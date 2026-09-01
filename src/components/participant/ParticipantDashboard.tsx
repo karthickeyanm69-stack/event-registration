@@ -25,6 +25,7 @@ import {
 import QRCode from 'qrcode';
 import { CollegeEvent, Coordinator, Participant, Registration } from '../../types';
 import { ChangeEventModal } from './ChangeEventModal';
+import { CollegeLogo, CollegeEmblem } from '../common/CollegeLogo';
 
 interface ParticipantDashboardProps {
   participant: Participant;
@@ -93,23 +94,10 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
 
   return (
     <div className="w-full min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
-      {/* Top Header Bar */}
-      <header className="h-16 bg-white border-b border-slate-200/90 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-40 shadow-sm">
+      {/* Top Header Bar with Official College Logo */}
+      <header className="h-16 bg-white border-b border-[#d4e8f5] px-4 sm:px-8 flex items-center justify-between sticky top-0 z-40 shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center text-white font-bold shadow-md shadow-teal-600/20">
-            <Sparkles className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-serif font-bold text-base text-slate-900 tracking-tight">SPIHER</span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-200 uppercase tracking-wider">
-                IGNITE 2024
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-500 font-medium hidden sm:block">
-              {participant.name} ({participant.rollNumber}) • {participant.collegeName}
-            </p>
-          </div>
+          <CollegeLogo variant="compact" size="sm" showSubtitle={false} />
         </div>
 
         {/* Desktop Navigation Links */}
@@ -340,13 +328,16 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
         {/* TAB 3: MY PASS */}
         {activeTab === 'pass' && (
           <div className="max-w-md mx-auto space-y-5">
-            <div className="bg-white text-slate-900 rounded-3xl p-6 sm:p-8 shadow-md border border-slate-200 space-y-6">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-200">
-                <div>
-                  <span className="font-serif font-bold text-base text-slate-900">SPIHER IGNITE 2024</span>
-                  <p className="text-[10px] text-teal-700 uppercase tracking-wider font-bold">Official Entry Pass</p>
+            <div className="bg-white text-slate-900 rounded-3xl p-6 sm:p-8 shadow-md border border-[#d4e8f5] space-y-6">
+              <div className="flex items-center justify-between pb-4 border-b border-[#e8f5fb]">
+                <div className="flex items-center gap-3">
+                  <CollegeEmblem size={40} />
+                  <div>
+                    <span className="font-serif font-black text-base text-[#002b66]">St. PETER'S</span>
+                    <p className="text-[10px] text-[#0077c8] uppercase tracking-wider font-bold">Official Registry Pass</p>
+                  </div>
                 </div>
-                <span className="font-mono text-xs font-bold text-teal-700">{registration.registrationNumber}</span>
+                <span className="font-mono text-xs font-bold text-[#0077c8]">{registration.registrationNumber}</span>
               </div>
 
               {/* QR Code Centrepiece */}

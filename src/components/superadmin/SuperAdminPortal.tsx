@@ -52,6 +52,7 @@ import {
   SystemSettings,
 } from '../../types';
 import { MockDatabaseService } from '../../data/mockDatabase';
+import { CollegeLogo, CollegeEmblem } from '../common/CollegeLogo';
 
 interface SuperAdminPortalProps {
   superAdminUser: StaffUser;
@@ -250,25 +251,13 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
-      {/* Top Executive Header Bar (White Theme) */}
-      <header className="h-16 bg-white border-b border-slate-200/90 px-6 flex items-center justify-between sticky top-0 z-40 shadow-sm">
+      {/* Top Executive Header Bar (White Theme with Official College Logo) */}
+      <header className="h-16 bg-white border-b border-[#d4e8f5] px-6 flex items-center justify-between sticky top-0 z-40 shadow-sm">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center text-white font-bold shadow-md shadow-teal-600/20">
-              <ShieldAlert className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-serif font-bold text-base text-slate-900 tracking-tight">SPIHER</span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-teal-50 text-teal-700 border border-teal-200 uppercase tracking-wider">
-                  Super Admin Console
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-500 font-medium hidden sm:block">
-                National Level Technical & Non-Technical Symposium Governance
-              </p>
-            </div>
-          </div>
+          <CollegeLogo variant="compact" size="sm" showSubtitle={false} />
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#e8f5fb] text-[#0077c8] border border-[#d4e8f5] uppercase tracking-wider hidden sm:inline-block">
+            Super Admin Console
+          </span>
         </div>
 
         {/* Center Live Telemetry Pill */}

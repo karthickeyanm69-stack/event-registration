@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { MockDatabaseService } from '../../data/mockDatabase';
 import { PortalRole, StaffUser } from '../../types';
+import { CollegeLogo } from '../common/CollegeLogo';
 
 interface StaffConsoleLoginProps {
   onLoginSuccess: (user: StaffUser, redirectRole: PortalRole) => void;
@@ -93,80 +94,77 @@ export const StaffConsoleLogin: React.FC<StaffConsoleLoginProps> = ({ onLoginSuc
   };
 
   return (
-    <div className="w-full max-w-md mx-auto px-4 py-8 flex flex-col justify-center min-h-[calc(100vh-4rem)]">
-      {/* Header */}
-      <div className="text-center mb-6 space-y-2">
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary to-primary-container text-white shadow-xl border border-white/20 mb-2">
-          <Lock className="w-7 h-7 text-secondary-fixed" />
+    <div className="w-full min-h-screen spiher-pattern-bg px-4 py-8 flex flex-col justify-center items-center">
+      <div className="w-full max-w-lg bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-[#d4e8f5] space-y-6">
+        {/* Header with Official College Logo */}
+        <div className="flex justify-center border-b border-[#e8f5fb] pb-5">
+          <CollegeLogo size="md" />
         </div>
-        <h2 className="text-2xl font-serif font-bold text-primary dark:text-white">
-          Shared Staff Console
-        </h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs mx-auto">
-          Unified authentication gateway for Employees, Event Admins, and Super Administrators.
-        </p>
-      </div>
 
-      {/* Login Card */}
-      <div className="bg-white dark:bg-primary-container rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-white/10 shadow-xl space-y-5">
-        <div className="space-y-1">
-          <h3 className="text-base font-bold text-primary dark:text-white flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-secondary" />
-            <span>Staff Authentication</span>
+        <div className="text-center space-y-1">
+          <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#e8f5fb] text-[#0077c8] border border-[#d4e8f5]">
+            Staff Console Gateway
+          </span>
+          <h3 className="text-base font-bold text-[#002b66]">
+            Authorized Staff Sign-In
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Role-based redirection enforces event-level access upon successful sign-in.
+          <p className="text-xs text-slate-500 max-w-xs mx-auto">
+            Unified access portal for Super Admins, Event Admins, and Evaluator Staff.
           </p>
         </div>
 
-        {errorMessage && (
-          <div className="p-3.5 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/50 text-red-800 dark:text-red-300 text-xs font-medium flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
-            <span>{errorMessage}</span>
-          </div>
-        )}
-
+        {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-4">
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-secondary" />
-              <span>Official Institutional Email</span>
-            </label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="staff@spiher.edu.in"
-              className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-primary/60 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-secondary focus:outline-none"
-            />
-          </div>
+          {errorMessage && (
+            <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{errorMessage}</span>
+            </div>
+          )}
 
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-              <Key className="w-3.5 h-3.5 text-secondary" />
-              <span>Password</span>
-            </label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••••••"
-              className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-primary/60 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-secondary focus:outline-none"
-            />
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-[#002b66] uppercase tracking-wider">
+                Official Staff Email *
+              </label>
+              <div className="relative">
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="staff@spiher.edu.in"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#d4e8f5] bg-slate-50 text-[#002b66] text-sm focus:border-[#0077c8] focus:bg-white focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-[#002b66] uppercase tracking-wider">
+                Password *
+              </label>
+              <div className="relative">
+                <Key className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••••••"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#d4e8f5] bg-slate-50 text-[#002b66] text-sm focus:border-[#0077c8] focus:bg-white focus:outline-none"
+                />
+              </div>
+            </div>
           </div>
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-primary to-primary-container hover:from-primary-container hover:to-primary text-white font-bold text-sm shadow-lg shadow-primary/30 flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+            className="w-full py-3.5 px-4 rounded-xl bg-[#0077c8] hover:bg-[#0066ad] text-white font-bold text-sm shadow-lg shadow-[#0077c8]/25 flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
           >
             {isSubmitting ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                <span>Authenticating & Routing...</span>
-              </>
+              <span>Authenticating...</span>
             ) : (
               <>
                 <span>Sign In to Console</span>
@@ -176,30 +174,30 @@ export const StaffConsoleLogin: React.FC<StaffConsoleLoginProps> = ({ onLoginSuc
           </button>
         </form>
 
-        {/* Rapid Testing Role Presets */}
-        <div className="pt-3 border-t border-slate-100 dark:border-white/10 space-y-2">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
-            Demo Staff Accounts (Click to Autofill)
+        {/* Quick Staff Presets for Instant Demo */}
+        <div className="pt-2 border-t border-[#e8f5fb] space-y-2">
+          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block text-center">
+            One-Click Role Authentication
           </span>
-          <div className="grid grid-cols-1 gap-1.5">
-            {staffPresets.map((p, idx) => {
-              const Icon = p.icon;
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {staffPresets.map((preset) => {
+              const Icon = preset.icon;
               return (
                 <button
-                  key={idx}
+                  key={preset.email}
                   type="button"
-                  onClick={() => handleSelectPreset(p.email)}
-                  className="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-white/5 hover:bg-secondary/10 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 text-left transition-colors"
+                  onClick={() => handleSelectPreset(preset.email)}
+                  className="p-2.5 rounded-xl border border-[#d4e8f5] bg-[#f8fafc] hover:bg-[#e8f5fb] text-left transition-colors flex items-center justify-between text-xs group"
                 >
-                  <div className="flex items-center gap-2">
-                    <Icon className="w-3.5 h-3.5 text-secondary shrink-0" />
-                    <div>
-                      <p className="text-xs font-bold text-slate-900 dark:text-white">{p.label}</p>
-                      <p className="text-[10px] text-slate-400 font-mono">{p.email}</p>
+                  <div className="flex items-center gap-2 overflow-hidden">
+                    <Icon className="w-4 h-4 text-[#0077c8] shrink-0" />
+                    <div className="truncate">
+                      <p className="font-bold text-[#002b66] truncate">{preset.label.split('(')[0]}</p>
+                      <p className="text-[10px] text-slate-500 font-mono truncate">{preset.email}</p>
                     </div>
                   </div>
-                  <span className="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-secondary/15 text-secondary border border-secondary/30">
-                    {p.badge}
+                  <span className="text-[9px] font-bold text-[#0077c8] bg-white px-1.5 py-0.5 rounded shadow-sm border border-[#d4e8f5] shrink-0 ml-1">
+                    {preset.badge}
                   </span>
                 </button>
               );

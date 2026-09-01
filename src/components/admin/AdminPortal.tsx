@@ -36,6 +36,7 @@ import {
   StaffUser,
 } from '../../types';
 import { MockDatabaseService } from '../../data/mockDatabase';
+import { CollegeLogo, CollegeEmblem } from '../common/CollegeLogo';
 
 interface AdminPortalProps {
   adminUser: StaffUser;
@@ -188,25 +189,13 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
-      {/* Top Header */}
-      <header className="h-16 bg-white border-b border-slate-200/90 px-6 flex items-center justify-between sticky top-0 z-40 shadow-sm">
+      {/* Top Header with Official College Logo */}
+      <header className="h-16 bg-white border-b border-[#d4e8f5] px-6 flex items-center justify-between sticky top-0 z-40 shadow-sm">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-cyan-600 flex items-center justify-center text-white font-bold shadow-md shadow-cyan-600/20">
-              <Building2 className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-serif font-bold text-base text-slate-900 tracking-tight">SPIHER</span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-50 text-cyan-800 border border-cyan-200 uppercase tracking-wider">
-                  Event Admin Portal
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-500 font-medium hidden sm:block">
-                {adminUser.department} • Assigned Operations
-              </p>
-            </div>
-          </div>
+          <CollegeLogo variant="compact" size="sm" showSubtitle={false} />
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#e8f5fb] text-[#0077c8] border border-[#d4e8f5] uppercase tracking-wider hidden sm:inline-block">
+            Event Admin Portal
+          </span>
         </div>
 
         {/* Center Telemetry Pill */}
