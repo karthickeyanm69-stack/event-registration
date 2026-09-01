@@ -1,0 +1,6 @@
+{
+  "name": "SPITHR Events",
+  "description": "College Event Registration and Management Platform for St. Peter's Institute of Higher Education & Research.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
