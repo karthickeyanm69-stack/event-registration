@@ -100,6 +100,9 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
   const [logFilterRole, setLogFilterRole] = useState('ALL');
   const [logSearch, setLogSearch] = useState('');
   const [eventCategoryFilter, setEventCategoryFilter] = useState<'ALL' | 'Technical' | 'Non-Technical'>('ALL');
+  const [matrixSearch, setMatrixSearch] = useState('');
+  const [matrixRoleFilter, setMatrixRoleFilter] = useState<'ALL' | 'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE'>('ALL');
+  const [matrixCategoryFilter, setMatrixCategoryFilter] = useState<'ALL' | 'Technical' | 'Non-Technical'>('ALL');
 
   // New Event Modal State
   const [isCreatingEvent, setIsCreatingEvent] = useState(false);
@@ -1021,58 +1024,337 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
           )}
 
           {/* ========================================================================= */}
-          {/* 4. PERMISSION MATRIX */}
+          {/* 4. PERMISSION MATRIX (ENTERPRISE REDESIGN)                                 */}
           {/* ========================================================================= */}
-          {activeTab === 'matrix' && (
-            <div className="space-y-6 max-w-7xl mx-auto">
-              <div className="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm">
-                <h3 className="text-lg font-bold text-slate-900">Event Assignment & Permission Matrix</h3>
-                <p className="text-xs text-slate-500">
-                  Visual mapping of all staff and admin authorization limits across technical and non-technical competitions.
-                </p>
-              </div>
+          {activeTab === 'matrix' && (() => {
+            const filteredStaff = staffList.filter((user) => {
+              if (matrixRoleFilter !== 'ALL' && user.role !== matrixRoleFilter) return false;
+              if (matrixSearch.trim()) {
+                const term = matrixSearch.toLowerCase();
+                return (
+                  user.name.toLowerCase().includes(term) ||
+                  user.email.toLowerCase().includes(term) ||
+                  (user.department && user.department.toLowerCase().includes(term))
+                );
+              }
+              return true;
+            });
 
-              <div className="bg-white border border-slate-200/90 rounded-3xl overflow-hidden shadow-sm">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[10px]">
-                      <tr>
-                        <th className="py-4 px-5">Staff / Admin</th>
-                        <th className="py-4 px-5">Role</th>
-                        {events.map((e) => (
-                          <th key={e.id} className="py-4 px-5 truncate max-w-[140px]">
-                            {e.title}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {staffList.map((user) => (
-                        <tr key={user.id} className="hover:bg-slate-50/70">
-                          <td className="py-4 px-5 font-bold text-slate-900">{user.name}</td>
-                          <td className="py-4 px-5 font-mono text-[11px] text-teal-700">{user.role}</td>
-                          {events.map((e) => {
-                            const isAssigned = user.assignedEventIds.length === 0 || user.assignedEventIds.includes(e.id);
-                            return (
-                              <td key={e.id} className="py-4 px-5 text-center">
-                                {isAssigned ? (
-                                  <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto text-xs font-bold">
-                                    ✓
-                                  </span>
-                                ) : (
-                                  <span className="text-slate-300">—</span>
-                                )}
-                              </td>
-                            );
-                          })}
-                        </tr>
+            const filteredMatrixEvents = events.filter((e) => {
+              if (matrixCategoryFilter === 'ALL') return true;
+              return e.category === matrixCategoryFilter;
+            });
+
+            const techEvents = filteredMatrixEvents.filter((e) => e.category === 'Technical');
+            const nonTechEvents = filteredMatrixEvents.filter((e) => e.category === 'Non-Technical');
+
+            return (
+              <div className="space-y-6 max-w-7xl mx-auto">
+                {/* Header & Metric Cards */}
+                <div className="bg-white p-6 rounded-3xl border border-[#d4e8f5] shadow-sm space-y-5">
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#e8f5fb] text-[#0077c8] border border-[#d4e8f5] uppercase tracking-wider">
+                          Access Control Governance
+                        </span>
+                        <span className="text-xs text-slate-400 font-mono">11 Competitions</span>
+                      </div>
+                      <h3 className="text-xl font-bold text-[#002b66] mt-1">
+                        Event Assignment &amp; Permission Matrix
+                      </h3>
+                      <p className="text-xs text-slate-500 max-w-2xl">
+                        Comprehensive authorization grid showing real-time event permissions, evaluation privileges, and gate control for all administrators and judges.
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setActiveTab('user-mgmt');
+                          setIsCreatingAdmin(true);
+                        }}
+                        className="py-2.5 px-4 rounded-xl bg-[#0077c8] hover:bg-[#0066ad] text-white font-bold text-xs shadow-md shadow-[#0077c8]/20 flex items-center gap-2 transition-all cursor-pointer"
+                      >
+                        <Plus className="w-4 h-4" />
+                        <span>Provision New Admin Pass</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Summary Metric Pills */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-[#e8f5fb]">
+                    <div className="p-3 rounded-2xl bg-[#f8fafc] border border-[#d4e8f5]">
+                      <span className="text-[10px] uppercase font-bold text-slate-500 block">Total Staff</span>
+                      <p className="text-xl font-bold text-[#002b66] font-mono mt-0.5">{staffList.length} Accounts</p>
+                    </div>
+                    <div className="p-3 rounded-2xl bg-[#f8fafc] border border-[#d4e8f5]">
+                      <span className="text-[10px] uppercase font-bold text-slate-500 block">Global Overseers</span>
+                      <p className="text-xl font-bold text-[#0077c8] font-mono mt-0.5">
+                        {staffList.filter((s) => s.assignedEventIds.length === 0).length} All-Access
+                      </p>
+                    </div>
+                    <div className="p-3 rounded-2xl bg-[#f8fafc] border border-[#d4e8f5]">
+                      <span className="text-[10px] uppercase font-bold text-slate-500 block">Tech Events</span>
+                      <p className="text-xl font-bold text-[#0077c8] font-mono mt-0.5">{techEvents.length} Events</p>
+                    </div>
+                    <div className="p-3 rounded-2xl bg-[#f8fafc] border border-[#d4e8f5]">
+                      <span className="text-[10px] uppercase font-bold text-slate-500 block">Non-Tech Events</span>
+                      <p className="text-xl font-bold text-[#00a887] font-mono mt-0.5">{nonTechEvents.length} Events</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Filter and Live Search Toolbar */}
+                <div className="bg-white p-4 rounded-3xl border border-[#d4e8f5] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+                  <div className="relative flex-1 max-w-md">
+                    <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      value={matrixSearch}
+                      onChange={(e) => setMatrixSearch(e.target.value)}
+                      placeholder="Search staff by name, email, or department..."
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-[#d4e8f5] text-slate-900 text-xs focus:border-[#0077c8] focus:bg-white focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    {/* Role Filter */}
+                    <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
+                      {(['ALL', 'SUPER_ADMIN', 'ADMIN', 'EMPLOYEE'] as const).map((r) => (
+                        <button
+                          key={r}
+                          type="button"
+                          onClick={() => setMatrixRoleFilter(r)}
+                          className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-colors ${
+                            matrixRoleFilter === r
+                              ? 'bg-[#0077c8] text-white shadow-sm'
+                              : 'text-slate-600 hover:text-slate-900'
+                          }`}
+                        >
+                          {r === 'ALL' ? 'All Roles' : r === 'SUPER_ADMIN' ? 'Super Admin' : r === 'ADMIN' ? 'Admin' : 'Evaluator'}
+                        </button>
                       ))}
-                    </tbody>
-                  </table>
+                    </div>
+
+                    {/* Category Filter */}
+                    <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
+                      {(['ALL', 'Technical', 'Non-Technical'] as const).map((cat) => (
+                        <button
+                          key={cat}
+                          type="button"
+                          onClick={() => setMatrixCategoryFilter(cat)}
+                          className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-colors ${
+                            matrixCategoryFilter === cat
+                              ? 'bg-[#002b66] text-white shadow-sm'
+                              : 'text-slate-600 hover:text-slate-900'
+                          }`}
+                        >
+                          {cat === 'ALL' ? 'All 11 Events' : cat}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Enterprise Matrix Table */}
+                <div className="bg-white border border-[#d4e8f5] rounded-3xl overflow-hidden shadow-sm">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs border-collapse">
+                      <thead>
+                        {/* Top Category Super-Header */}
+                        <tr className="bg-slate-100/80 border-b border-[#d4e8f5] text-[10px] uppercase tracking-wider">
+                          <th className="sticky left-0 bg-slate-100/90 z-20 py-2.5 px-5 font-bold text-slate-500 border-r border-[#d4e8f5] min-w-[280px]">
+                            Personnel Information
+                          </th>
+                          <th className="py-2.5 px-4 font-bold text-slate-500 border-r border-[#d4e8f5] min-w-[130px]">
+                            Authority
+                          </th>
+                          {techEvents.length > 0 && (
+                            <th
+                              colSpan={techEvents.length}
+                              className="py-2 px-4 text-center font-bold text-[#0077c8] bg-[#e8f5fb] border-r border-[#d4e8f5]"
+                            >
+                              Technical Competitions ({techEvents.length})
+                            </th>
+                          )}
+                          {nonTechEvents.length > 0 && (
+                            <th
+                              colSpan={nonTechEvents.length}
+                              className="py-2 px-4 text-center font-bold text-[#00a887] bg-teal-50/70 border-r border-[#d4e8f5]"
+                            >
+                              Non-Technical Competitions ({nonTechEvents.length})
+                            </th>
+                          )}
+                          <th className="py-2.5 px-4 text-right font-bold text-slate-500 min-w-[130px]">
+                            Actions
+                          </th>
+                        </tr>
+
+                        {/* Event Title Headers */}
+                        <tr className="bg-slate-50 border-b border-[#d4e8f5] text-slate-700 text-[11px]">
+                          <th className="sticky left-0 bg-slate-50 z-20 py-3.5 px-5 font-bold border-r border-[#d4e8f5]">
+                            Staff Member / Department
+                          </th>
+                          <th className="py-3.5 px-4 font-bold border-r border-[#d4e8f5]">
+                            Role Level
+                          </th>
+                          {filteredMatrixEvents.map((e) => (
+                            <th
+                              key={e.id}
+                              className="py-3 px-3 font-semibold border-r border-[#d4e8f5] min-w-[160px] text-center"
+                            >
+                              <div className="flex flex-col items-center gap-1">
+                                <span
+                                  className={`text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded ${
+                                    e.category === 'Technical'
+                                      ? 'bg-[#e8f5fb] text-[#0077c8]'
+                                      : 'bg-emerald-50 text-[#00a887]'
+                                  }`}
+                                >
+                                  {e.category === 'Technical' ? 'Tech' : 'Non-Tech'}
+                                </span>
+                                <span className="font-bold text-slate-900 leading-tight line-clamp-2">
+                                  {e.title}
+                                </span>
+                              </div>
+                            </th>
+                          ))}
+                          <th className="py-3.5 px-4 text-right font-bold">
+                            Credentials
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody className="divide-y divide-slate-100">
+                        {filteredStaff.map((user) => {
+                          const isGlobal = user.assignedEventIds.length === 0;
+                          return (
+                            <tr key={user.id} className="hover:bg-slate-50/80 transition-colors group">
+                              {/* Sticky Left Column with Name & Avatar */}
+                              <td className="sticky left-0 bg-white group-hover:bg-slate-50/90 z-10 py-4 px-5 border-r border-[#d4e8f5] shadow-[2px_0_5px_rgba(0,0,0,0.03)]">
+                                <div className="flex items-center gap-3">
+                                  <div
+                                    className={`w-9 h-9 rounded-xl font-bold flex items-center justify-center text-xs shrink-0 ${
+                                      user.role === 'SUPER_ADMIN'
+                                        ? 'bg-purple-100 text-purple-800'
+                                        : user.role === 'ADMIN'
+                                        ? 'bg-[#e8f5fb] text-[#0077c8]'
+                                        : 'bg-slate-100 text-slate-700'
+                                    }`}
+                                  >
+                                    {user.name.charAt(0)}
+                                  </div>
+                                  <div className="overflow-hidden">
+                                    <p className="font-bold text-[#002b66] text-xs leading-snug truncate">
+                                      {user.name}
+                                    </p>
+                                    <p className="text-[10px] text-slate-500 font-mono truncate">{user.email}</p>
+                                    <p className="text-[10px] text-slate-400 truncate">{user.department}</p>
+                                  </div>
+                                </div>
+                              </td>
+
+                              {/* Role Badge Column */}
+                              <td className="py-4 px-4 border-r border-[#d4e8f5]">
+                                <span
+                                  className={`inline-block text-[10px] uppercase font-extrabold px-2.5 py-1 rounded-full border ${
+                                    user.role === 'SUPER_ADMIN'
+                                      ? 'bg-purple-50 text-purple-800 border-purple-200'
+                                      : user.role === 'ADMIN'
+                                      ? 'bg-[#e8f5fb] text-[#0077c8] border-[#d4e8f5]'
+                                      : 'bg-slate-50 text-slate-700 border-slate-200'
+                                  }`}
+                                >
+                                  {user.role}
+                                </span>
+                              </td>
+
+                              {/* Event Intersection Matrix Cells */}
+                              {filteredMatrixEvents.map((e) => {
+                                const isAssigned = isGlobal || user.assignedEventIds.includes(e.id);
+                                return (
+                                  <td
+                                    key={e.id}
+                                    className={`py-4 px-3 text-center border-r border-[#d4e8f5] transition-colors ${
+                                      isAssigned ? 'bg-emerald-50/30' : ''
+                                    }`}
+                                  >
+                                    {isAssigned ? (
+                                      <div className="flex items-center justify-center">
+                                        {isGlobal ? (
+                                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#e8f5fb] text-[#0077c8] border border-[#d4e8f5]">
+                                            <Check className="w-3 h-3 text-[#0077c8]" />
+                                            <span>Full Access</span>
+                                          </span>
+                                        ) : (
+                                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                            <Check className="w-3 h-3 text-emerald-600" />
+                                            <span>Authorized</span>
+                                          </span>
+                                        )}
+                                      </div>
+                                    ) : (
+                                      <span className="text-slate-300 font-mono text-sm">—</span>
+                                    )}
+                                  </td>
+                                );
+                              })}
+
+                              {/* Action Cell */}
+                              <td className="py-4 px-4 text-right">
+                                <button
+                                  type="button"
+                                  onClick={() => setSelectedPassUser(user)}
+                                  className="py-1.5 px-3 rounded-xl bg-white border border-[#d4e8f5] text-[#0077c8] hover:bg-[#e8f5fb] font-bold text-xs shadow-sm transition-colors cursor-pointer"
+                                >
+                                  🔑 Pass Slip
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+
+                        {filteredStaff.length === 0 && (
+                          <tr>
+                            <td
+                              colSpan={filteredMatrixEvents.length + 3}
+                              className="py-12 text-center text-slate-400 text-xs"
+                            >
+                              No personnel accounts match the current filter criteria.
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Legend Footer */}
+                  <div className="p-4 bg-slate-50 border-t border-[#d4e8f5] flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-600">
+                    <div className="flex items-center gap-4">
+                      <span className="font-bold text-slate-700">Legend:</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#0077c8]" />
+                        <span>Full Global Overseer</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                        <span>Event-Scoped Evaluation &amp; Attendance</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
+                        <span>Restricted (No Access)</span>
+                      </div>
+                    </div>
+                    <span className="text-slate-400">
+                      Showing {filteredStaff.length} of {staffList.length} Personnel
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* ========================================================================= */}
           {/* 5. EVENT CHANGE AUDITS */}
