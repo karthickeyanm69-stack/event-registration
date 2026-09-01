@@ -53,6 +53,7 @@ import {
 } from '../../types';
 import { MockDatabaseService } from '../../data/mockDatabase';
 import { CollegeLogo, CollegeEmblem } from '../common/CollegeLogo';
+import { AdminCredentialPassModal } from '../common/AdminCredentialPassModal';
 
 interface SuperAdminPortalProps {
   superAdminUser: StaffUser;
@@ -117,8 +118,16 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
   const [isCreatingAdmin, setIsCreatingAdmin] = useState(false);
   const [adminName, setAdminName] = useState('');
   const [adminEmail, setAdminEmail] = useState('');
+  const [adminPassword, setAdminPassword] = useState('Admin@SPIHER2024');
   const [adminDept, setAdminDept] = useState('Dept. of Computer Science & Engineering');
   const [adminAssignedEvents, setAdminAssignedEvents] = useState<string[]>([]);
+  const [selectedPassUser, setSelectedPassUser] = useState<StaffUser | null>(null);
+
+  const handleGenerateAdminPassword = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const rand = Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    setAdminPassword(`SPIHER#${rand}`);
+  };
 
   // Settings State
   const [localSettings, setLocalSettings] = useState<SystemSettings>(settings);
@@ -148,9 +157,6 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
       totalSlots: newEventSlots,
       slotsLeft: newEventSlots,
       imageUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80',
-      prizePool: newEventPrize,
-      firstPrize: 'Trophy + Cash Award',
-      secondPrize: 'Certificate + Cash Award',
       rules: [
         'Standard fair play and institutional code of conduct apply.',
         'Jury panel evaluation decision is final and binding.',
@@ -190,6 +196,7 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
       email: adminEmail.trim().toLowerCase(),
       name: adminName.trim(),
       role: 'ADMIN',
+      password: adminPassword.trim() || 'admin123',
       department: adminDept,
       assignedEventIds: adminAssignedEvents,
       isActive: true,
@@ -200,7 +207,9 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
     setIsCreatingAdmin(false);
     setAdminName('');
     setAdminEmail('');
+    setAdminPassword('Admin@SPIHER2024');
     setAdminAssignedEvents([]);
+    setSelectedPassUser(newAdmin);
     onRefreshData();
   };
 
@@ -794,29 +803,53 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                     Admin Account Provisioning
                   </h4>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Admin Name *</label>
+                      <label className="font-semibold text-slate-700">Admin Full Name *</label>
                       <input
                         type="text"
                         required
                         value={adminName}
                         onChange={(e) => setAdminName(e.target.value)}
                         placeholder="e.g. Dr. K. Senthil Nathan"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-teal-600 focus:outline-none"
                       />
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Official Email *</label>
+                      <label className="font-semibold text-slate-700">Official Staff Email *</label>
                       <input
                         type="email"
                         required
                         value={adminEmail}
                         onChange={(e) => setAdminEmail(e.target.value)}
-                        placeholder="admin.tech@spiher.edu.in"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
+                        placeholder="admin.new@spiher.edu.in"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-teal-600 focus:outline-none"
                       />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <label className="font-semibold text-slate-700">Password / Access Pass *</label>
+                        <button
+                          type="button"
+                          onClick={handleGenerateAdminPassword}
+                          className="text-[10px] text-[#0077c8] hover:underline font-bold"
+                        >
+                          ⚡ Auto-Generate
+                        </button>
+                      </div>
+                      <div className="relative">
+                        <Key className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          required
+                          value={adminPassword}
+                          onChange={(e) => setAdminPassword(e.target.value)}
+                          placeholder="Admin@SPIHER2024"
+                          className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-mono font-bold focus:border-teal-600 focus:outline-none"
+                        />
+                      </div>
                     </div>
 
                     <div className="space-y-1.5">
@@ -825,15 +858,35 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                         type="text"
                         value={adminDept}
                         onChange={(e) => setAdminDept(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-teal-600 focus:outline-none"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2 text-xs">
-                    <label className="font-semibold text-slate-700">
-                      Assign Permitted Competitions to Admin:
-                    </label>
+                    <div className="flex items-center justify-between">
+                      <label className="font-semibold text-slate-700">
+                        Assign Permitted Competitions to Admin:
+                      </label>
+                      <div className="flex items-center gap-2 text-[11px]">
+                        <button
+                          type="button"
+                          onClick={() => setAdminAssignedEvents([])}
+                          className="text-teal-700 font-bold hover:underline"
+                        >
+                          All 11 Events (Full Overseer)
+                        </button>
+                        <span className="text-slate-300">|</span>
+                        <button
+                          type="button"
+                          onClick={() => setAdminAssignedEvents(events.map((e) => e.id))}
+                          className="text-slate-600 hover:text-slate-900"
+                        >
+                          Select All Checkboxes
+                        </button>
+                      </div>
+                    </div>
+
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                       {events.map((evt) => {
                         const isChecked = adminAssignedEvents.includes(evt.id);
@@ -863,9 +916,9 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                   <div className="flex justify-end gap-3 pt-2">
                     <button
                       type="submit"
-                      className="px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md"
+                      className="px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md cursor-pointer"
                     >
-                      Provision Admin Account
+                      Provision Admin Account &amp; Issue Pass
                     </button>
                   </div>
                 </form>
@@ -935,7 +988,15 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                               {user.isActive ? '● Active' : '○ Deactivated'}
                             </span>
                           </td>
-                          <td className="py-4 px-5 text-right">
+                          <td className="py-4 px-5 text-right space-x-2">
+                            <button
+                              type="button"
+                              onClick={() => setSelectedPassUser(user)}
+                              className="py-1 px-2.5 rounded-lg text-xs font-semibold bg-[#e8f5fb] text-[#0077c8] hover:bg-[#d4e8f5] transition-colors"
+                              title="View & Share Access Pass"
+                            >
+                              🔑 View Pass
+                            </button>
                             {user.role !== 'SUPER_ADMIN' && (
                               <button
                                 type="button"
@@ -1216,6 +1277,15 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
           )}
         </main>
       </div>
+
+      {/* Official Admin / Staff Credential Pass Modal */}
+      {selectedPassUser && (
+        <AdminCredentialPassModal
+          user={selectedPassUser}
+          events={events}
+          onClose={() => setSelectedPassUser(null)}
+        />
+      )}
     </div>
   );
 };

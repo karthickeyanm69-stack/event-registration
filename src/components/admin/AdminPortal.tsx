@@ -26,6 +26,7 @@ import {
   LayoutDashboard,
   Activity,
   Award,
+  Key,
 } from 'lucide-react';
 import {
   AttendanceRecord,
@@ -37,6 +38,7 @@ import {
 } from '../../types';
 import { MockDatabaseService } from '../../data/mockDatabase';
 import { CollegeLogo, CollegeEmblem } from '../common/CollegeLogo';
+import { AdminCredentialPassModal } from '../common/AdminCredentialPassModal';
 
 interface AdminPortalProps {
   adminUser: StaffUser;
@@ -83,9 +85,17 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
   const [isAppointingEmployee, setIsAppointingEmployee] = useState(false);
   const [empName, setEmpName] = useState('');
   const [empEmail, setEmpEmail] = useState('');
+  const [empPassword, setEmpPassword] = useState('Judge@SPIHER2024');
   const [empDept, setEmpDept] = useState(adminUser.department || 'Dept. of Computer Science');
   const [empEventId, setEmpEventId] = useState(assignedEvents[0]?.id || '');
   const [appointSuccess, setAppointSuccess] = useState<string | null>(null);
+  const [selectedPassUser, setSelectedPassUser] = useState<StaffUser | null>(null);
+
+  const handleGenerateEmpPassword = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const rand = Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    setEmpPassword(`EVAL#${rand}`);
+  };
 
   // Search & Filters for Registrations Table
   const [regSearch, setRegSearch] = useState('');
@@ -115,6 +125,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
       email: empEmail.trim().toLowerCase(),
       name: empName.trim(),
       role: 'EMPLOYEE',
+      password: empPassword.trim() || 'judge123',
       department: empDept,
       assignedEventIds: [empEventId],
       createdByAdminId: adminUser.id,
@@ -127,7 +138,9 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
     setAppointSuccess(`Staff credentials created for ${newEmp.name} (${newEmp.email})!`);
     setEmpName('');
     setEmpEmail('');
+    setEmpPassword('Judge@SPIHER2024');
     setIsAppointingEmployee(false);
+    setSelectedPassUser(newEmp);
     onRefreshData();
   };
 
@@ -718,7 +731,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                     Staff Credentials & Event Assignment
                   </h4>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
                     <div className="space-y-1.5">
                       <label className="font-semibold text-slate-700">Staff Full Name *</label>
                       <input
@@ -727,7 +740,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                         value={empName}
                         onChange={(e) => setEmpName(e.target.value)}
                         placeholder="e.g. Praveen Chandran"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 focus:border-cyan-600 focus:outline-none"
                       />
                     </div>
 
@@ -739,43 +752,65 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                         value={empEmail}
                         onChange={(e) => setEmpEmail(e.target.value)}
                         placeholder="judge@spiher.edu.in"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 focus:border-cyan-600 focus:outline-none"
                       />
                     </div>
-                  </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <label className="font-semibold text-slate-700">Password / Pass *</label>
+                        <button
+                          type="button"
+                          onClick={handleGenerateEmpPassword}
+                          className="text-[10px] text-[#0077c8] hover:underline font-bold"
+                        >
+                          ⚡ Auto-Generate
+                        </button>
+                      </div>
+                      <div className="relative">
+                        <Key className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          required
+                          value={empPassword}
+                          onChange={(e) => setEmpPassword(e.target.value)}
+                          placeholder="Judge@SPIHER2024"
+                          className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 font-mono font-bold focus:border-cyan-600 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
                     <div className="space-y-1.5">
                       <label className="font-semibold text-slate-700">Department</label>
                       <input
                         type="text"
                         value={empDept}
                         onChange={(e) => setEmpDept(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 focus:border-cyan-600 focus:outline-none"
                       />
                     </div>
+                  </div>
 
-                    <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Assigned Competition *</label>
-                      <select
-                        value={empEventId}
-                        onChange={(e) => setEmpEventId(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 font-bold"
-                      >
-                        {assignedEvents.map((e) => (
-                          <option key={e.id} value={e.id}>
-                            {e.title}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                  <div className="space-y-1.5 text-xs max-w-md">
+                    <label className="font-semibold text-slate-700">Assigned Competition *</label>
+                    <select
+                      value={empEventId}
+                      onChange={(e) => setEmpEventId(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 font-bold focus:border-cyan-600 focus:outline-none"
+                    >
+                      {assignedEvents.map((e) => (
+                        <option key={e.id} value={e.id}>
+                          {e.title} ({e.category})
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <button
                     type="submit"
-                    className="py-3 px-6 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs shadow-md"
+                    className="py-3 px-6 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs shadow-md cursor-pointer"
                   >
-                    Issue Staff Credentials
+                    Issue Staff Credentials &amp; Pass
                   </button>
                 </form>
               )}
@@ -796,13 +831,22 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                       </div>
                     </div>
 
-                    <div className="text-right">
-                      <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-cyan-100 text-cyan-800 border border-cyan-200">
-                        {emp.role}
-                      </span>
-                      <p className="text-[10px] text-slate-500 mt-1">
-                        Assigned: {assignedEvents.find((e) => emp.assignedEventIds.includes(e.id))?.title || 'Assigned Event'}
-                      </p>
+                    <div className="flex items-center gap-3">
+                      <div className="text-right hidden sm:block">
+                        <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-cyan-100 text-cyan-800 border border-cyan-200">
+                          {emp.role}
+                        </span>
+                        <p className="text-[10px] text-slate-500 mt-1">
+                          Assigned: {assignedEvents.find((e) => emp.assignedEventIds.includes(e.id))?.title || 'Assigned Event'}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedPassUser(emp)}
+                        className="py-1.5 px-3 rounded-xl bg-white border border-[#d4e8f5] text-[#0077c8] hover:bg-[#e8f5fb] font-bold text-xs shadow-sm transition-colors"
+                      >
+                        🔑 View Pass
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -879,6 +923,15 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           )}
         </main>
       </div>
+
+      {/* Official Admin / Staff Credential Pass Modal */}
+      {selectedPassUser && (
+        <AdminCredentialPassModal
+          user={selectedPassUser}
+          events={events}
+          onClose={() => setSelectedPassUser(null)}
+        />
+      )}
     </div>
   );
 };

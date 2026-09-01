@@ -64,7 +64,7 @@ export const StaffConsoleLogin: React.FC<StaffConsoleLoginProps> = ({ onLoginSuc
 
     setIsSubmitting(true);
     setTimeout(() => {
-      const res = MockDatabaseService.authenticateStaff(email);
+      const res = MockDatabaseService.authenticateStaff(email, password);
       setIsSubmitting(false);
 
       if (res.success && res.user) {

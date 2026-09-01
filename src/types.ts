@@ -136,6 +136,7 @@ export interface StaffUser {
   email: string;
   name: string;
   role: StaffRole;
+  password?: string;
   department?: string;
   assignedEventIds: string[]; // empty means all if SUPER_ADMIN
   createdByAdminId?: string;

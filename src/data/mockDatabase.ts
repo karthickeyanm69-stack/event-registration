@@ -549,6 +549,7 @@ export const INITIAL_STAFF: StaffUser[] = [
     email: 'superadmin@spiher.edu.in',
     name: 'Dr. M. Sivasankaran (Convenor)',
     role: 'SUPER_ADMIN',
+    password: 'superadmin123',
     department: 'Dean - Academic Affairs',
     assignedEventIds: [], // All 11 events
     isActive: true,
@@ -561,6 +562,7 @@ export const INITIAL_STAFF: StaffUser[] = [
     email: 'admin@spiher.edu.in',
     name: 'Dr. K. Senthil Nathan (Event Admin)',
     role: 'ADMIN',
+    password: 'admin123',
     department: 'Dept. of Computer Science & Engineering',
     assignedEventIds: [], // All 11 events
     isActive: true,
@@ -573,6 +575,7 @@ export const INITIAL_STAFF: StaffUser[] = [
     email: 'judge.codeathon@spiher.edu.in',
     name: 'Praveen Chandran (Evaluator)',
     role: 'EMPLOYEE',
+    password: 'judge123',
     department: 'Dept. of CSE',
     assignedEventIds: ['evt-codeathon'],
     createdByAdminId: 'staff-admin',
@@ -1306,12 +1309,19 @@ export class MockDatabaseService {
     this.logAction('STAFF_PROVISIONED', 'SUPER_ADMIN', 'Administrator', `Staff user ${user.name} (${user.email}) configured`);
   }
 
-  static authenticateStaff(email: string): { success: boolean; user?: StaffUser; error?: string } {
+  static authenticateStaff(email: string, password?: string): { success: boolean; user?: StaffUser; error?: string } {
     const staff = this.getStaffUsers();
     const user = staff.find((s) => s.email.toLowerCase() === email.trim().toLowerCase() && s.isActive);
     if (!user) {
-      return { success: false, error: 'Invalid staff credentials or account is inactive.' };
+      return { success: false, error: 'No authorized staff account found matching this email.' };
     }
+
+    if (password && password.trim() && user.password && !password.includes('••••')) {
+      if (user.password !== password.trim()) {
+        return { success: false, error: 'Incorrect password provided for this staff account.' };
+      }
+    }
+
     return { success: true, user };
   }
 
