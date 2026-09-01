@@ -75,33 +75,33 @@ export const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
       {/* Top Header */}
-      <header className="h-16 bg-slate-950 border-b border-slate-800 px-6 flex items-center justify-between sticky top-0 z-40 shadow-xl">
+      <header className="h-16 bg-white border-b border-slate-200/90 px-6 flex items-center justify-between sticky top-0 z-40 shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-500 to-emerald-400 flex items-center justify-center text-slate-950 font-bold shadow-lg shadow-teal-500/20">
+          <div className="w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center text-white font-bold shadow-md shadow-teal-600/20">
             <QrCode className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-serif font-bold text-base text-white tracking-tight">SPIHER</span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30 uppercase tracking-wider">
+              <span className="font-serif font-bold text-base text-slate-900 tracking-tight">SPIHER</span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-200 uppercase tracking-wider">
                 Staff & Judge PWA
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 font-medium hidden sm:block">
+            <p className="text-[11px] text-slate-500 font-medium hidden sm:block">
               {staffUser.name} • Assigned: {assignedEvents.map((e) => e.title).join(', ') || 'Assigned Events'}
             </p>
           </div>
         </div>
 
         {/* Center Live Pill */}
-        <div className="hidden lg:flex items-center gap-4 bg-slate-900/80 px-4 py-1.5 rounded-full border border-slate-800 text-xs">
-          <span className="text-slate-300 font-semibold">{totalAssigned} Assigned Participants</span>
-          <span className="text-slate-600">|</span>
-          <span className="text-emerald-400 font-bold">{presentCount} Verified</span>
-          <span className="text-slate-600">|</span>
-          <span className="text-amber-400 font-bold">{scoredCount} Scored</span>
+        <div className="hidden lg:flex items-center gap-4 bg-slate-100/90 px-4 py-1.5 rounded-full border border-slate-200 text-xs">
+          <span className="text-slate-700 font-semibold">{totalAssigned} Assigned Participants</span>
+          <span className="text-slate-300">|</span>
+          <span className="text-emerald-700 font-bold">{presentCount} Verified</span>
+          <span className="text-slate-300">|</span>
+          <span className="text-amber-700 font-bold">{scoredCount} Scored</span>
         </div>
 
         {/* Right User Logout */}
@@ -109,7 +109,7 @@ export const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
           <button
             onClick={onStaffLogout}
             title="Sign Out"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs font-semibold transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-semibold transition-colors"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Sign Out</span>
@@ -120,7 +120,7 @@ export const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
       {/* Desktop Main Container with Left Sidebar */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar */}
-        <aside className="w-64 bg-slate-950 border-r border-slate-800 flex flex-col justify-between p-4 shrink-0 hidden md:flex">
+        <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between p-4 shrink-0 hidden md:flex shadow-sm">
           <div className="space-y-1">
             <div className="px-3 py-2 text-[10px] uppercase font-bold tracking-widest text-slate-400">
               Staff Operations
@@ -136,18 +136,18 @@ export const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
                     onClick={() => setActiveTab(item.id)}
                     className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 ${
                       isActive
-                        ? 'bg-gradient-to-r from-teal-500 to-emerald-500 text-slate-950 font-bold shadow-lg shadow-teal-500/20'
-                        : 'text-slate-300 hover:bg-slate-900 hover:text-white'
+                        ? 'bg-teal-600 text-white font-bold shadow-md shadow-teal-600/20'
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <Icon className={`w-4 h-4 ${isActive ? 'text-slate-950' : 'text-slate-400'}`} />
+                      <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-500'}`} />
                       <span>{item.label}</span>
                     </div>
                     {item.badge && (
                       <span
                         className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
-                          isActive ? 'bg-slate-950 text-teal-300' : 'bg-slate-800 text-slate-400'
+                          isActive ? 'bg-white text-teal-800' : 'bg-slate-100 text-slate-600'
                         }`}
                       >
                         {item.badge}
@@ -159,12 +159,12 @@ export const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
             </nav>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 text-xs space-y-1">
-            <p className="font-bold text-teal-400">Assigned Competitions:</p>
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-1">
+            <p className="font-bold text-teal-700">Assigned Competitions:</p>
             <div className="space-y-1 pt-1">
               {assignedEvents.map((e) => (
-                <div key={e.id} className="text-[11px] text-slate-300 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-teal-400" />
+                <div key={e.id} className="text-[11px] text-slate-600 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-teal-600" />
                   <span className="truncate">{e.title}</span>
                 </div>
               ))}
@@ -173,7 +173,7 @@ export const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
         </aside>
 
         {/* Mobile Horizontal Tabs */}
-        <div className="md:hidden w-full overflow-x-auto bg-slate-950 border-b border-slate-800 p-2 flex gap-1.5 scrollbar-hide">
+        <div className="md:hidden w-full overflow-x-auto bg-white border-b border-slate-200 p-2 flex gap-1.5 scrollbar-hide">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -182,7 +182,7 @@ export const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors ${
-                  isActive ? 'bg-teal-500 text-slate-950' : 'text-slate-300 bg-slate-900'
+                  isActive ? 'bg-teal-600 text-white' : 'text-slate-600 bg-slate-100'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -193,45 +193,45 @@ export const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
         </div>
 
         {/* Main Content Pane */}
-        <main className="flex-1 bg-slate-900 overflow-y-auto p-6 lg:p-8 space-y-6">
+        <main className="flex-1 bg-slate-50 overflow-y-auto p-6 lg:p-8 space-y-6">
           {/* Executive Stat Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-5xl mx-auto">
-            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Assigned</span>
-                <div className="p-2 rounded-xl bg-teal-500/10 text-teal-400">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Assigned</span>
+                <div className="p-2 rounded-xl bg-teal-50 text-teal-700">
                   <Users className="w-4 h-4" />
                 </div>
               </div>
               <div className="mt-4">
-                <span className="text-3xl font-bold font-mono text-white">{totalAssigned}</span>
-                <p className="text-[11px] text-slate-400 mt-1">Participants to evaluate</p>
+                <span className="text-3xl font-bold font-mono text-slate-900">{totalAssigned}</span>
+                <p className="text-[11px] text-slate-500 mt-1">Participants to evaluate</p>
               </div>
             </div>
 
-            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Checked In</span>
-                <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Checked In</span>
+                <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
               </div>
               <div className="mt-4">
-                <span className="text-3xl font-bold font-mono text-emerald-400">{presentCount}</span>
-                <p className="text-[11px] text-slate-400 mt-1">{totalAssigned - presentCount} pending verification</p>
+                <span className="text-3xl font-bold font-mono text-emerald-600">{presentCount}</span>
+                <p className="text-[11px] text-slate-500 mt-1">{totalAssigned - presentCount} pending verification</p>
               </div>
             </div>
 
-            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Evaluated & Scored</span>
-                <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Evaluated & Scored</span>
+                <div className="p-2 rounded-xl bg-amber-50 text-amber-700">
                   <Trophy className="w-4 h-4" />
                 </div>
               </div>
               <div className="mt-4">
-                <span className="text-3xl font-bold font-mono text-amber-300">{scoredCount}</span>
-                <p className="text-[11px] text-slate-400 mt-1">Scores submitted & locked</p>
+                <span className="text-3xl font-bold font-mono text-amber-700">{scoredCount}</span>
+                <p className="text-[11px] text-slate-500 mt-1">Scores submitted & locked</p>
               </div>
             </div>
           </div>

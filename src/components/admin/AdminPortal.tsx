@@ -187,22 +187,22 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
       {/* Top Header */}
-      <header className="h-16 bg-slate-950 border-b border-slate-800 px-6 flex items-center justify-between sticky top-0 z-40 shadow-xl">
+      <header className="h-16 bg-white border-b border-slate-200/90 px-6 flex items-center justify-between sticky top-0 z-40 shadow-sm">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-500 flex items-center justify-center text-slate-950 font-bold shadow-lg shadow-cyan-500/20">
+            <div className="w-10 h-10 rounded-xl bg-cyan-600 flex items-center justify-center text-white font-bold shadow-md shadow-cyan-600/20">
               <Building2 className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-serif font-bold text-base text-white tracking-tight">SPIHER</span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 uppercase tracking-wider">
+                <span className="font-serif font-bold text-base text-slate-900 tracking-tight">SPIHER</span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-50 text-cyan-800 border border-cyan-200 uppercase tracking-wider">
                   Event Admin Portal
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 font-medium hidden sm:block">
+              <p className="text-[11px] text-slate-500 font-medium hidden sm:block">
                 {adminUser.department} • Assigned Operations
               </p>
             </div>
@@ -210,30 +210,30 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
         </div>
 
         {/* Center Telemetry Pill */}
-        <div className="hidden lg:flex items-center gap-4 bg-slate-900/80 px-4 py-1.5 rounded-full border border-slate-800 text-xs">
-          <span className="text-slate-300 font-semibold">{assignedEvents.length} Assigned Events</span>
-          <span className="text-slate-600">|</span>
-          <span className="text-cyan-400 font-mono font-bold">{assignedRegistrations.length} Registrations</span>
-          <span className="text-slate-600">|</span>
-          <span className="text-emerald-400 font-bold">{presentCount} Checked In</span>
+        <div className="hidden lg:flex items-center gap-4 bg-slate-100/90 px-4 py-1.5 rounded-full border border-slate-200 text-xs">
+          <span className="text-slate-700 font-semibold">{assignedEvents.length} Assigned Events</span>
+          <span className="text-slate-300">|</span>
+          <span className="text-cyan-700 font-mono font-bold">{assignedRegistrations.length} Registrations</span>
+          <span className="text-slate-300">|</span>
+          <span className="text-emerald-700 font-bold">{presentCount} Checked In</span>
         </div>
 
         {/* Right User Bar */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-3 bg-slate-900 py-1 px-3 rounded-xl border border-slate-800">
-            <div className="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center text-xs">
+          <div className="flex items-center gap-3 bg-slate-100/80 py-1 px-3 rounded-xl border border-slate-200">
+            <div className="w-7 h-7 rounded-lg bg-cyan-100 text-cyan-800 font-bold flex items-center justify-center text-xs">
               {adminUser.name.charAt(0)}
             </div>
             <div className="hidden sm:block text-left text-xs">
-              <p className="font-bold text-white leading-tight">{adminUser.name}</p>
-              <p className="text-[10px] text-slate-400">Event Administrator</p>
+              <p className="font-bold text-slate-900 leading-tight">{adminUser.name}</p>
+              <p className="text-[10px] text-slate-500">Event Administrator</p>
             </div>
           </div>
 
           <button
             onClick={onStaffLogout}
             title="Sign Out"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs font-semibold transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-semibold transition-colors"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Sign Out</span>
@@ -244,7 +244,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
       {/* Main Desktop Container */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar Navigation */}
-        <aside className="w-64 bg-slate-950 border-r border-slate-800 flex flex-col justify-between p-4 shrink-0 hidden md:flex">
+        <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between p-4 shrink-0 hidden md:flex shadow-sm">
           <div className="space-y-1">
             <div className="px-3 py-2 text-[10px] uppercase font-bold tracking-widest text-slate-400">
               Admin Operations
@@ -260,18 +260,18 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                     onClick={() => setActiveTab(item.id)}
                     className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 ${
                       isActive
-                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/20'
-                        : 'text-slate-300 hover:bg-slate-900 hover:text-white'
+                        ? 'bg-cyan-600 text-white font-bold shadow-md shadow-cyan-600/20'
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <Icon className={`w-4 h-4 ${isActive ? 'text-slate-950' : 'text-slate-400'}`} />
+                      <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-500'}`} />
                       <span>{item.label}</span>
                     </div>
                     {item.count !== undefined && (
                       <span
                         className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
-                          isActive ? 'bg-slate-950 text-cyan-300' : 'bg-slate-800 text-slate-400'
+                          isActive ? 'bg-white text-cyan-800' : 'bg-slate-100 text-slate-600'
                         }`}
                       >
                         {item.count}
@@ -283,19 +283,19 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
             </nav>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 text-xs space-y-1">
-            <div className="flex items-center gap-1.5 text-cyan-400 font-bold">
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-1">
+            <div className="flex items-center gap-1.5 text-cyan-700 font-bold">
               <ShieldCheck className="w-4 h-4" />
               <span>Event-Scoped Access</span>
             </div>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-slate-500">
               You are authorized to manage only your assigned competitions.
             </p>
           </div>
         </aside>
 
         {/* Mobile Horizontal Bar */}
-        <div className="md:hidden w-full overflow-x-auto bg-slate-950 border-b border-slate-800 p-2 flex gap-1.5 scrollbar-hide">
+        <div className="md:hidden w-full overflow-x-auto bg-white border-b border-slate-200 p-2 flex gap-1.5 scrollbar-hide">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -304,7 +304,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors ${
-                  isActive ? 'bg-cyan-500 text-slate-950' : 'text-slate-300 bg-slate-900'
+                  isActive ? 'bg-cyan-600 text-white' : 'text-slate-600 bg-slate-100'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -315,69 +315,69 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
         </div>
 
         {/* Main Content Area */}
-        <main className="flex-1 bg-slate-900 overflow-y-auto p-6 lg:p-8 space-y-6">
+        <main className="flex-1 bg-slate-50 overflow-y-auto p-6 lg:p-8 space-y-6">
           {/* Executive Stat Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
-            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Assigned Events</span>
-                <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Assigned Events</span>
+                <div className="p-2 rounded-xl bg-cyan-50 text-cyan-700">
                   <Layers className="w-4 h-4" />
                 </div>
               </div>
               <div className="mt-4">
-                <span className="text-3xl font-bold font-mono text-white">{assignedEvents.length}</span>
-                <p className="text-[11px] text-slate-400 mt-1">Under your governance</p>
+                <span className="text-3xl font-bold font-mono text-slate-900">{assignedEvents.length}</span>
+                <p className="text-[11px] text-slate-500 mt-1">Under your governance</p>
               </div>
             </div>
 
-            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Registrations</span>
-                <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Registrations</span>
+                <div className="p-2 rounded-xl bg-blue-50 text-blue-700">
                   <Users className="w-4 h-4" />
                 </div>
               </div>
               <div className="mt-4">
-                <span className="text-3xl font-bold font-mono text-cyan-300">{assignedRegistrations.length}</span>
-                <p className="text-[11px] text-slate-400 mt-1">Total registered candidates</p>
+                <span className="text-3xl font-bold font-mono text-cyan-700">{assignedRegistrations.length}</span>
+                <p className="text-[11px] text-slate-500 mt-1">Total registered candidates</p>
               </div>
             </div>
 
-            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Attendance Rate</span>
-                <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Attendance Rate</span>
+                <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
               </div>
               <div className="mt-4">
-                <span className="text-3xl font-bold font-mono text-emerald-400">
+                <span className="text-3xl font-bold font-mono text-emerald-700">
                   {assignedRegistrations.length > 0
                     ? `${Math.round((presentCount / assignedRegistrations.length) * 100)}%`
                     : '0%'}
                 </span>
-                <p className="text-[11px] text-slate-400 mt-1">{presentCount} checked-in at gates</p>
+                <p className="text-[11px] text-slate-500 mt-1">{presentCount} checked-in at gates</p>
               </div>
             </div>
 
-            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Staff Appointed</span>
-                <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Staff Appointed</span>
+                <div className="p-2 rounded-xl bg-amber-50 text-amber-700">
                   <UserPlus className="w-4 h-4" />
                 </div>
               </div>
               <div className="mt-4">
-                <span className="text-3xl font-bold font-mono text-amber-300">{appointedEmployees.length}</span>
-                <p className="text-[11px] text-slate-400 mt-1">Evaluators & Judges</p>
+                <span className="text-3xl font-bold font-mono text-amber-700">{appointedEmployees.length}</span>
+                <p className="text-[11px] text-slate-500 mt-1">Evaluators & Judges</p>
               </div>
             </div>
           </div>
 
           {appointSuccess && (
-            <div className="p-4 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold flex items-center gap-2 max-w-7xl mx-auto">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2 max-w-7xl mx-auto">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
               <span>{appointSuccess}</span>
             </div>
           )}
@@ -386,9 +386,9 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           {activeTab === 'events' && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
               {/* Event Picker List */}
-              <div className="bg-slate-950 rounded-3xl p-5 border border-slate-800 shadow-xl space-y-3">
-                <div className="pb-2 border-b border-slate-800">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-sm space-y-3">
+                <div className="pb-2 border-b border-slate-200">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
                     Assigned Competitions ({assignedEvents.length})
                   </h3>
                 </div>
@@ -400,18 +400,18 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                       onClick={() => setSelectedEventId(evt.id)}
                       className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                         selectedEventId === evt.id
-                          ? 'border-cyan-500 bg-cyan-500/10 shadow-md'
-                          : 'border-slate-800 bg-slate-900 hover:bg-slate-850'
+                          ? 'border-cyan-600 bg-cyan-50/70 shadow-sm'
+                          : 'border-slate-200 bg-slate-50 hover:bg-slate-100'
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-300">
+                        <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-white text-slate-700 border border-slate-200">
                           {evt.category}
                         </span>
-                        <span className="text-xs font-bold font-mono text-cyan-400">{evt.slotsLeft} slots free</span>
+                        <span className="text-xs font-bold font-mono text-cyan-700">{evt.slotsLeft} slots free</span>
                       </div>
-                      <h4 className="text-sm font-bold text-white mt-1.5">{evt.title}</h4>
-                      <p className="text-xs text-slate-400 mt-0.5">{evt.venue}</p>
+                      <h4 className="text-sm font-bold text-slate-900 mt-1.5">{evt.title}</h4>
+                      <p className="text-xs text-slate-500 mt-0.5">{evt.venue}</p>
                     </div>
                   ))}
                 </div>
@@ -419,51 +419,51 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
               {/* Selected Event Details View */}
               {selectedEvent && (
-                <div className="lg:col-span-2 bg-slate-950 rounded-3xl p-6 border border-slate-800 shadow-xl space-y-5">
-                  <div className="flex items-start justify-between pb-4 border-b border-slate-800">
+                <div className="lg:col-span-2 bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-5">
+                  <div className="flex items-start justify-between pb-4 border-b border-slate-200">
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-cyan-400">
+                      <span className="text-[10px] uppercase font-bold text-cyan-700">
                         {selectedEvent.category} Competition
                       </span>
-                      <h3 className="text-2xl font-bold text-white mt-0.5">{selectedEvent.title}</h3>
-                      <p className="text-xs text-slate-400">{selectedEvent.tagline}</p>
+                      <h3 className="text-2xl font-bold text-slate-900 mt-0.5">{selectedEvent.title}</h3>
+                      <p className="text-xs text-slate-500">{selectedEvent.tagline}</p>
                     </div>
 
                     <div className="text-right">
-                      <span className="text-[10px] uppercase text-slate-400 block font-bold">Prize Pool</span>
-                      <span className="text-lg font-bold text-amber-400 font-mono">{selectedEvent.prizePool}</span>
+                      <span className="text-[10px] uppercase text-slate-500 block font-bold">Prize Pool</span>
+                      <span className="text-lg font-bold text-amber-600 font-mono">{selectedEvent.prizePool}</span>
                     </div>
                   </div>
 
                   {/* Metadata Grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                    <div className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 space-y-0.5">
-                      <span className="text-[10px] text-slate-400 uppercase">Format</span>
-                      <p className="font-bold text-white">
+                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-0.5">
+                      <span className="text-[10px] text-slate-500 uppercase">Format</span>
+                      <p className="font-bold text-slate-900">
                         {selectedEvent.isTeamEvent ? `Team (${selectedEvent.minTeamSize}-${selectedEvent.maxTeamSize})` : 'Individual'}
                       </p>
                     </div>
 
-                    <div className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 space-y-0.5">
-                      <span className="text-[10px] text-slate-400 uppercase">Venue</span>
-                      <p className="font-bold text-white truncate">{selectedEvent.venue}</p>
+                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-0.5">
+                      <span className="text-[10px] text-slate-500 uppercase">Venue</span>
+                      <p className="font-bold text-slate-900 truncate">{selectedEvent.venue}</p>
                     </div>
 
-                    <div className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 space-y-0.5">
-                      <span className="text-[10px] text-slate-400 uppercase">Timing</span>
-                      <p className="font-bold text-white truncate">{selectedEvent.time}</p>
+                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-0.5">
+                      <span className="text-[10px] text-slate-500 uppercase">Timing</span>
+                      <p className="font-bold text-slate-900 truncate">{selectedEvent.time}</p>
                     </div>
                   </div>
 
                   {/* Rules */}
                   <div className="space-y-2">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
                       Competition Rules ({selectedEvent.rules.length})
                     </h4>
-                    <ul className="space-y-1.5 text-xs text-slate-300">
+                    <ul className="space-y-1.5 text-xs text-slate-700">
                       {selectedEvent.rules.map((r, idx) => (
-                        <li key={idx} className="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-900 border border-slate-800/50">
-                          <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">
+                        <li key={idx} className="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                          <span className="w-5 h-5 rounded-full bg-cyan-100 text-cyan-800 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">
                             {idx + 1}
                           </span>
                           <span>{r}</span>
@@ -473,18 +473,18 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   </div>
 
                   {/* Coordinators */}
-                  <div className="space-y-2 pt-2 border-t border-slate-800">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  <div className="space-y-2 pt-2 border-t border-slate-200">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
                       Event Coordinators
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {selectedEvent.coordinators.map((c) => (
-                        <div key={c.id} className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 flex items-center gap-3 text-xs">
+                        <div key={c.id} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center gap-3 text-xs">
                           <img src={c.photoUrl} alt={c.name} className="w-10 h-10 rounded-full object-cover" />
                           <div>
-                            <p className="font-bold text-white">{c.name}</p>
-                            <p className="text-[11px] text-cyan-400">{c.role}</p>
-                            <p className="text-[10px] text-slate-400 font-mono">{c.phone}</p>
+                            <p className="font-bold text-slate-900">{c.name}</p>
+                            <p className="text-[11px] text-cyan-700">{c.role}</p>
+                            <p className="text-[10px] text-slate-500 font-mono">{c.phone}</p>
                           </div>
                         </div>
                       ))}
@@ -497,7 +497,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
           {/* TAB 2: PARTICIPANT ROSTERS */}
           {activeTab === 'registrations' && (
-            <div className="bg-slate-950 rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4 max-w-7xl mx-auto">
+            <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-4 max-w-7xl mx-auto">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="relative flex-1 max-w-md">
                   <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -506,7 +506,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                     value={regSearch}
                     onChange={(e) => setRegSearch(e.target.value)}
                     placeholder="Search candidate, roll no, team..."
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:border-cyan-500 focus:outline-none"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs text-slate-900 focus:border-cyan-600 focus:outline-none"
                   />
                 </div>
 
@@ -514,7 +514,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   <select
                     value={regFilterEvent}
                     onChange={(e) => setRegFilterEvent(e.target.value)}
-                    className="px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white font-semibold"
+                    className="px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs text-slate-900 font-semibold"
                   >
                     <option value="ALL">All Assigned Competitions</option>
                     {assignedEvents.map((e) => (
@@ -527,7 +527,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   <button
                     type="button"
                     onClick={() => handleExportCSV('registrations')}
-                    className="py-2.5 px-4 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow"
+                    className="py-2.5 px-4 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs flex items-center gap-2 shadow"
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span>Export CSV</span>
@@ -538,7 +538,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
               {/* Data Grid */}
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-900 border-b border-slate-800 text-slate-400 uppercase tracking-wider text-[10px]">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[10px]">
                     <tr>
                       <th className="py-3.5 px-4">Pass ID</th>
                       <th className="py-3.5 px-4">Event</th>
@@ -548,36 +548,36 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                       <th className="py-3.5 px-4">Gate Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800">
+                  <tbody className="divide-y divide-slate-100">
                     {filteredRegistrations.map((r) => {
                       const isPresent = attendanceList.some((a) => a.registrationId === r.id && a.status === 'PRESENT');
                       return (
-                        <tr key={r.id} className="hover:bg-slate-900/50 transition-colors">
-                          <td className="py-3.5 px-4 font-mono font-bold text-cyan-400">{r.registrationNumber}</td>
-                          <td className="py-3.5 px-4 font-semibold text-white">{r.eventTitle}</td>
+                        <tr key={r.id} className="hover:bg-slate-50/70 transition-colors">
+                          <td className="py-3.5 px-4 font-mono font-bold text-cyan-700">{r.registrationNumber}</td>
+                          <td className="py-3.5 px-4 font-semibold text-slate-900">{r.eventTitle}</td>
                           <td className="py-3.5 px-4">
-                            <div className="font-bold text-white">{r.leaderName}</div>
-                            <div className="font-mono text-[10px] text-slate-400">
+                            <div className="font-bold text-slate-900">{r.leaderName}</div>
+                            <div className="font-mono text-[10px] text-slate-500">
                               {r.leaderRollNumber} {r.teamName ? `(${r.teamName})` : ''}
                             </div>
                           </td>
                           <td className="py-3.5 px-4">
-                            <div className="text-slate-300 truncate max-w-[200px]">{r.collegeName}</div>
-                            <div className="text-[10px] text-slate-400">{r.department}</div>
+                            <div className="text-slate-700 truncate max-w-[200px]">{r.collegeName}</div>
+                            <div className="text-[10px] text-slate-500">{r.department}</div>
                           </td>
                           <td className="py-3.5 px-4">
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
                               {r.status}
                             </span>
                           </td>
                           <td className="py-3.5 px-4">
                             {isPresent ? (
-                              <span className="text-emerald-400 font-bold flex items-center gap-1">
+                              <span className="text-emerald-700 font-bold flex items-center gap-1">
                                 <CheckCircle2 className="w-3.5 h-3.5" />
                                 <span>Present</span>
                               </span>
                             ) : (
-                              <span className="text-slate-500">Not Checked-in</span>
+                              <span className="text-slate-400">Not Checked-in</span>
                             )}
                           </td>
                         </tr>
@@ -591,16 +591,16 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
           {/* TAB 3: GATE ATTENDANCE */}
           {activeTab === 'attendance' && (
-            <div className="bg-slate-950 rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4 max-w-7xl mx-auto">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-4 max-w-7xl mx-auto">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                 <div>
-                  <h3 className="text-base font-bold text-white">Live Gate Attendance Stream</h3>
-                  <p className="text-xs text-slate-400">Participants verified at the entrance gates in real-time.</p>
+                  <h3 className="text-base font-bold text-slate-900">Live Gate Attendance Stream</h3>
+                  <p className="text-xs text-slate-500">Participants verified at the entrance gates in real-time.</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => handleExportCSV('attendance')}
-                  className="py-2.5 px-4 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow"
+                  className="py-2.5 px-4 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs flex items-center gap-2 shadow"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Export Attendance CSV</span>
@@ -613,25 +613,25 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   .map((att) => (
                     <div
                       key={att.id}
-                      className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between gap-3 text-xs"
+                      className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3 text-xs"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
+                        <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
                           <CheckCircle2 className="w-5 h-5" />
                         </div>
                         <div>
-                          <h4 className="font-bold text-white">{att.participantName}</h4>
-                          <p className="text-[11px] text-slate-400 font-mono">
+                          <h4 className="font-bold text-slate-900">{att.participantName}</h4>
+                          <p className="text-[11px] text-slate-500 font-mono">
                             {att.participantRollNumber} • {att.teamName || 'Solo'}
                           </p>
                         </div>
                       </div>
 
                       <div className="text-right">
-                        <span className="text-[10px] text-slate-400 font-mono block">
+                        <span className="text-[10px] text-slate-500 font-mono block">
                           {new Date(att.scannedAt || '').toLocaleTimeString()}
                         </span>
-                        <span className="text-[10px] text-cyan-400 font-semibold">
+                        <span className="text-[10px] text-cyan-700 font-semibold">
                           Verified by {att.scannedByStaffName || 'Staff'}
                         </span>
                       </div>
@@ -643,16 +643,16 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
           {/* TAB 4: SCORE LEADERBOARDS */}
           {activeTab === 'leaderboard' && (
-            <div className="bg-slate-950 rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4 max-w-7xl mx-auto">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-4 max-w-7xl mx-auto">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                 <div>
-                  <h3 className="text-base font-bold text-white">Ranked Competition Leaderboards</h3>
-                  <p className="text-xs text-slate-400">Total marks tabulated across all evaluation criteria.</p>
+                  <h3 className="text-base font-bold text-slate-900">Ranked Competition Leaderboards</h3>
+                  <p className="text-xs text-slate-500">Total marks tabulated across all evaluation criteria.</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => handleExportCSV('scores')}
-                  className="py-2.5 px-4 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow"
+                  className="py-2.5 px-4 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs flex items-center gap-2 shadow"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Export Leaderboard CSV</span>
@@ -666,33 +666,33 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   .map((scr, idx) => (
                     <div
                       key={scr.id}
-                      className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between gap-3 text-xs"
+                      className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3 text-xs"
                     >
                       <div className="flex items-center gap-3">
                         <div
                           className={`w-9 h-9 rounded-xl font-bold flex items-center justify-center shrink-0 ${
                             idx === 0
-                              ? 'bg-amber-500 text-slate-950 shadow-md'
+                              ? 'bg-amber-500 text-slate-950 shadow-sm'
                               : idx === 1
-                              ? 'bg-slate-300 text-slate-950 shadow-md'
+                              ? 'bg-slate-300 text-slate-900 shadow-sm'
                               : idx === 2
-                              ? 'bg-amber-700 text-white shadow-md'
-                              : 'bg-slate-800 text-slate-300'
+                              ? 'bg-amber-700 text-white shadow-sm'
+                              : 'bg-slate-200 text-slate-700'
                           }`}
                         >
                           #{idx + 1}
                         </div>
                         <div>
-                          <h4 className="font-bold text-white text-sm">{scr.teamOrParticipantName}</h4>
-                          <p className="text-[11px] text-slate-400 font-mono">
+                          <h4 className="font-bold text-slate-900 text-sm">{scr.teamOrParticipantName}</h4>
+                          <p className="text-[11px] text-slate-500 font-mono">
                             {scr.rollNumberOrTeamId} • {scr.round}
                           </p>
                         </div>
                       </div>
 
                       <div className="text-right">
-                        <span className="text-xl font-bold font-mono text-cyan-400">{scr.totalScore}</span>
-                        <span className="text-[10px] text-slate-400 block">/ 100 Marks</span>
+                        <span className="text-xl font-bold font-mono text-cyan-700">{scr.totalScore}</span>
+                        <span className="text-[10px] text-slate-500 block">/ 100 Marks</span>
                       </div>
                     </div>
                   ))}
@@ -702,11 +702,11 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
           {/* TAB 5: STAFF APPOINTMENT */}
           {activeTab === 'employees' && (
-            <div className="bg-slate-950 rounded-3xl p-6 border border-slate-800 shadow-xl space-y-6 max-w-7xl mx-auto">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-6 max-w-7xl mx-auto">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                 <div>
-                  <h3 className="text-base font-bold text-white">Appoint Staff & Judges for Assigned Events</h3>
-                  <p className="text-xs text-slate-400">
+                  <h3 className="text-base font-bold text-slate-900">Appoint Staff & Judges for Assigned Events</h3>
+                  <p className="text-xs text-slate-500">
                     Create employee accounts restricted only to your assigned competitions.
                   </p>
                 </div>
@@ -714,7 +714,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsAppointingEmployee(!isAppointingEmployee)}
-                  className="py-2.5 px-4 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow"
+                  className="py-2.5 px-4 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs flex items-center gap-2 shadow"
                 >
                   <Plus className="w-4 h-4" />
                   <span>{isAppointingEmployee ? 'Close Form' : 'Appoint New Staff'}</span>
@@ -722,54 +722,54 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
               </div>
 
               {isAppointingEmployee && (
-                <form onSubmit={handleAppointEmployee} className="p-6 rounded-3xl bg-slate-900 border border-cyan-500/30 space-y-4 animate-in fade-in">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-cyan-400">
+                <form onSubmit={handleAppointEmployee} className="p-6 rounded-3xl bg-slate-50 border border-cyan-300 space-y-4 animate-in fade-in">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-cyan-700">
                     Staff Credentials & Event Assignment
                   </h4>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-300">Staff Full Name *</label>
+                      <label className="font-semibold text-slate-700">Staff Full Name *</label>
                       <input
                         type="text"
                         required
                         value={empName}
                         onChange={(e) => setEmpName(e.target.value)}
                         placeholder="e.g. Praveen Chandran"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900"
                       />
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-300">Official Email ID *</label>
+                      <label className="font-semibold text-slate-700">Official Email ID *</label>
                       <input
                         type="email"
                         required
                         value={empEmail}
                         onChange={(e) => setEmpEmail(e.target.value)}
                         placeholder="judge@spiher.edu.in"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-300">Department</label>
+                      <label className="font-semibold text-slate-700">Department</label>
                       <input
                         type="text"
                         value={empDept}
                         onChange={(e) => setEmpDept(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900"
                       />
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-300">Assigned Competition *</label>
+                      <label className="font-semibold text-slate-700">Assigned Competition *</label>
                       <select
                         value={empEventId}
                         onChange={(e) => setEmpEventId(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white font-bold"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 font-bold"
                       >
                         {assignedEvents.map((e) => (
                           <option key={e.id} value={e.id}>
@@ -782,7 +782,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
                   <button
                     type="submit"
-                    className="py-3 px-6 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-md"
+                    className="py-3 px-6 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs shadow-md"
                   >
                     Issue Staff Credentials
                   </button>
@@ -793,23 +793,23 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                 {appointedEmployees.map((emp) => (
                   <div
                     key={emp.id}
-                    className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between gap-3 text-xs"
+                    className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3 text-xs"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 font-bold flex items-center justify-center shrink-0">
+                      <div className="w-9 h-9 rounded-xl bg-cyan-100 text-cyan-800 font-bold flex items-center justify-center shrink-0">
                         {emp.name.charAt(0)}
                       </div>
                       <div>
-                        <h4 className="font-bold text-white">{emp.name}</h4>
-                        <p className="text-[11px] text-slate-400 font-mono">{emp.email}</p>
+                        <h4 className="font-bold text-slate-900">{emp.name}</h4>
+                        <p className="text-[11px] text-slate-500 font-mono">{emp.email}</p>
                       </div>
                     </div>
 
                     <div className="text-right">
-                      <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                      <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-cyan-100 text-cyan-800 border border-cyan-200">
                         {emp.role}
                       </span>
-                      <p className="text-[10px] text-slate-400 mt-1">
+                      <p className="text-[10px] text-slate-500 mt-1">
                         Assigned: {assignedEvents.find((e) => emp.assignedEventIds.includes(e.id))?.title || 'Assigned Event'}
                       </p>
                     </div>
@@ -821,63 +821,63 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
           {/* TAB 6: DATA EXPORTS */}
           {activeTab === 'exports' && (
-            <div className="bg-slate-950 rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4 max-w-7xl mx-auto">
+            <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-4 max-w-7xl mx-auto">
               <div>
-                <h3 className="text-base font-bold text-white">Structured Data Export Engine</h3>
-                <p className="text-xs text-slate-400">
+                <h3 className="text-base font-bold text-slate-900">Structured Data Export Engine</h3>
+                <p className="text-xs text-slate-500">
                   Export verified registration rosters, gate attendance logs, and scored leaderboards for your assigned events.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 pt-3">
-                <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-4 flex flex-col justify-between">
+                <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-4 flex flex-col justify-between">
                   <div className="space-y-2">
-                    <div className="w-10 h-10 rounded-2xl bg-cyan-500/15 text-cyan-400 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-2xl bg-cyan-100 text-cyan-700 flex items-center justify-center">
                       <Users className="w-5 h-5" />
                     </div>
-                    <h4 className="text-sm font-bold text-white">Registrations Dataset</h4>
-                    <p className="text-xs text-slate-400">Complete participant names, roll numbers, college, and teams.</p>
+                    <h4 className="text-sm font-bold text-slate-900">Registrations Dataset</h4>
+                    <p className="text-xs text-slate-500">Complete participant names, roll numbers, college, and teams.</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => handleExportCSV('registrations')}
-                    className="w-full py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2"
+                    className="w-full py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs flex items-center justify-center gap-2"
                   >
                     <Download className="w-4 h-4" />
                     <span>Download CSV</span>
                   </button>
                 </div>
 
-                <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-4 flex flex-col justify-between">
+                <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-4 flex flex-col justify-between">
                   <div className="space-y-2">
-                    <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
                       <CheckCircle2 className="w-5 h-5" />
                     </div>
-                    <h4 className="text-sm font-bold text-white">Attendance Dataset</h4>
-                    <p className="text-xs text-slate-400">Gate verification timestamps and verifying staff records.</p>
+                    <h4 className="text-sm font-bold text-slate-900">Attendance Dataset</h4>
+                    <p className="text-xs text-slate-500">Gate verification timestamps and verifying staff records.</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => handleExportCSV('attendance')}
-                    className="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2"
+                    className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2"
                   >
                     <Download className="w-4 h-4" />
                     <span>Download CSV</span>
                   </button>
                 </div>
 
-                <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-4 flex flex-col justify-between">
+                <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-4 flex flex-col justify-between">
                   <div className="space-y-2">
-                    <div className="w-10 h-10 rounded-2xl bg-amber-500/15 text-amber-400 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center">
                       <Trophy className="w-5 h-5" />
                     </div>
-                    <h4 className="text-sm font-bold text-white">Leaderboard Dataset</h4>
-                    <p className="text-xs text-slate-400">Multi-criteria marks breakdown and final ranked standings.</p>
+                    <h4 className="text-sm font-bold text-slate-900">Leaderboard Dataset</h4>
+                    <p className="text-xs text-slate-500">Multi-criteria marks breakdown and final ranked standings.</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => handleExportCSV('scores')}
-                    className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2"
+                    className="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center justify-center gap-2"
                   >
                     <Download className="w-4 h-4" />
                     <span>Download CSV</span>
