@@ -614,11 +614,12 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Prize Pool</label>
+                      <label className="font-semibold text-slate-700">Tagline / Short Subtitle</label>
                       <input
                         type="text"
-                        value={newEventPrize}
-                        onChange={(e) => setNewEventPrize(e.target.value)}
+                        value={newEventTagline}
+                        onChange={(e) => setNewEventTagline(e.target.value)}
+                        placeholder="e.g. 3-Hour Design Sprint"
                         className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-teal-600 focus:outline-none"
                       />
                     </div>
@@ -707,10 +708,6 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                         <span className="text-[10px] uppercase font-bold px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-slate-900 shadow">
                           {evt.category}
                         </span>
-                      </div>
-
-                      <div className="absolute top-3 right-3 bg-amber-500 text-slate-950 px-2.5 py-1 rounded-full text-xs font-bold shadow-md">
-                        {evt.prizePool}
                       </div>
 
                       <div className="absolute bottom-3 left-3 right-3 text-white">

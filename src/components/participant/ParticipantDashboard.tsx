@@ -215,8 +215,8 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                   </div>
 
                   <div className="text-right">
-                    <span className="text-[10px] uppercase text-slate-500 block font-bold">Prize Pool</span>
-                    <span className="text-base font-bold text-amber-600 font-mono">{currentEvent.prizePool}</span>
+                    <span className="text-[10px] uppercase text-slate-500 block font-bold">Category</span>
+                    <span className="text-xs font-bold text-[#0077c8] font-mono">{registration.category}</span>
                   </div>
                 </div>
 
@@ -295,16 +295,6 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
               <p className="text-xs text-slate-500">{currentEvent.tagline}</p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center justify-between">
-              <div>
-                <span className="font-bold block">Total Prize Pool</span>
-                <span className="text-lg font-mono font-bold text-amber-700">{currentEvent.prizePool}</span>
-              </div>
-              <div className="text-right">
-                <p>1st: {currentEvent.firstPrize || 'Cash Award + Trophy'}</p>
-                <p>2nd: {currentEvent.secondPrize || 'Cash Award + Shield'}</p>
-              </div>
-            </div>
 
             <div className="space-y-3">
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">

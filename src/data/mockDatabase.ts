@@ -1,5 +1,6 @@
 import {
   AttendanceRecord,
+  AttendanceStatus,
   AuditLog,
   CollegeEvent,
   EventChangeAudit,
@@ -15,7 +16,7 @@ export const INITIAL_SYSTEM_SETTINGS: SystemSettings = {
   allowEventChange: true,
   collegeName: "St. Peter's Institute of Higher Education & Research",
   collegeShortName: "SPIHER",
-  symposiumName: 'IGNITE 2024 — National Level Technical Symposium',
+  symposiumName: 'IGNITE 2024 — National Level Symposium',
   symposiumYear: '2024',
   themeBannerText: 'Welcome to IGNITE 2024! Registrations are currently LIVE. Please ensure you carry your digital QR Pass.',
   supportEmail: 'ignite2024@spiher.edu.in',
@@ -25,32 +26,32 @@ export const INITIAL_SYSTEM_SETTINGS: SystemSettings = {
 };
 
 export const INITIAL_EVENTS: CollegeEvent[] = [
+  // -------------------------------------------------------------
+  // TECHNICAL EVENTS (6)
+  // -------------------------------------------------------------
   {
     id: 'evt-codeathon',
     title: 'Code-A-Thon Sprint',
     category: 'Technical',
-    tagline: '6-Hour Algorithmic & Full-Stack Coding Hackathon',
-    description: 'An intense sprint where teams solve real-world algorithmic problems, optimize time complexity, and construct scalable prototypes under time pressure.',
+    tagline: 'Algorithmic Problem Solving & Full-Stack Sprint',
+    description: 'An intense sprint where teams solve real-world algorithmic problems, optimize time complexity, and build working solutions under time limits.',
     isTeamEvent: true,
     minTeamSize: 2,
     maxTeamSize: 3,
     price: 0,
     date: 'Oct 24, 2024',
-    time: '09:30 AM - 03:30 PM',
+    time: '09:30 AM - 01:00 PM',
     startTime: '09:30 AM',
-    endTime: '03:30 PM',
+    endTime: '01:00 PM',
     venue: 'Computing Centre Lab 3, Block B',
     totalSlots: 50,
     slotsLeft: 18,
     imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80',
-    prizePool: '₹25,000',
-    firstPrize: '₹15,000 + Trophy',
-    secondPrize: '₹10,000 + Certificate',
     rules: [
       'Teams must strictly consist of 2 or 3 participants.',
       'Only approved IDEs and pre-installed compilers may be used.',
-      'Plagiarism or use of unapproved generative AI will result in immediate disqualification.',
-      'Decision of the technical jury panel is final and binding.',
+      'Plagiarism or unauthorized AI usage will lead to immediate disqualification.',
+      'Decision of the technical jury panel is final.',
     ],
     coordinators: [
       {
@@ -61,15 +62,6 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
         email: 'senthilnathan.cse@spiher.edu.in',
         photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
         department: 'Dept. of Computer Science & Engineering',
-      },
-      {
-        id: 'coord-2',
-        name: 'Vignesh Kumar R',
-        role: 'Student Coordinator',
-        phone: '+91 97890 12345',
-        email: 'vignesh.k21@spiher.edu.in',
-        photoUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of CSE (Final Year)',
       },
     ],
     status: 'OPEN',
@@ -92,131 +84,178 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     totalSlots: 40,
     slotsLeft: 12,
     imageUrl: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80',
-    prizePool: '₹35,000',
-    firstPrize: '₹20,000 + Champion Shield',
-    secondPrize: '₹15,000 + Shield',
     rules: [
       'Maximum robot weight limit is strictly 3.0 kg.',
       'Dimensions must not exceed 25cm x 25cm x 25cm before start.',
-      'No intentional fire, chemical liquids, or radio-jamming devices.',
-      'Arena ring diameter is 150cm made of polished plywood.',
+      'No corrosive liquids, fire, or entangling mechanisms.',
+    ],
+    coordinators: [
+      {
+        id: 'coord-2',
+        name: 'Dr. R. Anand Kumar',
+        role: 'Faculty Coordinator',
+        phone: '+91 98402 34567',
+        email: 'anand.mech@spiher.edu.in',
+        photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+        department: 'Dept. of Mechanical & Mechatronics',
+      },
+    ],
+    status: 'OPEN',
+  },
+  {
+    id: 'evt-webcraft',
+    title: 'Web Craft UI/UX',
+    category: 'Technical',
+    tagline: 'Responsive Frontend Architecture & Interface Design',
+    description: 'Design and build a responsive web interface from a given design brief within 3 hours. Judged on aesthetics, responsiveness, and clean code.',
+    isTeamEvent: true,
+    minTeamSize: 1,
+    maxTeamSize: 2,
+    price: 0,
+    date: 'Oct 24, 2024',
+    time: '10:30 AM - 01:30 PM',
+    startTime: '10:30 AM',
+    endTime: '01:30 PM',
+    venue: 'Multimedia Lab 2, Block C',
+    totalSlots: 40,
+    slotsLeft: 22,
+    imageUrl: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=800&q=80',
+    rules: [
+      'Individual or team of 2.',
+      'HTML5, CSS3, JavaScript, React or Tailwind CSS are permitted.',
+      'Must be fully responsive across mobile and desktop viewports.',
     ],
     coordinators: [
       {
         id: 'coord-3',
-        name: 'Prof. Anitha Rajan',
+        name: 'Prof. S. Divya',
         role: 'Faculty Coordinator',
-        phone: '+91 99402 34567',
-        email: 'anitha.ece@spiher.edu.in',
+        phone: '+91 98403 45678',
+        email: 'divya.it@spiher.edu.in',
         photoUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of Robotics & ECE',
+        department: 'Dept. of Information Technology',
       },
+    ],
+    status: 'OPEN',
+  },
+  {
+    id: 'evt-bughunt',
+    title: 'Bug Hunter & Debugging',
+    category: 'Technical',
+    tagline: 'Code Diagnosis, Syntax Rectification & Optimisation',
+    description: 'Identify logic bugs, memory leaks, and runtime errors in deliberately obfuscated code snippets across C, C++, Java, and Python.',
+    isTeamEvent: false,
+    minTeamSize: 1,
+    maxTeamSize: 1,
+    price: 0,
+    date: 'Oct 24, 2024',
+    time: '11:00 AM - 01:00 PM',
+    startTime: '11:00 AM',
+    endTime: '01:00 PM',
+    venue: 'IT Lab 4, Block B',
+    totalSlots: 60,
+    slotsLeft: 34,
+    imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80',
+    rules: [
+      'Solo event only.',
+      'Two rounds: Round 1 (MCQs & Dry Run), Round 2 (Live IDE Debugging).',
+      'Time-based scoring applies in case of a tie.',
+    ],
+    coordinators: [
       {
         id: 'coord-4',
-        name: 'Deepak Selvam',
-        role: 'Student Coordinator',
-        phone: '+91 98841 98765',
-        email: 'deepak.rob21@spiher.edu.in',
-        photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of Mechanical & Robotics',
+        name: 'Dr. P. Rajesh',
+        role: 'Faculty Coordinator',
+        phone: '+91 98404 56789',
+        email: 'rajesh.cse@spiher.edu.in',
+        photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
+        department: 'Dept. of Computer Science & Engineering',
+      },
+    ],
+    status: 'OPEN',
+  },
+  {
+    id: 'evt-paper',
+    title: 'Tech Paper Presentation',
+    category: 'Technical',
+    tagline: 'Research Presentation on Emerging Innovations',
+    description: 'Present original research or review papers on AI/ML, Quantum Computing, IoT, Cloud Security, or Green Technologies to a faculty jury panel.',
+    isTeamEvent: true,
+    minTeamSize: 1,
+    maxTeamSize: 3,
+    price: 0,
+    date: 'Oct 24, 2024',
+    time: '09:30 AM - 01:30 PM',
+    startTime: '09:30 AM',
+    endTime: '01:30 PM',
+    venue: 'Seminar Hall 1, Main Block',
+    totalSlots: 30,
+    slotsLeft: 10,
+    imageUrl: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=800&q=80',
+    rules: [
+      'Maximum 3 authors per paper.',
+      'Presentation duration: 8 minutes + 2 minutes Q&A.',
+      'IEEE 2-column format for submitted paper abstracts.',
+    ],
+    coordinators: [
+      {
+        id: 'coord-5',
+        name: 'Dr. N. Gayathri',
+        role: 'Faculty Coordinator',
+        phone: '+91 98405 67890',
+        email: 'gayathri.ece@spiher.edu.in',
+        photoUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80',
+        department: 'Dept. of ECE',
       },
     ],
     status: 'OPEN',
   },
   {
     id: 'evt-promptai',
-    title: 'Prompt-Craft AI Showdown',
+    title: 'Prompt & AI Innovation',
     category: 'Technical',
-    tagline: 'Next-Gen LLM & Multi-Modal Prompt Engineering',
-    description: 'Solve complex business briefs, generate clean code, and render precision UI layouts using state-of-the-art GenAI prompt engineering strategies.',
+    tagline: 'Generative AI Engineering & Workflow Challenge',
+    description: 'Harness LLMs, Diffusion models, and multimodal tools to solve complex prompt engineering challenges and build autonomous agent workflows.',
     isTeamEvent: false,
     minTeamSize: 1,
     maxTeamSize: 1,
     price: 0,
     date: 'Oct 24, 2024',
-    time: '11:30 AM - 01:30 PM',
-    startTime: '11:30 AM',
-    endTime: '01:30 PM',
-    venue: 'Seminar Hall 2, Innovation Wing',
-    totalSlots: 60,
-    slotsLeft: 22,
-    imageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
-    prizePool: '₹20,000',
-    firstPrize: '₹12,000 + Certificate',
-    secondPrize: '₹8,000 + Certificate',
+    time: '02:00 PM - 04:30 PM',
+    startTime: '02:00 PM',
+    endTime: '04:30 PM',
+    venue: 'AI Lab 1, Advanced Tech Block',
+    totalSlots: 45,
+    slotsLeft: 20,
+    imageUrl: 'https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80',
     rules: [
-      'Individual event only.',
-      '3 Progressive rounds: Text Reasoning, Multi-Modal Synthesis, and Bug Squash.',
-      'Efficiency in token count and output precision are key judging criteria.',
+      'Solo event.',
+      'Prompts and output accuracy will be benchmarked by automated test suites.',
+      'Judging based on clarity, minimal iterations, and constraint satisfaction.',
     ],
     coordinators: [
       {
-        id: 'coord-5',
+        id: 'coord-6',
         name: 'Dr. Suresh Balaji',
         role: 'Faculty Coordinator',
         phone: '+91 94441 55667',
         email: 'suresh.ai@spiher.edu.in',
         photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of Artificial Intelligence & Data Science',
+        department: 'Dept. of AI & DS',
       },
     ],
     status: 'OPEN',
   },
-  {
-    id: 'evt-adzap',
-    title: 'Ad-Zap Creative Commercials',
-    category: 'Non-Technical',
-    tagline: 'On-The-Spot Product Brand Pitch & Parody Acting',
-    description: 'Unleash your spontaneous comedic creativity and persuasive marketing flair in this fast-paced live stage ad enactment competition.',
-    isTeamEvent: true,
-    minTeamSize: 3,
-    maxTeamSize: 5,
-    price: 0,
-    date: 'Oct 24, 2024',
-    time: '01:30 PM - 04:30 PM',
-    startTime: '01:30 PM',
-    endTime: '04:30 PM',
-    venue: 'Main Auditorium Stage, Block A',
-    totalSlots: 35,
-    slotsLeft: 8,
-    imageUrl: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=80',
-    prizePool: '₹20,000',
-    firstPrize: '₹12,000 + Trophy',
-    secondPrize: '₹8,000 + Trophy',
-    rules: [
-      'Teams of 3 to 5 participants.',
-      'Product theme will be given on the spot with 5 minutes prep time.',
-      'Stage performance must not exceed 4 minutes.',
-      'Vulgarity, derogatory language, or political remarks will lead to immediate disqualification.',
-    ],
-    coordinators: [
-      {
-        id: 'coord-6',
-        name: 'Prof. Malini Sundaram',
-        role: 'Faculty Coordinator',
-        phone: '+91 98410 77889',
-        email: 'malini.mgmt@spiher.edu.in',
-        photoUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of Management Studies',
-      },
-      {
-        id: 'coord-7',
-        name: 'Harish Raghavan',
-        role: 'Student Coordinator',
-        phone: '+91 97910 33445',
-        email: 'harish.mba23@spiher.edu.in',
-        photoUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of MBA',
-      },
-    ],
-    status: 'OPEN',
-  },
+
+  // -------------------------------------------------------------
+  // NON-TECHNICAL EVENTS (5)
+  // -------------------------------------------------------------
   {
     id: 'evt-freefire',
-    title: 'Free Fire Max Clash Squad',
+    title: 'Free Fire Max Esports',
     category: 'Non-Technical',
-    tagline: 'Custom Room Esports Tournament',
-    description: 'High-stakes battle royale and clash squad matchups. Bring your squad to compete in structured custom rooms with live audience commentary.',
+    tagline: 'Custom Room Clash Squad & Battle Royale Tournament',
+    description: 'High-stakes squad matchups in custom rooms with live stadium projection and esports commentary.',
     isTeamEvent: true,
     minTeamSize: 4,
     maxTeamSize: 4,
@@ -229,24 +268,164 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     totalSlots: 32,
     slotsLeft: 6,
     imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80',
-    prizePool: '₹22,000',
-    firstPrize: '₹14,000 + Winner Shield',
-    secondPrize: '₹8,000 + Certificate',
     rules: [
       'Strictly 4 players per squad.',
       'Mobile devices only (No Emulators or iPads).',
-      'Hack detection and custom room logs will be verified prior to awarding results.',
-      'All players must be present in the gaming arena 15 minutes before the match start.',
+      'All players must report to the arena 15 minutes before the match.',
     ],
     coordinators: [
       {
-        id: 'coord-8',
+        id: 'coord-7',
         name: 'Karthik Raja',
-        role: 'Lead Organizer',
+        role: 'Student Coordinator',
         phone: '+91 98845 66778',
         email: 'karthik.esports@spiher.edu.in',
         photoUrl: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=300&q=80',
         department: 'SPIHER Esports Club',
+      },
+    ],
+    status: 'OPEN',
+  },
+  {
+    id: 'evt-brainiac',
+    title: 'Mega Brainiac Quiz',
+    category: 'Non-Technical',
+    tagline: 'General Knowledge, Pop Culture & Tech Trivia',
+    description: 'Fast-paced buzzer rounds covering science, technology, movies, history, sports, and business trivia.',
+    isTeamEvent: true,
+    minTeamSize: 2,
+    maxTeamSize: 2,
+    price: 0,
+    date: 'Oct 24, 2024',
+    time: '01:30 PM - 03:30 PM',
+    startTime: '01:30 PM',
+    endTime: '03:30 PM',
+    venue: 'Auditorium Hall B, Main Block',
+    totalSlots: 40,
+    slotsLeft: 15,
+    imageUrl: 'https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?auto=format&fit=crop&w=800&q=80',
+    rules: [
+      'Teams of 2 participants.',
+      'Written prelims round followed by top 6 stage finals with buzzer rounds.',
+      'No electronic devices allowed during testing.',
+    ],
+    coordinators: [
+      {
+        id: 'coord-8',
+        name: 'Prof. Malini Sundaram',
+        role: 'Faculty Coordinator',
+        phone: '+91 98410 77889',
+        email: 'malini.mgmt@spiher.edu.in',
+        photoUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80',
+        department: 'Dept. of Management Studies',
+      },
+    ],
+    status: 'OPEN',
+  },
+  {
+    id: 'evt-lensframe',
+    title: 'Lens & Frame Photography',
+    category: 'Non-Technical',
+    tagline: 'Campus Photography & Visual Storytelling',
+    description: 'Capture the essence of symposium life, architecture, and candids around the college campus under a specific theme given on the spot.',
+    isTeamEvent: false,
+    minTeamSize: 1,
+    maxTeamSize: 1,
+    price: 0,
+    date: 'Oct 24, 2024',
+    time: '10:00 AM - 03:00 PM',
+    startTime: '10:00 AM',
+    endTime: '03:00 PM',
+    venue: 'Media Studio & Campus Grounds',
+    totalSlots: 50,
+    slotsLeft: 28,
+    imageUrl: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80',
+    rules: [
+      'Solo participant.',
+      'DSLR or Mobile Camera photos must be submitted with original EXIF data.',
+      'Basic color grading allowed; photo manipulation/compositing strictly prohibited.',
+    ],
+    coordinators: [
+      {
+        id: 'coord-9',
+        name: 'Pradeep Chandran',
+        role: 'Student Coordinator',
+        phone: '+91 98409 11223',
+        email: 'pradeep.viscom@spiher.edu.in',
+        photoUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80',
+        department: 'Dept. of Visual Communication',
+      },
+    ],
+    status: 'OPEN',
+  },
+  {
+    id: 'evt-shortfilm',
+    title: 'Cine-Craft Short Film',
+    category: 'Non-Technical',
+    tagline: 'Cinematic Storytelling & Short Film Screening',
+    description: 'Screen your original short film to audience and jury. Judged on direction, screenplay, cinematography, and sound design.',
+    isTeamEvent: true,
+    minTeamSize: 2,
+    maxTeamSize: 5,
+    price: 0,
+    date: 'Oct 24, 2024',
+    time: '02:00 PM - 05:00 PM',
+    startTime: '02:00 PM',
+    endTime: '05:00 PM',
+    venue: 'Preview Theater, Visual Comm Block',
+    totalSlots: 20,
+    slotsLeft: 9,
+    imageUrl: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=800&q=80',
+    rules: [
+      'Maximum duration: 10 minutes including credits.',
+      'MP4/MOV 1080p format on USB drive or cloud link.',
+      'Appropriate content only (No violence, hate speech, or offensive themes).',
+    ],
+    coordinators: [
+      {
+        id: 'coord-10',
+        name: 'Dr. V. Kavitha',
+        role: 'Faculty Coordinator',
+        phone: '+91 98408 99001',
+        email: 'kavitha.viscom@spiher.edu.in',
+        photoUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80',
+        department: 'Dept. of Visual Communication',
+      },
+    ],
+    status: 'OPEN',
+  },
+  {
+    id: 'evt-treasure',
+    title: 'Campus Treasure Hunt',
+    category: 'Non-Technical',
+    tagline: 'Campus-Wide Cryptic Clue & Mystery Chase',
+    description: 'Decode cryptic riddles, search landmark locations across the campus, and race against the clock to discover the final artifact.',
+    isTeamEvent: true,
+    minTeamSize: 3,
+    maxTeamSize: 4,
+    price: 0,
+    date: 'Oct 24, 2024',
+    time: '02:30 PM - 04:30 PM',
+    startTime: '02:30 PM',
+    endTime: '04:30 PM',
+    venue: 'Central Quadrangle Flagpole Area',
+    totalSlots: 35,
+    slotsLeft: 14,
+    imageUrl: 'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=800&q=80',
+    rules: [
+      'Teams of 3 or 4 members.',
+      'All team members must stay together during the hunt.',
+      'Damaging college property or entering restricted labs results in disqualification.',
+    ],
+    coordinators: [
+      {
+        id: 'coord-11',
+        name: 'Rohit Balaji',
+        role: 'Student Coordinator',
+        phone: '+91 98407 88990',
+        email: 'rohit.mech21@spiher.edu.in',
+        photoUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80',
+        department: 'Dept. of Mechanical Engineering',
       },
     ],
     status: 'OPEN',
@@ -337,7 +516,7 @@ export const INITIAL_REGISTRATIONS: Registration[] = [
     id: 'reg-99120',
     registrationNumber: 'IGNITE-2024-99120',
     eventId: 'evt-promptai',
-    eventTitle: 'Prompt-Craft AI Showdown',
+    eventTitle: 'Prompt & AI Innovation',
     category: 'Technical',
     leaderId: 'part-3',
     leaderName: 'Sneha Ramachandran',
@@ -371,61 +550,36 @@ export const INITIAL_STAFF: StaffUser[] = [
     name: 'Dr. M. Sivasankaran (Convenor)',
     role: 'SUPER_ADMIN',
     department: 'Dean - Academic Affairs',
-    assignedEventIds: [], // All events
+    assignedEventIds: [], // All 11 events
     isActive: true,
     mustChangePassword: false,
     avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80',
     lastLoginAt: '2024-10-24T08:30:00Z',
   },
   {
-    id: 'staff-admin-tech',
-    email: 'admin.tech@spiher.edu.in',
-    name: 'Dr. K. Senthil Nathan (Tech Chair)',
+    id: 'staff-admin',
+    email: 'admin@spiher.edu.in',
+    name: 'Dr. K. Senthil Nathan (Event Admin)',
     role: 'ADMIN',
-    department: 'Dept. of CSE',
-    assignedEventIds: ['evt-codeathon', 'evt-robosumo', 'evt-promptai'],
+    department: 'Dept. of Computer Science & Engineering',
+    assignedEventIds: [], // All 11 events
     isActive: true,
     mustChangePassword: false,
     avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
     lastLoginAt: '2024-10-24T08:45:00Z',
   },
   {
-    id: 'staff-admin-nontech',
-    email: 'admin.nontech@spiher.edu.in',
-    name: 'Prof. Malini Sundaram (Non-Tech Chair)',
-    role: 'ADMIN',
-    department: 'Dept. of MBA',
-    assignedEventIds: ['evt-adzap', 'evt-freefire'],
-    isActive: true,
-    mustChangePassword: false,
-    avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80',
-    lastLoginAt: '2024-10-24T08:50:00Z',
-  },
-  {
     id: 'staff-emp-codeathon',
     email: 'judge.codeathon@spiher.edu.in',
-    name: 'Praveen Chandran (Lead Evaluator)',
+    name: 'Praveen Chandran (Evaluator)',
     role: 'EMPLOYEE',
     department: 'Dept. of CSE',
     assignedEventIds: ['evt-codeathon'],
-    createdByAdminId: 'staff-admin-tech',
+    createdByAdminId: 'staff-admin',
     isActive: true,
     mustChangePassword: false,
     avatarUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80',
     lastLoginAt: '2024-10-24T09:00:00Z',
-  },
-  {
-    id: 'staff-emp-adzap',
-    email: 'judge.adzap@spiher.edu.in',
-    name: 'Ananya Deshmukh (Judge)',
-    role: 'EMPLOYEE',
-    department: 'Dept. of MBA',
-    assignedEventIds: ['evt-adzap'],
-    createdByAdminId: 'staff-admin-nontech',
-    isActive: true,
-    mustChangePassword: false,
-    avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80',
-    lastLoginAt: '2024-10-24T09:05:00Z',
   },
 ];
 
@@ -434,14 +588,14 @@ export const INITIAL_ATTENDANCE: AttendanceRecord[] = [
     id: 'att-1',
     registrationId: 'reg-88421',
     eventId: 'evt-codeathon',
-    participantRollNumber: '2021CS042',
+    participantId: 'part-1',
     participantName: 'Alex Mercer',
+    participantRollNumber: '2021CS042',
     teamName: 'Binary Mavericks',
     status: 'PRESENT',
-    scannedAt: '2024-10-24T09:15:00Z',
+    scannedAt: '2024-10-24T09:15:22Z',
     scannedByStaffId: 'staff-emp-codeathon',
-    scannedByStaffName: 'Praveen Chandran (Lead Evaluator)',
-    notes: 'Verified College ID and QR Token. Team present in full.',
+    scannedByStaffName: 'Praveen Chandran',
   },
 ];
 
@@ -450,118 +604,96 @@ export const INITIAL_SCORES: ScoreRecord[] = [
     id: 'scr-1',
     registrationId: 'reg-88421',
     eventId: 'evt-codeathon',
-    teamOrParticipantName: 'Binary Mavericks',
-    rollNumberOrTeamId: '2021CS042 (Leader)',
-    criteria: [
-      { name: 'Algorithmic Correctness', maxMarks: 40, awardedMarks: 38 },
-      { name: 'Time & Space Complexity', maxMarks: 30, awardedMarks: 28 },
-      { name: 'Code Quality & Modularity', maxMarks: 20, awardedMarks: 19 },
-      { name: 'Live Defense / Q&A', maxMarks: 10, awardedMarks: 9 },
-    ],
+    teamOrParticipantName: 'Binary Mavericks (Alex Mercer)',
+    rollNumberOrTeamId: '2021CS042',
+    round: 'Final Evaluation',
+    criteriaScores: {
+      'Algorithmic Correctness': 38,
+      'Time & Space Optimization': 28,
+      'Code Modularity & Style': 19,
+      'Viva & Demonstration': 9,
+    },
     totalScore: 94,
-    round: 'Final Round',
-    rank: 1,
-    feedback: 'Outstanding algorithmic approach with sub-linear space optimization.',
+    feedback: 'Exceptional graph algorithmic solution with O(N log N) time complexity. Clean modular implementation.',
     submittedByStaffId: 'staff-emp-codeathon',
-    submittedByStaffName: 'Praveen Chandran (Lead Evaluator)',
+    submittedByStaffName: 'Praveen Chandran',
     submittedAt: '2024-10-24T14:30:00Z',
-    isLocked: true,
   },
 ];
 
 export const INITIAL_AUDIT_LOGS: AuditLog[] = [
   {
     id: 'log-1',
-    actorId: 'system',
-    actorName: 'System Engine',
+    action: 'SYSTEM_BOOT',
     actorRole: 'SYSTEM',
-    action: 'PORTAL_INITIALIZATION',
-    targetEntity: 'SYSTEM',
-    details: 'IGNITE 2024 Portal initialized with 5 events and security enforcement.',
-    timestamp: '2024-10-01T00:00:00Z',
-    status: 'SUCCESS',
+    actorName: 'SPIHER Core System',
+    timestamp: '2024-10-01T08:00:00Z',
+    details: 'System initialized with 11 Technical and Non-Technical competitions and 1-participant-1-event validation constraints.',
   },
   {
     id: 'log-2',
-    actorId: 'part-1',
-    actorName: 'Alex Mercer (2021CS042)',
+    action: 'REGISTRATION_CREATED',
     actorRole: 'PARTICIPANT',
-    action: 'EVENT_REGISTRATION',
-    targetEntity: 'REGISTRATION',
-    targetId: 'reg-88421',
-    details: 'Successfully registered for Code-A-Thon Sprint (Team: Binary Mavericks).',
+    actorName: 'Alex Mercer',
     timestamp: '2024-10-01T10:15:00Z',
-    status: 'SUCCESS',
+    details: 'Registered for Code-A-Thon Sprint (Team: Binary Mavericks). Generated QR Token.',
   },
   {
     id: 'log-3',
-    actorId: 'staff-emp-codeathon',
-    actorName: 'Praveen Chandran',
+    action: 'GATE_ATTENDANCE_VERIFIED',
     actorRole: 'EMPLOYEE',
-    action: 'QR_ATTENDANCE_VERIFIED',
-    targetEntity: 'ATTENDANCE',
-    targetId: 'att-1',
-    details: 'Scanned & recorded attendance for Binary Mavericks (reg-88421).',
-    timestamp: '2024-10-24T09:15:00Z',
-    status: 'SUCCESS',
+    actorName: 'Praveen Chandran',
+    timestamp: '2024-10-24T09:15:22Z',
+    details: 'Verified QR Pass for Alex Mercer at Computing Centre Lab 3.',
   },
 ];
 
+// Local Storage Keys
 const STORAGE_KEYS = {
-  SETTINGS: 'spiher_settings_v2',
-  EVENTS: 'spiher_events_v2',
-  PARTICIPANTS: 'spiher_participants_v2',
-  REGISTRATIONS: 'spiher_registrations_v2',
-  STAFF: 'spiher_staff_v2',
-  ATTENDANCE: 'spiher_attendance_v2',
-  SCORES: 'spiher_scores_v2',
-  EVENT_CHANGES: 'spiher_event_changes_v2',
-  AUDIT_LOGS: 'spiher_audit_logs_v2',
+  SETTINGS: 'spiher_settings_v3',
+  EVENTS: 'spiher_events_v3',
+  PARTICIPANTS: 'spiher_participants_v3',
+  REGISTRATIONS: 'spiher_registrations_v3',
+  ATTENDANCE: 'spiher_attendance_v3',
+  SCORES: 'spiher_scores_v3',
+  STAFF: 'spiher_staff_v3',
+  EVENT_CHANGES: 'spiher_event_changes_v3',
+  AUDIT_LOGS: 'spiher_audit_logs_v3',
 };
 
-// LocalStorage Helper with fallback
 export class MockDatabaseService {
-  private static load<T>(key: string, fallback: T): T {
+  private static getItem<T>(key: string, defaultVal: T): T {
     try {
-      const data = localStorage.getItem(key);
-      if (!data) {
-        localStorage.setItem(key, JSON.stringify(fallback));
-        return fallback;
+      const val = localStorage.getItem(key);
+      if (!val) {
+        localStorage.setItem(key, JSON.stringify(defaultVal));
+        return defaultVal;
       }
-      return JSON.parse(data);
+      return JSON.parse(val) as T;
     } catch {
-      return fallback;
+      return defaultVal;
     }
   }
 
-  private static save<T>(key: string, data: T): void {
+  private static setItem<T>(key: string, val: T): void {
     try {
-      localStorage.setItem(key, JSON.stringify(data));
+      localStorage.setItem(key, JSON.stringify(val));
     } catch (e) {
-      console.error('Failed to save to localStorage:', e);
+      console.error(`Error saving to localStorage key: ${key}`, e);
     }
   }
 
-  // System Settings
   static getSettings(): SystemSettings {
-    return this.load(STORAGE_KEYS.SETTINGS, INITIAL_SYSTEM_SETTINGS);
+    return this.getItem<SystemSettings>(STORAGE_KEYS.SETTINGS, INITIAL_SYSTEM_SETTINGS);
   }
 
-  static updateSettings(settings: Partial<SystemSettings>): SystemSettings {
-    const current = this.getSettings();
-    const updated = { ...current, ...settings };
-    this.save(STORAGE_KEYS.SETTINGS, updated);
-    this.logAction('staff-super', 'Super Admin', 'SUPER_ADMIN', 'UPDATE_SETTINGS', 'SETTINGS', undefined, 'Updated global system settings.');
-    return updated;
+  static updateSettings(settings: SystemSettings): void {
+    this.setItem(STORAGE_KEYS.SETTINGS, settings);
+    this.logAction('SETTINGS_UPDATED', 'SUPER_ADMIN', 'Super Admin', 'Platform global settings updated');
   }
 
-  // Events
   static getEvents(): CollegeEvent[] {
-    return this.load(STORAGE_KEYS.EVENTS, INITIAL_EVENTS);
-  }
-
-  static getEventById(id: string): CollegeEvent | undefined {
-    return this.getEvents().find((e) => e.id === id);
+    return this.getItem<CollegeEvent[]>(STORAGE_KEYS.EVENTS, INITIAL_EVENTS);
   }
 
   static saveEvent(event: CollegeEvent): void {
@@ -572,473 +704,640 @@ export class MockDatabaseService {
     } else {
       events.push(event);
     }
-    this.save(STORAGE_KEYS.EVENTS, events);
+    this.setItem(STORAGE_KEYS.EVENTS, events);
+    this.logAction('EVENT_SAVED', 'ADMIN', 'Administrator', `Event "${event.title}" created/updated`);
   }
 
-  static deleteEvent(id: string): void {
-    const events = this.getEvents().filter((e) => e.id !== id);
-    this.save(STORAGE_KEYS.EVENTS, events);
+  static deleteEvent(eventId: string): void {
+    const events = this.getEvents().filter((e) => e.id !== eventId);
+    this.setItem(STORAGE_KEYS.EVENTS, events);
+    this.logAction('EVENT_DELETED', 'SUPER_ADMIN', 'Super Admin', `Event ID ${eventId} archived/deleted`);
   }
 
-  // Participants & Strict Lookup
   static getParticipants(): Participant[] {
-    return this.load(STORAGE_KEYS.PARTICIPANTS, INITIAL_PARTICIPANTS);
+    return this.getItem<Participant[]>(STORAGE_KEYS.PARTICIPANTS, INITIAL_PARTICIPANTS);
   }
 
   static normalizeRollNumber(roll: string): string {
-    return roll.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
-  }
-
-  static normalizeDOB(dob: string): string {
-    return dob.trim();
+    return roll.trim().toUpperCase().replace(/[\s-]/g, '');
   }
 
   static verifyParticipantAccess(
     rollNumber: string,
-    dateOfBirth: string
+    dob: string
   ): { success: boolean; participant?: Participant; registration?: Registration; error?: string } {
-    const normRoll = this.normalizeRollNumber(rollNumber);
-    const normDOB = this.normalizeDOB(dateOfBirth);
-
+    const normInputRoll = this.normalizeRollNumber(rollNumber);
     const participants = this.getParticipants();
+    const registrations = this.getRegistrations();
+
     const participant = participants.find(
-      (p) => this.normalizeRollNumber(p.rollNumber) === normRoll && p.dateOfBirth === normDOB
+      (p) =>
+        this.normalizeRollNumber(p.rollNumber) === normInputRoll &&
+        p.dateOfBirth === dob.trim()
     );
 
     if (!participant) {
-      return { success: false, error: 'Invalid Roll Number or Date of Birth. If you are new, please register.' };
+      return {
+        success: false,
+        error: 'No participant record matching this Roll Number and Date of Birth was found.',
+      };
     }
 
-    const registrations = this.getRegistrations();
-    const activeReg = registrations.find(
+    const reg = registrations.find(
       (r) =>
         r.status === 'ACTIVE' &&
-        (r.leaderId === participant.id ||
-          this.normalizeRollNumber(r.leaderRollNumber) === normRoll ||
-          r.members.some((m) => this.normalizeRollNumber(m.rollNumber) === normRoll))
+        (this.normalizeRollNumber(r.leaderRollNumber) === normInputRoll ||
+          r.members?.some((m) => this.normalizeRollNumber(m.rollNumber) === normInputRoll))
     );
 
     return {
       success: true,
       participant,
-      registration: activeReg,
+      registration: reg,
     };
   }
 
-  // Registrations & Strict 1-Participant-to-1-Event Rule
   static getRegistrations(): Registration[] {
-    return this.load(STORAGE_KEYS.REGISTRATIONS, INITIAL_REGISTRATIONS);
+    return this.getItem<Registration[]>(STORAGE_KEYS.REGISTRATIONS, INITIAL_REGISTRATIONS);
   }
 
-  static checkIsParticipantRegistered(rollNumber: string): { isRegistered: boolean; activeRegistration?: Registration } {
-    const norm = this.normalizeRollNumber(rollNumber);
+  static isParticipantAlreadyRegistered(rollNumber: string): {
+    isRegistered: boolean;
+    existingEventTitle?: string;
+    existingRegNumber?: string;
+    activeRegistration?: Registration;
+  } {
+    const normRoll = this.normalizeRollNumber(rollNumber);
     const registrations = this.getRegistrations();
-    const active = registrations.find(
+
+    const existing = registrations.find(
       (r) =>
         r.status === 'ACTIVE' &&
-        (this.normalizeRollNumber(r.leaderRollNumber) === norm ||
-          r.members.some((m) => this.normalizeRollNumber(m.rollNumber) === norm))
+        (this.normalizeRollNumber(r.leaderRollNumber) === normRoll ||
+          r.members?.some((m) => this.normalizeRollNumber(m.rollNumber) === normRoll))
     );
-    return { isRegistered: !!active, activeRegistration: active };
-  }
 
-  static createRegistration(regData: Omit<Registration, 'id' | 'registrationNumber' | 'qrToken' | 'registeredAt' | 'status'>): {
-    success: boolean;
-    registration?: Registration;
-    error?: string;
-  } {
-    // 1. Check Leader duplicate
-    const leaderCheck = this.checkIsParticipantRegistered(regData.leaderRollNumber);
-    if (leaderCheck.isRegistered) {
+    if (existing) {
       return {
-        success: false,
-        error: `Participant ${regData.leaderName} (${regData.leaderRollNumber}) is already registered for "${leaderCheck.activeRegistration?.eventTitle}". A participant can register for only ONE event.`,
+        isRegistered: true,
+        existingEventTitle: existing.eventTitle,
+        existingRegNumber: existing.registrationNumber,
+        activeRegistration: existing,
       };
     }
 
-    // 2. Check each Teammate duplicate
-    for (const member of regData.members) {
+    return { isRegistered: false };
+  }
+
+  static createRegistration(params: {
+    eventId: string;
+    eventTitle: string;
+    category: 'Technical' | 'Non-Technical';
+    leaderId: string;
+    leaderName: string;
+    leaderRollNumber: string;
+    leaderEmail: string;
+    leaderPhone?: string;
+    collegeName: string;
+    department: string;
+    isTeamEvent: boolean;
+    teamName?: string;
+    members: {
+      participantId?: string;
+      name: string;
+      rollNumber: string;
+      department: string;
+      collegeName: string;
+      dateOfBirth?: string;
+      isLeader: boolean;
+    }[];
+  }): { success: boolean; registration?: Registration; error?: string } {
+    const leaderCheck = this.isParticipantAlreadyRegistered(params.leaderRollNumber);
+    if (leaderCheck.isRegistered) {
+      return {
+        success: false,
+        error: `Participant ${params.leaderName} (${params.leaderRollNumber}) is already registered for "${leaderCheck.existingEventTitle}". Strict 1-event rule applies.`,
+      };
+    }
+
+    for (const member of params.members) {
       if (!member.isLeader) {
-        const memberCheck = this.checkIsParticipantRegistered(member.rollNumber);
-        if (memberCheck.isRegistered) {
+        const memCheck = this.isParticipantAlreadyRegistered(member.rollNumber);
+        if (memCheck.isRegistered) {
           return {
             success: false,
-            error: `Teammate ${member.name} (${member.rollNumber}) is already registered for "${memberCheck.activeRegistration?.eventTitle}". A participant can register for only ONE event.`,
+            error: `Teammate ${member.name} (${member.rollNumber}) is already registered for "${memCheck.existingEventTitle}". Each student may join only 1 event.`,
           };
         }
       }
     }
 
-    // 3. Create or update participant records
-    const participants = this.getParticipants();
-    let leader = participants.find((p) => this.normalizeRollNumber(p.rollNumber) === this.normalizeRollNumber(regData.leaderRollNumber));
-    if (!leader) {
-      leader = {
-        id: `part-${Date.now()}`,
-        rollNumber: this.normalizeRollNumber(regData.leaderRollNumber),
-        dateOfBirth: regData.members.find((m) => m.isLeader)?.dateOfBirth || '2003-01-01',
-        name: regData.leaderName,
-        collegeName: regData.collegeName,
-        department: regData.department,
-        email: regData.leaderEmail,
-        phone: regData.leaderPhone,
-        accessSecret: `SPIHER_SEC_${Math.floor(10000 + Math.random() * 90000)}`,
-        createdAt: new Date().toISOString(),
-      };
-      participants.push(leader);
-      this.save(STORAGE_KEYS.PARTICIPANTS, participants);
-    }
+    const regId = `reg-${Date.now().toString().slice(-5)}`;
+    const regNumber = `IGNITE-2024-${Math.floor(10000 + Math.random() * 90000)}`;
+    const qrToken = `SPIHER_IGNITE_TOKEN_V1_${regNumber}_${Date.now()}`;
 
-    // 4. Generate Registration with opaque secure QR Token
-    const randId = Math.floor(10000 + Math.random() * 90000);
     const newReg: Registration = {
-      ...regData,
-      id: `reg-${randId}`,
-      registrationNumber: `IGNITE-2024-${randId}`,
-      leaderId: leader.id,
+      id: regId,
+      registrationNumber: regNumber,
+      eventId: params.eventId,
+      eventTitle: params.eventTitle,
+      category: params.category,
+      leaderId: params.leaderId,
+      leaderName: params.leaderName,
+      leaderRollNumber: params.leaderRollNumber,
+      leaderEmail: params.leaderEmail,
+      leaderPhone: params.leaderPhone,
+      collegeName: params.collegeName,
+      department: params.department,
+      isTeamEvent: params.isTeamEvent,
+      teamName: params.teamName,
+      members: params.members,
       status: 'ACTIVE',
-      qrToken: `SPIHER_IGNITE_TOKEN_V1_${randId}_${Math.random().toString(36).substring(2, 9).toUpperCase()}`,
+      qrToken,
       registeredAt: new Date().toISOString(),
     };
 
-    const registrations = this.getRegistrations();
-    registrations.push(newReg);
-    this.save(STORAGE_KEYS.REGISTRATIONS, registrations);
+    const regs = this.getRegistrations();
+    regs.push(newReg);
+    this.setItem(STORAGE_KEYS.REGISTRATIONS, regs);
 
-    // 5. Decrement event slot
+    const parts = this.getParticipants();
+    for (const m of params.members) {
+      const normM = this.normalizeRollNumber(m.rollNumber);
+      const exists = parts.find((p) => this.normalizeRollNumber(p.rollNumber) === normM);
+      if (!exists) {
+        parts.push({
+          id: m.participantId || `part-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+          rollNumber: m.rollNumber,
+          dateOfBirth: m.dateOfBirth || '2003-01-01',
+          name: m.name,
+          collegeName: m.collegeName,
+          department: m.department,
+          email: m.isLeader ? params.leaderEmail : `${normM.toLowerCase()}@spiher.edu.in`,
+          phone: m.isLeader ? params.leaderPhone : undefined,
+          createdAt: new Date().toISOString(),
+        });
+      }
+    }
+    this.setItem(STORAGE_KEYS.PARTICIPANTS, parts);
+
     const events = this.getEvents();
-    const eventIdx = events.findIndex((e) => e.id === regData.eventId);
+    const eventIdx = events.findIndex((e) => e.id === params.eventId);
     if (eventIdx >= 0 && events[eventIdx].slotsLeft > 0) {
       events[eventIdx].slotsLeft -= 1;
-      this.save(STORAGE_KEYS.EVENTS, events);
+      this.setItem(STORAGE_KEYS.EVENTS, events);
     }
 
     this.logAction(
-      leader.id,
-      `${leader.name} (${leader.rollNumber})`,
+      'REGISTRATION_CREATED',
       'PARTICIPANT',
-      'EVENT_REGISTRATION',
-      'REGISTRATION',
-      newReg.id,
-      `Registered for ${newReg.eventTitle} (Pass: ${newReg.registrationNumber})`
+      params.leaderName,
+      `Registered for "${params.eventTitle}" with Pass ID ${regNumber}`
     );
 
     return { success: true, registration: newReg };
   }
 
-  // Change Event Workflow (Strict Invalidation & Re-issuance)
+  static checkIsParticipantRegistered(rollNumber: string): {
+    isRegistered: boolean;
+    existingEventTitle?: string;
+    existingRegNumber?: string;
+    activeRegistration?: Registration;
+  } {
+    return this.isParticipantAlreadyRegistered(rollNumber);
+  }
+
   static changeEvent(
-    oldRegistrationId: string,
-    newEventId: string,
-    reason: string = 'Participant requested event switch'
+    param1:
+      | string
+      | {
+          currentRegistrationId: string;
+          targetEventId: string;
+          reason: string;
+          newTeamMembers?: {
+            name: string;
+            rollNumber: string;
+            department: string;
+            collegeName: string;
+            isLeader: boolean;
+          }[];
+        },
+    param2?: string,
+    param3?: string
   ): { success: boolean; newRegistration?: Registration; error?: string } {
-    const registrations = this.getRegistrations();
-    const oldRegIndex = registrations.findIndex((r) => r.id === oldRegistrationId);
-    if (oldRegIndex < 0) {
-      return { success: false, error: 'Original registration not found.' };
+    let params: {
+      currentRegistrationId: string;
+      targetEventId: string;
+      reason: string;
+      newTeamMembers?: {
+        name: string;
+        rollNumber: string;
+        department: string;
+        collegeName: string;
+        isLeader: boolean;
+      }[];
+    };
+
+    if (typeof param1 === 'string') {
+      params = {
+        currentRegistrationId: param1,
+        targetEventId: param2 || '',
+        reason: param3 || 'User requested 1-event switch',
+      };
+    } else {
+      params = param1;
     }
 
-    const oldReg = registrations[oldRegIndex];
-    if (oldReg.status !== 'ACTIVE') {
-      return { success: false, error: 'Cannot change an inactive or cancelled registration.' };
+    const regs = this.getRegistrations();
+    const oldRegIndex = regs.findIndex((r) => r.id === params.currentRegistrationId);
+
+    if (oldRegIndex === -1) {
+      return { success: false, error: 'Original registration record not found.' };
     }
 
-    const newEvent = this.getEventById(newEventId);
-    if (!newEvent) {
+    const oldReg = regs[oldRegIndex];
+    if (oldReg.status === 'CANCELLED') {
+      return { success: false, error: 'This registration has already been revoked or cancelled.' };
+    }
+
+    const events = this.getEvents();
+    const targetEvent = events.find((e) => e.id === params.targetEventId);
+
+    if (!targetEvent) {
       return { success: false, error: 'Target event not found.' };
     }
 
-    // 1. Invalidate old registration & QR code
-    oldReg.status = 'CANCELLED';
-    oldReg.cancelledAt = new Date().toISOString();
-    oldReg.cancellationReason = `Switched to ${newEvent.title}`;
-    registrations[oldRegIndex] = oldReg;
+    if (targetEvent.slotsLeft <= 0) {
+      return { success: false, error: `Event "${targetEvent.title}" is completely full.` };
+    }
 
-    // Restore slot to old event
-    const events = this.getEvents();
+    oldReg.status = 'CANCELLED';
+    oldReg.qrToken = `REVOKED_${oldReg.qrToken}_${Date.now()}`;
+    regs[oldRegIndex] = oldReg;
+
     const oldEventIdx = events.findIndex((e) => e.id === oldReg.eventId);
     if (oldEventIdx >= 0) {
       events[oldEventIdx].slotsLeft += 1;
     }
 
-    // 2. Generate new registration for new event
-    const randId = Math.floor(10000 + Math.random() * 90000);
+    const newRegId = `reg-${Date.now().toString().slice(-5)}`;
+    const newRegNumber = `IGNITE-2024-${Math.floor(10000 + Math.random() * 90000)}`;
+    const newQrToken = `SPIHER_IGNITE_TOKEN_V1_${newRegNumber}_${Date.now()}`;
+
+    const newMembers =
+      params.newTeamMembers && params.newTeamMembers.length > 0
+        ? params.newTeamMembers
+        : [
+            {
+              name: oldReg.leaderName,
+              rollNumber: oldReg.leaderRollNumber,
+              department: oldReg.department,
+              collegeName: oldReg.collegeName,
+              isLeader: true,
+            },
+          ];
+
     const newReg: Registration = {
-      ...oldReg,
-      id: `reg-${randId}`,
-      registrationNumber: `IGNITE-2024-${randId}`,
-      eventId: newEvent.id,
-      eventTitle: newEvent.title,
-      category: newEvent.category,
-      isTeamEvent: newEvent.isTeamEvent,
+      id: newRegId,
+      registrationNumber: newRegNumber,
+      eventId: targetEvent.id,
+      eventTitle: targetEvent.title,
+      category: targetEvent.category,
+      leaderId: oldReg.leaderId,
+      leaderName: oldReg.leaderName,
+      leaderRollNumber: oldReg.leaderRollNumber,
+      leaderEmail: oldReg.leaderEmail,
+      leaderPhone: oldReg.leaderPhone,
+      collegeName: oldReg.collegeName,
+      department: oldReg.department,
+      isTeamEvent: targetEvent.isTeamEvent,
+      teamName: targetEvent.isTeamEvent ? oldReg.teamName : undefined,
+      members: newMembers,
       status: 'ACTIVE',
-      qrToken: `SPIHER_IGNITE_TOKEN_V1_${randId}_${Math.random().toString(36).substring(2, 9).toUpperCase()}`,
+      qrToken: newQrToken,
       registeredAt: new Date().toISOString(),
-      cancelledAt: undefined,
-      cancellationReason: undefined,
     };
 
-    // Decrement new event slot
-    const newEventIdx = events.findIndex((e) => e.id === newEvent.id);
-    if (newEventIdx >= 0 && events[newEventIdx].slotsLeft > 0) {
-      events[newEventIdx].slotsLeft -= 1;
+    regs.push(newReg);
+    this.setItem(STORAGE_KEYS.REGISTRATIONS, regs);
+
+    const targetIdx = events.findIndex((e) => e.id === targetEvent.id);
+    if (targetIdx >= 0) {
+      events[targetIdx].slotsLeft -= 1;
     }
-    this.save(STORAGE_KEYS.EVENTS, events);
+    this.setItem(STORAGE_KEYS.EVENTS, events);
 
-    registrations.push(newReg);
-    this.save(STORAGE_KEYS.REGISTRATIONS, registrations);
-
-    // 3. Log Audit
-    const auditRecord: EventChangeAudit = {
+    const changes = this.getEventChanges();
+    const auditChange: EventChangeAudit = {
       id: `chg-${Date.now()}`,
       participantId: oldReg.leaderId,
       participantName: oldReg.leaderName,
       rollNumber: oldReg.leaderRollNumber,
+      oldRegistrationId: oldReg.registrationNumber,
       oldEventId: oldReg.eventId,
       oldEventTitle: oldReg.eventTitle,
-      oldRegistrationId: oldReg.id,
-      oldQrToken: oldReg.qrToken,
-      newEventId: newEvent.id,
-      newEventTitle: newEvent.title,
-      newRegistrationId: newReg.id,
-      newQrToken: newReg.qrToken,
-      reason,
+      newRegistrationId: newReg.registrationNumber,
+      newEventId: targetEvent.id,
+      newEventTitle: targetEvent.title,
       changedAt: new Date().toISOString(),
-      status: 'SUCCESS',
+      reason: params.reason || 'User requested 1-event switch in Participant Dashboard',
+      ipAddress: '127.0.0.1 (Local Client)',
     };
-
-    const changes = this.getEventChanges();
-    changes.unshift(auditRecord);
-    this.save(STORAGE_KEYS.EVENT_CHANGES, changes);
+    changes.push(auditChange);
+    this.setItem(STORAGE_KEYS.EVENT_CHANGES, changes);
 
     this.logAction(
-      oldReg.leaderId,
-      oldReg.leaderName,
-      'PARTICIPANT',
       'EVENT_CHANGED',
-      'EVENT_CHANGE_AUDIT',
-      auditRecord.id,
-      `Switched event from "${oldReg.eventTitle}" to "${newEvent.title}". Old QR invalidated.`
+      'PARTICIPANT',
+      oldReg.leaderName,
+      `Switched event from "${oldReg.eventTitle}" to "${targetEvent.title}". Old pass ${oldReg.registrationNumber} revoked, new pass ${newRegNumber} issued.`
     );
 
     return { success: true, newRegistration: newReg };
   }
 
-  static getEventChanges(): EventChangeAudit[] {
-    return this.load(STORAGE_KEYS.EVENT_CHANGES, []);
+  static getAttendance(): AttendanceRecord[] {
+    return this.getItem<AttendanceRecord[]>(STORAGE_KEYS.ATTENDANCE, INITIAL_ATTENDANCE);
   }
 
-  // Staff & Verification
-  static getStaffUsers(): StaffUser[] {
-    return this.load(STORAGE_KEYS.STAFF, INITIAL_STAFF);
-  }
-
-  static authenticateStaff(email: string): { success: boolean; user?: StaffUser; error?: string } {
-    const users = this.getStaffUsers();
-    const user = users.find((u) => u.email.toLowerCase() === email.trim().toLowerCase() && u.isActive);
-    if (!user) {
-      return { success: false, error: 'Invalid staff credentials or account deactivated.' };
-    }
-    user.lastLoginAt = new Date().toISOString();
-    this.saveStaffUser(user);
-    this.logAction(user.id, user.name, user.role, 'STAFF_LOGIN', 'AUTH', undefined, `Staff logged in via console.`);
-    return { success: true, user };
-  }
-
-  static saveStaffUser(user: StaffUser): void {
-    const users = this.getStaffUsers();
-    const idx = users.findIndex((u) => u.id === user.id);
-    if (idx >= 0) {
-      users[idx] = user;
-    } else {
-      users.push(user);
-    }
-    this.save(STORAGE_KEYS.STAFF, users);
-  }
-
-  static deleteStaffUser(id: string): void {
-    const users = this.getStaffUsers().filter((u) => u.id !== id);
-    this.save(STORAGE_KEYS.STAFF, users);
-  }
-
-  // QR Token Verification for Employee Scanner
-  static verifyQRToken(qrToken: string, currentStaffAssignedEventIds: string[]): {
-    valid: boolean;
+  static verifyQRToken(
+    token: string,
+    scanningStaffUser: StaffUser
+  ): {
+    success: boolean;
     registration?: Registration;
-    event?: CollegeEvent;
-    errorType?: 'INVALID_TOKEN' | 'CANCELLED_REGISTRATION' | 'UNASSIGNED_EVENT' | 'ALREADY_ATTENDED';
-    errorMessage?: string;
+    alreadyAttended?: boolean;
+    errorState?:
+      | 'INVALID_QR'
+      | 'ALREADY_ATTENDED'
+      | 'WRONG_EVENT'
+      | 'PARTICIPANT_NOT_FOUND'
+      | 'NOT_AUTHORIZED';
+    error?: string;
   } {
-    const registrations = this.getRegistrations();
-    const reg = registrations.find((r) => r.qrToken === qrToken.trim());
+    if (!token || !token.trim()) {
+      return { success: false, errorState: 'INVALID_QR', error: 'No QR token data found.' };
+    }
+
+    const cleanToken = token.trim();
+    if (cleanToken.startsWith('REVOKED_')) {
+      return {
+        success: false,
+        errorState: 'INVALID_QR',
+        error: 'This QR pass has been REVOKED due to an authorized event change. Please use the newly issued pass.',
+      };
+    }
+
+    const regs = this.getRegistrations();
+    const reg = regs.find(
+      (r) => r.qrToken === cleanToken || r.registrationNumber === cleanToken
+    );
 
     if (!reg) {
       return {
-        valid: false,
-        errorType: 'INVALID_TOKEN',
-        errorMessage: 'Invalid QR Token. Pass not found in system.',
+        success: false,
+        errorState: 'PARTICIPANT_NOT_FOUND',
+        error: 'Pass token not found in the official registry.',
       };
     }
 
     if (reg.status === 'CANCELLED') {
       return {
-        valid: false,
-        registration: reg,
-        errorType: 'CANCELLED_REGISTRATION',
-        errorMessage: 'This QR Code was cancelled due to an event change and is no longer valid.',
+        success: false,
+        errorState: 'INVALID_QR',
+        error: 'This registration pass has been CANCELLED and is no longer valid.',
       };
     }
 
-    // Check staff event permission (if staff has specific events)
-    if (currentStaffAssignedEventIds.length > 0 && !currentStaffAssignedEventIds.includes(reg.eventId)) {
+    if (
+      scanningStaffUser.assignedEventIds.length > 0 &&
+      !scanningStaffUser.assignedEventIds.includes(reg.eventId)
+    ) {
       return {
-        valid: false,
+        success: false,
         registration: reg,
-        errorType: 'UNASSIGNED_EVENT',
-        errorMessage: `Scanned participant belongs to "${reg.eventTitle}", which is not assigned to your staff profile.`,
+        errorState: 'WRONG_EVENT',
+        error: `Scanned pass is for "${reg.eventTitle}". You are authorized to evaluate only your assigned events.`,
       };
     }
 
-    // Check attendance status
-    const attendanceList = this.getAttendance();
-    const existing = attendanceList.find((a) => a.registrationId === reg.id && a.status === 'PRESENT');
-    if (existing) {
+    const attendance = this.getAttendance();
+    const existingAtt = attendance.find(
+      (a) => a.registrationId === reg.id && a.status === 'PRESENT'
+    );
+
+    if (existingAtt) {
       return {
-        valid: true,
+        success: true,
         registration: reg,
-        event: this.getEventById(reg.eventId),
-        errorType: 'ALREADY_ATTENDED',
-        errorMessage: `Attendance was already recorded on ${new Date(existing.scannedAt || '').toLocaleTimeString()}.`,
+        alreadyAttended: true,
+        errorState: 'ALREADY_ATTENDED',
+        error: `Participant attendance was already recorded at ${new Date(
+          existingAtt.scannedAt || ''
+        ).toLocaleTimeString()} by ${existingAtt.scannedByStaffName}.`,
       };
     }
 
     return {
-      valid: true,
+      success: true,
       registration: reg,
-      event: this.getEventById(reg.eventId),
+      alreadyAttended: false,
     };
   }
 
-  // Attendance
-  static getAttendance(): AttendanceRecord[] {
-    return this.load(STORAGE_KEYS.ATTENDANCE, INITIAL_ATTENDANCE);
-  }
+  static markAttendance(params: {
+    registrationId: string;
+    staffUser: StaffUser;
+  }): { success: boolean; record?: AttendanceRecord; error?: string } {
+    const regs = this.getRegistrations();
+    const reg = regs.find((r) => r.id === params.registrationId);
 
-  static recordAttendance(
-    registrationId: string,
-    staffUser: StaffUser,
-    status: 'PRESENT' | 'ABSENT' = 'PRESENT',
-    notes?: string
-  ): { success: boolean; record?: AttendanceRecord; error?: string } {
-    const registrations = this.getRegistrations();
-    const reg = registrations.find((r) => r.id === registrationId);
-    if (!reg) return { success: false, error: 'Registration not found.' };
+    if (!reg) {
+      return { success: false, error: 'Registration record not found.' };
+    }
 
     const attendance = this.getAttendance();
-    const existingIdx = attendance.findIndex((a) => a.registrationId === registrationId);
+    const existing = attendance.find(
+      (a) => a.registrationId === reg.id && a.status === 'PRESENT'
+    );
+
+    if (existing) {
+      return { success: false, error: 'Attendance already recorded for this registration.' };
+    }
 
     const record: AttendanceRecord = {
-      id: existingIdx >= 0 ? attendance[existingIdx].id : `att-${Date.now()}`,
+      id: `att-${Date.now()}`,
       registrationId: reg.id,
       eventId: reg.eventId,
-      participantRollNumber: reg.leaderRollNumber,
+      participantId: reg.leaderId,
       participantName: reg.leaderName,
+      participantRollNumber: reg.leaderRollNumber,
       teamName: reg.teamName,
-      status,
+      status: 'PRESENT',
       scannedAt: new Date().toISOString(),
-      scannedByStaffId: staffUser.id,
-      scannedByStaffName: staffUser.name,
-      notes: notes || `Attendance recorded by ${staffUser.name}`,
+      scannedByStaffId: params.staffUser.id,
+      scannedByStaffName: params.staffUser.name,
     };
 
-    if (existingIdx >= 0) {
-      attendance[existingIdx] = record;
-    } else {
-      attendance.unshift(record);
-    }
-    this.save(STORAGE_KEYS.ATTENDANCE, attendance);
+    attendance.push(record);
+    this.setItem(STORAGE_KEYS.ATTENDANCE, attendance);
 
     this.logAction(
-      staffUser.id,
-      staffUser.name,
-      staffUser.role,
-      'MARK_ATTENDANCE',
-      'ATTENDANCE',
-      record.id,
-      `Marked ${reg.teamName || reg.leaderName} as ${status} for ${reg.eventTitle}`
+      'ATTENDANCE_MARKED',
+      'EMPLOYEE',
+      params.staffUser.name,
+      `Checked in ${reg.leaderName} (${reg.registrationNumber}) for "${reg.eventTitle}"`
     );
 
     return { success: true, record };
   }
 
-  // Scores
-  static getScores(): ScoreRecord[] {
-    return this.load(STORAGE_KEYS.SCORES, INITIAL_SCORES);
-  }
+  static recordAttendance(
+    registrationId: string,
+    staffUser: StaffUser,
+    status: AttendanceStatus = 'PRESENT',
+    notes?: string
+  ): { success: boolean; record?: AttendanceRecord; error?: string } {
+    const regs = this.getRegistrations();
+    const reg = regs.find((r) => r.id === registrationId);
 
-  static saveScore(score: ScoreRecord, staffUser: StaffUser): void {
-    const scores = this.getScores();
-    const idx = scores.findIndex((s) => s.id === score.id);
-    if (idx >= 0) {
-      scores[idx] = { ...score, updatedAt: new Date().toISOString() };
-    } else {
-      scores.unshift(score);
+    if (!reg) {
+      return { success: false, error: 'Registration record not found.' };
     }
-    this.save(STORAGE_KEYS.SCORES, scores);
+
+    const attendance = this.getAttendance();
+    const existingIdx = attendance.findIndex((a) => a.registrationId === reg.id);
+
+    const record: AttendanceRecord = {
+      id: existingIdx >= 0 ? attendance[existingIdx].id : `att-${Date.now()}`,
+      registrationId: reg.id,
+      eventId: reg.eventId,
+      participantId: reg.leaderId,
+      participantName: reg.leaderName,
+      participantRollNumber: reg.leaderRollNumber,
+      teamName: reg.teamName,
+      status: status,
+      scannedAt: new Date().toISOString(),
+      scannedByStaffId: staffUser.id,
+      scannedByStaffName: staffUser.name,
+      notes: notes,
+    };
+
+    if (existingIdx >= 0) {
+      attendance[existingIdx] = record;
+    } else {
+      attendance.push(record);
+    }
+    this.setItem(STORAGE_KEYS.ATTENDANCE, attendance);
 
     this.logAction(
-      staffUser.id,
+      'ATTENDANCE_MARKED',
+      'EMPLOYEE',
       staffUser.name,
-      staffUser.role,
-      'SUBMIT_SCORE',
-      'SCORE',
-      score.id,
-      `Score ${score.totalScore}/100 awarded to ${score.teamOrParticipantName}`
+      `Marked ${status} for ${reg.leaderName} (${reg.registrationNumber}) in "${reg.eventTitle}"`
+    );
+
+    return { success: true, record };
+  }
+
+  static getScores(): ScoreRecord[] {
+    return this.getItem<ScoreRecord[]>(STORAGE_KEYS.SCORES, INITIAL_SCORES);
+  }
+
+  static saveScore(
+    scoreOrRegId: ScoreRecord | string,
+    scoreRecordParam?: ScoreRecord | number,
+    feedbackParam?: string
+  ): void {
+    let score: ScoreRecord;
+    if (typeof scoreOrRegId === 'string' && typeof scoreRecordParam === 'object') {
+      score = scoreRecordParam;
+    } else if (typeof scoreOrRegId === 'object') {
+      score = scoreOrRegId;
+    } else {
+      const regs = this.getRegistrations();
+      const reg = regs.find((r) => r.id === scoreOrRegId);
+      score = {
+        id: `scr-${Date.now()}`,
+        registrationId: scoreOrRegId as string,
+        eventId: reg?.eventId || '',
+        teamOrParticipantName: reg?.teamName ? `${reg.teamName} (${reg.leaderName})` : reg?.leaderName || 'Participant',
+        rollNumberOrTeamId: reg?.leaderRollNumber || '',
+        totalScore: typeof scoreRecordParam === 'number' ? scoreRecordParam : 0,
+        round: 'Evaluation',
+        feedback: feedbackParam || '',
+        submittedByStaffId: 'staff-emp',
+        submittedByStaffName: 'Evaluator',
+        submittedAt: new Date().toISOString(),
+      };
+    }
+
+    const scores = this.getScores();
+    const idx = scores.findIndex((s) => s.id === score.id || (s.registrationId === score.registrationId && s.round === score.round));
+
+    if (idx >= 0) {
+      scores[idx] = score;
+    } else {
+      scores.push(score);
+    }
+
+    this.setItem(STORAGE_KEYS.SCORES, scores);
+    this.logAction(
+      'SCORE_SUBMITTED',
+      'EMPLOYEE',
+      score.submittedByStaffName,
+      `Score of ${score.totalScore}/100 recorded for ${score.teamOrParticipantName}`
     );
   }
 
-  // Audit Logs
+  static getStaffUsers(): StaffUser[] {
+    return this.getItem<StaffUser[]>(STORAGE_KEYS.STAFF, INITIAL_STAFF);
+  }
+
+  static saveStaffUser(user: StaffUser): void {
+    const staff = this.getStaffUsers();
+    const idx = staff.findIndex((s) => s.id === user.id || s.email.toLowerCase() === user.email.toLowerCase());
+    if (idx >= 0) {
+      staff[idx] = user;
+    } else {
+      staff.push(user);
+    }
+    this.setItem(STORAGE_KEYS.STAFF, staff);
+    this.logAction('STAFF_PROVISIONED', 'SUPER_ADMIN', 'Administrator', `Staff user ${user.name} (${user.email}) configured`);
+  }
+
+  static authenticateStaff(email: string): { success: boolean; user?: StaffUser; error?: string } {
+    const staff = this.getStaffUsers();
+    const user = staff.find((s) => s.email.toLowerCase() === email.trim().toLowerCase() && s.isActive);
+    if (!user) {
+      return { success: false, error: 'Invalid staff credentials or account is inactive.' };
+    }
+    return { success: true, user };
+  }
+
+  static getEventChanges(): EventChangeAudit[] {
+    return this.getItem<EventChangeAudit[]>(STORAGE_KEYS.EVENT_CHANGES, []);
+  }
+
   static getAuditLogs(): AuditLog[] {
-    return this.load(STORAGE_KEYS.AUDIT_LOGS, INITIAL_AUDIT_LOGS);
+    return this.getItem<AuditLog[]>(STORAGE_KEYS.AUDIT_LOGS, INITIAL_AUDIT_LOGS);
   }
 
   static logAction(
-    actorId: string,
-    actorName: string,
-    actorRole: string,
     action: string,
-    targetEntity: string,
-    targetId?: string,
-    details: string = '',
-    status: 'SUCCESS' | 'FAILED' | 'WARNING' = 'SUCCESS'
+    actorRole: 'PARTICIPANT' | 'EMPLOYEE' | 'ADMIN' | 'SUPER_ADMIN' | 'SYSTEM',
+    actorName: string,
+    details: string
   ): void {
     const logs = this.getAuditLogs();
-    const newLog: AuditLog = {
-      id: `log-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-      actorId,
-      actorName,
-      actorRole,
+    logs.unshift({
+      id: `log-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
       action,
-      targetEntity,
-      targetId,
-      details,
+      actorRole,
+      actorName,
       timestamp: new Date().toISOString(),
-      status,
-    };
-    logs.unshift(newLog);
-    this.save(STORAGE_KEYS.AUDIT_LOGS, logs.slice(0, 300)); // Cap at 300 logs
-  }
-
-  // Reset demo data to defaults
-  static resetDatabase(): void {
-    localStorage.removeItem(STORAGE_KEYS.SETTINGS);
-    localStorage.removeItem(STORAGE_KEYS.EVENTS);
-    localStorage.removeItem(STORAGE_KEYS.PARTICIPANTS);
-    localStorage.removeItem(STORAGE_KEYS.REGISTRATIONS);
-    localStorage.removeItem(STORAGE_KEYS.STAFF);
-    localStorage.removeItem(STORAGE_KEYS.ATTENDANCE);
-    localStorage.removeItem(STORAGE_KEYS.SCORES);
-    localStorage.removeItem(STORAGE_KEYS.EVENT_CHANGES);
-    localStorage.removeItem(STORAGE_KEYS.AUDIT_LOGS);
+      details,
+    });
+    this.setItem(STORAGE_KEYS.AUDIT_LOGS, logs.slice(0, 300));
   }
 }

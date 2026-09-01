@@ -44,7 +44,7 @@ export interface CollegeEvent {
   totalSlots: number;
   slotsLeft: number;
   imageUrl: string;
-  prizePool: string;
+  prizePool?: string;
   firstPrize?: string;
   secondPrize?: string;
   rules: string[];
@@ -93,6 +93,7 @@ export interface AttendanceRecord {
   id: string;
   registrationId: string;
   eventId: string;
+  participantId?: string;
   participantRollNumber: string;
   participantName: string;
   teamName?: string;
@@ -115,7 +116,8 @@ export interface ScoreRecord {
   eventId: string;
   teamOrParticipantName: string;
   rollNumberOrTeamId: string;
-  criteria: ScoreCriteria[];
+  criteria?: ScoreCriteria[];
+  criteriaScores?: Record<string, number>;
   totalScore: number;
   round: string; // e.g. "Round 1 - Prelims", "Finals"
   rank?: number;
@@ -124,7 +126,7 @@ export interface ScoreRecord {
   submittedByStaffName: string;
   submittedAt: string;
   updatedAt?: string;
-  isLocked: boolean;
+  isLocked?: boolean;
 }
 
 export type StaffRole = 'EMPLOYEE' | 'ADMIN' | 'SUPER_ADMIN';
@@ -151,27 +153,28 @@ export interface EventChangeAudit {
   oldEventId: string;
   oldEventTitle: string;
   oldRegistrationId: string;
-  oldQrToken: string;
+  oldQrToken?: string;
   newEventId: string;
   newEventTitle: string;
   newRegistrationId: string;
-  newQrToken: string;
+  newQrToken?: string;
   reason: string;
   changedAt: string;
-  status: 'SUCCESS' | 'REJECTED';
+  status?: 'SUCCESS' | 'REJECTED';
+  ipAddress?: string;
 }
 
 export interface AuditLog {
   id: string;
-  actorId: string;
+  actorId?: string;
   actorName: string;
   actorRole: string;
   action: string;
-  targetEntity: string;
+  targetEntity?: string;
   targetId?: string;
   details: string;
   timestamp: string;
-  status: 'SUCCESS' | 'FAILED' | 'WARNING';
+  status?: 'SUCCESS' | 'FAILED' | 'WARNING';
 }
 
 export interface SystemSettings {

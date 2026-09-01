@@ -125,22 +125,16 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-              {/* Prize Pool Tag */}
-              <div className="absolute top-3 right-3 bg-amber-500/90 backdrop-blur-md text-slate-950 px-2.5 py-1 rounded-full text-xs font-extrabold flex items-center gap-1 shadow-md">
-                <Trophy className="w-3.5 h-3.5" />
-                <span>{evt.prizePool}</span>
-              </div>
-
               {/* Team / Solo Badge */}
               <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[11px] font-semibold flex items-center gap-1 border border-white/20">
                 {evt.isTeamEvent ? (
                   <>
-                    <Users className="w-3.5 h-3.5 text-secondary-fixed" />
+                    <Users className="w-3.5 h-3.5 text-[#00a887]" />
                     <span>Team ({evt.minTeamSize} - {evt.maxTeamSize} members)</span>
                   </>
                 ) : (
                   <>
-                    <User className="w-3.5 h-3.5 text-secondary-fixed" />
+                    <User className="w-3.5 h-3.5 text-[#00a887]" />
                     <span>Individual Event</span>
                   </>
                 )}
@@ -237,17 +231,6 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
               </button>
             </div>
 
-            {/* Prize & Rules Section */}
-            <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 flex items-center justify-between">
-              <div>
-                <span className="text-[11px] font-semibold text-amber-800 dark:text-amber-300">Total Prize Pool</span>
-                <p className="text-lg font-bold text-amber-900 dark:text-amber-200">{inspectingEvent.prizePool}</p>
-              </div>
-              <div className="text-right text-xs text-amber-800 dark:text-amber-300">
-                <p>1st: {inspectingEvent.firstPrize || 'Trophy + Cash'}</p>
-                <p>2nd: {inspectingEvent.secondPrize || 'Shield'}</p>
-              </div>
-            </div>
 
             <div className="space-y-2">
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">

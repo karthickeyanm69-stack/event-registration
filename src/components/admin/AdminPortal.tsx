@@ -419,8 +419,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                     </div>
 
                     <div className="text-right">
-                      <span className="text-[10px] uppercase text-slate-500 block font-bold">Prize Pool</span>
-                      <span className="text-lg font-bold text-amber-600 font-mono">{selectedEvent.prizePool}</span>
+                      <span className="text-[10px] uppercase text-slate-500 block font-bold">Participation</span>
+                      <span className="text-sm font-bold text-cyan-700 font-mono">
+                        {selectedEvent.isTeamEvent ? `Team (${selectedEvent.minTeamSize}-${selectedEvent.maxTeamSize})` : 'Individual'}
+                      </span>
                     </div>
                   </div>
 

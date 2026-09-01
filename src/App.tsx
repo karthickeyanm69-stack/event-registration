@@ -307,11 +307,11 @@ export default function App() {
               currentStaffUser?.role === 'ADMIN'
                 ? currentStaffUser
                 : staffList.find((s) => s.role === 'ADMIN') || staffList[1] || {
-                    id: 'staff-admin-tech',
-                    email: 'admin.tech@spiher.edu.in',
-                    name: 'Dr. K. Senthil Nathan (Tech Chair)',
+                    id: 'staff-admin',
+                    email: 'admin@spiher.edu.in',
+                    name: 'Dr. K. Senthil Nathan (Event Admin)',
                     role: 'ADMIN',
-                    assignedEventIds: ['evt-codeathon', 'evt-robosumo', 'evt-promptai'],
+                    assignedEventIds: [], // All 11 events
                     isActive: true,
                   }
             }
