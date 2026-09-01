@@ -1092,6 +1092,21 @@ export class MockDatabaseService {
     }
 
     const regs = this.getRegistrations();
+
+    // Check if this token belonged to a registration that was subsequently revoked
+    const revokedReg = regs.find(
+      (r) =>
+        r.status === 'CANCELLED' ||
+        (r.qrToken.startsWith('REVOKED_') && r.qrToken.includes(cleanToken))
+    );
+    if (revokedReg && (revokedReg.qrToken.includes(cleanToken) || revokedReg.registrationNumber === cleanToken)) {
+      return {
+        success: false,
+        errorState: 'INVALID_QR',
+        error: 'This QR pass has been REVOKED due to an authorized event change. Please use the newly issued pass.',
+      };
+    }
+
     const reg = regs.find(
       (r) => r.qrToken === cleanToken || r.registrationNumber === cleanToken
     );
