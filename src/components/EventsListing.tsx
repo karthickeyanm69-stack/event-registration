@@ -13,9 +13,9 @@ export const EventsListing: React.FC<EventsListingProps> = ({
   onRegisterClick,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<EventCategory>('All');
+  const [selectedCategory, setSelectedCategory] = useState<EventCategory | 'All'>('All');
 
-  const categories: EventCategory[] = ['All', 'Technical', 'Non-Technical'];
+  const categories: (EventCategory | 'All')[] = ['All', 'Technical', 'Non-Technical'];
 
   const filteredEvents = events.filter((event) => {
     const matchesCategory =
