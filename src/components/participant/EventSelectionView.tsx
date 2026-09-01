@@ -13,8 +13,10 @@ import {
   ChevronRight,
   Shield,
   Layers,
+  X,
 } from 'lucide-react';
 import { CollegeEvent, EventCategory, Participant } from '../../types';
+import { CollegeEmblem } from '../common/CollegeLogo';
 
 interface EventSelectionViewProps {
   events: CollegeEvent[];
@@ -168,15 +170,15 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
               {/* Slots Bar */}
               <div className="space-y-1.5 pt-2 border-t border-slate-100 dark:border-white/10">
                 <div className="flex justify-between text-[11px] font-semibold">
-                  <span className="text-slate-500 dark:text-slate-400">Availability</span>
-                  <span className={evt.slotsLeft <= 10 ? 'text-red-500 font-bold' : 'text-emerald-500 font-bold'}>
+                  <span className="text-slate-500">Availability</span>
+                  <span className={evt.slotsLeft <= 10 ? 'text-red-600 font-bold' : 'text-emerald-700 font-bold'}>
                     {evt.slotsLeft} slots remaining
                   </span>
                 </div>
-                <div className="h-1.5 w-full bg-slate-100 dark:bg-white/10 rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full ${
-                      evt.slotsLeft <= 10 ? 'bg-red-500' : 'bg-secondary'
+                      evt.slotsLeft <= 10 ? 'bg-red-500' : 'bg-[#0077c8]'
                     }`}
                     style={{
                       width: `${Math.max(10, ((evt.totalSlots - evt.slotsLeft) / evt.totalSlots) * 100)}%`,
@@ -190,15 +192,15 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setInspectingEvent(evt)}
-                  className="flex-1 py-2.5 px-3 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 text-xs font-bold transition-colors"
+                  className="flex-1 py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-colors cursor-pointer"
                 >
-                  View Details & Rules
+                  View Details &amp; Rules
                 </button>
 
                 <button
                   type="button"
                   onClick={() => onSelectEvent(evt)}
-                  className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-secondary to-secondary-container text-primary font-bold text-xs shadow-md shadow-secondary/20 flex items-center gap-1.5 hover:opacity-95 transition-opacity"
+                  className="py-2.5 px-4 rounded-xl bg-[#0077c8] hover:bg-[#0066ad] text-white font-bold text-xs shadow-md shadow-[#0077c8]/20 flex items-center gap-1.5 transition-all cursor-pointer"
                 >
                   <span>Select</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -211,54 +213,85 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
 
       {/* Event Details & Rules Inspector Modal */}
       {inspectingEvent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-primary-container rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-slate-200 dark:border-white/10 shadow-2xl p-6 space-y-5">
-            <div className="flex items-start justify-between">
-              <div>
-                <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-secondary/20 text-secondary border border-secondary/30">
-                  {inspectingEvent.category}
-                </span>
-                <h3 className="text-xl font-serif font-bold text-primary dark:text-white mt-1">
-                  {inspectingEvent.title}
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400">{inspectingEvent.tagline}</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-[#d4e8f5] shadow-2xl p-6 sm:p-7 space-y-5 animate-in zoom-in-95 duration-200">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between pb-3 border-b border-[#e8f5fb]">
+              <div className="flex items-center gap-3">
+                <CollegeEmblem size={44} />
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`text-[9px] uppercase font-extrabold px-2 py-0.5 rounded-full border ${
+                        inspectingEvent.category === 'Technical'
+                          ? 'bg-[#e8f5fb] text-[#0077c8] border-[#d4e8f5]'
+                          : 'bg-teal-50 text-[#00a887] border-teal-200'
+                      }`}
+                    >
+                      {inspectingEvent.category} Competition
+                    </span>
+                    <span className="text-[11px] text-slate-400 font-mono">IGNITE 2024</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-[#002b66] mt-0.5">
+                    {inspectingEvent.title}
+                  </h3>
+                  <p className="text-xs text-slate-500">{inspectingEvent.tagline}</p>
+                </div>
               </div>
               <button
                 onClick={() => setInspectingEvent(null)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
               >
-                ✕
+                <X className="w-5 h-5" />
               </button>
             </div>
 
+            {/* Quick Metrics Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 p-3 rounded-2xl bg-[#f8fbfe] border border-[#d4e8f5] text-xs">
+              <div className="space-y-0.5">
+                <span className="text-[10px] uppercase font-bold text-slate-400 block">Venue</span>
+                <p className="font-bold text-[#002b66] truncate">{inspectingEvent.venue}</p>
+              </div>
+              <div className="space-y-0.5">
+                <span className="text-[10px] uppercase font-bold text-slate-400 block">Schedule</span>
+                <p className="font-bold text-[#002b66]">{inspectingEvent.time}</p>
+              </div>
+              <div className="space-y-0.5 col-span-2 sm:col-span-1">
+                <span className="text-[10px] uppercase font-bold text-slate-400 block">Capacity</span>
+                <p className="font-bold text-emerald-600">{inspectingEvent.slotsLeft} slots available</p>
+              </div>
+            </div>
 
-            <div className="space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                <Shield className="w-3.5 h-3.5 text-secondary" />
-                <span>Official Rules & Guidelines</span>
+            {/* Rules Section */}
+            <div className="space-y-2.5">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#002b66] flex items-center gap-1.5">
+                <Shield className="w-3.5 h-3.5 text-[#0077c8]" />
+                <span>Official Rules &amp; Guidelines</span>
               </h4>
-              <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
-                {inspectingEvent.rules.map((rule, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-secondary shrink-0 mt-0.5" />
-                    <span>{rule}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                <ul className="space-y-2 text-xs text-slate-700">
+                  {inspectingEvent.rules.map((rule, idx) => (
+                    <li key={idx} className="flex items-start gap-2 leading-relaxed">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#00a887] shrink-0 mt-0.5" />
+                      <span>{rule}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
             {/* Coordinators Section */}
             {inspectingEvent.coordinators && inspectingEvent.coordinators.length > 0 && (
-              <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-white/10">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                  Event Coordinators
+              <div className="space-y-2 pt-2 border-t border-[#e8f5fb]">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#002b66]">
+                  Faculty &amp; Student Coordinators
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {inspectingEvent.coordinators.map((c) => (
-                    <div key={c.id} className="p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs">
-                      <p className="font-bold text-slate-900 dark:text-white">{c.name}</p>
-                      <p className="text-[11px] text-secondary">{c.role}</p>
-                      <p className="text-[11px] text-slate-400 mt-1 font-mono">{c.phone}</p>
+                    <div key={c.id} className="p-3 rounded-2xl bg-[#f8fbfe] border border-[#d4e8f5] text-xs">
+                      <p className="font-bold text-[#002b66]">{c.name}</p>
+                      <p className="text-[11px] text-[#0077c8] font-semibold">{c.role}</p>
+                      <p className="text-[11px] text-slate-500 mt-1 font-mono">{c.phone}</p>
                     </div>
                   ))}
                 </div>
@@ -270,7 +303,7 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
               <button
                 type="button"
                 onClick={() => setInspectingEvent(null)}
-                className="flex-1 py-3 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 text-xs font-bold"
+                className="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
               >
                 Close
               </button>
@@ -281,7 +314,7 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
                   setInspectingEvent(null);
                   onSelectEvent(evt);
                 }}
-                className="flex-1 py-3 rounded-xl bg-gradient-to-r from-secondary to-secondary-container text-primary font-bold text-xs shadow-lg shadow-secondary/30 flex items-center justify-center gap-1.5"
+                className="flex-1 py-2.5 rounded-xl bg-[#0077c8] hover:bg-[#0066ad] text-white font-bold text-xs shadow-md shadow-[#0077c8]/20 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
               >
                 <span>Register for {inspectingEvent.title}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
