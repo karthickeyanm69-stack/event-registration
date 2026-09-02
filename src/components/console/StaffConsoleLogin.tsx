@@ -18,9 +18,13 @@ import { CollegeLogo } from '../common/CollegeLogo';
 
 interface StaffConsoleLoginProps {
   onLoginSuccess: (user: StaffUser, redirectRole: PortalRole) => void;
+  redirectNotice?: string | null;
 }
 
-export const StaffConsoleLogin: React.FC<StaffConsoleLoginProps> = ({ onLoginSuccess }) => {
+export const StaffConsoleLogin: React.FC<StaffConsoleLoginProps> = ({
+  onLoginSuccess,
+  redirectNotice,
+}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -107,8 +111,15 @@ export const StaffConsoleLogin: React.FC<StaffConsoleLoginProps> = ({ onLoginSuc
 
         {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-4">
+          {redirectNotice && !errorMessage && (
+            <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 text-xs font-semibold flex items-center gap-2.5 animate-in fade-in">
+              <ShieldAlert className="w-4 h-4 shrink-0 text-amber-600" />
+              <span>{redirectNotice}</span>
+            </div>
+          )}
+
           {errorMessage && (
-            <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium flex items-center gap-2">
+            <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium flex items-center gap-2 animate-in fade-in">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errorMessage}</span>
             </div>

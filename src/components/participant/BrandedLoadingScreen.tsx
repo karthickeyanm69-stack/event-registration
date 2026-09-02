@@ -1,68 +1,94 @@
-import React, { useEffect, useState } from 'react';
-import { CollegeEmblem } from '../common/CollegeLogo';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface BrandedLoadingScreenProps {
-  collegeName?: string;
-  symposiumName?: string;
   onFinish: () => void;
-  durationMs?: number;
+  videoSrc?: string;
 }
 
 export const BrandedLoadingScreen: React.FC<BrandedLoadingScreenProps> = ({
-  collegeName = "St. Peter's Institute of Higher Education & Research",
-  symposiumName = 'IGNITE 2024 • National Level Symposium',
   onFinish,
-  durationMs = 1400,
+  videoSrc = '/loading-page-spiher.mp4',
 }) => {
   const [fadeOut, setFadeOut] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const hasFinishedRef = useRef(false);
+
+  const handleComplete = () => {
+    if (hasFinishedRef.current) return;
+    hasFinishedRef.current = true;
+    setFadeOut(true);
+    setTimeout(() => {
+      onFinish();
+    }, 300);
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setFadeOut(true);
-      setTimeout(onFinish, 350);
-    }, durationMs);
+    // Generous fallback safety (20s) so full 8+ second video is NEVER cut off prematurely
+    const safetyTimer = setTimeout(() => {
+      handleComplete();
+    }, 20000);
 
-    return () => clearTimeout(timer);
-  }, [durationMs, onFinish]);
+    return () => clearTimeout(safetyTimer);
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.muted = true;
+      video.playsInline = true;
+      video.defaultMuted = true;
+      video.playbackRate = 1.0;
+      video
+        .play()
+        .catch(() => {
+          // Browser autoplay fallback
+        });
+    }
+  }, []);
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-white spiher-pattern-bg transition-opacity duration-300 ${
+      className={`fixed inset-0 z-50 w-screen h-screen flex items-center justify-center bg-white select-none transition-opacity duration-300 ${
         fadeOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
+      style={{
+        backgroundColor: '#ffffff',
+        margin: 0,
+        padding: 0,
+        border: 'none',
+        outline: 'none',
+        boxShadow: 'none',
+        overflow: 'hidden',
+      }}
     >
-      <div className="flex flex-col items-center text-center p-8 max-w-md space-y-6 animate-in fade-in zoom-in-95 duration-500">
-        {/* Official College Emblem with Animated Glow Ring */}
-        <div className="relative flex items-center justify-center">
-          <div className="absolute -inset-4 rounded-full bg-gradient-to-tr from-[#0077c8]/20 to-[#00a887]/20 blur-xl animate-pulse" />
-          <div className="relative bg-white p-4 rounded-3xl shadow-xl border border-[#d4e8f5]">
-            <CollegeEmblem size={84} />
-          </div>
-        </div>
-
-        {/* Institution Branding */}
-        <div className="space-y-2">
-          <h1 className="font-serif font-black text-2xl sm:text-3xl text-[#002b66] tracking-tight">
-            St. PETER'S
-          </h1>
-          <h2 className="text-xs font-black uppercase tracking-wider text-[#002b66]">
-            INSTITUTE OF HIGHER EDUCATION & RESEARCH
-          </h2>
-          <div className="bg-[#0095d9] px-3 py-1 rounded text-center max-w-xs mx-auto mt-2">
-            <p className="text-[10px] font-black uppercase tracking-wider text-white">
-              DEEMED TO BE UNIVERSITY U/S 3 OF THE UGC ACT 1956
-            </p>
-          </div>
-        </div>
-
-        {/* Loading Spinner */}
-        <div className="flex flex-col items-center gap-2 pt-2">
-          <div className="w-8 h-8 border-3 border-[#0077c8] border-t-[#00a887] rounded-full animate-spin" />
-          <span className="text-xs font-bold text-[#002b66] tracking-wide">
-            Loading Event Portal...
-          </span>
-        </div>
-      </div>
+      <video
+        ref={videoRef}
+        src={videoSrc}
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+        controls={false}
+        disablePictureInPicture
+        disableRemotePlayback
+        onEnded={handleComplete}
+        className="w-full h-full bg-white block"
+        style={{
+          backgroundColor: '#ffffff',
+          width: '100vw',
+          height: '100vh',
+          objectFit: 'contain',
+          border: 'none',
+          outline: 'none',
+          boxShadow: 'none',
+          borderRadius: '0px',
+          margin: 0,
+          padding: 0,
+          WebkitTapHighlightColor: 'transparent',
+        }}
+      />
     </div>
   );
 };
+
+export default BrandedLoadingScreen;

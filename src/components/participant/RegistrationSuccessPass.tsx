@@ -45,9 +45,12 @@ export const RegistrationSuccessPass: React.FC<RegistrationSuccessPassProps> = (
       // ignore
     }
 
-    // Generate high-resolution vector QR from opaque token
+    // Generate high-resolution vector QR with universal verification URL
     if (registration.qrToken) {
-      QRCode.toDataURL(registration.qrToken, {
+      const origin = window.location.origin;
+      const verifyUrl = `${origin}/?verify=${encodeURIComponent(registration.registrationNumber)}&token=${encodeURIComponent(registration.qrToken)}`;
+
+      QRCode.toDataURL(verifyUrl, {
         width: 320,
         margin: 1.5,
         color: {

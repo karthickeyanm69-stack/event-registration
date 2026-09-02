@@ -1065,10 +1065,12 @@ export class MockDatabaseService {
 
   static verifyQRToken(
     token: string,
-    scanningStaffUser: StaffUser
+    scanningStaffUser: StaffUser | string[]
   ): {
     success: boolean;
+    valid?: boolean;
     registration?: Registration;
+    event?: CollegeEvent;
     alreadyAttended?: boolean;
     errorState?:
       | 'INVALID_QR'
@@ -1076,66 +1078,125 @@ export class MockDatabaseService {
       | 'WRONG_EVENT'
       | 'PARTICIPANT_NOT_FOUND'
       | 'NOT_AUTHORIZED';
+    errorType?: string;
     error?: string;
+    errorMessage?: string;
   } {
     if (!token || !token.trim()) {
-      return { success: false, errorState: 'INVALID_QR', error: 'No QR token data found.' };
+      return {
+        success: false,
+        valid: false,
+        errorState: 'INVALID_QR',
+        errorType: 'INVALID_QR',
+        error: 'No QR token data found.',
+        errorMessage: 'No QR token data found.',
+      };
     }
 
-    const cleanToken = token.trim();
+    let cleanToken = token.trim();
+
+    // 1. Check if token is a JSON payload
+    try {
+      if (cleanToken.startsWith('{') && cleanToken.endsWith('}')) {
+        const parsed = JSON.parse(cleanToken);
+        cleanToken = parsed.qrToken || parsed.token || parsed.registrationNumber || parsed.rollNumber || cleanToken;
+      }
+    } catch {
+      // not json, continue
+    }
+
+    // 2. Check if token is a URL
+    if (cleanToken.includes('token=')) {
+      try {
+        const url = new URL(cleanToken);
+        cleanToken = url.searchParams.get('token') || cleanToken;
+      } catch {
+        const match = cleanToken.match(/token=([^&]+)/);
+        if (match) cleanToken = match[1];
+      }
+    }
+
     if (cleanToken.startsWith('REVOKED_')) {
       return {
         success: false,
+        valid: false,
         errorState: 'INVALID_QR',
+        errorType: 'INVALID_QR',
         error: 'This QR pass has been REVOKED due to an authorized event change. Please use the newly issued pass.',
+        errorMessage: 'This QR pass has been REVOKED due to an authorized event change. Please use the newly issued pass.',
       };
     }
 
     const regs = this.getRegistrations();
+    const events = this.getEvents();
+    const normInput = this.normalizeRollNumber(cleanToken);
 
-    // Check if this token belonged to a registration that was subsequently revoked
+    // Check revoked list
     const revokedReg = regs.find(
       (r) =>
-        r.status === 'CANCELLED' ||
-        (r.qrToken.startsWith('REVOKED_') && r.qrToken.includes(cleanToken))
+        r.status === 'CANCELLED' &&
+        (r.qrToken.includes(cleanToken) || r.registrationNumber === cleanToken)
     );
-    if (revokedReg && (revokedReg.qrToken.includes(cleanToken) || revokedReg.registrationNumber === cleanToken)) {
+    if (revokedReg) {
       return {
         success: false,
+        valid: false,
         errorState: 'INVALID_QR',
+        errorType: 'INVALID_QR',
         error: 'This QR pass has been REVOKED due to an authorized event change. Please use the newly issued pass.',
+        errorMessage: 'This QR pass has been REVOKED due to an authorized event change. Please use the newly issued pass.',
       };
     }
 
+    // Match by qrToken, registrationNumber, leaderRollNumber, or member rollNumber
     const reg = regs.find(
-      (r) => r.qrToken === cleanToken || r.registrationNumber === cleanToken
+      (r) =>
+        r.qrToken === cleanToken ||
+        r.registrationNumber.toUpperCase() === cleanToken.toUpperCase() ||
+        this.normalizeRollNumber(r.leaderRollNumber) === normInput ||
+        r.members?.some((m) => this.normalizeRollNumber(m.rollNumber) === normInput)
     );
 
     if (!reg) {
       return {
         success: false,
+        valid: false,
         errorState: 'PARTICIPANT_NOT_FOUND',
+        errorType: 'PARTICIPANT_NOT_FOUND',
         error: 'Pass token not found in the official registry.',
+        errorMessage: 'Pass token not found in the official registry.',
       };
     }
+
+    const matchedEvent = events.find((e) => e.id === reg.eventId);
 
     if (reg.status === 'CANCELLED') {
       return {
         success: false,
+        valid: false,
+        registration: reg,
+        event: matchedEvent,
         errorState: 'INVALID_QR',
+        errorType: 'INVALID_QR',
         error: 'This registration pass has been CANCELLED and is no longer valid.',
+        errorMessage: 'This registration pass has been CANCELLED and is no longer valid.',
       };
     }
 
-    if (
-      scanningStaffUser.assignedEventIds.length > 0 &&
-      !scanningStaffUser.assignedEventIds.includes(reg.eventId)
-    ) {
+    const assignedIds: string[] = Array.isArray(scanningStaffUser)
+      ? scanningStaffUser
+      : scanningStaffUser.assignedEventIds || [];
+
+    if (assignedIds.length > 0 && !assignedIds.includes(reg.eventId)) {
       return {
         success: false,
+        valid: false,
         registration: reg,
+        event: matchedEvent,
         errorState: 'WRONG_EVENT',
+        errorType: 'WRONG_EVENT',
         error: `Scanned pass is for "${reg.eventTitle}". You are authorized to evaluate only your assigned events.`,
+        errorMessage: `Scanned pass is for "${reg.eventTitle}". You are authorized to evaluate only your assigned events.`,
       };
     }
 
@@ -1147,10 +1208,16 @@ export class MockDatabaseService {
     if (existingAtt) {
       return {
         success: true,
+        valid: true,
         registration: reg,
+        event: matchedEvent,
         alreadyAttended: true,
         errorState: 'ALREADY_ATTENDED',
+        errorType: 'ALREADY_ATTENDED',
         error: `Participant attendance was already recorded at ${new Date(
+          existingAtt.scannedAt || ''
+        ).toLocaleTimeString()} by ${existingAtt.scannedByStaffName}.`,
+        errorMessage: `Participant attendance was already recorded at ${new Date(
           existingAtt.scannedAt || ''
         ).toLocaleTimeString()} by ${existingAtt.scannedByStaffName}.`,
       };
@@ -1158,7 +1225,9 @@ export class MockDatabaseService {
 
     return {
       success: true,
+      valid: true,
       registration: reg,
+      event: matchedEvent,
       alreadyAttended: false,
     };
   }

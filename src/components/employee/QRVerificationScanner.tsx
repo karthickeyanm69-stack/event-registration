@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   QrCode,
   CheckCircle2,
@@ -13,6 +13,7 @@ import {
   Sparkles,
   Camera,
   RefreshCw,
+  Search,
 } from 'lucide-react';
 import { MockDatabaseService } from '../../data/mockDatabase';
 import { CollegeEvent, Registration, StaffUser } from '../../types';
@@ -29,20 +30,30 @@ export const QRVerificationScanner: React.FC<QRVerificationScannerProps> = ({
   const [manualToken, setManualToken] = useState('');
   const [isScanning, setIsScanning] = useState(true);
   const [scanResult, setScanResult] = useState<{
-    valid: boolean;
+    valid?: boolean;
+    success?: boolean;
     registration?: Registration;
     event?: CollegeEvent;
     errorType?: string;
+    errorState?: string;
     errorMessage?: string;
+    error?: string;
   } | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [successNotice, setSuccessNotice] = useState<string | null>(null);
+  const [activeRegistrations, setActiveRegistrations] = useState<Registration[]>([]);
+
+  // Load all current registrations from database
+  useEffect(() => {
+    const regs = MockDatabaseService.getRegistrations().filter((r) => r.status === 'ACTIVE');
+    setActiveRegistrations(regs);
+  }, [isScanning]);
 
   const handleSimulateScan = (tokenToScan?: string) => {
     const token = tokenToScan || manualToken.trim();
     if (!token) return;
 
-    const res = MockDatabaseService.verifyQRToken(token, staffUser.assignedEventIds);
+    const res = MockDatabaseService.verifyQRToken(token, staffUser);
     setScanResult(res);
     setIsScanning(false);
     setSuccessNotice(null);
@@ -57,7 +68,7 @@ export const QRVerificationScanner: React.FC<QRVerificationScannerProps> = ({
         scanResult.registration!.id,
         staffUser,
         'PRESENT',
-        `Scanned & verified via Employee PWA by ${staffUser.name}`
+        `Scanned & verified via Evaluator PWA by ${staffUser.name}`
       );
       setIsRecording(false);
 
@@ -65,7 +76,7 @@ export const QRVerificationScanner: React.FC<QRVerificationScannerProps> = ({
         setSuccessNotice(`Attendance successfully recorded for ${scanResult.registration!.teamName || scanResult.registration!.leaderName}!`);
         onAttendanceRecorded(scanResult.registration!);
       }
-    }, 500);
+    }, 400);
   };
 
   const handleResetScanner = () => {
@@ -75,6 +86,13 @@ export const QRVerificationScanner: React.FC<QRVerificationScannerProps> = ({
     setSuccessNotice(null);
   };
 
+  // Filter registrations relevant to this staff user
+  const relevantRegistrations = activeRegistrations.filter(
+    (r) =>
+      staffUser.assignedEventIds.length === 0 ||
+      staffUser.assignedEventIds.includes(r.eventId)
+  );
+
   return (
     <div className="w-full max-w-md mx-auto space-y-5">
       {/* Scanner Mode */}
@@ -82,75 +100,80 @@ export const QRVerificationScanner: React.FC<QRVerificationScannerProps> = ({
         <div className="bg-white dark:bg-primary-container rounded-3xl p-6 border border-slate-200/80 dark:border-white/10 shadow-xl space-y-5">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <Camera className="w-4 h-4 text-secondary" />
-              <span>Live QR Viewfinder</span>
+              <Camera className="w-4 h-4 text-teal-600" />
+              <span>Live QR Scanner Viewfinder</span>
             </h3>
-            <span className="text-[10px] uppercase font-bold text-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full border border-emerald-500/20">
-              Camera Ready
+            <span className="text-[10px] uppercase font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+              Ready
             </span>
           </div>
 
           {/* Animated Camera Viewfinder Simulation */}
-          <div className="relative w-full aspect-square max-w-[280px] mx-auto rounded-3xl bg-slate-950 overflow-hidden border-2 border-dashed border-secondary/50 flex items-center justify-center shadow-inner">
+          <div className="relative w-full aspect-square max-w-[280px] mx-auto rounded-3xl bg-slate-950 overflow-hidden border-2 border-dashed border-teal-500/50 flex items-center justify-center shadow-inner">
             {/* Viewfinder Target Reticle */}
             <div className="absolute inset-8 border border-white/30 rounded-2xl pointer-events-none" />
 
             {/* Glowing Laser Scanline */}
-            <div className="absolute left-6 right-6 h-1 bg-gradient-to-r from-transparent via-secondary-fixed to-transparent animate-scan shadow-[0_0_12px_#7af1fc]" />
+            <div className="absolute left-6 right-6 h-1 bg-gradient-to-r from-transparent via-teal-400 to-transparent animate-laser shadow-[0_0_12px_#2dd4bf]" />
 
             <div className="text-center space-y-2 z-10">
-              <QrCode className="w-16 h-16 text-secondary/70 mx-auto animate-pulse" />
+              <QrCode className="w-16 h-16 text-teal-400/80 mx-auto animate-pulse" />
               <p className="text-[11px] text-slate-300 font-medium px-4">
-                Point camera at participant's digital pass
+                Point camera at participant's digital pass or enter details below
               </p>
             </div>
           </div>
 
-          {/* Quick Demo Test Bar */}
+          {/* Manual Token / Roll Number Input */}
           <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-white/10">
-            <span className="text-[10px] uppercase font-bold text-slate-400 block">
-              Simulate Scan with Active Registrations:
-            </span>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => handleSimulateScan('SPIHER_IGNITE_TOKEN_V1_88421_SEC')}
-                className="p-2 rounded-xl bg-secondary/10 hover:bg-secondary/20 text-secondary text-xs font-bold border border-secondary/20 truncate"
-              >
-                Scan Code-A-Thon (88421)
-              </button>
-              <button
-                type="button"
-                onClick={() => handleSimulateScan('SPIHER_IGNITE_TOKEN_V1_99120_SEC')}
-                className="p-2 rounded-xl bg-secondary/10 hover:bg-secondary/20 text-secondary text-xs font-bold border border-secondary/20 truncate"
-              >
-                Scan Prompt-AI (99120)
-              </button>
-            </div>
-          </div>
-
-          {/* Manual Token Input Fallback */}
-          <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-white/10">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Or Enter Pass Token Manually:
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <Search className="w-3.5 h-3.5 text-teal-600" />
+              <span>Verify by Token, Roll No, or Pass ID:</span>
             </label>
             <div className="flex gap-2">
               <input
                 type="text"
                 value={manualToken}
                 onChange={(e) => setManualToken(e.target.value)}
-                placeholder="SPIHER_IGNITE_TOKEN..."
-                className="flex-1 px-3 py-2 rounded-xl bg-slate-50 dark:bg-primary/60 border border-slate-200 dark:border-white/10 text-xs font-mono focus:ring-2 focus:ring-secondary focus:outline-none"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleSimulateScan();
+                }}
+                placeholder="e.g. 2021CS042 or IGNITE-2024-88421"
+                className="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-primary/60 border border-slate-200 dark:border-white/10 text-xs font-mono focus:ring-2 focus:ring-teal-500 focus:outline-none"
               />
               <button
                 type="button"
                 onClick={() => handleSimulateScan()}
-                className="py-2 px-3 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary-container"
+                className="py-2.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition-colors cursor-pointer shadow-sm"
               >
-                Verify
+                Scan Pass
               </button>
             </div>
           </div>
+
+          {/* Quick Real-Time Registration Quick Select */}
+          {relevantRegistrations.length > 0 && (
+            <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-white/10">
+              <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                1-Tap Live Simulation ({relevantRegistrations.length} Active Participants):
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto pr-1">
+                {relevantRegistrations.slice(0, 6).map((reg) => (
+                  <button
+                    key={reg.id}
+                    type="button"
+                    onClick={() => handleSimulateScan(reg.qrToken)}
+                    className="p-2 rounded-xl bg-teal-50 hover:bg-teal-100 dark:bg-teal-950/40 dark:hover:bg-teal-900/50 text-teal-800 dark:text-teal-200 text-xs font-semibold border border-teal-200 dark:border-teal-800 text-left transition-colors truncate"
+                  >
+                    <div className="font-bold truncate">{reg.teamName || reg.leaderName}</div>
+                    <div className="text-[10px] font-mono text-teal-600 dark:text-teal-400">
+                      {reg.leaderRollNumber} • {reg.eventTitle.split(' ')[0]}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -161,22 +184,22 @@ export const QRVerificationScanner: React.FC<QRVerificationScannerProps> = ({
           <div className="flex items-start justify-between">
             <div>
               <span className="text-[10px] uppercase font-bold text-slate-400">Scanned Pass Verification</span>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                {scanResult.registration?.eventTitle || 'Unknown Event'}
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                {scanResult.registration?.eventTitle || scanResult.event?.title || 'Unknown Event'}
               </h3>
             </div>
 
-            {scanResult.valid && !scanResult.errorType && (
+            {scanResult.valid && !scanResult.errorState && (
               <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Valid Pass</span>
               </span>
             )}
 
-            {scanResult.errorType && (
+            {(scanResult.errorState || scanResult.errorType) && (
               <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border border-red-500/30 flex items-center gap-1">
                 <AlertTriangle className="w-3.5 h-3.5" />
-                <span>{scanResult.errorType}</span>
+                <span>{scanResult.errorState || scanResult.errorType}</span>
               </span>
             )}
           </div>
@@ -190,11 +213,11 @@ export const QRVerificationScanner: React.FC<QRVerificationScannerProps> = ({
           )}
 
           {/* Error Message Details */}
-          {scanResult.errorMessage && !successNotice && (
+          {(scanResult.errorMessage || scanResult.error) && !successNotice && (
             <div className="p-3.5 rounded-2xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 text-xs font-medium space-y-1">
-              <p className="font-bold">{scanResult.errorMessage}</p>
+              <p className="font-bold">{scanResult.errorMessage || scanResult.error}</p>
               <p className="text-[11px] text-red-600 dark:text-red-400">
-                Please double-check with the participant before taking action.
+                Please double-check with the participant or contact the Event Admin.
               </p>
             </div>
           )}
@@ -206,10 +229,12 @@ export const QRVerificationScanner: React.FC<QRVerificationScannerProps> = ({
                 <div>
                   <span className="text-[10px] text-slate-400 uppercase block">Candidate / Leader</span>
                   <p className="font-bold text-slate-900 dark:text-white">{scanResult.registration.leaderName}</p>
-                  <p className="font-mono text-[11px] text-secondary">{scanResult.registration.leaderRollNumber}</p>
+                  <p className="font-mono text-[11px] text-teal-600 dark:text-teal-400 font-bold">
+                    {scanResult.registration.leaderRollNumber}
+                  </p>
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-400 uppercase block">Registration No</span>
+                  <span className="text-[10px] text-slate-400 uppercase block">Pass ID</span>
                   <p className="font-mono font-bold text-slate-900 dark:text-white">
                     {scanResult.registration.registrationNumber}
                   </p>
@@ -224,7 +249,7 @@ export const QRVerificationScanner: React.FC<QRVerificationScannerProps> = ({
 
               {scanResult.registration.isTeamEvent && (
                 <div className="pt-2 border-t border-slate-200/60 dark:border-white/10 space-y-1">
-                  <div className="flex items-center gap-1.5 font-bold text-secondary">
+                  <div className="flex items-center gap-1.5 font-bold text-teal-700 dark:text-teal-300">
                     <Crown className="w-3.5 h-3.5 text-amber-500" />
                     <span>Team: {scanResult.registration.teamName}</span>
                   </div>
@@ -248,22 +273,22 @@ export const QRVerificationScanner: React.FC<QRVerificationScannerProps> = ({
             <button
               type="button"
               onClick={handleResetScanner}
-              className="py-3 px-4 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 text-xs font-bold flex items-center gap-1.5 transition-colors"
+              className="py-3 px-4 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Back / Scan Another</span>
+              <span>Back / Scan Next</span>
             </button>
 
-            {scanResult.valid && !successNotice && (
+            {scanResult.valid && !scanResult.alreadyAttended && !successNotice && (
               <button
                 type="button"
                 disabled={isRecording}
                 onClick={handleConfirmAttendance}
-                className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-secondary to-secondary-container text-primary font-bold text-xs shadow-lg shadow-secondary/30 flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50"
+                className="flex-1 py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-lg shadow-teal-600/25 flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
               >
                 {isRecording ? (
                   <>
-                    <div className="w-3.5 h-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     <span>Recording...</span>
                   </>
                 ) : (
@@ -280,3 +305,5 @@ export const QRVerificationScanner: React.FC<QRVerificationScannerProps> = ({
     </div>
   );
 };
+
+export default QRVerificationScanner;
