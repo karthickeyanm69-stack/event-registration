@@ -48,9 +48,15 @@ export default function App() {
   // 3. Strict Participant Flow Steps:
   // 'access' -> 'onboarding' -> 'events' -> 'team' -> 'success' -> 'dashboard'
   type ParticipantFlowStep = 'access' | 'onboarding' | 'events' | 'team' | 'success' | 'dashboard';
-  const [participantStep, setParticipantStep] = useState<ParticipantFlowStep>('access');
-  const [currentParticipant, setCurrentParticipant] = useState<Participant | null>(null);
-  const [currentRegistration, setCurrentRegistration] = useState<Registration | null>(null);
+  const [participantStep, setParticipantStep] = useState<ParticipantFlowStep>('dashboard');
+  const [currentParticipant, setCurrentParticipant] = useState<Participant | null>(() => {
+    const list = MockDatabaseService.getParticipants();
+    return list.length > 0 ? list[0] : null;
+  });
+  const [currentRegistration, setCurrentRegistration] = useState<Registration | null>(() => {
+    const list = MockDatabaseService.getRegistrations();
+    return list.length > 0 ? list[0] : null;
+  });
   const [onboardingDraft, setOnboardingDraft] = useState<Partial<Participant>>({});
   const [selectedEventForReg, setSelectedEventForReg] = useState<CollegeEvent | null>(null);
 
@@ -283,7 +289,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#000a1e] text-slate-900 dark:text-white flex flex-col font-sans selection:bg-secondary selection:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-[#0077c8] selection:text-white">
       {/* ========================================================================= */}
       {/* 1. PARTICIPANT PORTAL (PUBLIC FACING ONLY - NO STAFF SWITCHER)            */}
       {/* ========================================================================= */}
@@ -303,6 +309,7 @@ export default function App() {
                 <ParticipantAccess
                   onSuccessfulAccess={handleParticipantAccessSuccess}
                   onStartNewRegistration={handleStartNewRegistration}
+                  onBackToHome={() => setParticipantStep('dashboard')}
                 />
               )}
 
@@ -348,13 +355,15 @@ export default function App() {
             />
           )}
 
-          {/* Participant Dashboard (Home, Rules, Event Countdown, Contact Us, My QR Pass, Change Event) */}
-          {participantStep === 'dashboard' && currentParticipant && currentRegistration && (
+          {/* Participant Dashboard / Public Landing (Home, Rules, Campus, Support, Entry Pass) */}
+          {participantStep === 'dashboard' && (
             <ParticipantDashboard
-              participant={currentParticipant}
-              registration={currentRegistration}
+              participant={currentParticipant || MockDatabaseService.getParticipants()[0]}
+              registration={currentRegistration || MockDatabaseService.getRegistrations()[0]}
               events={events}
               onSignOut={() => setParticipantStep('access')}
+              onStartNewRegistration={handleStartNewRegistration}
+              onOpenAccessLogin={() => setParticipantStep('access')}
               onEventChangedSuccess={(newReg) => {
                 setCurrentRegistration(newReg);
                 loadDatabaseData();

@@ -62,7 +62,7 @@ export const EmployeeAttendanceRoster: React.FC<EmployeeAttendanceRosterProps> =
   return (
     <div className="w-full max-w-2xl mx-auto space-y-4">
       {/* Search & Filter Header */}
-      <div className="bg-white dark:bg-primary-container p-4 rounded-3xl border border-slate-200/80 dark:border-white/10 shadow-lg space-y-3">
+      <div className="bg-white p-4 rounded-3xl border border-slate-200 shadow-sm space-y-3">
         <div className="relative">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
@@ -70,7 +70,7 @@ export const EmployeeAttendanceRoster: React.FC<EmployeeAttendanceRosterProps> =
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search by Roll No, Candidate Name, or Team..."
-            className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-primary/60 border border-slate-200 dark:border-white/10 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-secondary focus:outline-none"
+            className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs text-slate-900 placeholder-slate-400 font-semibold focus:bg-white focus:ring-2 focus:ring-teal-600 focus:border-teal-600 focus:outline-none"
           />
         </div>
 
@@ -81,10 +81,10 @@ export const EmployeeAttendanceRoster: React.FC<EmployeeAttendanceRosterProps> =
                 key={st}
                 type="button"
                 onClick={() => setStatusFilter(st)}
-                className={`px-3 py-1.5 rounded-xl font-bold text-[11px] transition-colors ${
+                className={`px-3 py-1.5 rounded-xl font-bold text-[11px] transition-colors cursor-pointer ${
                   statusFilter === st
-                    ? 'bg-secondary text-white shadow-sm'
-                    : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10'
+                    ? 'bg-teal-600 text-white shadow-sm'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                 }`}
               >
                 {st}
@@ -92,7 +92,7 @@ export const EmployeeAttendanceRoster: React.FC<EmployeeAttendanceRosterProps> =
             ))}
           </div>
 
-          <span className="text-[11px] text-slate-400 font-medium">
+          <span className="text-[11px] text-slate-500 font-bold">
             Showing {filteredRegistrations.length} of {assignedRegistrations.length}
           </span>
         </div>
@@ -106,24 +106,24 @@ export const EmployeeAttendanceRoster: React.FC<EmployeeAttendanceRosterProps> =
           return (
             <div
               key={reg.id}
-              className="bg-white dark:bg-primary-container rounded-2xl p-4 border border-slate-200/80 dark:border-white/10 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+              className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
             >
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-[9px] uppercase font-bold px-2 py-0.5 rounded bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300">
+                  <span className="text-[9px] uppercase font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
                     {reg.eventTitle}
                   </span>
                   {reg.teamName && (
-                    <span className="text-[11px] font-bold text-secondary flex items-center gap-1">
+                    <span className="text-[11px] font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 flex items-center gap-1">
                       <Crown className="w-3 h-3 text-amber-500" />
                       <span>{reg.teamName}</span>
                     </span>
                   )}
                 </div>
 
-                <h4 className="text-sm font-bold text-slate-900 dark:text-white">{reg.leaderName}</h4>
-                <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
-                  <span className="font-mono text-secondary">{reg.leaderRollNumber}</span>
+                <h4 className="text-sm font-bold text-slate-900">{reg.leaderName}</h4>
+                <div className="flex items-center gap-2 text-[11px] text-slate-600">
+                  <span className="font-mono font-bold text-teal-700">{reg.leaderRollNumber}</span>
                   <span>•</span>
                   <span>{reg.department}</span>
                 </div>
@@ -133,10 +133,10 @@ export const EmployeeAttendanceRoster: React.FC<EmployeeAttendanceRosterProps> =
               <button
                 type="button"
                 onClick={() => handleToggleAttendance(reg, isPresent)}
-                className={`py-2 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm ${
+                className={`py-2 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer ${
                   isPresent
-                    ? 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-emerald-500/20'
-                    : 'bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/15 text-slate-600 dark:text-slate-300'
+                    ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/20'
+                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
                 }`}
               >
                 {isPresent ? (
@@ -156,9 +156,9 @@ export const EmployeeAttendanceRoster: React.FC<EmployeeAttendanceRosterProps> =
         })}
 
         {filteredRegistrations.length === 0 && (
-          <div className="text-center py-10 bg-white dark:bg-primary-container rounded-3xl border border-slate-200 dark:border-white/10 p-6 space-y-2">
-            <p className="text-xs font-bold text-slate-700 dark:text-slate-300">No Participants Match Search Filter</p>
-            <p className="text-[11px] text-slate-400">Try adjusting your query or filter criteria.</p>
+          <div className="text-center py-10 bg-white rounded-3xl border border-slate-200 p-6 space-y-2">
+            <p className="text-xs font-bold text-slate-900">No Participants Match Search Filter</p>
+            <p className="text-[11px] text-slate-500">Try adjusting your query or filter criteria.</p>
           </div>
         )}
       </div>

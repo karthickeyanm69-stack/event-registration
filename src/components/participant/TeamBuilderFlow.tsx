@@ -171,32 +171,32 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
         <button
           type="button"
           onClick={onBackToEventSelection}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-teal-700 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Change Event</span>
         </button>
 
-        <div className="flex items-center gap-1 text-[11px] font-bold text-secondary bg-secondary/10 px-2.5 py-1 rounded-full border border-secondary/20">
-          <Sparkles className="w-3.5 h-3.5" />
+        <div className="flex items-center gap-1 text-xs font-bold text-teal-800 bg-teal-50 px-3 py-1 rounded-full border border-teal-200 shadow-sm">
+          <Sparkles className="w-3.5 h-3.5 text-teal-600" />
           <span>Step 3 of 3: {event.isTeamEvent ? 'Team Details' : 'Confirmation'}</span>
         </div>
       </div>
 
-      {/* Event Overview Pill */}
-      <div className="p-4 rounded-2xl bg-primary-container text-white border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
+      {/* Event Overview Banner */}
+      <div className="p-5 rounded-2xl bg-[#002b66] text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
         <div>
-          <span className="text-[10px] uppercase tracking-wider font-bold text-secondary-fixed">
+          <span className="text-[10px] uppercase tracking-wider font-extrabold text-teal-300">
             {event.category} Event
           </span>
-          <h3 className="text-base font-bold">{event.title}</h3>
-          <p className="text-xs text-slate-300">
+          <h3 className="text-lg font-bold text-white mt-0.5">{event.title}</h3>
+          <p className="text-xs text-slate-200">
             {event.venue} • {event.time}
           </p>
         </div>
-        <div className="text-xs font-semibold bg-white/10 px-3 py-1.5 rounded-xl border border-white/15 self-start sm:self-auto">
+        <div className="text-xs font-bold bg-white/10 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/20 self-start sm:self-auto">
           {event.isTeamEvent ? (
-            <span className="text-secondary-fixed">
+            <span className="text-teal-200">
               Team Requirement: {event.minTeamSize} to {event.maxTeamSize} Members
             </span>
           ) : (
@@ -206,8 +206,8 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
       </div>
 
       {errorMessage && (
-        <div className="p-4 rounded-2xl bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-800/60 text-red-900 dark:text-red-200 text-xs font-medium flex items-start gap-2.5 animate-shake">
-          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+        <div className="p-4 rounded-2xl bg-red-50 border border-red-300 text-red-900 text-xs font-medium flex items-start gap-2.5 shadow-sm">
+          <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
           <span>{errorMessage}</span>
         </div>
       )}
@@ -215,9 +215,9 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
       <form onSubmit={handleValidateAndProceed} className="space-y-6">
         {/* Team Name Input (If Team Event) */}
         {event.isTeamEvent && (
-          <div className="bg-white dark:bg-primary-container rounded-3xl p-6 border border-slate-200/80 dark:border-white/10 shadow-lg space-y-2">
-            <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
-              <Users className="w-4 h-4 text-secondary" />
+          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-2">
+            <label className="text-xs font-bold text-[#002b66] uppercase tracking-wider flex items-center gap-2">
+              <Users className="w-4 h-4 text-teal-600" />
               <span>Team Name *</span>
             </label>
             <input
@@ -226,7 +226,7 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
               value={teamName}
               onChange={(e) => setTeamName(e.target.value)}
               placeholder="e.g. Cyber Ninjas"
-              className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-primary/60 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-sm font-semibold focus:ring-2 focus:ring-secondary focus:outline-none"
+              className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm font-semibold focus:bg-white focus:ring-2 focus:ring-teal-600 focus:border-teal-600 focus:outline-none"
             />
           </div>
         )}
@@ -234,9 +234,9 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
         {/* Member Cards List */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 uppercase tracking-wider">
               <span>{event.isTeamEvent ? 'Team Roster & Details' : 'Participant Details'}</span>
-              <span className="text-xs font-normal text-slate-400">
+              <span className="text-xs font-normal text-slate-500">
                 ({members.length} {event.isTeamEvent ? `/ ${event.maxTeamSize} max` : ''})
               </span>
             </h3>
@@ -245,9 +245,9 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
               <button
                 type="button"
                 onClick={handleAddMember}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-secondary/10 hover:bg-secondary/20 text-secondary text-xs font-bold border border-secondary/20 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 text-xs font-bold border border-teal-200 transition-colors shadow-sm cursor-pointer"
               >
-                <Plus className="w-3.5 h-3.5" />
+                <Plus className="w-3.5 h-3.5 text-teal-600" />
                 <span>Add Teammate</span>
               </button>
             )}
@@ -260,23 +260,23 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
             return (
               <div
                 key={idx}
-                className={`bg-white dark:bg-primary-container rounded-3xl p-5 sm:p-6 border transition-all ${
+                className={`bg-white rounded-3xl p-5 sm:p-6 border transition-all ${
                   member.isLeader
-                    ? 'border-secondary/40 shadow-md ring-1 ring-secondary/20'
-                    : 'border-slate-200/80 dark:border-white/10 shadow'
+                    ? 'border-teal-400 shadow-md ring-1 ring-teal-400/30'
+                    : 'border-slate-200 shadow-sm'
                 } space-y-4`}
               >
                 {/* Member Header */}
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/10">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                   <div className="flex items-center gap-2">
                     {member.isLeader ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-300 border border-amber-500/30">
-                        <Crown className="w-3.5 h-3.5" />
+                      <span className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
+                        <Crown className="w-3.5 h-3.5 text-amber-500" />
                         <span>Team Leader (You)</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-300">
-                        <User className="w-3.5 h-3.5" />
+                      <span className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                        <User className="w-3.5 h-3.5 text-slate-500" />
                         <span>Teammate #{idx + 1}</span>
                       </span>
                     )}
@@ -286,7 +286,7 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
                     <button
                       type="button"
                       onClick={() => handleRemoveMember(idx)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                       title="Remove Member"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -295,9 +295,9 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
                 </div>
 
                 {/* Name & Roll Number Input */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-[#002b66] uppercase tracking-wider">
                       Full Name *
                     </label>
                     <input
@@ -307,12 +307,12 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
                       disabled={member.isLeader}
                       onChange={(e) => handleMemberChange(idx, 'name', e.target.value)}
                       placeholder="e.g. Teammate Name"
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-primary/60 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-secondary focus:outline-none disabled:opacity-75"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-xs font-semibold focus:bg-white focus:ring-2 focus:ring-teal-600 focus:border-teal-600 focus:outline-none disabled:bg-slate-100 disabled:text-slate-600"
                     />
                   </div>
 
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-[#002b66] uppercase tracking-wider">
                       Roll / Register Number *
                     </label>
                     <input
@@ -322,7 +322,7 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
                       disabled={member.isLeader}
                       onChange={(e) => handleMemberChange(idx, 'rollNumber', e.target.value.toUpperCase())}
                       placeholder="e.g. 2021CS099"
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-primary/60 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs font-mono focus:ring-2 focus:ring-secondary focus:outline-none disabled:opacity-75"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-xs font-mono font-bold focus:bg-white focus:ring-2 focus:ring-teal-600 focus:border-teal-600 focus:outline-none disabled:bg-slate-100 disabled:text-slate-600"
                     />
                   </div>
                 </div>
@@ -330,22 +330,22 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
                 {/* Quick Auto-Fill Helpers for Teammates */}
                 {!member.isLeader && (
                   <div className="flex flex-wrap gap-4 pt-1 text-xs">
-                    <label className="flex items-center gap-1.5 cursor-pointer text-slate-600 dark:text-slate-300">
+                    <label className="flex items-center gap-1.5 cursor-pointer text-slate-700 font-semibold">
                       <input
                         type="checkbox"
                         checked={isSameCol}
                         onChange={(e) => handleToggleSameCollege(idx, e.target.checked)}
-                        className="rounded border-slate-300 text-secondary focus:ring-secondary"
+                        className="rounded border-slate-300 text-teal-600 focus:ring-teal-500"
                       />
                       <span>Same College as Leader</span>
                     </label>
 
-                    <label className="flex items-center gap-1.5 cursor-pointer text-slate-600 dark:text-slate-300">
+                    <label className="flex items-center gap-1.5 cursor-pointer text-slate-700 font-semibold">
                       <input
                         type="checkbox"
                         checked={isSameDept}
                         onChange={(e) => handleToggleSameDept(idx, e.target.checked)}
-                        className="rounded border-slate-300 text-secondary focus:ring-secondary"
+                        className="rounded border-slate-300 text-teal-600 focus:ring-teal-500"
                       />
                       <span>Same Department as Leader</span>
                     </label>
@@ -353,9 +353,9 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
                 )}
 
                 {/* College & Department Inputs */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-[#002b66] uppercase tracking-wider">
                       College *
                     </label>
                     <input
@@ -364,12 +364,12 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
                       value={member.collegeName}
                       disabled={member.isLeader || (!member.isLeader && isSameCol)}
                       onChange={(e) => handleMemberChange(idx, 'collegeName', e.target.value)}
-                      className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-primary/60 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-secondary focus:outline-none disabled:opacity-70"
+                      className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-xs font-semibold focus:bg-white focus:ring-2 focus:ring-teal-600 focus:border-teal-600 focus:outline-none disabled:bg-slate-100 disabled:text-slate-600"
                     />
                   </div>
 
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-[#002b66] uppercase tracking-wider">
                       Department *
                     </label>
                     <input
@@ -378,7 +378,7 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
                       value={member.department}
                       disabled={member.isLeader || (!member.isLeader && isSameDept)}
                       onChange={(e) => handleMemberChange(idx, 'department', e.target.value)}
-                      className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-primary/60 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-secondary focus:outline-none disabled:opacity-70"
+                      className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-xs font-semibold focus:bg-white focus:ring-2 focus:ring-teal-600 focus:border-teal-600 focus:outline-none disabled:bg-slate-100 disabled:text-slate-600"
                     />
                   </div>
                 </div>
@@ -390,10 +390,10 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
         {/* Submit & Confirm Button */}
         <button
           type="submit"
-          className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-primary to-primary-container hover:from-primary-container hover:to-primary text-white font-bold text-sm shadow-xl shadow-primary/30 flex items-center justify-center gap-2 hover:scale-[1.01] transition-all"
+          className="w-full py-4 px-6 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm shadow-md shadow-teal-600/20 flex items-center justify-center gap-2 transition-all cursor-pointer"
         >
-          <ShieldCheck className="w-5 h-5 text-secondary-fixed" />
-          <span>Confirm & Generate Official QR Pass</span>
+          <ShieldCheck className="w-5 h-5 text-teal-200" />
+          <span>Confirm &amp; Generate Official QR Pass</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </form>

@@ -112,16 +112,16 @@ export const EmployeeScoreManagement: React.FC<EmployeeScoreManagementProps> = (
   return (
     <div className="w-full max-w-2xl mx-auto space-y-5">
       {/* Registration Picker Card */}
-      <div className="bg-white dark:bg-primary-container p-5 rounded-3xl border border-slate-200/80 dark:border-white/10 shadow-lg space-y-3">
-        <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
-          <Trophy className="w-4 h-4 text-secondary" />
+      <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-md space-y-3">
+        <label className="text-xs font-bold text-[#002b66] flex items-center gap-2 uppercase tracking-wider">
+          <Trophy className="w-4 h-4 text-teal-600" />
           <span>Select Participant / Team to Evaluate</span>
         </label>
 
         <select
           value={selectedRegId}
           onChange={(e) => handleSelectRegistration(e.target.value)}
-          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-primary/60 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-secondary focus:outline-none"
+          className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-teal-600 focus:bg-white focus:outline-none"
         >
           {assignedRegistrations.map((r) => {
             const hasScore = scores.some((s) => s.registrationId === r.id);
@@ -135,57 +135,64 @@ export const EmployeeScoreManagement: React.FC<EmployeeScoreManagementProps> = (
       </div>
 
       {successNotice && (
-        <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200 text-xs font-bold flex items-center gap-2 animate-in fade-in">
-          <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-500" />
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs font-bold flex items-center gap-2 animate-in fade-in">
+          <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-600" />
           <span>{successNotice}</span>
         </div>
       )}
 
       {selectedReg && (
-        <form onSubmit={handleSaveScore} className="bg-white dark:bg-primary-container rounded-3xl p-6 border border-slate-200/80 dark:border-white/10 shadow-xl space-y-5">
+        <form onSubmit={handleSaveScore} className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200 shadow-xl space-y-6">
           {/* Candidate Overview Header */}
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/10">
+          <div className="flex items-center justify-between pb-4 border-b border-slate-200">
             <div>
-              <span className="text-[10px] uppercase font-bold text-secondary">{selectedReg.eventTitle}</span>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+              <span className="text-[10px] uppercase font-extrabold px-2.5 py-1 rounded bg-teal-50 text-teal-800 border border-teal-200">
+                {selectedReg.eventTitle}
+              </span>
+              <h3 className="text-lg font-bold text-slate-900 mt-1.5">
                 {selectedReg.teamName ? selectedReg.teamName : selectedReg.leaderName}
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
-                {selectedReg.leaderRollNumber} • {selectedReg.collegeName}
+              <p className="text-xs text-slate-600 font-mono mt-0.5">
+                Roll No: <span className="font-bold text-teal-700">{selectedReg.leaderRollNumber}</span> • {selectedReg.collegeName}
               </p>
             </div>
 
             {/* Total Score Meter */}
-            <div className="p-3 rounded-2xl bg-primary text-white text-center min-w-[80px] shadow-md border border-white/15">
-              <span className="text-[9px] uppercase tracking-wider text-slate-400 block">Total</span>
-              <span className="text-2xl font-bold font-mono text-secondary-fixed">{totalScore}</span>
-              <span className="text-[9px] text-slate-400 block">/ {maxPossible}</span>
+            <div className="p-3.5 rounded-2xl bg-teal-700 text-white text-center min-w-[90px] shadow-md border border-teal-800 shrink-0">
+              <span className="text-[9px] uppercase tracking-widest text-teal-100 block font-bold">Total Score</span>
+              <span className="text-2xl font-bold font-mono text-white">{totalScore}</span>
+              <span className="text-[10px] text-teal-200 block font-medium">/ {maxPossible}</span>
             </div>
           </div>
 
           {/* Round Selector */}
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">
               Evaluation Round
             </label>
             <input
               type="text"
               value={round}
               onChange={(e) => setRound(e.target.value)}
-              className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-primary/60 border border-slate-200 dark:border-white/10 text-xs text-slate-900 dark:text-white"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-teal-600 focus:outline-none"
             />
           </div>
 
           {/* Criteria Sliders & Numeric Inputs */}
           <div className="space-y-4 pt-1">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-              Evaluation Criteria Breakdown
-            </h4>
+            <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800">
+                Evaluation Criteria Breakdown
+              </h4>
+              <span className="text-xs font-bold font-mono text-teal-700">
+                Total: {totalScore}/{maxPossible}
+              </span>
+            </div>
 
             {criteria.map((c, idx) => (
-              <div key={idx} className="p-3.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 space-y-2">
+              <div key={idx} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-slate-800 dark:text-slate-200">{c.name}</span>
+                  <span className="font-bold text-slate-900 text-sm">{c.name}</span>
                   <div className="flex items-center gap-1.5 font-mono">
                     <input
                       type="number"
@@ -193,9 +200,9 @@ export const EmployeeScoreManagement: React.FC<EmployeeScoreManagementProps> = (
                       max={c.maxMarks}
                       value={c.awardedMarks}
                       onChange={(e) => handleMarkChange(idx, parseInt(e.target.value) || 0)}
-                      className="w-14 px-2 py-1 text-center font-bold text-sm bg-white dark:bg-primary rounded-lg border border-slate-300 dark:border-white/20 text-secondary focus:outline-none"
+                      className="w-16 px-2.5 py-1 text-center font-bold text-base bg-white rounded-lg border border-slate-300 text-teal-800 focus:ring-2 focus:ring-teal-600 focus:outline-none shadow-sm"
                     />
-                    <span className="text-slate-400">/ {c.maxMarks}</span>
+                    <span className="text-slate-500 font-bold text-sm">/ {c.maxMarks}</span>
                   </div>
                 </div>
 
@@ -205,33 +212,33 @@ export const EmployeeScoreManagement: React.FC<EmployeeScoreManagementProps> = (
                   max={c.maxMarks}
                   value={c.awardedMarks}
                   onChange={(e) => handleMarkChange(idx, parseInt(e.target.value) || 0)}
-                  className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-lg appearance-none cursor-pointer accent-secondary"
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-teal-600"
                 />
               </div>
             ))}
           </div>
 
           {/* Feedback Notes */}
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">
               Evaluator Feedback / Remarks
             </label>
             <textarea
-              rows={2}
+              rows={3}
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
               placeholder="e.g. Excellent algorithmic structure, clear defense response..."
-              className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-primary/60 border border-slate-200 dark:border-white/10 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-secondary focus:outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs font-medium text-slate-900 placeholder-slate-400 focus:bg-white focus:ring-2 focus:ring-teal-600 focus:outline-none"
             />
           </div>
 
           {/* Save Button */}
           <button
             type="submit"
-            className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-secondary to-secondary-container text-primary font-bold text-xs shadow-lg shadow-secondary/30 flex items-center justify-center gap-2 hover:opacity-95 transition-opacity"
+            className="w-full py-4 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm shadow-lg shadow-teal-600/30 flex items-center justify-center gap-2 cursor-pointer transition-colors"
           >
             <Save className="w-4 h-4" />
-            <span>Submit & Lock Score ({totalScore}/100)</span>
+            <span>Submit &amp; Lock Score ({totalScore}/100)</span>
           </button>
         </form>
       )}

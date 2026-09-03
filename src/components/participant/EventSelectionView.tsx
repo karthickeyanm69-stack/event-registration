@@ -46,17 +46,17 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
         <button
           type="button"
           onClick={onBackToOnboarding}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-teal-700 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Details</span>
         </button>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+          <span className="text-xs font-semibold text-slate-600">
             Registering for:
           </span>
-          <span className="text-xs font-bold text-primary dark:text-white bg-slate-100 dark:bg-primary-container px-2.5 py-1 rounded-lg border border-slate-200 dark:border-white/10 font-mono">
+          <span className="text-xs font-bold text-[#002b66] bg-slate-100 px-3 py-1 rounded-lg border border-slate-200 font-mono">
             {participantData.name} ({participantData.rollNumber})
           </span>
         </div>
@@ -64,32 +64,32 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
 
       {/* Title & Instructions */}
       <div className="space-y-1">
-        <div className="flex items-center gap-2 text-secondary text-xs font-bold uppercase tracking-wider">
-          <Sparkles className="w-4 h-4" />
+        <div className="flex items-center gap-1 text-xs font-bold text-teal-800 bg-teal-50 px-3 py-1 rounded-full border border-teal-200 shadow-sm w-fit">
+          <Sparkles className="w-3.5 h-3.5 text-teal-600" />
           <span>Step 2 of 3: Event Selection</span>
         </div>
-        <h2 className="text-2xl font-serif font-bold text-primary dark:text-white">
+        <h2 className="text-2xl font-serif font-bold text-[#002b66] mt-2">
           Choose Your Competition
         </h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
+        <p className="text-xs text-slate-600 font-medium">
           Remember: A participant can register for <strong>only ONE event</strong> across the entire symposium.
         </p>
       </div>
 
       {/* Category Toggle Tabs */}
-      <div className="grid grid-cols-2 gap-3 max-w-md mx-auto p-1.5 bg-slate-100 dark:bg-primary-container/90 rounded-2xl border border-slate-200 dark:border-white/10 shadow-inner">
+      <div className="grid grid-cols-2 gap-3 max-w-md mx-auto p-1.5 bg-slate-100 rounded-2xl border border-slate-200 shadow-inner">
         <button
           type="button"
           onClick={() => setSelectedCategory('Technical')}
-          className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold transition-all duration-200 ${
+          className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
             selectedCategory === 'Technical'
-              ? 'bg-primary text-white shadow-md shadow-primary/20 scale-[1.02]'
-              : 'text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white'
+              ? 'bg-[#002b66] text-white shadow-md scale-[1.02]'
+              : 'text-slate-700 hover:text-[#002b66]'
           }`}
         >
           <Layers className="w-4 h-4" />
           <span>Technical Events</span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/20 text-white">
+          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/20 text-white font-bold">
             {techCount}
           </span>
         </button>
@@ -97,15 +97,15 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
         <button
           type="button"
           onClick={() => setSelectedCategory('Non-Technical')}
-          className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold transition-all duration-200 ${
+          className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
             selectedCategory === 'Non-Technical'
-              ? 'bg-secondary text-white shadow-md shadow-secondary/30 scale-[1.02]'
-              : 'text-slate-600 dark:text-slate-300 hover:text-secondary'
+              ? 'bg-teal-700 text-white shadow-md scale-[1.02]'
+              : 'text-slate-700 hover:text-teal-700'
           }`}
         >
           <Trophy className="w-4 h-4" />
           <span>Non-Technical Events</span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-black/20 text-white">
+          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-black/20 text-white font-bold">
             {nonTechCount}
           </span>
         </button>
@@ -116,7 +116,7 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
         {filteredEvents.map((evt) => (
           <div
             key={evt.id}
-            className="group bg-white dark:bg-primary-container rounded-3xl overflow-hidden border border-slate-200/80 dark:border-white/10 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+            className="group bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
           >
             {/* Image Header with Badges */}
             <div className="relative h-44 w-full overflow-hidden bg-slate-900">
@@ -131,12 +131,12 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
               <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[11px] font-semibold flex items-center gap-1 border border-white/20">
                 {evt.isTeamEvent ? (
                   <>
-                    <Users className="w-3.5 h-3.5 text-[#00a887]" />
+                    <Users className="w-3.5 h-3.5 text-teal-400" />
                     <span>Team ({evt.minTeamSize} - {evt.maxTeamSize} members)</span>
                   </>
                 ) : (
                   <>
-                    <User className="w-3.5 h-3.5 text-[#00a887]" />
+                    <User className="w-3.5 h-3.5 text-teal-400" />
                     <span>Individual Event</span>
                   </>
                 )}
@@ -151,24 +151,24 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
 
             {/* Event Body */}
             <div className="p-5 space-y-4 flex-1 flex flex-col justify-between">
-              <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed">
+              <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
                 {evt.description}
               </p>
 
               {/* Metadata Badges */}
-              <div className="grid grid-cols-2 gap-2 text-xs text-slate-500 dark:text-slate-400">
+              <div className="grid grid-cols-2 gap-2 text-xs text-slate-600 font-medium">
                 <div className="flex items-center gap-1.5 truncate">
-                  <Clock className="w-3.5 h-3.5 text-secondary shrink-0" />
+                  <Clock className="w-3.5 h-3.5 text-teal-600 shrink-0" />
                   <span className="truncate">{evt.time}</span>
                 </div>
                 <div className="flex items-center gap-1.5 truncate">
-                  <MapPin className="w-3.5 h-3.5 text-secondary shrink-0" />
+                  <MapPin className="w-3.5 h-3.5 text-teal-600 shrink-0" />
                   <span className="truncate">{evt.venue}</span>
                 </div>
               </div>
 
               {/* Slots Bar */}
-              <div className="space-y-1.5 pt-2 border-t border-slate-100 dark:border-white/10">
+              <div className="space-y-1.5 pt-2 border-t border-slate-100">
                 <div className="flex justify-between text-[11px] font-semibold">
                   <span className="text-slate-500">Availability</span>
                   <span className={evt.slotsLeft <= 10 ? 'text-red-600 font-bold' : 'text-emerald-700 font-bold'}>
@@ -178,7 +178,7 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
                 <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full ${
-                      evt.slotsLeft <= 10 ? 'bg-red-500' : 'bg-[#0077c8]'
+                      evt.slotsLeft <= 10 ? 'bg-red-500' : 'bg-teal-600'
                     }`}
                     style={{
                       width: `${Math.max(10, ((evt.totalSlots - evt.slotsLeft) / evt.totalSlots) * 100)}%`,
@@ -200,7 +200,7 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
                 <button
                   type="button"
                   onClick={() => onSelectEvent(evt)}
-                  className="py-2.5 px-4 rounded-xl bg-[#0077c8] hover:bg-[#0066ad] text-white font-bold text-xs shadow-md shadow-[#0077c8]/20 flex items-center gap-1.5 transition-all cursor-pointer"
+                  className="py-2.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md shadow-teal-600/20 flex items-center gap-1.5 transition-all cursor-pointer"
                 >
                   <span>Select</span>
                   <ArrowRight className="w-3.5 h-3.5" />

@@ -14,16 +14,18 @@
     --spiher-border: #d4e8f5;     /* Soft ice-blue borders */
     
     /* Background Canvas */
-    --bg-page: #f8fafc;
+    --bg-page: #ffffff;
     --bg-card: #ffffff;
   }
 
-  body {
-    background-color: var(--bg-page);
+  html, body {
+    background-color: #ffffff;
     color: var(--spiher-navy-dark);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 }
 
