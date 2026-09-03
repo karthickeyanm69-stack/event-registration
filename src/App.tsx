@@ -12,6 +12,7 @@ import { AdminPortal } from './components/admin/AdminPortal';
 import { SuperAdminPortal } from './components/superadmin/SuperAdminPortal';
 import { PublicPassVerificationModal } from './components/participant/PublicPassVerificationModal';
 import { MockDatabaseService } from './data/mockDatabase';
+import { supabase } from './lib/supabaseClient';
 import {
   AttendanceRecord,
   AuditLog,
@@ -299,6 +300,23 @@ export default function App() {
     navigateTo('/console', 'console');
   };
 
+  const handleParticipantLogout = async () => {
+    if (supabase) {
+      try {
+        await supabase.auth.signOut();
+      } catch {
+        // ignore
+      }
+    }
+    setCurrentParticipant(null);
+    setCurrentRegistration(null);
+    setOnboardingDraft({});
+    setSelectedEventForReg(null);
+    setParticipantStep('access');
+    sessionStorage.removeItem('spiher_participant_session');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-[#0077c8] selection:text-white">
       {/* ========================================================================= */}
@@ -320,7 +338,6 @@ export default function App() {
                 <ParticipantAccess
                   onSuccessfulAccess={handleParticipantAccessSuccess}
                   onStartNewRegistration={handleStartNewRegistration}
-                  onBackToHome={() => setParticipantStep('dashboard')}
                 />
               )}
 
@@ -372,9 +389,9 @@ export default function App() {
               participant={currentParticipant || MockDatabaseService.getParticipants()[0]}
               registration={currentRegistration || MockDatabaseService.getRegistrations()[0]}
               events={events}
-              onSignOut={() => setParticipantStep('access')}
+              onSignOut={handleParticipantLogout}
               onStartNewRegistration={handleStartNewRegistration}
-              onOpenAccessLogin={() => setParticipantStep('access')}
+              onOpenAccessLogin={handleParticipantLogout}
               onEventChangedSuccess={(newReg) => {
                 setCurrentRegistration(newReg);
                 loadDatabaseData();

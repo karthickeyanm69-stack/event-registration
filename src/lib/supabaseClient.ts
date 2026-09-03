@@ -25,6 +25,8 @@ export const supabase: SupabaseClient | null = isSupabaseConfigured()
       auth: {
         persistSession: true,
         autoRefreshToken: true,
+        detectSessionInUrl: true,
+        storageKey: 'spiher_supabase_auth_session',
       },
     })
   : null;
@@ -38,6 +40,8 @@ export const supabaseAdmin: SupabaseClient | null =
         auth: {
           persistSession: false,
           autoRefreshToken: false,
+          detectSessionInUrl: false,
+          storageKey: 'spiher_supabase_admin_session',
         },
       })
     : null;

@@ -13,6 +13,7 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import { MockDatabaseService } from '../../data/mockDatabase';
+import { supabase } from '../../lib/supabaseClient';
 import { PortalRole, StaffUser } from '../../types';
 import { CollegeLogo } from '../common/CollegeLogo';
 
@@ -32,8 +33,9 @@ export const StaffConsoleLogin: React.FC<StaffConsoleLoginProps> = ({
 
   const staffPresets = [
     {
-      label: 'Super Admin (Dr. Sivasankaran)',
+      label: 'Super Admin (Dr. Senthil Nathan)',
       email: 'superadmin@spiher.edu.in',
+      passwordPreset: 'superadmin123',
       role: 'SUPER_ADMIN',
       target: 'superadmin' as PortalRole,
       badge: 'Convenor',
@@ -42,14 +44,16 @@ export const StaffConsoleLogin: React.FC<StaffConsoleLoginProps> = ({
     {
       label: 'Event Admin (All 11 Events)',
       email: 'admin@spiher.edu.in',
+      passwordPreset: 'admin123',
       role: 'ADMIN',
       target: 'admin' as PortalRole,
       badge: 'All Events Admin',
       icon: Building2,
     },
     {
-      label: 'Staff Evaluator (Code-A-Thon)',
-      email: 'judge.codeathon@spiher.edu.in',
+      label: 'Staff Evaluator (Code-A-Thon Lead)',
+      email: 'employee@spiher.edu.in',
+      passwordPreset: 'staff123',
       role: 'EMPLOYEE',
       target: 'employee' as PortalRole,
       badge: 'PWA Scanner',
@@ -57,18 +61,59 @@ export const StaffConsoleLogin: React.FC<StaffConsoleLoginProps> = ({
     },
   ];
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
 
-    if (!email.trim() || !password.trim()) {
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPassword = password.trim();
+
+    if (!cleanEmail || !cleanPassword) {
       setErrorMessage('Please provide your staff email and password.');
       return;
     }
 
     setIsSubmitting(true);
-    setTimeout(() => {
-      const res = MockDatabaseService.authenticateStaff(email, password);
+
+    try {
+      // 1. Try Live Supabase Authentication
+      if (supabase) {
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+          email: cleanEmail,
+          password: cleanPassword,
+        });
+
+        if (authData && authData.user) {
+          // Fetch corresponding staff user record
+          const { data: staffRow } = await supabase
+            .from('staff_users')
+            .select('*')
+            .eq('email', cleanEmail)
+            .maybeSingle();
+
+          const staffRole = staffRow?.role || authData.user.user_metadata?.role || 'EMPLOYEE';
+          const staffUser: StaffUser = {
+            id: staffRow?.id || authData.user.id,
+            email: cleanEmail,
+            name: staffRow?.name || authData.user.user_metadata?.name || cleanEmail.split('@')[0],
+            role: staffRole,
+            department: staffRow?.department || authData.user.user_metadata?.department || 'Department',
+            assignedEventIds: staffRow?.assigned_event_ids || [],
+            isActive: true,
+          };
+
+          let targetRole: PortalRole = 'employee';
+          if (staffRole === 'SUPER_ADMIN') targetRole = 'superadmin';
+          else if (staffRole === 'ADMIN') targetRole = 'admin';
+
+          setIsSubmitting(false);
+          onLoginSuccess(staffUser, targetRole);
+          return;
+        }
+      }
+
+      // 2. Fallback / Local Database Authentication
+      const res = MockDatabaseService.authenticateStaff(cleanEmail, cleanPassword);
       setIsSubmitting(false);
 
       if (res.success && res.user) {
@@ -78,14 +123,26 @@ export const StaffConsoleLogin: React.FC<StaffConsoleLoginProps> = ({
 
         onLoginSuccess(res.user, targetRole);
       } else {
-        setErrorMessage(res.error || 'Authentication failed.');
+        setErrorMessage(res.error || 'Invalid staff email or password.');
       }
-    }, 500);
+    } catch (err: any) {
+      setIsSubmitting(false);
+      // Fallback
+      const res = MockDatabaseService.authenticateStaff(cleanEmail, cleanPassword);
+      if (res.success && res.user) {
+        let targetRole: PortalRole = 'employee';
+        if (res.user.role === 'SUPER_ADMIN') targetRole = 'superadmin';
+        else if (res.user.role === 'ADMIN') targetRole = 'admin';
+        onLoginSuccess(res.user, targetRole);
+      } else {
+        setErrorMessage(err.message || 'Authentication error.');
+      }
+    }
   };
 
-  const handleSelectPreset = (presetEmail: string) => {
-    setEmail(presetEmail);
-    setPassword('••••••••••••');
+  const handleSelectPreset = (preset: typeof staffPresets[0]) => {
+    setEmail(preset.email);
+    setPassword(preset.passwordPreset);
     setErrorMessage(null);
   };
 
@@ -189,7 +246,7 @@ export const StaffConsoleLogin: React.FC<StaffConsoleLoginProps> = ({
                 <button
                   key={preset.email}
                   type="button"
-                  onClick={() => handleSelectPreset(preset.email)}
+                  onClick={() => handleSelectPreset(preset)}
                   className="p-2.5 rounded-xl border border-[#d4e8f5] bg-[#f8fafc] hover:bg-[#e8f5fb] text-left transition-colors flex items-center justify-between text-xs group"
                 >
                   <div className="flex items-center gap-2 overflow-hidden">

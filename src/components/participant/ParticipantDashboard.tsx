@@ -132,22 +132,33 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
             })}
           </nav>
 
-          {/* Right Header Actions: Change Event & Sign Out */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          {/* Right Header Actions: Modern Premium Action Bar */}
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            {/* Participant Identity Badge */}
+            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#f0f8fc] border border-[#d4e8f5] text-xs shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="font-bold text-[#002b66] truncate max-w-[130px]">{participant.name}</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white text-[#0077c8] border border-[#d4e8f5] font-bold">
+                {participant.rollNumber}
+              </span>
+            </div>
+
+            {/* Change Event Button (Modern Deep Navy -> Royal Cyan Gradient) */}
             <button
               type="button"
               onClick={() => setIsChangeModalOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold transition-all shadow-sm cursor-pointer"
+              className="group flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white text-xs font-bold transition-all duration-200 shadow-sm shadow-[#0077c8]/20 hover:shadow-md hover:shadow-[#0077c8]/30 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
             >
-              <RefreshCw className="w-3.5 h-3.5 text-amber-700" />
-              <span>Change Event</span>
+              <RefreshCw className="w-3.5 h-3.5 text-[#7af1fc] group-hover:rotate-180 transition-transform duration-500" />
+              <span className="tracking-tight whitespace-nowrap">Change Event</span>
             </button>
 
+            {/* Sign Out Button (Refined Icon Button) */}
             <button
               type="button"
               onClick={onSignOut}
-              title="Sign Out of Dashboard"
-              className="p-2 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 border border-slate-200 hover:border-rose-200 transition-colors cursor-pointer"
+              title="Sign Out"
+              className="p-2 rounded-xl bg-white hover:bg-rose-50 text-slate-500 hover:text-rose-600 border border-[#d4e8f5] hover:border-rose-200 shadow-xs transition-all duration-200 cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
             </button>

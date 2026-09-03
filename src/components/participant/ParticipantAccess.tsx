@@ -69,16 +69,6 @@ export const ParticipantAccess: React.FC<ParticipantAccessProps> = ({
 
   return (
     <div className="w-full min-h-screen spiher-pattern-bg px-4 py-8 flex flex-col justify-center items-center relative">
-      {onBackToHome && (
-        <button
-          type="button"
-          onClick={onBackToHome}
-          className="absolute top-4 left-4 px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-[#002b66] border border-slate-200 text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
-        >
-          <span>← Back to Home Page</span>
-        </button>
-      )}
-
       <div className="w-full max-w-lg bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-[#d4e8f5] space-y-6">
         {/* Official College Logo Header */}
         <div className="flex justify-center border-b border-[#e8f5fb] pb-5">

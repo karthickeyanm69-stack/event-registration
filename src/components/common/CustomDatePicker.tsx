@@ -4,7 +4,6 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronDown,
-  X,
 } from 'lucide-react';
 
 interface CustomDatePickerProps {
@@ -16,6 +15,7 @@ interface CustomDatePickerProps {
   required?: boolean;
   minYear?: number;
   maxYear?: number;
+  align?: 'left' | 'right' | 'auto';
   className?: string;
 }
 
@@ -45,6 +45,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   required = false,
   minYear = 1990,
   maxYear = 2012,
+  align = 'right',
   className = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,7 +59,6 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   const [viewMonth, setViewMonth] = useState<number>(
     isNaN(initialDate.getMonth()) ? 0 : initialDate.getMonth()
   );
-  const [showYearPicker, setShowYearPicker] = useState(false);
 
   // Sync view when value changes from outside
   useEffect(() => {
@@ -76,14 +76,13 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     const handleClickOutside = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setIsOpen(false);
-        setShowYearPicker(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Format display string
+  // Format display string (e.g. 14 May 2003)
   const formatDisplay = (val: string) => {
     if (!val) return '';
     try {
@@ -170,10 +169,11 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full px-3.5 py-2.5 rounded-xl bg-white border text-left text-sm flex items-center justify-between transition-all duration-200 cursor-pointer ${isOpen
+        className={`w-full px-3.5 py-2.5 rounded-xl bg-white border text-left text-sm flex items-center justify-between transition-all duration-200 cursor-pointer ${
+          isOpen
             ? 'border-[#0077c8] ring-2 ring-[#0077c8]/20 shadow-md'
             : 'border-[#d4e8f5] hover:border-[#0077c8]/60 shadow-sm'
-          }`}
+        }`}
       >
         <div className="flex items-center gap-2 truncate">
           <CalendarIcon className="w-4 h-4 text-[#0077c8] shrink-0" />
@@ -183,15 +183,20 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
         </div>
 
         <ChevronDown
-          className={`w-4 h-4 text-[#0077c8] transition-transform duration-200 shrink-0 ${isOpen ? 'rotate-180' : ''
-            }`}
+          className={`w-4 h-4 text-[#0077c8] transition-transform duration-200 shrink-0 ${
+            isOpen ? 'rotate-180' : ''
+          }`}
         />
       </button>
 
-      {/* Modern Popover Calendar */}
+      {/* Modern Popover Calendar with Right-Anchoring to Never Overflow */}
       {isOpen && (
-        <div className="absolute z-50 left-0 right-0 mt-1.5 bg-white rounded-2xl border border-[#d4e8f5] shadow-2xl p-4 space-y-3 animate-in fade-in zoom-in-95 duration-150">
-          {/* Header Controls (Month & Year Selector) */}
+        <div
+          className={`absolute z-50 mt-1.5 w-[285px] sm:w-[295px] max-w-[calc(100vw-24px)] bg-white rounded-2xl border border-[#d4e8f5] shadow-2xl p-3.5 space-y-3 animate-in fade-in zoom-in-95 duration-150 ${
+            align === 'right' ? 'right-0' : align === 'left' ? 'left-0' : 'left-0 sm:left-auto sm:right-0'
+          }`}
+        >
+          {/* Header Controls (Month & Year Selectors) */}
           <div className="flex items-center justify-between pb-2 border-b border-[#e8f5fb]">
             <button
               type="button"
@@ -245,9 +250,9 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             ))}
           </div>
 
-          {/* Calendar Grid */}
+          {/* Calendar Days Grid */}
           <div className="grid grid-cols-7 gap-1 text-center">
-            {/* Empty slots for offset */}
+            {/* Empty slots for month offset */}
             {Array.from({ length: firstDay }).map((_, i) => (
               <div key={`empty-${i}`} className="w-7 h-7" />
             ))}
@@ -261,10 +266,11 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
                   key={day}
                   type="button"
                   onClick={() => handleSelectDay(day)}
-                  className={`w-7 h-7 mx-auto rounded-lg text-xs font-medium flex items-center justify-center transition-all cursor-pointer ${isSelected
+                  className={`w-7 h-7 mx-auto rounded-lg text-xs font-medium flex items-center justify-center transition-all cursor-pointer ${
+                    isSelected
                       ? 'bg-[#0077c8] text-white font-bold shadow-md'
                       : 'text-slate-700 hover:bg-[#e8f5fb] hover:text-[#002b66]'
-                    }`}
+                  }`}
                 >
                   {day}
                 </button>
@@ -272,19 +278,20 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             })}
           </div>
 
-          {/* Quick Year Shortcuts (Student Friendly) */}
-          <div className="pt-2 border-t border-[#e8f5fb] flex items-center justify-between text-[11px]">
-            <span className="text-slate-400 font-medium">Quick Year:</span>
-            <div className="flex gap-1">
+          {/* Quick Year Shortcuts (Clean wrap with no overflow) */}
+          <div className="pt-2 border-t border-[#e8f5fb] flex items-center justify-between text-[11px] gap-1">
+            <span className="text-slate-400 font-medium shrink-0 text-[10px]">Quick:</span>
+            <div className="flex flex-wrap gap-1 justify-end">
               {[2001, 2002, 2003, 2004, 2005].map((y) => (
                 <button
                   key={y}
                   type="button"
                   onClick={() => setViewYear(y)}
-                  className={`px-1.5 py-0.5 rounded text-[10px] font-bold transition-colors ${viewYear === y
-                      ? 'bg-[#0077c8] text-white'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}
+                  className={`px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                    viewYear === y
+                      ? 'bg-[#0077c8] text-white shadow-xs'
+                      : 'bg-[#f0f8fc] text-slate-600 hover:bg-[#e8f5fb]'
+                  }`}
                 >
                   {y}
                 </button>
