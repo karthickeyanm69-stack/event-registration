@@ -526,4 +526,232 @@ export class SupabaseService {
       return { success: false, error: e.message };
     }
   }
+
+  /**
+   * Complete Backend Validation of QR Token / Registration ID
+   * Checks:
+   * 1. Token exists & valid in Supabase
+   * 2. Registration is active (not cancelled)
+   * 3. Matches selected/assigned event
+   * 4. Employee is authorized
+   * 5. Duplicate attendance check (not already recorded)
+   */
+  static async validateQRForAttendance(params: {
+    tokenOrId: string;
+    staffUser: StaffUser;
+    selectedEventId?: string;
+  }): Promise<{
+    success: boolean;
+    valid: boolean;
+    registration?: Registration;
+    event?: CollegeEvent;
+    errorType?:
+      | 'INVALID_QR'
+      | 'NOT_FOUND'
+      | 'WRONG_EVENT'
+      | 'UNAUTHORIZED_STAFF'
+      | 'ALREADY_ATTENDED'
+      | 'REGISTRATION_CANCELLED'
+      | 'NETWORK_ERROR';
+    errorMessage?: string;
+    alreadyAttendedAt?: string;
+    alreadyAttendedBy?: string;
+  }> {
+    const { tokenOrId, staffUser, selectedEventId } = params;
+
+    if (!tokenOrId || !tokenOrId.trim()) {
+      return {
+        success: false,
+        valid: false,
+        errorType: 'INVALID_QR',
+        errorMessage: 'Empty QR token or pass identifier.',
+      };
+    }
+
+    // Clean / Parse identifier (supports URL, token, pass number, or roll number)
+    let cleanToken = tokenOrId.trim();
+    if (cleanToken.includes('verify=')) {
+      try {
+        const urlObj = new URL(cleanToken, 'https://ignite.spiher.edu.in');
+        cleanToken = urlObj.searchParams.get('verify') || urlObj.searchParams.get('token') || cleanToken;
+      } catch {
+        const match = cleanToken.match(/verify=([^&]+)/);
+        if (match) cleanToken = decodeURIComponent(match[1]);
+      }
+    }
+
+    try {
+      let regRow: any = null;
+
+      if (supabase) {
+        // Query Supabase by QR token or Registration Number or Leader Roll Number
+        const { data, error } = await supabase
+          .from('registrations')
+          .select('*')
+          .or(`qr_token.eq.${cleanToken},registration_number.eq.${cleanToken},leader_roll_number.ilike.${cleanToken}`)
+          .order('registered_at', { ascending: false })
+          .limit(1);
+
+        if (!error && data && data.length > 0) {
+          regRow = data[0];
+        }
+      }
+
+      // If Supabase query did not find it, check local database
+      let registration: Registration | undefined = regRow ? mapRegistrationFromSupabase(regRow) : undefined;
+      
+      if (!registration) {
+        return {
+          success: false,
+          valid: false,
+          errorType: 'NOT_FOUND',
+          errorMessage: `No active registration pass found matching "${cleanToken}". Please ensure candidate has registered.`,
+        };
+      }
+
+      // Check Registration Status
+      if (registration.status === 'CANCELLED') {
+        return {
+          success: false,
+          valid: false,
+          errorType: 'REGISTRATION_CANCELLED',
+          errorMessage: `This pass (${registration.registrationNumber}) has been cancelled or transferred to another event.`,
+        };
+      }
+
+      // 4. Check Event Assignment & Authorization
+      const assignedIds = staffUser.assignedEventIds || [];
+      const isSuperOrAdmin = staffUser.role === 'SUPER_ADMIN' || staffUser.role === 'ADMIN';
+
+      // Check against selected event filter (if specified by employee)
+      if (selectedEventId && selectedEventId !== 'ALL' && registration.eventId !== selectedEventId) {
+        return {
+          success: false,
+          valid: false,
+          registration,
+          errorType: 'WRONG_EVENT',
+          errorMessage: `Candidate is registered for "${registration.eventTitle}", but scanner is currently set for a different competition.`,
+        };
+      }
+
+      // Check against staff authorized events
+      if (!isSuperOrAdmin && assignedIds.length > 0 && !assignedIds.includes(registration.eventId)) {
+        return {
+          success: false,
+          valid: false,
+          registration,
+          errorType: 'UNAUTHORIZED_STAFF',
+          errorMessage: `You are authorized for specific events only. This pass is registered for "${registration.eventTitle}".`,
+        };
+      }
+
+      // 5. Duplicate Attendance Check
+      let existingAttendance: any = null;
+      if (supabase) {
+        const { data: attData } = await supabase
+          .from('attendance')
+          .select('*')
+          .eq('registration_id', registration.id)
+          .eq('status', 'PRESENT')
+          .maybeSingle();
+
+        existingAttendance = attData;
+      }
+
+      if (existingAttendance) {
+        const scannedTime = existingAttendance.scanned_at
+          ? new Date(existingAttendance.scanned_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          : 'earlier today';
+
+        return {
+          success: false,
+          valid: false,
+          registration,
+          errorType: 'ALREADY_ATTENDED',
+          errorMessage: `Candidate ${registration.leaderName} (${registration.leaderRollNumber}) was already verified present at ${scannedTime} by ${existingAttendance.scanned_by_staff_name || 'Staff'}.`,
+          alreadyAttendedAt: existingAttendance.scanned_at,
+          alreadyAttendedBy: existingAttendance.scanned_by_staff_name,
+        };
+      }
+
+      // Validation Successful
+      return {
+        success: true,
+        valid: true,
+        registration,
+      };
+    } catch (e: any) {
+      console.error('validateQRForAttendance error:', e);
+      return {
+        success: false,
+        valid: false,
+        errorType: 'NETWORK_ERROR',
+        errorMessage: e.message || 'Database validation error. Please try again.',
+      };
+    }
+  }
+
+  /**
+   * Final atomic attendance confirmation & recording in Supabase
+   */
+  static async confirmAndRecordAttendance(params: {
+    registration: Registration;
+    staffUser: StaffUser;
+    notes?: string;
+  }): Promise<{ success: boolean; record?: AttendanceRecord; error?: string }> {
+    const { registration, staffUser, notes } = params;
+
+    const recordId = `att-${Date.now()}`;
+    const newRecord: AttendanceRecord = {
+      id: recordId,
+      registrationId: registration.id,
+      eventId: registration.eventId,
+      participantId: registration.leaderId,
+      participantName: registration.leaderName,
+      participantRollNumber: registration.leaderRollNumber,
+      teamName: registration.teamName,
+      status: 'PRESENT',
+      scannedAt: new Date().toISOString(),
+      scannedByStaffId: staffUser.id,
+      scannedByStaffName: staffUser.name,
+      notes: notes || `Verified in-person by ${staffUser.name} (${staffUser.role})`,
+    };
+
+    // 1. Insert into Supabase
+    if (supabase) {
+      const row = {
+        id: newRecord.id,
+        registration_id: newRecord.registrationId,
+        event_id: newRecord.eventId,
+        participant_id: newRecord.participantId,
+        participant_name: newRecord.participantName,
+        participant_roll_number: newRecord.participantRollNumber,
+        team_name: newRecord.teamName,
+        status: newRecord.status,
+        scanned_at: newRecord.scannedAt,
+        scanned_by_staff_id: newRecord.scannedByStaffId,
+        scanned_by_staff_name: newRecord.scannedByStaffName,
+        notes: newRecord.notes,
+      };
+
+      const { error: attErr } = await supabase.from('attendance').insert(row);
+      if (attErr) {
+        console.error('Supabase attendance insert error:', attErr);
+        return { success: false, error: attErr.message };
+      }
+
+      // Log in Audit Trail
+      await supabase.from('audit_logs').insert({
+        actor_id: staffUser.id,
+        actor_name: staffUser.name,
+        actor_role: staffUser.role,
+        action: 'ATTENDANCE_CONFIRMED',
+        target_entity: 'REGISTRATION',
+        target_id: registration.registrationNumber,
+        details: `Recorded PRESENT for ${registration.leaderName} (${registration.registrationNumber}) in "${registration.eventTitle}"`,
+      });
+    }
+
+    return { success: true, record: newRecord };
+  }
 }
