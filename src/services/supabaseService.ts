@@ -327,6 +327,10 @@ export class SupabaseService {
       const { participantData, registration } = params;
 
       // 1. Insert/Upsert Leader Participant
+      const leaderEmail =
+        registration.leaderEmail ||
+        `${registration.leaderRollNumber.toLowerCase().trim()}@spiher.edu.in`;
+
       const leaderRow = {
         id: registration.leaderId,
         roll_number: registration.leaderRollNumber.toUpperCase().trim(),
@@ -334,28 +338,40 @@ export class SupabaseService {
         date_of_birth: participantData.dateOfBirth || '2003-01-01',
         college_name: registration.collegeName,
         department: registration.department,
-        email: registration.leaderEmail,
-        phone: registration.leaderPhone,
+        email: leaderEmail,
+        phone: registration.leaderPhone || '',
         created_at: new Date().toISOString(),
       };
 
-      const { error: partErr } = await supabase.from('participants').upsert(leaderRow, { onConflict: 'roll_number' });
+      const { error: partErr } = await supabase
+        .from('participants')
+        .upsert(leaderRow, { onConflict: 'roll_number' });
       if (partErr) console.warn('Supabase leader insert warning:', partErr);
 
-      // 2. Insert any teammates
+      // 2. Insert any teammates with full valid attributes
       if (registration.members && registration.members.length > 1) {
         for (const m of registration.members) {
           if (!m.isLeader) {
+            const memberRoll = m.rollNumber.toUpperCase().trim();
+            const memberEmail =
+              (m as any).email ||
+              `${memberRoll.toLowerCase()}@spiher.edu.in`;
+
             const memberRow = {
-              id: m.participantId || `part-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-              roll_number: m.rollNumber.toUpperCase().trim(),
+              id: m.participantId || `part-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+              roll_number: memberRoll,
               name: m.name,
-              date_of_birth: m.dateOfBirth || '2003-01-01',
-              college_name: m.collegeName,
-              department: m.department,
+              date_of_birth: (m as any).dateOfBirth || '2003-01-01',
+              college_name: m.collegeName || registration.collegeName,
+              department: m.department || registration.department,
+              email: memberEmail,
+              phone: (m as any).phone || registration.leaderPhone || '',
               created_at: new Date().toISOString(),
             };
-            await supabase.from('participants').upsert(memberRow, { onConflict: 'roll_number' });
+            const { error: memErr } = await supabase
+              .from('participants')
+              .upsert(memberRow, { onConflict: 'roll_number' });
+            if (memErr) console.warn('Supabase member insert warning:', memErr);
           }
         }
       }

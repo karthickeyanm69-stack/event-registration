@@ -29,14 +29,13 @@
   }
 }
 
-/* College Geometric Cross Pattern Background */
+/* Official Institutional Clean Background matching College Aesthetic */
 .spiher-pattern-bg {
   background-color: #f8fafc;
   background-image: 
-    radial-gradient(#0077c8 0.6px, transparent 0.6px),
-    radial-gradient(#00a887 0.6px, #f8fafc 0.6px);
-  background-size: 24px 24px;
-  background-position: 0 0, 12px 12px;
+    radial-gradient(circle at 50% 0%, rgba(0, 119, 200, 0.08) 0%, rgba(248, 250, 252, 0.95) 45%, #ffffff 100%),
+    linear-gradient(180deg, #f0f8fc 0%, #ffffff 100%);
+  background-attachment: fixed;
 }
 
 /* College Brand Gradient Accents */
