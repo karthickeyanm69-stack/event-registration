@@ -48,15 +48,9 @@ export default function App() {
   // 3. Strict Participant Flow Steps:
   // 'access' -> 'onboarding' -> 'events' -> 'team' -> 'success' -> 'dashboard'
   type ParticipantFlowStep = 'access' | 'onboarding' | 'events' | 'team' | 'success' | 'dashboard';
-  const [participantStep, setParticipantStep] = useState<ParticipantFlowStep>('dashboard');
-  const [currentParticipant, setCurrentParticipant] = useState<Participant | null>(() => {
-    const list = MockDatabaseService.getParticipants();
-    return list.length > 0 ? list[0] : null;
-  });
-  const [currentRegistration, setCurrentRegistration] = useState<Registration | null>(() => {
-    const list = MockDatabaseService.getRegistrations();
-    return list.length > 0 ? list[0] : null;
-  });
+  const [participantStep, setParticipantStep] = useState<ParticipantFlowStep>('access');
+  const [currentParticipant, setCurrentParticipant] = useState<Participant | null>(null);
+  const [currentRegistration, setCurrentRegistration] = useState<Registration | null>(null);
   const [onboardingDraft, setOnboardingDraft] = useState<Partial<Participant>>({});
   const [selectedEventForReg, setSelectedEventForReg] = useState<CollegeEvent | null>(null);
 

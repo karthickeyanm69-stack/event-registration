@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 import { MockDatabaseService } from '../../data/mockDatabase';
 import { Participant, Registration } from '../../types';
+import { CustomSelect } from '../common/CustomSelect';
+import { CustomDatePicker } from '../common/CustomDatePicker';
 
 interface OnboardingDetailsFormProps {
   onBackToAccess: () => void;
@@ -47,6 +49,19 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
     'Dept. of Civil Engineering',
     'Dept. of Management Studies (MBA)',
     'Other / Visiting Department',
+  ];
+
+  const collegeList = [
+    "St. Peter's Institute of Higher Education & Research",
+    'Anna University, CEG Campus',
+    'Madras Institute of Technology (MIT)',
+    'SRM Institute of Science and Technology',
+    'SSN College of Engineering',
+    'Vellore Institute of Technology (VIT)',
+    'PSG College of Technology',
+    'Sathyabama Institute of Science and Technology',
+    'Rajalakshmi Engineering College',
+    'Other Affiliated / Partner Institution',
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -99,25 +114,25 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
         <button
           type="button"
           onClick={onBackToAccess}
-          className="flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-teal-700 transition-colors"
+          className="flex items-center gap-1.5 text-xs font-semibold text-[#002b66] hover:text-[#0077c8] transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Access</span>
         </button>
 
-        <div className="flex items-center gap-1 text-xs font-bold text-teal-800 bg-teal-50 px-3 py-1 rounded-full border border-teal-200 shadow-sm">
-          <Sparkles className="w-3.5 h-3.5 text-teal-600" />
+        <div className="flex items-center gap-1 text-[11px] font-bold text-[#0077c8] bg-[#e8f5fb] px-3 py-1 rounded-full border border-[#d4e8f5]">
+          <Sparkles className="w-3.5 h-3.5" />
           <span>Step 1 of 3: Onboarding</span>
         </div>
       </div>
 
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl space-y-6">
-        <div className="border-b border-slate-100 pb-3">
-          <h2 className="text-xl font-serif font-bold text-[#002b66]">
+      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#d4e8f5] shadow-xl space-y-6">
+        <div>
+          <h2 className="text-2xl font-serif font-bold text-[#002b66]">
             Participant Onboarding
           </h2>
-          <p className="text-xs text-slate-600 mt-1">
-            Provide your basic institutional details for the official symposium record and QR pass.
+          <p className="text-xs text-slate-500 mt-1">
+            Provide your institutional details for the official symposium registry and digital QR pass.
           </p>
         </div>
 
@@ -143,7 +158,7 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
             <button
               type="button"
               onClick={() => onRedirectToExistingDashboard(existingRegNotice.participant, existingRegNotice.registration)}
-              className="w-full py-2.5 px-4 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow flex items-center justify-center gap-2"
+              className="w-full py-2.5 px-4 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow flex items-center justify-center gap-2 transition-colors cursor-pointer"
             >
               <span>Open My Existing Pass &amp; Dashboard</span>
               <ArrowRight className="w-4 h-4" />
@@ -160,9 +175,9 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Full Name */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-[#002b66] uppercase tracking-wider flex items-center gap-1.5">
-              <User className="w-3.5 h-3.5 text-teal-600" />
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
+              <User className="w-3.5 h-3.5 text-[#0077c8]" />
               <span>Full Name (As per College ID) *</span>
             </label>
             <input
@@ -171,15 +186,15 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Alex Mercer"
-              className="w-full px-3.5 py-3 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 placeholder-slate-400 text-sm font-semibold focus:bg-white focus:ring-2 focus:ring-teal-600 focus:border-teal-600 focus:outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#d4e8f5] text-[#002b66] placeholder-slate-400 text-sm focus:ring-2 focus:ring-[#0077c8]/20 focus:border-[#0077c8] focus:outline-none transition-all shadow-sm"
             />
           </div>
 
           {/* Roll Number & Date of Birth (Grid) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#002b66] uppercase tracking-wider flex items-center gap-1.5">
-                <GraduationCap className="w-3.5 h-3.5 text-teal-600" />
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
+                <GraduationCap className="w-3.5 h-3.5 text-[#0077c8]" />
                 <span>Roll / Register No *</span>
               </label>
               <input
@@ -188,63 +203,45 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
                 value={rollNumber}
                 onChange={(e) => setRollNumber(e.target.value.toUpperCase())}
                 placeholder="2021CS042"
-                className="w-full px-3.5 py-3 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 placeholder-slate-400 text-sm font-mono font-bold tracking-wider focus:bg-white focus:ring-2 focus:ring-teal-600 focus:border-teal-600 focus:outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#d4e8f5] text-[#002b66] placeholder-slate-400 text-sm font-mono tracking-wider focus:ring-2 focus:ring-[#0077c8]/20 focus:border-[#0077c8] focus:outline-none transition-all shadow-sm"
               />
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#002b66] uppercase tracking-wider flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-teal-600" />
-                <span>Date of Birth *</span>
-              </label>
-              <input
-                type="date"
-                required
-                value={dateOfBirth}
-                onChange={(e) => setDateOfBirth(e.target.value)}
-                className="w-full px-3.5 py-3 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm font-semibold focus:bg-white focus:ring-2 focus:ring-teal-600 focus:border-teal-600 focus:outline-none"
-              />
-            </div>
-          </div>
-
-          {/* College Name */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-[#002b66] uppercase tracking-wider flex items-center gap-1.5">
-              <Building className="w-3.5 h-3.5 text-teal-600" />
-              <span>College Name *</span>
-            </label>
-            <input
-              type="text"
+            {/* Modern Custom Date Picker without ugly OS popup */}
+            <CustomDatePicker
+              value={dateOfBirth}
+              onChange={setDateOfBirth}
+              label="Date of Birth *"
+              placeholder="Select Date of Birth"
               required
-              value={collegeName}
-              onChange={(e) => setCollegeName(e.target.value)}
-              className="w-full px-3.5 py-3 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm font-semibold focus:bg-white focus:ring-2 focus:ring-teal-600 focus:border-teal-600 focus:outline-none"
             />
           </div>
 
-          {/* Department */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-[#002b66] uppercase tracking-wider">
-              Department *
-            </label>
-            <select
-              value={department}
-              onChange={(e) => setDepartment(e.target.value)}
-              className="w-full px-3.5 py-3 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm font-semibold focus:bg-white focus:ring-2 focus:ring-teal-600 focus:border-teal-600 focus:outline-none"
-            >
-              {departments.map((dept) => (
-                <option key={dept} value={dept} className="bg-white text-slate-900 font-semibold">
-                  {dept}
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* College Name Custom Select */}
+          <CustomSelect
+            label="College / Institution *"
+            icon={<Building className="w-3.5 h-3.5 text-[#0077c8]" />}
+            options={collegeList}
+            value={collegeName}
+            onChange={setCollegeName}
+            searchable
+          />
+
+          {/* Department Custom Select */}
+          <CustomSelect
+            label="Department / Specialization *"
+            icon={<GraduationCap className="w-3.5 h-3.5 text-[#0077c8]" />}
+            options={departments}
+            value={department}
+            onChange={setDepartment}
+            searchable
+          />
 
           {/* Email & Phone */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#002b66] uppercase tracking-wider flex items-center gap-1.5">
-                <Mail className="w-3.5 h-3.5 text-teal-600" />
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
+                <Mail className="w-3.5 h-3.5 text-[#0077c8]" />
                 <span>Email Address *</span>
               </label>
               <input
@@ -253,13 +250,13 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="alex@college.edu"
-                className="w-full px-3.5 py-3 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 placeholder-slate-400 text-sm font-semibold focus:bg-white focus:ring-2 focus:ring-teal-600 focus:border-teal-600 focus:outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#d4e8f5] text-[#002b66] placeholder-slate-400 text-sm focus:ring-2 focus:ring-[#0077c8]/20 focus:border-[#0077c8] focus:outline-none transition-all shadow-sm"
               />
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#002b66] uppercase tracking-wider flex items-center gap-1.5">
-                <Phone className="w-3.5 h-3.5 text-teal-600" />
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
+                <Phone className="w-3.5 h-3.5 text-[#0077c8]" />
                 <span>Phone / WhatsApp</span>
               </label>
               <input
@@ -267,15 +264,15 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+91 98765 43210"
-                className="w-full px-3.5 py-3 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 placeholder-slate-400 text-sm font-semibold focus:bg-white focus:ring-2 focus:ring-teal-600 focus:border-teal-600 focus:outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#d4e8f5] text-[#002b66] placeholder-slate-400 text-sm focus:ring-2 focus:ring-[#0077c8]/20 focus:border-[#0077c8] focus:outline-none transition-all shadow-sm"
               />
             </div>
           </div>
 
-          {/* Continue Action */}
+          {/* Continue Action Button */}
           <button
             type="submit"
-            className="w-full mt-3 py-3.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm shadow-md shadow-teal-600/20 flex items-center justify-center gap-2 transition-colors cursor-pointer"
+            className="w-full mt-3 py-3.5 px-4 rounded-xl bg-[#0077c8] hover:bg-[#0066ad] text-white font-bold text-sm shadow-lg shadow-[#0077c8]/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             <span>Proceed to Event Selection</span>
             <ArrowRight className="w-4 h-4" />
@@ -285,3 +282,5 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
     </div>
   );
 };
+
+export default OnboardingDetailsForm;

@@ -13,6 +13,7 @@ import {
 import { MockDatabaseService } from '../../data/mockDatabase';
 import { Participant, Registration } from '../../types';
 import { CollegeLogo } from '../common/CollegeLogo';
+import { CustomDatePicker } from '../common/CustomDatePicker';
 
 interface ParticipantAccessProps {
   onSuccessfulAccess: (participant: Participant, registration?: Registration) => void;
@@ -149,26 +150,19 @@ export const ParticipantAccess: React.FC<ParticipantAccessProps> = ({
                     value={rollNumber}
                     onChange={(e) => setRollNumber(e.target.value.toUpperCase())}
                     placeholder="e.g. 2021CS042"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#d4e8f5] bg-slate-50 text-[#002b66] font-mono text-sm focus:border-[#0077c8] focus:bg-white focus:outline-none transition-colors"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#d4e8f5] bg-white text-[#002b66] font-mono text-sm focus:border-[#0077c8] focus:ring-2 focus:ring-[#0077c8]/20 focus:outline-none transition-colors shadow-sm"
                   />
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-[#002b66] uppercase tracking-wider">
-                  Date of Birth *
-                </label>
-                <div className="relative">
-                  <Calendar className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="date"
-                    required
-                    value={dateOfBirth}
-                    onChange={(e) => setDateOfBirth(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#d4e8f5] bg-slate-50 text-[#002b66] font-mono text-sm focus:border-[#0077c8] focus:bg-white focus:outline-none transition-colors"
-                  />
-                </div>
-              </div>
+              {/* Modern Custom Date Picker without ugly OS popup */}
+              <CustomDatePicker
+                value={dateOfBirth}
+                onChange={setDateOfBirth}
+                label="Date of Birth *"
+                placeholder="Select Date of Birth"
+                required
+              />
             </div>
 
             <button

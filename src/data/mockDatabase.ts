@@ -470,6 +470,17 @@ export const INITIAL_PARTICIPANTS: Participant[] = [
     accessSecret: 'SPIHER_SEC_99120',
     createdAt: '2024-10-02T11:30:00Z',
   },
+  {
+    id: 'part-karthickeyan',
+    rollNumber: 'SP24ITU008',
+    dateOfBirth: '2002-08-02',
+    name: 'karthickeyan M',
+    collegeName: "St. Peter's Institute of Higher Education & Research",
+    department: 'Dept. of Computer Science & Engineering',
+    email: 'karthickeyan.m@spiher.edu.in',
+    phone: '+91 98765 12345',
+    createdAt: '2024-10-03T12:00:00Z',
+  },
 ];
 
 export const INITIAL_REGISTRATIONS: Registration[] = [
@@ -515,8 +526,8 @@ export const INITIAL_REGISTRATIONS: Registration[] = [
   {
     id: 'reg-99120',
     registrationNumber: 'IGNITE-2024-99120',
-    eventId: 'evt-promptai',
-    eventTitle: 'Prompt & AI Innovation',
+    eventId: 'evt-promptcraft',
+    eventTitle: 'Prompt-AI Mastery',
     category: 'Technical',
     leaderId: 'part-3',
     leaderName: 'Sneha Ramachandran',
@@ -540,6 +551,36 @@ export const INITIAL_REGISTRATIONS: Registration[] = [
     status: 'ACTIVE',
     qrToken: 'SPIHER_IGNITE_TOKEN_V1_99120_SEC',
     registeredAt: '2024-10-02T11:30:00Z',
+  },
+  {
+    id: 'reg-88957',
+    registrationNumber: 'IGNITE-2024-88957',
+    eventId: 'evt-robosumo',
+    eventTitle: 'Robo-Sumo Clash',
+    category: 'Technical',
+    leaderId: 'part-karthickeyan',
+    leaderName: 'karthickeyan M',
+    leaderRollNumber: 'SP24ITU008',
+    leaderEmail: 'karthickeyan.m@spiher.edu.in',
+    leaderPhone: '+91 98765 12345',
+    collegeName: "St. Peter's Institute of Higher Education & Research",
+    department: 'Dept. of Computer Science & Engineering',
+    isTeamEvent: true,
+    teamName: 'Team karthickeyan',
+    members: [
+      {
+        participantId: 'part-karthickeyan',
+        name: 'karthickeyan M',
+        rollNumber: 'SP24ITU008',
+        department: 'Dept. of Computer Science & Engineering',
+        collegeName: "St. Peter's Institute of Higher Education & Research",
+        dateOfBirth: '2002-08-02',
+        isLeader: true,
+      },
+    ],
+    status: 'ACTIVE',
+    qrToken: 'SPIHER_IGNITE_TOKEN_V1_88957_SEC',
+    registeredAt: '2024-10-03T12:00:00Z',
   },
 ];
 

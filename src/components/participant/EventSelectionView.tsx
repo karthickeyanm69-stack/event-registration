@@ -77,19 +77,25 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
       </div>
 
       {/* Category Toggle Tabs */}
-      <div className="grid grid-cols-2 gap-3 max-w-md mx-auto p-1.5 bg-slate-100 rounded-2xl border border-slate-200 shadow-inner">
+      <div className="grid grid-cols-2 gap-3 max-w-md mx-auto p-1.5 bg-[#f0f8fc] rounded-2xl border border-[#d4e8f5] shadow-inner">
         <button
           type="button"
           onClick={() => setSelectedCategory('Technical')}
           className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
             selectedCategory === 'Technical'
-              ? 'bg-[#002b66] text-white shadow-md scale-[1.02]'
-              : 'text-slate-700 hover:text-[#002b66]'
+              ? 'bg-[#002b66] text-white shadow-md shadow-[#002b66]/25 scale-[1.02]'
+              : 'text-[#002b66] hover:bg-white/80 hover:text-[#0077c8]'
           }`}
         >
           <Layers className="w-4 h-4" />
           <span>Technical Events</span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/20 text-white font-bold">
+          <span
+            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+              selectedCategory === 'Technical'
+                ? 'bg-white/20 text-white'
+                : 'bg-[#d4e8f5] text-[#002b66]'
+            }`}
+          >
             {techCount}
           </span>
         </button>
@@ -99,13 +105,19 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
           onClick={() => setSelectedCategory('Non-Technical')}
           className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
             selectedCategory === 'Non-Technical'
-              ? 'bg-teal-700 text-white shadow-md scale-[1.02]'
-              : 'text-slate-700 hover:text-teal-700'
+              ? 'bg-[#00a887] text-white shadow-md shadow-[#00a887]/25 scale-[1.02]'
+              : 'text-[#002b66] hover:bg-white/80 hover:text-[#00a887]'
           }`}
         >
           <Trophy className="w-4 h-4" />
           <span>Non-Technical Events</span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-black/20 text-white font-bold">
+          <span
+            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+              selectedCategory === 'Non-Technical'
+                ? 'bg-white/20 text-white'
+                : 'bg-[#d4e8f5] text-[#002b66]'
+            }`}
+          >
             {nonTechCount}
           </span>
         </button>
