@@ -38,7 +38,7 @@ interface EmployeeDashboardProps {
   onRefreshData: () => void;
 }
 
-export type EmployeeTab = 'scanner' | 'attendance' | 'scoring' | 'states';
+export type EmployeeTab = 'scanner' | 'attendance' | 'scoring';
 
 export const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
   staffUser,
@@ -72,7 +72,6 @@ export const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
     { id: 'scanner', label: 'QR Scanner Viewfinder', icon: Camera, badge: 'Live' },
     { id: 'attendance', label: `Attendance Checklist (${presentCount}/${totalAssigned})`, icon: Users },
     { id: 'scoring', label: 'Evaluation & Scoring', icon: Trophy, badge: `${scoredCount} Done` },
-    { id: 'states', label: 'Staff Edge States', icon: HelpCircle },
   ];
 
   return (
@@ -252,8 +251,6 @@ export const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
                 onScoresUpdated={onRefreshData}
               />
             )}
-
-            {activeTab === 'states' && <EmployeeStateShowcase />}
           </div>
         </main>
       </div>

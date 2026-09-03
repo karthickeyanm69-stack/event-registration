@@ -23,12 +23,12 @@ import {
   Share2,
   Building,
   ArrowRight,
-  MoreVertical,
 } from 'lucide-react';
 import QRCode from 'qrcode';
 import { CollegeEvent, Coordinator, Participant, Registration } from '../../types';
 import { MockDatabaseService } from '../../data/mockDatabase';
 import { CollegeLogo, CollegeEmblem } from '../common/CollegeLogo';
+import { ChangeEventModal } from './ChangeEventModal';
 
 interface ParticipantDashboardProps {
   participant?: Participant;
@@ -52,7 +52,7 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
   onOpenAccessLogin,
 }) => {
   const [activeTab, setActiveTab] = useState<ParticipantTab>('home');
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
 
   const currentEvent = events.find((e) => e.id === registration.eventId) || events[0];
@@ -120,11 +120,10 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                    isActive
+                  className={`flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${isActive
                       ? 'bg-teal-600 text-white shadow-md shadow-teal-600/30 scale-105'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-white/80'
-                  }`}
+                    }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
                   <span>{item.label}</span>
@@ -133,55 +132,25 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
             })}
           </nav>
 
-          {/* Right Actions - Three Dots (⋮) Dropdown Menu with Glassmorphism */}
-          <div className="relative">
+          {/* Right Header Actions: Change Event & Sign Out */}
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               type="button"
-              onClick={() => setIsMenuOpen((prev) => !prev)}
-              title="More Options"
-              className="p-2 rounded-xl bg-slate-100/80 hover:bg-slate-200/90 backdrop-blur-md text-slate-700 border border-slate-200/80 transition-all cursor-pointer flex items-center justify-center shadow-sm hover:shadow"
+              onClick={() => setIsChangeModalOpen(true)}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold transition-all shadow-sm cursor-pointer"
             >
-              <MoreVertical className="w-5 h-5 text-slate-700" />
+              <RefreshCw className="w-3.5 h-3.5 text-amber-700" />
+              <span>Change Event</span>
             </button>
 
-            {/* Three Dots Dropdown Menu with Frosted Glass */}
-            {isMenuOpen && (
-              <>
-                {/* Overlay Backdrop to close menu on outside click */}
-                <div
-                  className="fixed inset-0 z-40"
-                  onClick={() => setIsMenuOpen(false)}
-                />
-                <div className="absolute right-0 mt-2 w-52 bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl border border-slate-200/90 py-2 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-1">
-                  {onStartNewRegistration && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        onStartNewRegistration();
-                      }}
-                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-bold text-teal-700 hover:bg-teal-50/80 transition-colors text-left cursor-pointer"
-                    >
-                      <Sparkles className="w-4 h-4 text-teal-600" />
-                      <span>Register Now</span>
-                    </button>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      if (onOpenAccessLogin) onOpenAccessLogin();
-                      else onSignOut();
-                    }}
-                    className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-100/80 transition-colors text-left cursor-pointer"
-                  >
-                    <LogOut className="w-4 h-4 text-slate-500" />
-                    <span>Pass Access</span>
-                  </button>
-                </div>
-              </>
-            )}
+            <button
+              type="button"
+              onClick={onSignOut}
+              title="Sign Out of Dashboard"
+              className="p-2 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 border border-slate-200 hover:border-rose-200 transition-colors cursor-pointer"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </header>
@@ -344,7 +313,7 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
 
               {/* Unboxed Grid Columns */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                
+
                 {/* Left 8 Cols (Featured Story & Editorial News) */}
                 <div className="lg:col-span-8 space-y-6">
                   {/* Large Featured News Photo Banner */}
@@ -809,11 +778,10 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                 key={item.id}
                 type="button"
                 onClick={() => setActiveTab(item.id)}
-                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-full transition-all duration-200 cursor-pointer ${
-                  isActive
+                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-full transition-all duration-200 cursor-pointer ${isActive
                     ? 'bg-teal-600 text-white shadow-md shadow-teal-600/30 font-bold scale-105'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                }`}
+                  }`}
               >
                 <Icon className="w-4 h-4" />
                 <span className="text-[9px] font-bold tracking-tight">{item.label.split(' ')[0]}</span>
@@ -822,6 +790,15 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
           })}
         </nav>
       </div>
+
+      {/* Modern Event Switcher Modal */}
+      <ChangeEventModal
+        isOpen={isChangeModalOpen}
+        onClose={() => setIsChangeModalOpen(false)}
+        currentRegistration={registration}
+        events={events}
+        onEventChangedSuccess={onEventChangedSuccess}
+      />
     </div>
   );
 };

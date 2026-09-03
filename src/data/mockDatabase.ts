@@ -9,7 +9,9 @@ import {
   ScoreRecord,
   StaffUser,
   SystemSettings,
+  TeamMember,
 } from '../types';
+import { SupabaseService } from '../services/supabaseService';
 
 export const INITIAL_SYSTEM_SETTINGS: SystemSettings = {
   isRegistrationOpen: true,
@@ -727,6 +729,47 @@ export class MockDatabaseService {
     }
   }
 
+  /**
+   * Synchronize all local storage tables with live Supabase Database
+   */
+  static async syncWithSupabase(): Promise<void> {
+    try {
+      const [events, participants, registrations, attendance, scores, staff, settings] = await Promise.all([
+        SupabaseService.getEvents(),
+        SupabaseService.getParticipants(),
+        SupabaseService.getRegistrations(),
+        SupabaseService.getAttendance(),
+        SupabaseService.getScores(),
+        SupabaseService.getStaffUsers(),
+        SupabaseService.getSettings(),
+      ]);
+
+      if (events && events.length > 0) {
+        this.setItem(STORAGE_KEYS.EVENTS, events);
+      }
+      if (participants && participants.length > 0) {
+        this.setItem(STORAGE_KEYS.PARTICIPANTS, participants);
+      }
+      if (registrations && registrations.length > 0) {
+        this.setItem(STORAGE_KEYS.REGISTRATIONS, registrations);
+      }
+      if (attendance && attendance.length > 0) {
+        this.setItem(STORAGE_KEYS.ATTENDANCE, attendance);
+      }
+      if (scores && scores.length > 0) {
+        this.setItem(STORAGE_KEYS.SCORES, scores);
+      }
+      if (staff && staff.length > 0) {
+        this.setItem(STORAGE_KEYS.STAFF, staff);
+      }
+      if (settings) {
+        this.setItem(STORAGE_KEYS.SETTINGS, settings);
+      }
+    } catch (err) {
+      console.warn('Supabase sync notice:', err);
+    }
+  }
+
   static getSettings(): SystemSettings {
     return this.getItem<SystemSettings>(STORAGE_KEYS.SETTINGS, INITIAL_SYSTEM_SETTINGS);
   }
@@ -939,6 +982,14 @@ export class MockDatabaseService {
       `Registered for "${params.eventTitle}" with Pass ID ${regNumber}`
     );
 
+    // Live Supabase Backend Synchronization
+    SupabaseService.createRegistration({
+      participantData: {
+        dateOfBirth: params.members.find((m) => m.isLeader)?.dateOfBirth,
+      },
+      registration: newReg,
+    }).catch((err) => console.warn('Supabase createRegistration background sync error:', err));
+
     return { success: true, registration: newReg };
   }
 
@@ -1096,6 +1147,10 @@ export class MockDatabaseService {
       oldReg.leaderName,
       `Switched event from "${oldReg.eventTitle}" to "${targetEvent.title}". Old pass ${oldReg.registrationNumber} revoked, new pass ${newRegNumber} issued.`
     );
+
+    // Live Supabase Backend Synchronization
+    SupabaseService.changeEvent(auditChange, oldReg.id, newReg)
+      .catch((err) => console.warn('Supabase changeEvent background sync error:', err));
 
     return { success: true, newRegistration: newReg };
   }
@@ -1365,6 +1420,10 @@ export class MockDatabaseService {
       `Marked ${status} for ${reg.leaderName} (${reg.registrationNumber}) in "${reg.eventTitle}"`
     );
 
+    // Live Supabase Backend Synchronization
+    SupabaseService.recordAttendance(record)
+      .catch((err) => console.warn('Supabase recordAttendance background sync error:', err));
+
     return { success: true, record };
   }
 
@@ -1416,6 +1475,10 @@ export class MockDatabaseService {
       score.submittedByStaffName,
       `Score of ${score.totalScore}/100 recorded for ${score.teamOrParticipantName}`
     );
+
+    // Live Supabase Backend Synchronization
+    SupabaseService.saveScore(score)
+      .catch((err) => console.warn('Supabase saveScore background sync error:', err));
   }
 
   static getStaffUsers(): StaffUser[] {

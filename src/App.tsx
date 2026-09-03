@@ -81,8 +81,9 @@ export default function App() {
 
   const [currentStaffUser, setCurrentStaffUser] = useState<StaffUser | null>(getStoredStaffSession);
 
-  // Reload data from storage
-  const loadDatabaseData = () => {
+  // Reload data from local cache and sync with live Supabase Database
+  const loadDatabaseData = async () => {
+    // 1. Instant local read for 0-latency UI
     setEvents(MockDatabaseService.getEvents());
     setParticipants(MockDatabaseService.getParticipants());
     setRegistrations(MockDatabaseService.getRegistrations());
@@ -92,6 +93,22 @@ export default function App() {
     setEventChanges(MockDatabaseService.getEventChanges());
     setAuditLogs(MockDatabaseService.getAuditLogs());
     setSettings(MockDatabaseService.getSettings());
+
+    // 2. Pull live state directly from Supabase Database
+    try {
+      await MockDatabaseService.syncWithSupabase();
+      setEvents(MockDatabaseService.getEvents());
+      setParticipants(MockDatabaseService.getParticipants());
+      setRegistrations(MockDatabaseService.getRegistrations());
+      setAttendanceList(MockDatabaseService.getAttendance());
+      setScores(MockDatabaseService.getScores());
+      setStaffList(MockDatabaseService.getStaffUsers());
+      setEventChanges(MockDatabaseService.getEventChanges());
+      setAuditLogs(MockDatabaseService.getAuditLogs());
+      setSettings(MockDatabaseService.getSettings());
+    } catch (e) {
+      console.warn('Live Supabase data sync exception:', e);
+    }
   };
 
   // Determine current portal strictly by URL path / hash with Auth Guards

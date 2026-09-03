@@ -170,11 +170,10 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full px-3.5 py-2.5 rounded-xl bg-white border text-left text-sm flex items-center justify-between transition-all duration-200 cursor-pointer ${
-          isOpen
+        className={`w-full px-3.5 py-2.5 rounded-xl bg-white border text-left text-sm flex items-center justify-between transition-all duration-200 cursor-pointer ${isOpen
             ? 'border-[#0077c8] ring-2 ring-[#0077c8]/20 shadow-md'
             : 'border-[#d4e8f5] hover:border-[#0077c8]/60 shadow-sm'
-        }`}
+          }`}
       >
         <div className="flex items-center gap-2 truncate">
           <CalendarIcon className="w-4 h-4 text-[#0077c8] shrink-0" />
@@ -184,9 +183,8 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
         </div>
 
         <ChevronDown
-          className={`w-4 h-4 text-[#0077c8] transition-transform duration-200 shrink-0 ${
-            isOpen ? 'rotate-180' : ''
-          }`}
+          className={`w-4 h-4 text-[#0077c8] transition-transform duration-200 shrink-0 ${isOpen ? 'rotate-180' : ''
+            }`}
         />
       </button>
 
@@ -263,11 +261,10 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
                   key={day}
                   type="button"
                   onClick={() => handleSelectDay(day)}
-                  className={`w-7 h-7 mx-auto rounded-lg text-xs font-medium flex items-center justify-center transition-all cursor-pointer ${
-                    isSelected
+                  className={`w-7 h-7 mx-auto rounded-lg text-xs font-medium flex items-center justify-center transition-all cursor-pointer ${isSelected
                       ? 'bg-[#0077c8] text-white font-bold shadow-md'
                       : 'text-slate-700 hover:bg-[#e8f5fb] hover:text-[#002b66]'
-                  }`}
+                    }`}
                 >
                   {day}
                 </button>
@@ -284,11 +281,10 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
                   key={y}
                   type="button"
                   onClick={() => setViewYear(y)}
-                  className={`px-1.5 py-0.5 rounded text-[10px] font-bold transition-colors ${
-                    viewYear === y
+                  className={`px-1.5 py-0.5 rounded text-[10px] font-bold transition-colors ${viewYear === y
                       ? 'bg-[#0077c8] text-white'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                  }`}
+                    }`}
                 >
                   {y}
                 </button>

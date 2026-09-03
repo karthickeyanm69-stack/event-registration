@@ -78,7 +78,7 @@ export const ChangeEventModal: React.FC<ChangeEventModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-white rounded-3xl max-w-lg w-full border border-[#d4e8f5] shadow-2xl overflow-hidden p-6 space-y-5 animate-in zoom-in-95 duration-200">
-        
+
         {/* Institutional Header */}
         <div className="flex items-start justify-between pb-4 border-b border-[#e8f5fb]">
           <div className="flex items-center gap-3">
@@ -199,11 +199,10 @@ export const ChangeEventModal: React.FC<ChangeEventModalProps> = ({
                     key={cat}
                     type="button"
                     onClick={() => setCategoryFilter(cat)}
-                    className={`px-2 py-1 rounded-md font-bold transition-colors ${
-                      categoryFilter === cat
+                    className={`px-2 py-1 rounded-md font-bold transition-colors ${categoryFilter === cat
                         ? 'bg-[#0077c8] text-white shadow-sm'
                         : 'text-slate-600 hover:text-slate-900'
-                    }`}
+                      }`}
                   >
                     {cat === 'ALL' ? 'All (10)' : cat}
                   </button>
@@ -222,20 +221,18 @@ export const ChangeEventModal: React.FC<ChangeEventModalProps> = ({
                       setSelectedNewEventId(evt.id);
                       setErrorMessage(null);
                     }}
-                    className={`p-3.5 rounded-2xl border cursor-pointer transition-all flex items-center justify-between ${
-                      isSelected
+                    className={`p-3.5 rounded-2xl border cursor-pointer transition-all flex items-center justify-between ${isSelected
                         ? 'border-[#0077c8] bg-[#e8f5fb] shadow-sm'
                         : 'border-slate-200 bg-white hover:bg-slate-50'
-                    }`}
+                      }`}
                   >
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <span
-                          className={`text-[9px] uppercase font-extrabold px-1.5 py-0.5 rounded ${
-                            evt.category === 'Technical'
+                          className={`text-[9px] uppercase font-extrabold px-1.5 py-0.5 rounded ${evt.category === 'Technical'
                               ? 'bg-[#e8f5fb] text-[#0077c8]'
                               : 'bg-teal-50 text-[#00a887]'
-                          }`}
+                            }`}
                         >
                           {evt.category}
                         </span>
@@ -247,11 +244,10 @@ export const ChangeEventModal: React.FC<ChangeEventModalProps> = ({
                     </div>
 
                     <div
-                      className={`w-5 h-5 rounded-full border flex items-center justify-center transition-colors ${
-                        isSelected
+                      className={`w-5 h-5 rounded-full border flex items-center justify-center transition-colors ${isSelected
                           ? 'border-[#0077c8] bg-[#0077c8] text-white'
                           : 'border-slate-300 bg-white'
-                      }`}
+                        }`}
                     >
                       {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
                     </div>
