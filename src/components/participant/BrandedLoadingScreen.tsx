@@ -1,92 +1,80 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface BrandedLoadingScreenProps {
   onFinish: () => void;
-  videoSrc?: string;
+  collegeName?: string;
+  symposiumName?: string;
 }
 
 export const BrandedLoadingScreen: React.FC<BrandedLoadingScreenProps> = ({
   onFinish,
-  videoSrc = '/loading-page-spiher.mp4',
+  collegeName = "St. Peter's Institute of Higher Education & Research",
+  symposiumName = 'IGNITE 2026',
 }) => {
+  const [progress, setProgress] = useState(10);
   const [fadeOut, setFadeOut] = useState(false);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const hasFinishedRef = useRef(false);
 
-  const handleComplete = () => {
-    if (hasFinishedRef.current) return;
-    hasFinishedRef.current = true;
-    setFadeOut(true);
-    setTimeout(() => {
+  useEffect(() => {
+    // Smooth progress bar animation over ~1.1s
+    const p1 = setTimeout(() => setProgress(45), 200);
+    const p2 = setTimeout(() => setProgress(80), 550);
+    const p3 = setTimeout(() => setProgress(100), 950);
+
+    // Trigger fade-out and finish
+    const fadeTimer = setTimeout(() => {
+      setFadeOut(true);
+    }, 1200);
+
+    const finishTimer = setTimeout(() => {
       onFinish();
-    }, 300);
-  };
+    }, 1500);
 
-  useEffect(() => {
-    // Generous fallback safety (20s) so full 8+ second video is NEVER cut off prematurely
-    const safetyTimer = setTimeout(() => {
-      handleComplete();
-    }, 20000);
-
-    return () => clearTimeout(safetyTimer);
-  }, []);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (video) {
-      video.muted = true;
-      video.playsInline = true;
-      video.defaultMuted = true;
-      video.playbackRate = 1.0;
-      video
-        .play()
-        .catch(() => {
-          // Browser autoplay fallback
-        });
-    }
-  }, []);
+    return () => {
+      clearTimeout(p1);
+      clearTimeout(p2);
+      clearTimeout(p3);
+      clearTimeout(fadeTimer);
+      clearTimeout(finishTimer);
+    };
+  }, [onFinish]);
 
   return (
     <div
-      className={`fixed inset-0 z-50 w-screen h-screen flex items-center justify-center bg-white select-none transition-opacity duration-300 ${
+      className={`fixed inset-0 z-50 w-screen h-screen flex flex-col items-center justify-center bg-white select-none transition-opacity duration-300 ${
         fadeOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
-      style={{
-        backgroundColor: '#ffffff',
-        margin: 0,
-        padding: 0,
-        border: 'none',
-        outline: 'none',
-        boxShadow: 'none',
-        overflow: 'hidden',
-      }}
     >
-      <video
-        ref={videoRef}
-        src={videoSrc}
-        autoPlay
-        muted
-        playsInline
-        preload="auto"
-        controls={false}
-        disablePictureInPicture
-        disableRemotePlayback
-        onEnded={handleComplete}
-        className="w-full h-full bg-white block"
-        style={{
-          backgroundColor: '#ffffff',
-          width: '100vw',
-          height: '100vh',
-          objectFit: 'contain',
-          border: 'none',
-          outline: 'none',
-          boxShadow: 'none',
-          borderRadius: '0px',
-          margin: 0,
-          padding: 0,
-          WebkitTapHighlightColor: 'transparent',
-        }}
-      />
+      <div className="flex flex-col items-center justify-center max-w-sm px-6 text-center animate-in fade-in zoom-in-95 duration-500">
+        {/* Official College Logo */}
+        <div className="w-24 h-24 mb-5 flex items-center justify-center p-2 rounded-2xl bg-white shadow-sm border border-slate-100">
+          <img
+            src="/spiher-logo.jpg"
+            alt={collegeName}
+            className="w-full h-full object-contain"
+          />
+        </div>
+
+        {/* Institution Title */}
+        <div className="space-y-1 mb-6">
+          <span className="text-[11px] font-black tracking-widest text-[#0077c8] uppercase bg-blue-50 px-3 py-1 rounded-full inline-block border border-blue-100/60">
+            {symposiumName} PORTAL
+          </span>
+          <h1 className="text-lg font-extrabold text-[#001f4d] tracking-tight pt-1">
+            St. PETER'S
+          </h1>
+          <p className="text-[11px] font-semibold text-slate-500 tracking-wide uppercase">
+            Institute of Higher Education & Research
+          </p>
+        </div>
+
+        {/* Sleek Smooth Progress Bar */}
+        <div className="w-48 h-1.5 bg-slate-100 rounded-full overflow-hidden relative shadow-inner">
+          <div
+            className="h-full bg-gradient-to-r from-[#002b66] via-[#0077c8] to-[#00a887] rounded-full transition-all duration-300 ease-out"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
     </div>
   );
 };
