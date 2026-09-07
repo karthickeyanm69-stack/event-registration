@@ -213,6 +213,48 @@ export default function App() {
     return () => window.removeEventListener('popstate', syncRouteFromLocation);
   }, []);
 
+  // 5. Scoped PWA Installation Manager (Exclusively for Employee, Admin, and Super Admin)
+  useEffect(() => {
+    const isStaffPortal = ['employee', 'admin', 'superadmin', 'console'].includes(currentRole);
+    const existingManifestLink = document.getElementById('spiher-staff-pwa-manifest');
+
+    const handleBeforeInstall = (e: Event) => {
+      // Prevent browser install prompt popup/bar on participant pages
+      if (!isStaffPortal) {
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+
+    if (isStaffPortal) {
+      // 1. Inject PWA Manifest for Staff & Admin dashboards
+      if (!existingManifestLink) {
+        const manifestLink = document.createElement('link');
+        manifestLink.id = 'spiher-staff-pwa-manifest';
+        manifestLink.rel = 'manifest';
+        manifestLink.href = '/manifest.json';
+        document.head.appendChild(manifestLink);
+      }
+
+      // 2. Register Service Worker for Native Chrome Installation
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch((err) => {
+          console.warn('Staff PWA ServiceWorker registration warning:', err);
+        });
+      }
+    } else {
+      // Remove manifest when viewing participant pages
+      if (existingManifestLink) {
+        existingManifestLink.remove();
+      }
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+    };
+  }, [currentRole]);
+
   const navigateTo = (path: string, role: PortalRole) => {
     setCurrentRole(role);
     window.history.pushState({}, '', path);

@@ -1,14 +1,14 @@
 {
-  "name": "SPIHER Portal — Event Governance & Scanner",
-  "short_name": "SPIHER Events",
-  "description": "St. Peter's Institute of Higher Education & Research — Official Event Governance, Employee QR Scanner, Admin and Super Admin Portal",
-  "start_url": "/",
+  "name": "SPIHER Admin & Staff Portal",
+  "short_name": "SPIHER Staff",
+  "description": "St. Peter's Institute of Higher Education & Research — Official Employee Scanner, Event Admin & Super Admin Management Portal",
+  "start_url": "/console",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#001f4d",
   "theme_color": "#002b66",
-  "categories": ["education", "events", "productivity"],
+  "categories": ["education", "events", "productivity", "utilities"],
   "icons": [
     {
       "src": "/icon-192.png",

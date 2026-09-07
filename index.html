@@ -6,14 +6,6 @@
     <title>SPIHER Events — St. Peter's Institute</title>
     <meta name="description" content="Official Event Registration, QR Verification, and Management Platform for St. Peter's Institute of Higher Education & Research." />
     
-    <!-- PWA Web App Manifest -->
-    <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#002b66" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="SPIHER Events" />
-    
     <!-- Official College Favicon & PWA Icons -->
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -33,17 +25,6 @@
   <body class="bg-background text-on-background min-h-screen font-sans antialiased selection:bg-[#0077c8] selection:text-white">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-
-    <!-- Register PWA Service Worker for Native Chrome Installation -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch((err) => {
-            console.warn('PWA ServiceWorker registration warning:', err);
-          });
-        });
-      }
-    </script>
   </body>
 </html>
 
