@@ -2,20 +2,49 @@
 <html lang="en" class="light">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SPITHR Events</title>
-    <meta name="description" content="College Event Registration and Management Platform for St. Peter's Institute of Higher Education & Research." />
-    <meta property="og:title" content="SPITHR Events" />
-    <meta property="og:description" content="College Event Registration and Management Platform for St. Peter's Institute of Higher Education & Research." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <title>SPIHER Events — St. Peter's Institute</title>
+    <meta name="description" content="Official Event Registration, QR Verification, and Management Platform for St. Peter's Institute of Higher Education & Research." />
+    
+    <!-- PWA Web App Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#002b66" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="SPIHER Events" />
+    
+    <!-- Official College Favicon & PWA Icons -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Open Graph & Social Cards -->
+    <meta property="og:title" content="SPIHER Events — St. Peter's Institute" />
+    <meta property="og:description" content="Official Event Registration, QR Verification, and Management Platform for St. Peter's Institute of Higher Education & Research." />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content="/spiher-logo.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
   </head>
-  <body class="bg-background text-on-background min-h-screen font-sans antialiased selection:bg-secondary/20 selection:text-secondary">
+  <body class="bg-background text-on-background min-h-screen font-sans antialiased selection:bg-[#0077c8] selection:text-white">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Register PWA Service Worker for Native Chrome Installation -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch((err) => {
+            console.warn('PWA ServiceWorker registration warning:', err);
+          });
+        });
+      }
+    </script>
   </body>
 </html>
+
 

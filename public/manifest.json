@@ -1,0 +1,49 @@
+{
+  "name": "SPIHER Portal — Event Governance & Scanner",
+  "short_name": "SPIHER Events",
+  "description": "St. Peter's Institute of Higher Education & Research — Official Event Governance, Employee QR Scanner, Admin and Super Admin Portal",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#001f4d",
+  "theme_color": "#002b66",
+  "categories": ["education", "events", "productivity"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Employee QR Scanner",
+      "short_name": "QR Scanner",
+      "description": "Scan participant QR badges and record attendance",
+      "url": "/employee",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Event Admin Portal",
+      "short_name": "Admin Portal",
+      "description": "Manage assigned competitions, rosters, and scores",
+      "url": "/admin",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Super Admin Console",
+      "short_name": "Super Admin",
+      "description": "Master telemetry and event management",
+      "url": "/superadmin",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
