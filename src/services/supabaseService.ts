@@ -183,6 +183,95 @@ export class SupabaseService {
   }
 
   /**
+   * Save / Upsert Event directly to Supabase
+   */
+  static async saveEvent(event: CollegeEvent): Promise<{ success: boolean; error?: string }> {
+    if (!supabase) return { success: false, error: 'Supabase client not configured.' };
+    try {
+      const eventRow = {
+        id: event.id,
+        title: event.title,
+        category: event.category,
+        tagline: event.tagline || '',
+        description: event.description || '',
+        is_team_event: event.isTeamEvent,
+        min_team_size: event.minTeamSize,
+        max_team_size: event.maxTeamSize,
+        price: event.price || 0,
+        date: event.date || 'Oct 24, 2026',
+        time: event.time || '10:00 AM - 01:00 PM',
+        start_time: event.startTime || '10:00 AM',
+        end_time: event.endTime || '01:00 PM',
+        venue: event.venue,
+        total_slots: event.totalSlots,
+        slots_left: event.slotsLeft,
+        image_url: event.imageUrl,
+        rules: event.rules || [],
+        coordinators: event.coordinators || [],
+        status: event.status || 'OPEN',
+      };
+
+      const { error } = await supabase.from('events').upsert(eventRow, { onConflict: 'id' });
+      if (error) {
+        console.warn('Supabase saveEvent error:', error);
+        return { success: false, error: error.message };
+      }
+      return { success: true };
+    } catch (e: any) {
+      console.warn('Supabase saveEvent exception:', e);
+      return { success: false, error: e?.message || 'Failed to save event to Supabase' };
+    }
+  }
+
+  /**
+   * Delete Event from Supabase
+   */
+  static async deleteEvent(eventId: string): Promise<{ success: boolean; error?: string }> {
+    if (!supabase) return { success: false, error: 'Supabase client not configured.' };
+    try {
+      const { error } = await supabase.from('events').delete().eq('id', eventId);
+      if (error) {
+        console.warn('Supabase deleteEvent error:', error);
+        return { success: false, error: error.message };
+      }
+      return { success: true };
+    } catch (e: any) {
+      return { success: false, error: e?.message };
+    }
+  }
+
+  /**
+   * Update Global System Settings in Supabase
+   */
+  static async updateSettings(settings: SystemSettings): Promise<{ success: boolean; error?: string }> {
+    if (!supabase) return { success: false, error: 'Supabase client not configured.' };
+    try {
+      const settingsRow = {
+        is_registration_open: settings.isRegistrationOpen,
+        allow_event_change: settings.allowEventChange,
+        college_name: settings.collegeName,
+        college_short_name: settings.collegeShortName,
+        symposium_name: settings.symposiumName,
+        symposium_year: settings.symposiumYear,
+        theme_banner_text: settings.themeBannerText,
+        support_email: settings.supportEmail,
+        support_phone: settings.supportPhone,
+        venue_address: settings.venueAddress,
+        emergency_notice: settings.emergencyNotice,
+      };
+
+      const { error } = await supabase.from('system_settings').upsert(settingsRow);
+      if (error) {
+        console.warn('Supabase updateSettings error:', error);
+        return { success: false, error: error.message };
+      }
+      return { success: true };
+    } catch (e: any) {
+      return { success: false, error: e?.message };
+    }
+  }
+
+  /**
    * Fetch All Live Participants from Supabase
    */
   static async getParticipants(): Promise<Participant[]> {

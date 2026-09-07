@@ -104,11 +104,13 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
   const [matrixRoleFilter, setMatrixRoleFilter] = useState<'ALL' | 'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE'>('ALL');
   const [matrixCategoryFilter, setMatrixCategoryFilter] = useState<'ALL' | 'Technical' | 'Non-Technical'>('ALL');
 
-  // New Event Modal State
+  // Event Management State (Create & Edit)
   const [isCreatingEvent, setIsCreatingEvent] = useState(false);
+  const [editingEvent, setEditingEvent] = useState<CollegeEvent | null>(null);
   const [newEventTitle, setNewEventTitle] = useState('');
   const [newEventCategory, setNewEventCategory] = useState<EventCategory>('Technical');
   const [newEventTagline, setNewEventTagline] = useState('');
+  const [newEventDescription, setNewEventDescription] = useState('Official tournament competition hosted by the Department.');
   const [newEventVenue, setNewEventVenue] = useState('Computing Annex Lab 1');
   const [newEventTime, setNewEventTime] = useState('10:00 AM - 01:00 PM');
   const [newEventPrize, setNewEventPrize] = useState('₹25,000');
@@ -116,6 +118,55 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
   const [newEventIsTeam, setNewEventIsTeam] = useState(true);
   const [newEventMinTeam, setNewEventMinTeam] = useState(2);
   const [newEventMaxTeam, setNewEventMaxTeam] = useState(3);
+  const [newEventImageUrl, setNewEventImageUrl] = useState('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80');
+  const [newEventRulesText, setNewEventRulesText] = useState(
+    'Standard fair play and institutional code of conduct apply.\nJury panel evaluation decision is final and binding.'
+  );
+  const [newEventCoordName, setNewEventCoordName] = useState(superAdminUser.name);
+  const [newEventCoordPhone, setNewEventCoordPhone] = useState('+91 94440 12345');
+  const [newEventCoordEmail, setNewEventCoordEmail] = useState(superAdminUser.email);
+
+  // Open Create Modal
+  const handleOpenCreateEvent = () => {
+    setEditingEvent(null);
+    setNewEventTitle('');
+    setNewEventCategory('Technical');
+    setNewEventTagline('');
+    setNewEventDescription('Official tournament competition hosted by the Department.');
+    setNewEventVenue('Computing Annex Lab 1');
+    setNewEventTime('10:00 AM - 01:00 PM');
+    setNewEventSlots(40);
+    setNewEventIsTeam(true);
+    setNewEventMinTeam(2);
+    setNewEventMaxTeam(3);
+    setNewEventImageUrl('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80');
+    setNewEventRulesText('Standard fair play and institutional code of conduct apply.\nJury panel evaluation decision is final and binding.');
+    setNewEventCoordName(superAdminUser.name);
+    setNewEventCoordPhone('+91 94440 12345');
+    setNewEventCoordEmail(superAdminUser.email);
+    setIsCreatingEvent(true);
+  };
+
+  // Open Edit Modal with Pre-filled values
+  const handleOpenEditEvent = (evt: CollegeEvent) => {
+    setEditingEvent(evt);
+    setNewEventTitle(evt.title);
+    setNewEventCategory(evt.category);
+    setNewEventTagline(evt.tagline || '');
+    setNewEventDescription(evt.description || 'Official tournament competition hosted by the Department.');
+    setNewEventVenue(evt.venue);
+    setNewEventTime(evt.time || '10:00 AM - 01:00 PM');
+    setNewEventSlots(evt.totalSlots);
+    setNewEventIsTeam(evt.isTeamEvent);
+    setNewEventMinTeam(evt.minTeamSize);
+    setNewEventMaxTeam(evt.maxTeamSize);
+    setNewEventImageUrl(evt.imageUrl || 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80');
+    setNewEventRulesText((evt.rules || []).join('\n'));
+    setNewEventCoordName(evt.coordinators?.[0]?.name || superAdminUser.name);
+    setNewEventCoordPhone(evt.coordinators?.[0]?.phone || '+91 94440 12345');
+    setNewEventCoordEmail(evt.coordinators?.[0]?.email || superAdminUser.email);
+    setIsCreatingEvent(true);
+  };
 
   // New Admin Modal State
   const [isCreatingAdmin, setIsCreatingAdmin] = useState(false);
@@ -141,45 +192,51 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
     e.preventDefault();
     if (!newEventTitle.trim()) return;
 
-    const id = `evt-${newEventTitle.toLowerCase().replace(/[^a-z0-9]/g, '')}-${Date.now().toString().slice(-4)}`;
-    const newEvent: CollegeEvent = {
-      id,
+    // Parse rules from textarea lines
+    const parsedRules = newEventRulesText
+      .split('\n')
+      .map((r) => r.trim())
+      .filter((r) => r.length > 0);
+
+    const eventId = editingEvent
+      ? editingEvent.id
+      : `evt-${newEventTitle.toLowerCase().replace(/[^a-z0-9]/g, '')}-${Date.now().toString().slice(-4)}`;
+
+    const eventToSave: CollegeEvent = {
+      id: eventId,
       title: newEventTitle.trim(),
       category: newEventCategory,
-      tagline: newEventTagline.trim() || 'Exciting National Level Competition at IGNITE 2024',
-      description: 'Official tournament competition hosted by the Department.',
+      tagline: newEventTagline.trim() || 'Exciting National Level Competition at IGNITE 2026',
+      description: newEventDescription.trim() || 'Official tournament competition hosted by the Department.',
       isTeamEvent: newEventIsTeam,
       minTeamSize: newEventIsTeam ? newEventMinTeam : 1,
       maxTeamSize: newEventIsTeam ? newEventMaxTeam : 1,
       price: 0,
-      date: 'Oct 24, 2024',
+      date: 'Oct 24, 2026',
       time: newEventTime,
       startTime: newEventTime.split('-')[0]?.trim() || '10:00 AM',
       endTime: newEventTime.split('-')[1]?.trim() || '01:00 PM',
       venue: newEventVenue,
       totalSlots: newEventSlots,
-      slotsLeft: newEventSlots,
-      imageUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80',
-      rules: [
-        'Standard fair play and institutional code of conduct apply.',
-        'Jury panel evaluation decision is final and binding.',
-      ],
+      slotsLeft: editingEvent ? Math.min(editingEvent.slotsLeft, newEventSlots) : newEventSlots,
+      imageUrl: newEventImageUrl.trim() || 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80',
+      rules: parsedRules.length > 0 ? parsedRules : ['Standard fair play and institutional code of conduct apply.'],
       coordinators: [
         {
-          id: `coord-${Date.now()}`,
-          name: superAdminUser.name,
-          role: 'Convenor',
-          phone: '+91 94440 12345',
-          email: superAdminUser.email,
+          id: editingEvent?.coordinators?.[0]?.id || `coord-${Date.now()}`,
+          name: newEventCoordName.trim() || superAdminUser.name,
+          role: 'Faculty Coordinator',
+          phone: newEventCoordPhone.trim() || '+91 94440 12345',
+          email: newEventCoordEmail.trim() || superAdminUser.email,
           photoUrl: superAdminUser.avatarUrl || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80',
         },
       ],
       status: 'OPEN',
     };
 
-    MockDatabaseService.saveEvent(newEvent);
+    MockDatabaseService.saveEvent(eventToSave);
     setIsCreatingEvent(false);
-    setNewEventTitle('');
+    setEditingEvent(null);
     onRefreshData();
   };
 
@@ -307,9 +364,9 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
         </div>
       </header>
 
-      {/* Main Desktop Container with Left Sidebar & Full-Width Canvas */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Navigation Sidebar */}
+      {/* Main Container with Left Sidebar on Desktop & Top Segmented Bar on Mobile */}
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
+        {/* Left Navigation Sidebar (Desktop) */}
         <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between p-4 shrink-0 hidden md:flex shadow-sm">
           <div className="space-y-1">
             <div className="px-3 py-2 text-[10px] uppercase font-bold tracking-widest text-slate-400">
@@ -324,20 +381,20 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id)}
-                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 ${
+                    className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer ${
                       isActive
-                        ? 'bg-teal-600 text-white font-bold shadow-md shadow-teal-600/20'
+                        ? 'bg-gradient-to-r from-[#002b66] to-[#0077c8] text-white font-bold shadow-md shadow-[#0077c8]/25'
                         : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-500'}`} />
+                      <Icon className={`w-4 h-4 ${isActive ? 'text-[#7af1fc]' : 'text-slate-500'}`} />
                       <span>{item.label}</span>
                     </div>
                     {item.count !== undefined && (
                       <span
                         className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
-                          isActive ? 'bg-white text-teal-800' : 'bg-slate-100 text-slate-600'
+                          isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
                         }`}
                       >
                         {item.count}
@@ -351,8 +408,8 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
 
           {/* Sidebar Footer Info */}
           <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-1">
-            <div className="flex items-center gap-1.5 text-teal-700 font-bold">
-              <ShieldCheck className="w-4 h-4" />
+            <div className="flex items-center gap-1.5 text-[#0077c8] font-bold">
+              <ShieldCheck className="w-4 h-4 text-emerald-500" />
               <span>Strict 1-Participant Rule</span>
             </div>
             <p className="text-[11px] text-slate-500">
@@ -362,7 +419,7 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
         </aside>
 
         {/* Mobile Horizontal Navigation Tabs */}
-        <div className="md:hidden w-full overflow-x-auto bg-white border-b border-slate-200 p-2 flex gap-1.5 scrollbar-hide">
+        <div className="md:hidden w-full overflow-x-auto bg-white border-b border-[#d4e8f5] p-2 flex gap-2 shrink-0 scrollbar-none sticky top-16 z-30 shadow-xs">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -370,12 +427,23 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors ${
-                  isActive ? 'bg-teal-600 text-white' : 'text-slate-600 bg-slate-100'
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
+                  isActive
+                    ? 'bg-gradient-to-r from-[#002b66] to-[#0077c8] text-white shadow-md shadow-[#0077c8]/25'
+                    : 'text-slate-600 bg-slate-50 border border-slate-200 hover:bg-slate-100'
                 }`}
               >
-                <Icon className="w-3.5 h-3.5" />
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#7af1fc]' : 'text-slate-500'}`} />
                 <span>{item.label}</span>
+                {item.count !== undefined && (
+                  <span
+                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
+                      isActive ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
+                    }`}
+                  >
+                    {item.count}
+                  </span>
+                )}
               </button>
             );
           })}
@@ -550,27 +618,29 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
           )}
 
           {/* ========================================================================= */}
-          {/* 2. COMPETITIONS & EVENTS CRUD */}
+          {/* 2. COMPETITIONS & EVENTS DIRECTORY (Create, Edit, Image & Rules)        */}
           {/* ========================================================================= */}
           {activeTab === 'events-crud' && (
             <div className="space-y-6 max-w-7xl mx-auto">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/90 shadow-sm">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">Event & Competition Directory</h3>
+                  <h3 className="text-lg font-bold text-slate-900">Event &amp; Competition Directory</h3>
                   <p className="text-xs text-slate-500">
-                    Create, edit, manage slots, configure rules, and manage prize pools for all symposium events.
+                    Create, edit, configure rules, assign images, and manage slots for all symposium events.
                   </p>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2.5">
                   <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs">
                     {(['ALL', 'Technical', 'Non-Technical'] as const).map((cat) => (
                       <button
                         key={cat}
                         type="button"
                         onClick={() => setEventCategoryFilter(cat)}
-                        className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-colors ${
-                          eventCategoryFilter === cat ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                        className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-colors cursor-pointer ${
+                          eventCategoryFilter === cat
+                            ? 'bg-gradient-to-r from-[#002b66] to-[#0077c8] text-white shadow-sm'
+                            : 'text-slate-600 hover:text-slate-900'
                         }`}
                       >
                         {cat}
@@ -580,8 +650,15 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
 
                   <button
                     type="button"
-                    onClick={() => setIsCreatingEvent(!isCreatingEvent)}
-                    className="py-2 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md shadow-teal-600/20 flex items-center gap-2 transition-colors"
+                    onClick={() => {
+                      if (isCreatingEvent) {
+                        setIsCreatingEvent(false);
+                        setEditingEvent(null);
+                      } else {
+                        handleOpenCreateEvent();
+                      }
+                    }}
+                    className="py-2 px-4 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white font-bold text-xs shadow-md shadow-[#0077c8]/25 flex items-center gap-2 transition-all cursor-pointer"
                   >
                     <Plus className="w-4 h-4" />
                     <span>{isCreatingEvent ? 'Close Form' : 'Add New Event'}</span>
@@ -589,17 +666,20 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                 </div>
               </div>
 
-              {/* Create New Event Modal / Drawer */}
+              {/* Create / Edit Event Drawer Form */}
               {isCreatingEvent && (
-                <form onSubmit={handleSaveNewEvent} className="p-6 rounded-3xl bg-white border border-teal-300 space-y-5 animate-in fade-in shadow-md">
+                <form onSubmit={handleSaveNewEvent} className="p-6 rounded-3xl bg-white border border-[#d4e8f5] space-y-5 animate-in fade-in shadow-lg">
                   <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-                    <h4 className="text-sm font-bold uppercase tracking-wider text-teal-700 flex items-center gap-2">
-                      <Sparkles className="w-4 h-4" />
-                      <span>New Competition Creation</span>
+                    <h4 className="text-sm font-bold uppercase tracking-wider text-[#0077c8] flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-amber-500" />
+                      <span>{editingEvent ? `Editing Event: ${editingEvent.title}` : 'New Competition Creation'}</span>
                     </h4>
-                    <span className="text-xs text-slate-500 font-mono">Status: Draft</span>
+                    <span className="text-xs text-slate-500 font-mono">
+                      {editingEvent ? `ID: ${editingEvent.id}` : 'Status: Draft'}
+                    </span>
                   </div>
 
+                  {/* Row 1: Title, Category, Tagline */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
                     <div className="space-y-1.5">
                       <label className="font-semibold text-slate-700">Competition Title *</label>
@@ -609,7 +689,7 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                         value={newEventTitle}
                         onChange={(e) => setNewEventTitle(e.target.value)}
                         placeholder="e.g. Algorithmic Code Sprint"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-teal-600 focus:outline-none"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-[#0077c8] focus:outline-none"
                       />
                     </div>
 
@@ -618,7 +698,7 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                       <select
                         value={newEventCategory}
                         onChange={(e) => setNewEventCategory(e.target.value as EventCategory)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-bold focus:border-teal-600 focus:outline-none"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-bold focus:border-[#0077c8] focus:outline-none"
                       >
                         <option value="Technical">Technical</option>
                         <option value="Non-Technical">Non-Technical</option>
@@ -631,42 +711,48 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                         type="text"
                         value={newEventTagline}
                         onChange={(e) => setNewEventTagline(e.target.value)}
-                        placeholder="e.g. 3-Hour Design Sprint"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-teal-600 focus:outline-none"
+                        placeholder="e.g. 3-Hour Full-Stack Challenge"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-[#0077c8] focus:outline-none"
                       />
                     </div>
                   </div>
 
+                  {/* Row 2: Venue, Time, Slots, Participation */}
                   <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Venue</label>
+                      <label className="font-semibold text-slate-700">Venue Location *</label>
                       <input
                         type="text"
+                        required
                         value={newEventVenue}
                         onChange={(e) => setNewEventVenue(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
+                        placeholder="e.g. Computing Annex Lab 1"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-[#0077c8] focus:outline-none"
                       />
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Time & Schedule</label>
+                      <label className="font-semibold text-slate-700">Time &amp; Schedule *</label>
                       <input
                         type="text"
+                        required
                         value={newEventTime}
                         onChange={(e) => setNewEventTime(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
+                        placeholder="10:00 AM - 01:00 PM"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-[#0077c8] focus:outline-none"
                       />
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Total Capacity Slots</label>
+                      <label className="font-semibold text-slate-700">Total Capacity Slots *</label>
                       <input
                         type="number"
                         min={5}
                         max={300}
+                        required
                         value={newEventSlots}
                         onChange={(e) => setNewEventSlots(parseInt(e.target.value) || 40)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-[#0077c8] focus:outline-none"
                       />
                     </div>
 
@@ -675,7 +761,7 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                       <select
                         value={newEventIsTeam ? 'TEAM' : 'SOLO'}
                         onChange={(e) => setNewEventIsTeam(e.target.value === 'TEAM')}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-bold"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-bold focus:border-[#0077c8] focus:outline-none"
                       >
                         <option value="TEAM">Team Event</option>
                         <option value="SOLO">Individual (Solo)</option>
@@ -683,25 +769,154 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                     </div>
                   </div>
 
-                  <div className="flex justify-end gap-3 pt-2">
+                  {/* Team Size inputs if team event */}
+                  {newEventIsTeam && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs p-3 rounded-2xl bg-[#e8f5fb] border border-[#d4e8f5]">
+                      <div className="space-y-1">
+                        <label className="font-semibold text-[#002b66]">Minimum Team Size</label>
+                        <input
+                          type="number"
+                          min={1}
+                          max={10}
+                          value={newEventMinTeam}
+                          onChange={(e) => setNewEventMinTeam(parseInt(e.target.value) || 2)}
+                          className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-slate-900"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="font-semibold text-[#002b66]">Maximum Team Size</label>
+                        <input
+                          type="number"
+                          min={newEventMinTeam}
+                          max={10}
+                          value={newEventMaxTeam}
+                          onChange={(e) => setNewEventMaxTeam(parseInt(e.target.value) || 4)}
+                          className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-slate-900"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Row 3: Event Banner Image URL & Presets */}
+                  <div className="space-y-2 text-xs">
+                    <label className="font-semibold text-slate-700 flex items-center justify-between">
+                      <span>Event Banner Image URL</span>
+                      <span className="text-[11px] text-slate-400 font-normal">Pick a preset or paste direct image URL</span>
+                    </label>
+                    <div className="flex gap-3 items-center">
+                      <input
+                        type="url"
+                        value={newEventImageUrl}
+                        onChange={(e) => setNewEventImageUrl(e.target.value)}
+                        placeholder="https://images.unsplash.com/..."
+                        className="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-[#0077c8] focus:outline-none"
+                      />
+                      <div className="w-12 h-10 rounded-xl overflow-hidden bg-slate-200 shrink-0 border border-slate-300">
+                        <img src={newEventImageUrl} alt="Preview" className="w-full h-full object-cover" />
+                      </div>
+                    </div>
+
+                    {/* Quick Image Presets */}
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      <span className="text-[11px] text-slate-500 font-medium py-1">Quick Presets:</span>
+                      {[
+                        { label: '💻 Coding', url: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80' },
+                        { label: '🤖 Robotics', url: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80' },
+                        { label: '✨ AI / Prompt', url: 'https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80' },
+                        { label: '🎨 UI / Web', url: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80' },
+                        { label: '📄 Paper Pres.', url: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=800&q=80' },
+                        { label: '📷 Photography', url: 'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&w=800&q=80' },
+                        { label: '🎮 Gaming', url: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=800&q=80' },
+                        { label: '🎵 Music / Cultural', url: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80' },
+                      ].map((preset) => (
+                        <button
+                          key={preset.label}
+                          type="button"
+                          onClick={() => setNewEventImageUrl(preset.url)}
+                          className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold transition-colors cursor-pointer"
+                        >
+                          {preset.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Row 4: Rules & Guidelines */}
+                  <div className="space-y-1.5 text-xs">
+                    <label className="font-semibold text-slate-700 flex items-center justify-between">
+                      <span>Event Rules &amp; Evaluation Guidelines *</span>
+                      <span className="text-[11px] text-slate-400 font-normal">Enter each rule on a new line</span>
+                    </label>
+                    <textarea
+                      rows={4}
+                      required
+                      value={newEventRulesText}
+                      onChange={(e) => setNewEventRulesText(e.target.value)}
+                      placeholder="1. Each team must report 15 minutes prior to start time.&#10;2. External libraries and frameworks must be declared.&#10;3. Jury decision is final."
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-[#0077c8] focus:outline-none font-sans"
+                    />
+                  </div>
+
+                  {/* Row 5: Faculty Coordinator Details */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs pt-2 border-t border-slate-200">
+                    <div className="space-y-1.5">
+                      <label className="font-semibold text-slate-700">Faculty Coordinator Name</label>
+                      <input
+                        type="text"
+                        value={newEventCoordName}
+                        onChange={(e) => setNewEventCoordName(e.target.value)}
+                        placeholder="Dr. Senthil Nathan"
+                        className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="font-semibold text-slate-700">Contact Phone</label>
+                      <input
+                        type="text"
+                        value={newEventCoordPhone}
+                        onChange={(e) => setNewEventCoordPhone(e.target.value)}
+                        placeholder="+91 94440 12345"
+                        className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="font-semibold text-slate-700">Email Address</label>
+                      <input
+                        type="email"
+                        value={newEventCoordEmail}
+                        onChange={(e) => setNewEventCoordEmail(e.target.value)}
+                        placeholder="coordinator@spiher.edu.in"
+                        className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200">
                     <button
                       type="button"
-                      onClick={() => setIsCreatingEvent(false)}
-                      className="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs"
+                      onClick={() => {
+                        setIsCreatingEvent(false);
+                        setEditingEvent(null);
+                      }}
+                      className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors cursor-pointer"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md"
+                      className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white font-bold text-xs shadow-md shadow-[#0077c8]/25 flex items-center gap-2 transition-all cursor-pointer"
                     >
-                      Publish Event
+                      <Save className="w-4 h-4" />
+                      <span>{editingEvent ? 'Save Event Changes' : 'Publish & Sync Event'}</span>
                     </button>
                   </div>
                 </form>
               )}
 
-              {/* Events Grid */}
+              {/* Events Cards Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {filteredEvents.map((evt) => (
                   <div
@@ -714,41 +929,53 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                         alt={evt.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/35 to-transparent" />
 
                       <div className="absolute top-3 left-3 flex items-center gap-2">
-                        <span className="text-[10px] uppercase font-bold px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-slate-900 shadow">
+                        <span className="text-[10px] uppercase font-bold px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#002b66] shadow">
                           {evt.category}
                         </span>
                       </div>
 
                       <div className="absolute bottom-3 left-3 right-3 text-white">
-                        <h4 className="text-lg font-bold leading-tight">{evt.title}</h4>
-                        <p className="text-xs opacity-90 truncate">{evt.tagline}</p>
+                        <h4 className="text-lg font-bold leading-tight drop-shadow">{evt.title}</h4>
+                        <p className="text-xs text-slate-200 truncate drop-shadow-sm">{evt.tagline}</p>
                       </div>
                     </div>
 
                     <div className="p-5 space-y-4 flex-1 flex flex-col justify-between text-xs">
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 text-slate-600">
-                          <MapPin className="w-3.5 h-3.5 text-teal-600 shrink-0" />
-                          <span className="truncate">{evt.venue}</span>
+                          <MapPin className="w-3.5 h-3.5 text-[#0077c8] shrink-0" />
+                          <span className="truncate font-medium">{evt.venue}</span>
                         </div>
                         <div className="flex items-center gap-2 text-slate-600">
-                          <Clock className="w-3.5 h-3.5 text-teal-600 shrink-0" />
-                          <span className="truncate">{evt.time}</span>
+                          <Clock className="w-3.5 h-3.5 text-[#0077c8] shrink-0" />
+                          <span className="truncate font-medium">{evt.time}</span>
                         </div>
                       </div>
 
-                      {/* Slots Bar */}
+                      {/* Rules summary preview */}
+                      {evt.rules && evt.rules.length > 0 && (
+                        <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-[11px] text-slate-600 space-y-1">
+                          <span className="font-bold text-[#002b66] block text-[10px] uppercase tracking-wider">
+                            Rules Preview ({evt.rules.length}):
+                          </span>
+                          <p className="line-clamp-2 italic text-slate-500">
+                            • {evt.rules[0]}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Slots Availability Bar */}
                       <div className="space-y-1.5 pt-2 border-t border-slate-100">
                         <div className="flex justify-between text-[11px] font-mono">
                           <span className="text-slate-500">Availability</span>
-                          <span className="text-teal-700 font-bold">{evt.slotsLeft} of {evt.totalSlots} Slots Free</span>
+                          <span className="text-[#0077c8] font-bold">{evt.slotsLeft} of {evt.totalSlots} Slots Free</span>
                         </div>
                         <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-teal-600 rounded-full"
+                            className="h-full bg-gradient-to-r from-[#002b66] to-[#0077c8] rounded-full"
                             style={{
                               width: `${((evt.totalSlots - evt.slotsLeft) / evt.totalSlots) * 100}%`,
                             }}
@@ -756,18 +983,32 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                      {/* Card Action Footer with Edit & Delete */}
+                      <div className="flex items-center justify-between pt-3 border-t border-slate-100">
                         <span className="text-[11px] text-slate-500 font-semibold">
-                          {evt.isTeamEvent ? `Team (${evt.minTeamSize}-${evt.maxTeamSize})` : 'Solo'}
+                          {evt.isTeamEvent ? `Team (${evt.minTeamSize}-${evt.maxTeamSize})` : 'Individual (Solo)'}
                         </span>
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteEvent(evt.id)}
-                          className="p-2 rounded-xl text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
-                          title="Delete Event"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => handleOpenEditEvent(evt)}
+                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#e8f5fb] text-[#0077c8] hover:bg-[#d4e8f5] font-bold text-[11px] transition-colors cursor-pointer"
+                            title="Edit Event"
+                          >
+                            <Edit className="w-3.5 h-3.5" />
+                            <span>Edit</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteEvent(evt.id)}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                            title="Delete Event"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>

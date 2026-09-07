@@ -243,9 +243,9 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
         </div>
       </header>
 
-      {/* Main Desktop Container */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Sidebar Navigation */}
+      {/* Main Container with Left Sidebar on Desktop & Top Segmented Bar on Mobile */}
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
+        {/* Left Sidebar Navigation (Desktop) */}
         <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between p-4 shrink-0 hidden md:flex shadow-sm">
           <div className="space-y-1">
             <div className="px-3 py-2 text-[10px] uppercase font-bold tracking-widest text-slate-400">
@@ -260,20 +260,20 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id)}
-                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 ${
+                    className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer ${
                       isActive
-                        ? 'bg-cyan-600 text-white font-bold shadow-md shadow-cyan-600/20'
+                        ? 'bg-gradient-to-r from-[#002b66] to-[#0077c8] text-white font-bold shadow-md shadow-[#0077c8]/25'
                         : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-500'}`} />
+                      <Icon className={`w-4 h-4 ${isActive ? 'text-[#7af1fc]' : 'text-slate-500'}`} />
                       <span>{item.label}</span>
                     </div>
                     {item.count !== undefined && (
                       <span
                         className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
-                          isActive ? 'bg-white text-cyan-800' : 'bg-slate-100 text-slate-600'
+                          isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
                         }`}
                       >
                         {item.count}
@@ -286,8 +286,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           </div>
 
           <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-1">
-            <div className="flex items-center gap-1.5 text-cyan-700 font-bold">
-              <ShieldCheck className="w-4 h-4" />
+            <div className="flex items-center gap-1.5 text-[#0077c8] font-bold">
+              <ShieldCheck className="w-4 h-4 text-emerald-500" />
               <span>Event-Scoped Access</span>
             </div>
             <p className="text-[11px] text-slate-500">
@@ -297,7 +297,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
         </aside>
 
         {/* Mobile Horizontal Bar */}
-        <div className="md:hidden w-full overflow-x-auto bg-white border-b border-slate-200 p-2 flex gap-1.5 scrollbar-hide">
+        <div className="md:hidden w-full overflow-x-auto bg-white border-b border-[#d4e8f5] p-2 flex gap-2 shrink-0 scrollbar-none sticky top-16 z-30 shadow-xs">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -305,12 +305,23 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors ${
-                  isActive ? 'bg-cyan-600 text-white' : 'text-slate-600 bg-slate-100'
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
+                  isActive
+                    ? 'bg-gradient-to-r from-[#002b66] to-[#0077c8] text-white shadow-md shadow-[#0077c8]/25'
+                    : 'text-slate-600 bg-slate-50 border border-slate-200 hover:bg-slate-100'
                 }`}
               >
-                <Icon className="w-3.5 h-3.5" />
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#7af1fc]' : 'text-slate-500'}`} />
                 <span>{item.label}</span>
+                {item.count !== undefined && (
+                  <span
+                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
+                      isActive ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
+                    }`}
+                  >
+                    {item.count}
+                  </span>
+                )}
               </button>
             );
           })}

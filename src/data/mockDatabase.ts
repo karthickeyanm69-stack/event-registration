@@ -777,6 +777,10 @@ export class MockDatabaseService {
   static updateSettings(settings: SystemSettings): void {
     this.setItem(STORAGE_KEYS.SETTINGS, settings);
     this.logAction('SETTINGS_UPDATED', 'SUPER_ADMIN', 'Super Admin', 'Platform global settings updated');
+    // Sync to Supabase in background
+    SupabaseService.updateSettings(settings).catch((err) => {
+      console.warn('Background Supabase updateSettings warning:', err);
+    });
   }
 
   static getEvents(): CollegeEvent[] {
@@ -793,12 +797,20 @@ export class MockDatabaseService {
     }
     this.setItem(STORAGE_KEYS.EVENTS, events);
     this.logAction('EVENT_SAVED', 'ADMIN', 'Administrator', `Event "${event.title}" created/updated`);
+    // Sync to Supabase in background
+    SupabaseService.saveEvent(event).catch((err) => {
+      console.warn('Background Supabase saveEvent warning:', err);
+    });
   }
 
   static deleteEvent(eventId: string): void {
     const events = this.getEvents().filter((e) => e.id !== eventId);
     this.setItem(STORAGE_KEYS.EVENTS, events);
     this.logAction('EVENT_DELETED', 'SUPER_ADMIN', 'Super Admin', `Event ID ${eventId} archived/deleted`);
+    // Sync to Supabase in background
+    SupabaseService.deleteEvent(eventId).catch((err) => {
+      console.warn('Background Supabase deleteEvent warning:', err);
+    });
   }
 
   static getParticipants(): Participant[] {

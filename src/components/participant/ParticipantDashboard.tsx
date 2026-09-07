@@ -4,6 +4,7 @@ import {
   BookOpen,
   Calendar,
   PhoneCall,
+  QrCode,
   QrCode as QrIcon,
   RefreshCw,
   Sparkles,
@@ -166,103 +167,109 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
         </div>
       </header>
 
-      {/* Main Workspace Viewport */}
-      <main className="flex-1 max-w-[1700px] 2xl:max-w-[1920px] mx-auto w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-6 space-y-8 overflow-x-hidden">
+      {/* ========================================================================= */}
+      {/* FULL-BLEED VERTICAL HERO SECTION (Streamlined, Cinematic & Spacious)     */}
+      {/* ========================================================================= */}
+      {activeTab === 'home' && (
+        <section className="relative w-full min-h-[75vh] sm:min-h-[82vh] lg:min-h-[88vh] flex flex-col justify-between overflow-hidden bg-slate-950 border-b border-slate-800/80">
+          {/* Background St. Peter's College Building Facade Photo */}
+          <img
+            src="/spiher-hero-hd.jpg?v=3"
+            alt="St. Peter's Institute Main Building"
+            className="absolute inset-0 w-full h-full object-cover object-center"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = '/spiher-hero-building.png?v=3';
+            }}
+          />
+          {/* Smooth Cinematic Dark Vignette Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-slate-950/70" />
+
+          {/* Top Subtle Brand Chip */}
+          <div className="relative z-10 pt-6 sm:pt-8 px-6 max-w-6xl mx-auto w-full flex items-center justify-between">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[#7af1fc] text-[11px] font-bold tracking-wide">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>SPIHER • Deemed to be University</span>
+            </div>
+            <span className="text-xs text-white/70 font-mono hidden sm:inline-block">
+              IGNITE 2026 • Live
+            </span>
+          </div>
+
+          {/* Central Hero Typography & Clean College Branding (No Clutter) */}
+          <div className="relative z-10 p-4 sm:p-8 max-w-2xl mx-auto text-center space-y-4 my-auto">
+            <div className="flex justify-center">
+              <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl">
+                <CollegeEmblem size={52} />
+              </div>
+            </div>
+
+            <div className="space-y-2.5">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-extrabold text-white tracking-tight leading-tight drop-shadow-xl">
+                IGNITE 2026
+              </h1>
+              <p className="text-xs sm:text-base text-slate-100 font-semibold tracking-wide max-w-lg mx-auto leading-relaxed">
+                National Level Technical &amp; Non-Technical Symposium
+              </p>
+              <p className="text-[11px] sm:text-xs text-[#7af1fc] font-medium leading-relaxed max-w-md mx-auto">
+                Departments of Computer Science &amp; Engineering and Information Technology
+              </p>
+            </div>
+          </div>
+
+          {/* Bottom Unified Executive Pass Bar with Action Buttons */}
+          <div className="relative z-10 pb-6 sm:pb-8 px-4 max-w-5xl mx-auto w-full">
+            <div className="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-slate-900/85 backdrop-blur-2xl border border-white/20 text-white flex flex-col lg:flex-row items-center justify-between gap-4 shadow-2xl">
+              {/* Pass Status Badge & Identity */}
+              <div className="flex flex-col sm:flex-row items-center gap-2.5 text-center sm:text-left">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold uppercase text-[9px] tracking-wider">
+                    PASS ACTIVE
+                  </span>
+                </div>
+                <div className="text-xs text-slate-200">
+                  <span>{participant.name}</span>
+                  <span className="text-white/40 mx-1.5">•</span>
+                  <strong className="text-white">{registration.eventTitle}</strong>
+                  <span className="text-[#7af1fc] font-mono text-[11px] ml-1.5 hidden md:inline">
+                    ({registration.registrationNumber})
+                  </span>
+                </div>
+              </div>
+
+              {/* Action Buttons Unified in Bottom Bar */}
+              <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full lg:w-auto">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('pass')}
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white font-bold text-xs shadow-lg shadow-[#0077c8]/30 flex items-center justify-center gap-2 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  <QrCode className="w-4 h-4 text-[#7af1fc]" />
+                  <span>View My Entry Pass</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('contact')}
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/20 text-white font-semibold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  <Building className="w-4 h-4 text-[#7af1fc]" />
+                  <span>Campus Venue</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Main Workspace Viewport for Details and Other Tabs */}
+      <main className="flex-1 max-w-[1700px] 2xl:max-w-[1920px] mx-auto w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-8 space-y-12 overflow-x-hidden">
         {/* ========================================================================= */}
-        {/* TAB 1: OVERVIEW / HOME (Professional Full-View Edge-to-Edge Layout) */}
+        {/* TAB 1: OVERVIEW / HOME (Sections Below Full-Screen Hero)                   */}
         {/* ========================================================================= */}
         {activeTab === 'home' && (
           <div className="space-y-16 pb-8">
-            {/* 1. Full View Bleed Hero Section (Edge-to-Edge Widescreen Optimization) */}
-            <div className="relative rounded-3xl overflow-hidden min-h-[500px] sm:min-h-[560px] lg:min-h-[620px] xl:min-h-[650px] flex flex-col justify-between shadow-2xl bg-slate-950 w-full border border-slate-200/20">
-              {/* Background St. Peter's College Building Facade Photo */}
-              <img
-                src="/spiher-hero-hd.jpg?v=3"
-                alt="St. Peter's Institute Main Building"
-                className="absolute inset-0 w-full h-full object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/spiher-hero-building.png?v=3';
-                }}
-              />
-              {/* Gradient Overlay for Optimal Readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/50 to-slate-950/70" />
-
-              {/* Vertical Accent Ribbon Tag (Top Right) */}
-              <div className="absolute top-0 right-8 z-20 hidden md:block">
-                <div className="w-12 h-36 bg-[#0077c8] shadow-lg flex flex-col justify-end items-center pb-4 text-white">
-                  <Sparkles className="w-5 h-5 animate-pulse" />
-                  <span className="text-[9px] uppercase font-bold tracking-widest rotate-90 origin-bottom whitespace-nowrap mb-8">
-                    IGNITE 2026
-                  </span>
-                </div>
-                <div className="w-0 h-0 border-l-[24px] border-l-transparent border-r-[24px] border-r-transparent border-t-[16px] border-t-[#0077c8]" />
-              </div>
-
-              {/* Central Professional Content (Minimal & Clean Hero View) */}
-              <div className="relative z-10 p-6 sm:p-12 max-w-4xl mx-auto text-center space-y-4 pt-14 sm:pt-16">
-                <div className="flex justify-center mb-1">
-                  <div className="p-3 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl">
-                    <CollegeEmblem size={56} />
-                  </div>
-                </div>
-
-                {/* Floating Translucent Pill Badge */}
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-teal-200 text-xs font-semibold uppercase tracking-wider shadow-lg">
-                  <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
-                  <span>St. Peter's Institute of Higher Education &amp; Research</span>
-                </div>
-
-                <h1 className="text-3xl sm:text-6xl font-serif font-bold text-white tracking-tight leading-tight drop-shadow-lg">
-                  IGNITE 2026
-                </h1>
-                <p className="text-xs sm:text-base text-teal-200 font-medium max-w-xl mx-auto drop-shadow">
-                  Technical &amp; Non-Technical Fest • Dept. of CSE &amp; IT
-                </p>
-
-                {/* Frosted Glass Control Pills */}
-                <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('contact')}
-                    className="px-5 py-2.5 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 text-white font-semibold text-xs flex items-center gap-2 transition-all shadow-md cursor-pointer"
-                  >
-                    <Building className="w-4 h-4 text-teal-300" />
-                    <span>Campus Venue</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('rules')}
-                    className="px-5 py-2.5 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 text-white font-semibold text-xs flex items-center gap-2 transition-all shadow-md cursor-pointer"
-                  >
-                    <BookOpen className="w-4 h-4 text-teal-300" />
-                    <span>Rules &amp; Specs</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Bottom Glassmorphic Floating CTA Bar */}
-              <div className="relative z-10 p-6 sm:p-8 max-w-5xl mx-auto w-full">
-                <div className="p-4 sm:p-5 rounded-2xl sm:rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xl">
-                  <div className="flex items-center gap-3 text-xs sm:text-sm px-2">
-                    <span className="px-3 py-1 rounded-full bg-teal-500/30 text-teal-200 border border-teal-400/30 font-bold uppercase text-[10px] tracking-wider">
-                      ACTIVE PASS
-                    </span>
-                    <span className="text-slate-200 font-mono">
-                      Pass ID: <strong className="text-white">{registration.registrationNumber}</strong>
-                    </span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('pass')}
-                    className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-white hover:bg-teal-50 text-[#002b66] font-bold text-xs shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer"
-                  >
-                    <span>ENTRY PASS</span>
-                    <ArrowRight className="w-4 h-4 text-[#0077c8]" />
-                  </button>
-                </div>
-              </div>
-            </div>
 
             {/* 2. Streamlined About & Leadership Section */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
