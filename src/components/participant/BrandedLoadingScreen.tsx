@@ -1,67 +1,91 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface BrandedLoadingScreenProps {
   onFinish: () => void;
+  videoSrc?: string;
   collegeName?: string;
   symposiumName?: string;
 }
 
 export const BrandedLoadingScreen: React.FC<BrandedLoadingScreenProps> = ({
   onFinish,
+  videoSrc = '/college_logo_reveal_video.mp4',
 }) => {
-  const [progress, setProgress] = useState(15);
   const [fadeOut, setFadeOut] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const hasFinishedRef = useRef(false);
+
+  const handleComplete = () => {
+    if (hasFinishedRef.current) return;
+    hasFinishedRef.current = true;
+    setFadeOut(true);
+    setTimeout(() => {
+      onFinish();
+    }, 400);
+  };
 
   useEffect(() => {
-    // Smooth progress animation over ~1.1 seconds
-    const p1 = setTimeout(() => setProgress(50), 200);
-    const p2 = setTimeout(() => setProgress(85), 600);
-    const p3 = setTimeout(() => setProgress(100), 950);
+    // Safety fallback timer so loading never hangs indefinitely
+    const safetyTimer = setTimeout(() => {
+      handleComplete();
+    }, 12000);
 
-    // Fade out and finish
-    const fadeTimer = setTimeout(() => {
-      setFadeOut(true);
-    }, 1150);
+    return () => clearTimeout(safetyTimer);
+  }, []);
 
-    const finishTimer = setTimeout(() => {
-      onFinish();
-    }, 1450);
-
-    return () => {
-      clearTimeout(p1);
-      clearTimeout(p2);
-      clearTimeout(p3);
-      clearTimeout(fadeTimer);
-      clearTimeout(finishTimer);
-    };
-  }, [onFinish]);
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.muted = true;
+      video.playsInline = true;
+      video.defaultMuted = true;
+      video.playbackRate = 1.0;
+      video.play().catch(() => {
+        // Fallback if browser autoplay is blocked
+      });
+    }
+  }, []);
 
   return (
     <div
-      className={`fixed inset-0 z-50 w-screen h-screen flex flex-col items-center justify-center bg-white select-none transition-opacity duration-300 ${
+      className={`fixed inset-0 z-50 w-screen h-screen flex items-center justify-center bg-white select-none transition-opacity duration-400 ${
         fadeOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
-      style={{ backgroundColor: '#ffffff' }}
+      style={{
+        backgroundColor: '#ffffff',
+        margin: 0,
+        padding: 0,
+        overflow: 'hidden',
+      }}
     >
-      <div className="flex flex-col items-center justify-center max-w-xs w-full px-6 text-center animate-in fade-in zoom-in-95 duration-500">
-        {/* Full Clean Logo with pure seamless white background */}
-        <div className="w-full flex justify-center mb-6">
-          <img
-            src="/spiher-logo.jpg"
-            alt="St. Peter's Institute of Higher Education & Research"
-            className="w-48 sm:w-56 h-auto object-contain block select-none drop-shadow-none"
-            style={{ backgroundColor: '#ffffff' }}
-          />
-        </div>
+      <video
+        ref={videoRef}
+        src={videoSrc}
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+        controls={false}
+        disablePictureInPicture
+        disableRemotePlayback
+        onEnded={handleComplete}
+        className="w-full h-full object-contain block bg-white"
+        style={{
+          backgroundColor: '#ffffff',
+          width: '100vw',
+          height: '100vh',
+          objectFit: 'contain',
+        }}
+      />
 
-        {/* Minimal Smooth Gradient Loading Bar */}
-        <div className="w-40 h-1.5 bg-slate-100 rounded-full overflow-hidden relative shadow-inner">
-          <div
-            className="h-full bg-gradient-to-r from-[#002b66] via-[#0077c8] to-[#00a887] rounded-full transition-all duration-300 ease-out"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      </div>
+      {/* Subtle Skip button for instantaneous access */}
+      <button
+        type="button"
+        onClick={handleComplete}
+        className="absolute top-5 right-5 z-20 px-3.5 py-1.5 rounded-full bg-slate-900/40 hover:bg-slate-900/60 backdrop-blur-md text-white text-[11px] font-semibold tracking-wider uppercase transition-all cursor-pointer border border-white/20 active:scale-95"
+      >
+        Skip ✕
+      </button>
     </div>
   );
 };
