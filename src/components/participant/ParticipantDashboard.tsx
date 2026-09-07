@@ -168,70 +168,70 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
       </header>
 
       {/* ========================================================================= */}
-      {/* FULL-BLEED VERTICAL HERO SECTION (Streamlined, Cinematic & Spacious)     */}
+      {/* FULL-BLEED VERTICAL HERO SECTION (Clean, Bright, Crisp & Modern White)   */}
       {/* ========================================================================= */}
       {activeTab === 'home' && (
-        <section className="relative w-full min-h-[75vh] sm:min-h-[82vh] lg:min-h-[88vh] flex flex-col justify-between overflow-hidden bg-slate-950 border-b border-slate-800/80">
-          {/* Background St. Peter's College Building Facade Photo */}
+        <section className="relative w-full min-h-[70vh] sm:min-h-[78vh] lg:min-h-[82vh] flex flex-col justify-between overflow-hidden bg-gradient-to-b from-white via-sky-50/40 to-slate-50 border-b border-[#e2eff7]">
+          {/* Soft St. Peter's College Building Facade Texture (Bright High-Key) */}
           <img
             src="/spiher-hero-hd.jpg?v=3"
             alt="St. Peter's Institute Main Building"
-            className="absolute inset-0 w-full h-full object-cover object-center"
+            className="absolute inset-0 w-full h-full object-cover object-center opacity-15 mix-blend-multiply pointer-events-none"
             onError={(e) => {
               (e.target as HTMLImageElement).src = '/spiher-hero-building.png?v=3';
             }}
           />
-          {/* Smooth Cinematic Dark Vignette Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-slate-950/70" />
+          {/* Crisp Light Luminous Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-50/95 via-white/80 to-white/70 pointer-events-none" />
 
           {/* Top Subtle Brand Chip */}
           <div className="relative z-10 pt-6 sm:pt-8 px-6 max-w-6xl mx-auto w-full flex items-center justify-between">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[#7af1fc] text-[11px] font-bold tracking-wide">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white shadow-xs border border-[#d4e8f5] text-[#0077c8] text-[11px] font-bold tracking-wide">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span>SPIHER • Deemed to be University</span>
             </div>
-            <span className="text-xs text-white/70 font-mono hidden sm:inline-block">
-              IGNITE 2026 • Live
+            <span className="text-xs text-[#002b66] font-semibold tracking-wide hidden sm:inline-block bg-[#f0f8fc] px-3 py-1 rounded-full border border-[#d4e8f5]">
+              IGNITE 2026 • Live Platform
             </span>
           </div>
 
-          {/* Central Hero Typography & Clean College Branding (No Clutter) */}
+          {/* Central Hero Typography & Clean College Branding (Clean White Aesthetic) */}
           <div className="relative z-10 p-4 sm:p-8 max-w-2xl mx-auto text-center space-y-4 my-auto">
             <div className="flex justify-center">
-              <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl">
-                <CollegeEmblem size={52} />
+              <div className="p-3 rounded-2xl bg-white shadow-md border border-[#d4e8f5]">
+                <CollegeEmblem size={56} />
               </div>
             </div>
 
-            <div className="space-y-2.5">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-extrabold text-white tracking-tight leading-tight drop-shadow-xl">
+            <div className="space-y-2">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-extrabold text-[#001f4d] tracking-tight leading-tight drop-shadow-xs">
                 IGNITE 2026
               </h1>
-              <p className="text-xs sm:text-base text-slate-100 font-semibold tracking-wide max-w-lg mx-auto leading-relaxed">
+              <p className="text-sm sm:text-lg text-[#002b66] font-bold tracking-wide max-w-lg mx-auto leading-relaxed">
                 National Level Technical &amp; Non-Technical Symposium
               </p>
-              <p className="text-[11px] sm:text-xs text-[#7af1fc] font-medium leading-relaxed max-w-md mx-auto">
+              <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed max-w-md mx-auto">
                 Departments of Computer Science &amp; Engineering and Information Technology
               </p>
             </div>
           </div>
 
-          {/* Bottom Unified Executive Pass Bar with Action Buttons */}
+          {/* Bottom Unified Executive Pass Bar with Action Buttons (Light Theme) */}
           <div className="relative z-10 pb-6 sm:pb-8 px-4 max-w-5xl mx-auto w-full">
-            <div className="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-slate-900/85 backdrop-blur-2xl border border-white/20 text-white flex flex-col lg:flex-row items-center justify-between gap-4 shadow-2xl">
+            <div className="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-white/95 backdrop-blur-xl border border-[#d4e8f5] text-slate-900 flex flex-col lg:flex-row items-center justify-between gap-4 shadow-[0_20px_50px_-15px_rgba(0,43,102,0.12)]">
               {/* Pass Status Badge & Identity */}
               <div className="flex flex-col sm:flex-row items-center gap-2.5 text-center sm:text-left">
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold uppercase text-[9px] tracking-wider">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold uppercase text-[9px] tracking-wider">
                     PASS ACTIVE
                   </span>
                 </div>
-                <div className="text-xs text-slate-200">
-                  <span>{participant.name}</span>
-                  <span className="text-white/40 mx-1.5">•</span>
-                  <strong className="text-white">{registration.eventTitle}</strong>
-                  <span className="text-[#7af1fc] font-mono text-[11px] ml-1.5 hidden md:inline">
+                <div className="text-xs text-slate-700">
+                  <span className="font-semibold">{participant.name}</span>
+                  <span className="text-slate-300 mx-1.5">•</span>
+                  <strong className="text-[#001f4d]">{registration.eventTitle}</strong>
+                  <span className="text-[#0077c8] font-mono font-bold text-[11px] ml-1.5 hidden md:inline">
                     ({registration.registrationNumber})
                   </span>
                 </div>
@@ -242,7 +242,7 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveTab('pass')}
-                  className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white font-bold text-xs shadow-lg shadow-[#0077c8]/30 flex items-center justify-center gap-2 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white font-bold text-xs shadow-md shadow-[#0077c8]/25 flex items-center justify-center gap-2 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <QrCode className="w-4 h-4 text-[#7af1fc]" />
                   <span>View My Entry Pass</span>
@@ -252,9 +252,9 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveTab('contact')}
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/20 text-white font-semibold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#f0f8fc] hover:bg-[#e4f3fa] border border-[#d4e8f5] text-[#002b66] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  <Building className="w-4 h-4 text-[#7af1fc]" />
+                  <Building className="w-4 h-4 text-[#0077c8]" />
                   <span>Campus Venue</span>
                 </button>
               </div>
