@@ -63,12 +63,12 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const headGroup = new THREE.Group();
     scene.add(headGroup);
 
-    // Resting Position: Positioned on the right half, filling top-to-bottom gracefully
-    const RESTING_POS_X = isMobile ? 2.4 : 3.8; 
-    const RESTING_POS_Y = isMobile ? -0.75 : -0.2;
+    // Resting Position: Centered on desktop in its column (x: 0, y: 0), right-anchored on mobile (x: 2.4, y: -0.75)
+    const RESTING_POS_X = isMobile ? 2.4 : 0.0; 
+    const RESTING_POS_Y = isMobile ? -0.75 : 0.0;
 
     // Starts off-screen for entrance animation
-    headGroup.position.set(isMobile ? 7.0 : 14.0, RESTING_POS_Y, 0);
+    headGroup.position.set(isMobile ? 7.0 : 12.0, RESTING_POS_Y, 0);
 
     // 4. Background Orbiting 3D Particle Cloud (Light Theme Cyber Dust)
     const particleCount = 650;
@@ -108,8 +108,8 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const backgroundParticles = new THREE.Points(particleGeo, particleMat);
     scene.add(backgroundParticles);
 
-    // 5. Target Orientation: Exact left-facing side profile as in reference screenshot
-    const BASE_ROTATION_Y = -Math.PI / 2.05;
+    // 5. Target Orientation: Exact left-facing profile on mobile, dynamic 3/4 angle on desktop
+    const BASE_ROTATION_Y = isMobile ? -Math.PI / 2.05 : -Math.PI / 5.5;
     const BASE_ROTATION_X = 0.02;
 
     // 6. Load & Scale Cyber Head Model (`cyber_head.glb`)
