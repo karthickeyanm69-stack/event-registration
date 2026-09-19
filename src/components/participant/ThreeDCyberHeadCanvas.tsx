@@ -108,52 +108,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const backgroundParticles = new THREE.Points(particleGeo, particleMat);
     scene.add(backgroundParticles);
 
-    // 4B. Floating Cyber Planetary Orbs (Matching Reference Image)
-    const orbsGroup = new THREE.Group();
-    scene.add(orbsGroup);
-
-    const orbDefinitions = [
-      { x: isMobile ? -1.6 : -3.5, y: isMobile ? 0.6 : 1.0, z: 2.2, r: 0.58, color: 0x00f2fe, hasRing: true },
-      { x: isMobile ? -2.5 : -4.8, y: isMobile ? 1.8 : 2.2, z: 1.0, r: 0.38, color: 0x7c3aed, hasRing: false },
-      { x: isMobile ? -1.0 : -2.2, y: isMobile ? -1.4 : -1.6, z: 2.8, r: 0.68, color: 0x0077c8, hasRing: true },
-      { x: isMobile ? -2.6 : -5.0, y: isMobile ? -0.8 : -0.6, z: 1.5, r: 0.32, color: 0x00a887, hasRing: false },
-      { x: isMobile ? -0.4 : -1.2, y: isMobile ? 2.4 : 2.8, z: 1.8, r: 0.28, color: 0xa855f7, hasRing: false },
-    ];
-
-    const orbMeshes: THREE.Mesh[] = [];
-
-    orbDefinitions.forEach((orb) => {
-      const orbGeo = new THREE.SphereGeometry(orb.r, 32, 32);
-      const orbMat = new THREE.MeshStandardMaterial({
-        color: orb.color,
-        roughness: 0.15,
-        metalness: 0.75,
-        emissive: orb.color,
-        emissiveIntensity: 0.35,
-        transparent: true,
-        opacity: 0.9,
-      });
-      const orbMesh = new THREE.Mesh(orbGeo, orbMat);
-      orbMesh.position.set(orb.x, orb.y, orb.z);
-      orbsGroup.add(orbMesh);
-      orbMeshes.push(orbMesh);
-
-      if (orb.hasRing) {
-        const ringGeo = new THREE.RingGeometry(orb.r * 1.35, orb.r * 1.85, 32);
-        const ringMat = new THREE.MeshBasicMaterial({
-          color: 0x7af1fc,
-          side: THREE.DoubleSide,
-          transparent: true,
-          opacity: 0.8,
-        });
-        const ringMesh = new THREE.Mesh(ringGeo, ringMat);
-        ringMesh.rotation.x = Math.PI / 2.3;
-        ringMesh.rotation.y = Math.PI / 8;
-        orbMesh.add(ringMesh);
-      }
-    });
-
-    // 4C. Faint Orbital Arc Rings Around Face (Like in Reference)
+    // 4B. Faint Orbital Arc Rings Around Face
     const arcGroup = new THREE.Group();
     arcGroup.position.set(RESTING_POS_X, RESTING_POS_Y, 0);
     scene.add(arcGroup);
@@ -356,12 +311,6 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       // Particle field drift
       backgroundParticles.rotation.y = elapsedTime * 0.035;
       backgroundParticles.rotation.x = Math.sin(elapsedTime * 0.05) * 0.08;
-
-      // Floating planetary orbs gentle breathing
-      orbMeshes.forEach((mesh, idx) => {
-        mesh.position.y += Math.sin(elapsedTime * 1.5 + idx * 1.2) * 0.002;
-        mesh.rotation.y += 0.008;
-      });
 
       // Pulsing keylights
       keyLight.intensity = 6.0 + Math.sin(elapsedTime * 2.5) * 1.0;

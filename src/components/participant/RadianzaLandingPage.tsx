@@ -544,77 +544,102 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               <section id="hero" className="relative w-full overflow-hidden bg-gradient-to-b from-[#e3f0fc] via-[#edf6fe] to-[#f4faff]">
                 
                 {/* ─── MOBILE VIEW: EXACT PIXEL-PERFECT REFERENCE MATCH (< lg) ─── */}
-                <div className="lg:hidden relative w-full h-[calc(100dvh-4.25rem)] min-h-[560px] max-h-[820px] flex flex-col justify-between p-6 pb-5 select-none overflow-hidden">
+                <div className="lg:hidden relative w-full h-[calc(100dvh-4.25rem)] min-h-[560px] max-h-[840px] flex flex-col justify-between p-5 sm:p-6 pb-6 select-none overflow-hidden">
                   {/* Subtle Background Glow Elements */}
                   <div className="absolute top-1/4 right-0 w-72 h-72 rounded-full bg-cyan-200/30 blur-3xl pointer-events-none" />
                   <div className="absolute bottom-1/3 left-0 w-60 h-60 rounded-full bg-indigo-200/25 blur-3xl pointer-events-none" />
 
-                  {/* Background 3D Cyber Scene (Head anchored on right, floating planetary orbs & particles) */}
+                  {/* Background 3D Cyber Scene (Head anchored on right side, aligned with forehead height) */}
                   <div className="absolute inset-0 z-0 pointer-events-auto">
                     <ThreeDCyberHeadCanvas onRegisterClick={onStartNewRegistration} />
                   </div>
 
-                  {/* Top-Left Branding & Title */}
-                  <div className="relative z-10 space-y-2 pointer-events-none">
+                  {/* Foreground Content: Arranged Line-by-Line starting from Forehead Level */}
+                  <div className="relative z-10 pt-2 sm:pt-4 space-y-3 sm:space-y-4 max-w-[85%] pointer-events-auto">
+                    {/* Line 1: SPIHER PRESENTS Badge */}
                     <motion.div
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="inline-block"
+                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-md shadow-xs border border-[#d4e8f5] text-[#0077c8]"
                     >
-                      <SpiherStarburstLogo size={56} />
+                      <SpiherStarburstLogo size={20} />
+                      <span className="tracking-widest uppercase font-mono text-[10px] sm:text-[11px] font-bold text-[#002b66]">
+                        SPIHER PRESENTS
+                      </span>
                     </motion.div>
                     
+                    {/* Line 2: RADIANZA '26 Title (Starting at Forehead level) */}
                     <motion.h1
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: -18 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: 0.1 }}
-                      className="text-3xl sm:text-4xl font-serif font-black tracking-tight text-[#0e2a56] leading-none"
+                      className="text-4xl sm:text-5xl font-serif font-black tracking-tight text-[#001f4d] leading-[1.05]"
                     >
-                      RADIANZA’26
+                      RADIANZA <span className="text-[#0077c8]">'26</span>
                     </motion.h1>
-                  </div>
 
-                  {/* Bottom Elements: Event Details + Register Button + Carousel Dots */}
-                  <div className="relative z-10 space-y-4 pointer-events-auto">
-                    {/* Date & Location (Bottom Left) */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 15 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: 0.2 }}
-                      className="space-y-1 text-slate-800"
+                    {/* Line 3: National-Level Technical Symposium */}
+                    <motion.p
+                      initial={{ opacity: 0, x: -14 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.6, delay: 0.15 }}
+                      className="text-[10px] sm:text-xs font-mono font-bold tracking-[0.18em] text-[#004080] uppercase"
                     >
-                      <div className="flex items-center gap-2 text-sm sm:text-base font-bold text-[#0e2a56]">
-                        <Calendar className="w-4 h-4 text-[#0077c8]" />
+                      NATIONAL-LEVEL TECHNICAL SYMPOSIUM
+                    </motion.p>
+
+                    {/* Line 4: Igniting Ideas, Innovating Tomorrow */}
+                    <motion.p
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.6, delay: 0.2 }}
+                      className="text-xs sm:text-sm text-slate-600 font-medium italic"
+                    >
+                      "Igniting Ideas, Innovating Tomorrow"
+                    </motion.p>
+
+                    {/* Line 5: Date & Location Pills */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.25 }}
+                      className="flex flex-col sm:flex-row flex-wrap gap-2 pt-1"
+                    >
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-xs font-bold text-[#001f4d] w-fit">
+                        <Calendar className="w-3.5 h-3.5 text-[#0077c8]" />
                         <span>15 - 16 OCT 2026</span>
                       </div>
-                      <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-700">
-                        <MapPin className="w-4 h-4 text-[#00a887]" />
-                        <span>SPIHER Campus</span>
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-xs font-medium text-slate-700 w-fit">
+                        <MapPin className="w-3.5 h-3.5 text-[#00a887]" />
+                        <span>SPIHER Campus, Coimbatore</span>
                       </div>
                     </motion.div>
 
-                    {/* Dark Blue Pill Register CTA */}
-                    <div className="flex flex-col items-center gap-2.5 pt-1">
-                      <motion.button
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.5, delay: 0.3 }}
+                    {/* Line 6: Register Now CTA Button */}
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5, delay: 0.3 }}
+                      className="pt-2"
+                    >
+                      <button
                         type="button"
                         onClick={onStartNewRegistration}
-                        className="w-full max-w-[240px] py-3 px-6 rounded-full bg-gradient-to-r from-[#0d2a54] via-[#103366] to-[#143f7a] hover:from-[#081d3d] hover:to-[#0d2a54] text-white font-bold text-sm shadow-xl shadow-blue-950/20 active:scale-95 transition-transform flex items-center justify-center cursor-pointer"
+                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-[#001f4d] via-[#002b66] to-[#0077c8] hover:from-[#001433] hover:to-[#005fa3] text-white font-bold text-xs sm:text-sm shadow-md shadow-[#002b66]/25 active:scale-95 transition-transform cursor-pointer"
                       >
                         <span>Register Now</span>
-                      </motion.button>
+                        <ArrowRight className="w-3.5 h-3.5 text-[#7af1fc]" />
+                      </button>
+                    </motion.div>
+                  </div>
 
-                      {/* Pagination Indicator Dots */}
-                      <div className="flex items-center justify-center gap-2 pt-0.5">
-                        <span className="w-2 h-2 rounded-full bg-[#0d2a54]"></span>
-                        <span className="w-2 h-2 rounded-full bg-slate-300"></span>
-                        <span className="w-2 h-2 rounded-full bg-slate-300"></span>
-                        <span className="w-2 h-2 rounded-full bg-slate-300"></span>
-                      </div>
-                    </div>
+                  {/* Bottom Indicator Dots (Clean subtle footer) */}
+                  <div className="relative z-10 flex items-center justify-center gap-2 pt-2">
+                    <span className="w-2 h-2 rounded-full bg-[#002b66]"></span>
+                    <span className="w-2 h-2 rounded-full bg-slate-300"></span>
+                    <span className="w-2 h-2 rounded-full bg-slate-300"></span>
+                    <span className="w-2 h-2 rounded-full bg-slate-300"></span>
                   </div>
                 </div>
 
