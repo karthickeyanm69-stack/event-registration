@@ -64,8 +64,8 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     scene.add(headGroup);
 
     // Resting Position: Positioned on the right half, filling top-to-bottom gracefully
-    const RESTING_POS_X = isMobile ? 2.1 : 3.8; 
-    const RESTING_POS_Y = isMobile ? 0.05 : 0.05;
+    const RESTING_POS_X = isMobile ? 2.6 : 3.8; 
+    const RESTING_POS_Y = isMobile ? -0.15 : 0.05;
 
     // Starts off-screen for entrance animation
     headGroup.position.set(isMobile ? 7.0 : 14.0, RESTING_POS_Y, 0);
@@ -108,8 +108,8 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const backgroundParticles = new THREE.Points(particleGeo, particleMat);
     scene.add(backgroundParticles);
 
-    // 5. Target Orientation: Dynamic 3/4 front angle on mobile, profile facing left on desktop
-    const BASE_ROTATION_Y = isMobile ? -Math.PI / 5.2 : -Math.PI / 2.05;
+    // 5. Target Orientation: Exact left-facing side profile as in reference screenshot
+    const BASE_ROTATION_Y = -Math.PI / 2.05;
     const BASE_ROTATION_X = 0.02;
 
     // 6. Load & Scale Cyber Head Model (`cyber_head.glb`)
@@ -343,8 +343,8 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
         <span className="px-2.5 py-1 rounded-xl bg-white/90 backdrop-blur-md border border-[#0077c8]/30 text-[#002b66] font-mono text-[9px] sm:text-[11px] font-bold tracking-wider shadow-xs">
           1.00011 // 0.39
         </span>
-        <span className="text-[8px] sm:text-[9.5px] font-mono font-bold text-[#7c3aed] tracking-widest uppercase">
-          RAD.AI // [ACTIVE]
+        <span className="text-[8px] sm:text-[9.5px] font-mono font-bold text-[#c026d3] tracking-widest uppercase">
+          MOD_TYPE.C [SYS_OK]
         </span>
       </div>
 
