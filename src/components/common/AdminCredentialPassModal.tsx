@@ -38,7 +38,7 @@ export const AdminCredentialPassModal: React.FC<AdminCredentialPassModalProps> =
       ? events
       : events.filter((e) => user.assignedEventIds.includes(e.id));
 
-  const portalUrl = `${window.location.origin}${window.location.pathname}?role=console`;
+  const portalUrl = `${window.location.origin}/console`;
 
   const handleCopy = (text: string, field: string) => {
     navigator.clipboard.writeText(text);
@@ -49,7 +49,7 @@ export const AdminCredentialPassModal: React.FC<AdminCredentialPassModalProps> =
   const handleCopyFullSlip = () => {
     const slip = `=====================================================
 ST. PETER'S INSTITUTE OF HIGHER EDUCATION & RESEARCH
-IGNITE 2024 — OFFICIAL STAFF / ADMIN CREDENTIAL PASS
+RADIANZA ’26 — OFFICIAL STAFF / ADMIN CREDENTIAL PASS
 =====================================================
 Name: ${user.name}
 Role: ${user.role === 'SUPER_ADMIN' ? 'Super Administrator' : user.role === 'ADMIN' ? 'Event Administrator' : 'Staff Evaluator / Judge'}

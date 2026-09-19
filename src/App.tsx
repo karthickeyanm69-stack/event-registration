@@ -50,7 +50,9 @@ export default function App() {
   // 3. Strict Participant Flow Steps:
   // 'access' -> 'onboarding' -> 'events' -> 'team' -> 'success' -> 'dashboard'
   type ParticipantFlowStep = 'access' | 'onboarding' | 'events' | 'team' | 'success' | 'dashboard';
+  type LandingPageId = 'home' | 'events' | 'about' | 'contact';
   const [participantStep, setParticipantStep] = useState<ParticipantFlowStep>('access');
+  const [landingPageId, setLandingPageId] = useState<LandingPageId>('home');
   const [currentParticipant, setCurrentParticipant] = useState<Participant | null>(null);
   const [currentRegistration, setCurrentRegistration] = useState<Registration | null>(null);
   const [onboardingDraft, setOnboardingDraft] = useState<Partial<Participant>>({});
@@ -113,11 +115,11 @@ export default function App() {
     }
   };
 
-  // Determine current portal strictly by URL path / hash with Auth Guards
+  // Determine current portal strictly by URL path with clean DNS/page-name routing & Auth Guards
   const syncRouteFromLocation = () => {
     loadDatabaseData();
     const pathname = window.location.pathname.toLowerCase();
-    const hash = window.location.hash.toLowerCase();
+    const hash = window.location.hash.toLowerCase().replace('#', '');
     const session = getStoredStaffSession();
     setCurrentStaffUser(session);
 
@@ -127,7 +129,6 @@ export default function App() {
         setCurrentRole('console');
         window.history.replaceState({}, '', '/console');
       } else if (session.role !== 'SUPER_ADMIN') {
-        // Redirect unauthorized users to their permitted portal
         const targetPath = session.role === 'ADMIN' ? '/admin' : '/employee';
         const targetRole: PortalRole = session.role === 'ADMIN' ? 'admin' : 'employee';
         setAuthRedirectNotice(`Access restricted. You are signed in as ${session.name} (${session.role}).`);
@@ -136,6 +137,9 @@ export default function App() {
       } else {
         setAuthRedirectNotice(null);
         setCurrentRole('superadmin');
+        if (pathname !== '/superadmin' || window.location.hash) {
+          window.history.replaceState({}, '', '/superadmin');
+        }
       }
     } else if (pathname.includes('/admin') || hash.includes('admin')) {
       if (!session) {
@@ -143,15 +147,22 @@ export default function App() {
         setCurrentRole('console');
         window.history.replaceState({}, '', '/console');
       } else if (session.role === 'EMPLOYEE') {
-        // Evaluators cannot access the admin panel
         setAuthRedirectNotice('Staff Evaluator profile is restricted to the Scanner & Scoring PWA.');
         setCurrentRole('employee');
         window.history.replaceState({}, '', '/employee');
       } else {
         setAuthRedirectNotice(null);
         setCurrentRole('admin');
+        if (pathname !== '/admin' || window.location.hash) {
+          window.history.replaceState({}, '', '/admin');
+        }
       }
-    } else if (pathname.includes('/employee') || hash.includes('employee')) {
+    } else if (
+      pathname.includes('/employee') ||
+      pathname.includes('/scanner') ||
+      hash.includes('employee') ||
+      hash.includes('scanner')
+    ) {
       if (!session) {
         setAuthRedirectNotice('Staff Evaluator authentication required. Please sign in to continue.');
         setCurrentRole('console');
@@ -159,13 +170,103 @@ export default function App() {
       } else {
         setAuthRedirectNotice(null);
         setCurrentRole('employee');
+        if (pathname !== '/employee' || window.location.hash) {
+          window.history.replaceState({}, '', '/employee');
+        }
       }
-    } else if (pathname.includes('/console') || hash.includes('console')) {
+    } else if (
+      pathname.includes('/console') ||
+      pathname.includes('/login') ||
+      hash.includes('console') ||
+      hash.includes('login')
+    ) {
       setCurrentRole('console');
-    } else {
-      // Default: Pure Participant Portal
+      if (pathname !== '/console' || window.location.hash) {
+        window.history.replaceState({}, '', '/console');
+      }
+    } else if (pathname.startsWith('/dashboard') || hash.includes('dashboard')) {
+      setCurrentRole('participant');
+      setParticipantStep('dashboard');
+      if (window.location.hash) {
+        window.history.replaceState({}, '', pathname.startsWith('/dashboard') ? pathname : '/dashboard');
+      }
+    } else if (
+      pathname.startsWith('/pass') ||
+      pathname.startsWith('/success') ||
+      hash.includes('pass') ||
+      hash.includes('success')
+    ) {
+      setCurrentRole('participant');
+      setParticipantStep('success');
+      if (window.location.hash || pathname !== '/pass') {
+        window.history.replaceState({}, '', '/pass');
+      }
+    } else if (
+      pathname.startsWith('/register/confirm') ||
+      pathname.startsWith('/register/team') ||
+      pathname.startsWith('/confirm') ||
+      hash.includes('confirm') ||
+      hash.includes('team')
+    ) {
+      setCurrentRole('participant');
+      setParticipantStep('team');
+      if (window.location.hash || pathname !== '/register/confirm') {
+        window.history.replaceState({}, '', '/register/confirm');
+      }
+    } else if (
+      pathname.startsWith('/register/events') ||
+      pathname.startsWith('/select-event') ||
+      hash.includes('select-event')
+    ) {
+      setCurrentRole('participant');
+      setParticipantStep('events');
+      if (window.location.hash || pathname !== '/register/events') {
+        window.history.replaceState({}, '', '/register/events');
+      }
+    } else if (
+      pathname.startsWith('/register') ||
+      pathname.startsWith('/onboarding') ||
+      hash.includes('register') ||
+      hash.includes('onboarding')
+    ) {
+      setCurrentRole('participant');
+      setParticipantStep('onboarding');
+      if (window.location.hash || pathname !== '/register') {
+        window.history.replaceState({}, '', '/register');
+      }
+    } else if (pathname.startsWith('/events') || hash === 'events') {
       setAuthRedirectNotice(null);
       setCurrentRole('participant');
+      setParticipantStep('access');
+      setLandingPageId('events');
+      if (window.location.hash || pathname !== '/events') {
+        window.history.replaceState({}, '', '/events');
+      }
+    } else if (pathname.startsWith('/about') || hash === 'about') {
+      setAuthRedirectNotice(null);
+      setCurrentRole('participant');
+      setParticipantStep('access');
+      setLandingPageId('about');
+      if (window.location.hash || pathname !== '/about') {
+        window.history.replaceState({}, '', '/about');
+      }
+    } else if (pathname.startsWith('/contact') || hash === 'contact') {
+      setAuthRedirectNotice(null);
+      setCurrentRole('participant');
+      setParticipantStep('access');
+      setLandingPageId('contact');
+      if (window.location.hash || pathname !== '/contact') {
+        window.history.replaceState({}, '', '/contact');
+      }
+    } else {
+      // Default: Pure Participant Portal Root Home
+      setAuthRedirectNotice(null);
+      setCurrentRole('participant');
+      setParticipantStep('access');
+      setLandingPageId('home');
+      if (window.location.hash) {
+        window.history.replaceState({}, '', '/');
+      }
     }
 
     // Check if URL contains scanned verification parameters (?verify= or ?token= or ?pass=)
@@ -256,9 +357,18 @@ export default function App() {
     };
   }, [currentRole]);
 
-  const navigateTo = (path: string, role: PortalRole) => {
+  const navigateTo = (
+    path: string,
+    role: PortalRole = 'participant',
+    step: ParticipantFlowStep = 'access',
+    landingPage: LandingPageId = 'home'
+  ) => {
     setCurrentRole(role);
-    window.history.pushState({}, '', path);
+    setParticipantStep(step);
+    setLandingPageId(landingPage);
+    if (window.location.pathname !== path || window.location.hash) {
+      window.history.pushState({}, '', path);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -268,28 +378,28 @@ export default function App() {
     if (registration) {
       // Existing active registration found -> open participant dashboard directly
       setCurrentRegistration(registration);
-      setParticipantStep('dashboard');
+      navigateTo('/dashboard', 'participant', 'dashboard');
     } else {
       // Participant exists but no registration -> proceed to event selection
       setOnboardingDraft(participant);
-      setParticipantStep('events');
+      navigateTo('/register/events', 'participant', 'events');
     }
   };
 
   const handleStartNewRegistration = () => {
     setOnboardingDraft({});
     setSelectedEventForReg(null);
-    setParticipantStep('onboarding');
+    navigateTo('/register', 'participant', 'onboarding');
   };
 
   const handleOnboardingContinue = (draft: Partial<Participant>) => {
     setOnboardingDraft(draft);
-    setParticipantStep('events');
+    navigateTo('/register/events', 'participant', 'events');
   };
 
   const handleSelectEvent = (event: CollegeEvent) => {
     setSelectedEventForReg(event);
-    setParticipantStep('team');
+    navigateTo('/register/confirm', 'participant', 'team');
   };
 
   const handleSubmitTeamAndRegister = (teamName: string, members: TeamMember[]) => {
@@ -322,7 +432,7 @@ export default function App() {
       );
       if (leaderPart) setCurrentParticipant(leaderPart);
       setCurrentRegistration(res.registration);
-      setParticipantStep('success');
+      navigateTo('/pass', 'participant', 'success');
     } else {
       alert(res.error || 'Registration failed.');
     }
@@ -340,7 +450,7 @@ export default function App() {
     sessionStorage.removeItem(STAFF_AUTH_SESSION_KEY);
     setCurrentStaffUser(null);
     setAuthRedirectNotice(null);
-    navigateTo('/console', 'console');
+    navigateTo('/console', 'console', 'access', 'home');
   };
 
   const handleParticipantLogout = async () => {
@@ -355,9 +465,8 @@ export default function App() {
     setCurrentRegistration(null);
     setOnboardingDraft({});
     setSelectedEventForReg(null);
-    setParticipantStep('access');
     sessionStorage.removeItem('spiher_participant_session');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigateTo('/', 'participant', 'access', 'home');
   };
 
   return (
@@ -380,75 +489,80 @@ export default function App() {
               {participantStep === 'access' && (
                 <RadianzaLandingPage
                   events={events}
+                  activeLandingPage={landingPageId}
+                  onNavigateLandingPage={(pageId) => {
+                    const cleanPath = pageId === 'home' ? '/' : `/${pageId}`;
+                    navigateTo(cleanPath, 'participant', 'access', pageId);
+                  }}
                   onStartNewRegistration={handleStartNewRegistration}
                   onSelectEvent={(event) => {
                     setSelectedEventForReg(event);
-                    setParticipantStep('onboarding');
+                    navigateTo('/register', 'participant', 'onboarding');
                   }}
                   onSuccessfulAccess={handleParticipantAccessSuccess}
-                  onOpenConsole={() => navigateTo('/console', 'console')}
+                  onOpenConsole={() => navigateTo('/console', 'console', 'access', 'home')}
                 />
               )}
 
-          {/* Onboarding Form (Personal, College, Roll No, DOB, Email) */}
-          {participantStep === 'onboarding' && (
-            <OnboardingDetailsForm
-              onBackToAccess={() => setParticipantStep('access')}
-              onContinueToEvents={handleOnboardingContinue}
-              onRedirectToExistingDashboard={(part, reg) => {
-                setCurrentParticipant(part);
-                setCurrentRegistration(reg);
-                setParticipantStep('dashboard');
-              }}
-            />
-          )}
+              {/* Onboarding Form (Personal, College, Roll No, DOB, Email) */}
+              {participantStep === 'onboarding' && (
+                <OnboardingDetailsForm
+                  onBackToAccess={() => navigateTo('/', 'participant', 'access', 'home')}
+                  onContinueToEvents={handleOnboardingContinue}
+                  onRedirectToExistingDashboard={(part, reg) => {
+                    setCurrentParticipant(part);
+                    setCurrentRegistration(reg);
+                    navigateTo('/dashboard', 'participant', 'dashboard');
+                  }}
+                />
+              )}
 
-          {/* Event Selection (Technical vs Non-Technical) */}
-          {participantStep === 'events' && (
-            <EventSelectionView
-              events={events}
-              participantData={onboardingDraft}
-              onBackToOnboarding={() => setParticipantStep('onboarding')}
-              onSelectEvent={handleSelectEvent}
-            />
-          )}
+              {/* Event Selection (Technical vs Non-Technical) */}
+              {participantStep === 'events' && (
+                <EventSelectionView
+                  events={events}
+                  participantData={onboardingDraft}
+                  onBackToOnboarding={() => navigateTo('/register', 'participant', 'onboarding')}
+                  onSelectEvent={handleSelectEvent}
+                />
+              )}
 
-          {/* Team Builder (Team Leader default + Teammates + Same College/Dept + 1-Event Check) */}
-          {participantStep === 'team' && selectedEventForReg && (
-            <TeamBuilderFlow
-              event={selectedEventForReg}
-              participantData={onboardingDraft}
-              onBackToEventSelection={() => setParticipantStep('events')}
-              onSubmitTeamAndRegister={handleSubmitTeamAndRegister}
-            />
-          )}
+              {/* Team Builder (Team Leader default + Teammates + Same College/Dept + 1-Event Check) */}
+              {participantStep === 'team' && selectedEventForReg && (
+                <TeamBuilderFlow
+                  event={selectedEventForReg}
+                  participantData={onboardingDraft}
+                  onBackToEventSelection={() => navigateTo('/register/events', 'participant', 'events')}
+                  onSubmitTeamAndRegister={handleSubmitTeamAndRegister}
+                />
+              )}
 
-          {/* Registration Success & Vector QR Pass Display with Download */}
-          {participantStep === 'success' && currentRegistration && (
-            <RegistrationSuccessPass
-              registration={currentRegistration}
-              event={events.find((e) => e.id === currentRegistration.eventId)}
-              onProceedToDashboard={() => setParticipantStep('dashboard')}
-            />
-          )}
+              {/* Registration Success & Vector QR Pass Display with Download */}
+              {participantStep === 'success' && currentRegistration && (
+                <RegistrationSuccessPass
+                  registration={currentRegistration}
+                  event={events.find((e) => e.id === currentRegistration.eventId)}
+                  onProceedToDashboard={() => navigateTo('/dashboard', 'participant', 'dashboard')}
+                />
+              )}
 
-          {/* Participant Dashboard / Public Landing (Home, Rules, Campus, Support, Entry Pass) */}
-          {participantStep === 'dashboard' && (
-            <ParticipantDashboard
-              participant={currentParticipant || MockDatabaseService.getParticipants()[0]}
-              registration={currentRegistration || MockDatabaseService.getRegistrations()[0]}
-              events={events}
-              onSignOut={handleParticipantLogout}
-              onStartNewRegistration={handleStartNewRegistration}
-              onOpenAccessLogin={handleParticipantLogout}
-              onEventChangedSuccess={(newReg) => {
-                setCurrentRegistration(newReg);
-                loadDatabaseData();
-              }}
-            />
+              {/* Participant Dashboard / Public Landing (Home, Rules, Campus, Support, Entry Pass) */}
+              {participantStep === 'dashboard' && (
+                <ParticipantDashboard
+                  participant={currentParticipant || MockDatabaseService.getParticipants()[0]}
+                  registration={currentRegistration || MockDatabaseService.getRegistrations()[0]}
+                  events={events}
+                  onSignOut={handleParticipantLogout}
+                  onStartNewRegistration={handleStartNewRegistration}
+                  onOpenAccessLogin={handleParticipantLogout}
+                  onEventChangedSuccess={(newReg) => {
+                    setCurrentRegistration(newReg);
+                    loadDatabaseData();
+                  }}
+                />
+              )}
+            </>
           )}
-          </>
-        )}
         </div>
       )}
 

@@ -52,11 +52,36 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
   onStartNewRegistration,
   onOpenAccessLogin,
 }) => {
-  const [activeTab, setActiveTab] = useState<ParticipantTab>('home');
+  const getTabFromUrl = (): ParticipantTab => {
+    const path = window.location.pathname.toLowerCase();
+    if (path.includes('/dashboard/rules')) return 'rules';
+    if (path.includes('/dashboard/pass')) return 'pass';
+    if (path.includes('/dashboard/event') || path.includes('/dashboard/schedule')) return 'event';
+    if (path.includes('/dashboard/contact')) return 'contact';
+    return 'home';
+  };
+
+  const [activeTab, setActiveTab] = useState<ParticipantTab>(getTabFromUrl());
   const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
 
   const currentEvent = events.find((e) => e.id === registration.eventId) || events[0];
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setActiveTab(getTabFromUrl());
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const handleTabChange = (tabId: ParticipantTab) => {
+    setActiveTab(tabId);
+    const targetPath = tabId === 'home' ? '/dashboard' : `/dashboard/${tabId}`;
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState({}, '', targetPath);
+    }
+  };
 
   const [timeLeft, setTimeLeft] = useState<{ hours: number; minutes: number; seconds: number }>({
     hours: 2,
@@ -120,11 +145,12 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${isActive
+                  onClick={() => handleTabChange(item.id)}
+                  className={`flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    isActive
                       ? 'bg-teal-600 text-white shadow-md shadow-teal-600/30 scale-105'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-white/80'
-                    }`}
+                  }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
                   <span>{item.label}</span>
@@ -241,7 +267,7 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
               <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full lg:w-auto">
                 <button
                   type="button"
-                  onClick={() => setActiveTab('pass')}
+                  onClick={() => handleTabChange('pass')}
                   className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white font-bold text-xs shadow-md shadow-[#0077c8]/25 flex items-center justify-center gap-2 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <QrCode className="w-4 h-4 text-[#7af1fc]" />
@@ -251,7 +277,7 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
 
                 <button
                   type="button"
-                  onClick={() => setActiveTab('contact')}
+                  onClick={() => handleTabChange('contact')}
                   className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#f0f8fc] hover:bg-[#e4f3fa] border border-[#d4e8f5] text-[#002b66] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <Building className="w-4 h-4 text-[#0077c8]" />
@@ -335,7 +361,7 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                 {/* Left 8 Cols (Featured Story & Editorial News) */}
                 <div className="lg:col-span-8 space-y-6">
                   {/* Large Featured News Photo Banner */}
-                  <div className="relative rounded-3xl overflow-hidden shadow-xl min-h-[240px] flex items-end group cursor-pointer" onClick={() => setActiveTab('rules')}>
+                  <div className="relative rounded-3xl overflow-hidden shadow-xl min-h-[240px] flex items-end group cursor-pointer" onClick={() => handleTabChange('rules')}>
                     <img
                       src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80"
                       alt="Symposium Keynote"
@@ -359,7 +385,7 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                   {/* Open Secondary Editorial Row */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-1">
                     {/* Item 1 */}
-                    <div className="space-y-2 cursor-pointer group" onClick={() => setActiveTab('pass')}>
+                    <div className="space-y-2 cursor-pointer group" onClick={() => handleTabChange('pass')}>
                       <div className="relative h-36 rounded-2xl overflow-hidden shadow">
                         <img
                           src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80"
@@ -381,7 +407,7 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                     </div>
 
                     {/* Item 2 */}
-                    <div className="space-y-2 cursor-pointer group" onClick={() => setActiveTab('contact')}>
+                    <div className="space-y-2 cursor-pointer group" onClick={() => handleTabChange('contact')}>
                       <div className="relative h-36 rounded-2xl overflow-hidden shadow bg-[#002b66] p-4 text-white flex flex-col justify-between">
                         <span className="text-[9px] font-bold uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 w-fit">
                           VENUE
@@ -443,7 +469,7 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
 
                     <button
                       type="button"
-                      onClick={() => setActiveTab('pass')}
+                      onClick={() => handleTabChange('pass')}
                       className="w-full py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow flex items-center justify-center gap-2 transition-colors cursor-pointer"
                     >
                       <QrIcon className="w-4 h-4" />
@@ -455,17 +481,12 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
               </div>
             </div>
 
-            {/* 4. Footer Section Styled As Per SPIHER Official Logo Palette (#002b66 Deep Navy, #0077c8 Royal Blue, #00a887 Emerald Teal) */}
+            {/* 4. Footer Section Styled As Per SPIHER Official Logo Palette */}
             <footer className="mt-16 rounded-3xl overflow-hidden shadow-2xl text-white relative p-8 sm:p-12 space-y-10 bg-[#002b66] border border-[#0077c8]/30">
-              {/* SPIHER Logo Emblem Color Gradient Top Accent Line */}
               <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#0077c8] via-[#00a887] to-[#0077c8]" />
-
-              {/* Soft Subtle Logo Navy Glow Overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-[#002b66] via-[#001e47] to-[#002b66] opacity-95" />
 
-              {/* Content floating over logo themed background */}
               <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-8">
-                {/* Brand Column */}
                 <div className="space-y-4 md:col-span-1">
                   <div className="flex items-center gap-3">
                     <div className="p-2.5 rounded-2xl bg-white/10 backdrop-blur-md border border-[#00a887]/30 shadow-lg">
@@ -479,11 +500,10 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                     </div>
                   </div>
                   <p className="text-xs text-slate-300 leading-relaxed font-medium">
-                    Avadi, Chennai, Tamil Nadu 600054. IGNITE 2026 Technical &amp; Non-Technical Symposium.
+                    Avadi, Chennai, Tamil Nadu 600054. RADIANZA ’26 Technical &amp; Non-Technical Symposium.
                   </p>
                 </div>
 
-                {/* Footer Link Column 1: Contact Details */}
                 <div className="space-y-2.5 text-xs">
                   <h5 className="font-bold text-teal-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#00a887]" />
@@ -494,24 +514,22 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                   <p className="text-slate-300">Avadi, Saraswati Nagar, Chennai - 600054</p>
                 </div>
 
-                {/* Footer Link Column 2: About Symposium */}
                 <div className="space-y-2.5 text-xs">
                   <h5 className="font-bold text-blue-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#0077c8]" />
                     <span>About Symposium</span>
                   </h5>
-                  <p className="text-slate-200 font-medium">IGNITE 2026 Technical Fest</p>
+                  <p className="text-slate-200 font-medium">RADIANZA ’26 Technical Fest</p>
                   <p className="text-slate-300">Dept. of CSE &amp; IT</p>
                   <p className="text-slate-300">SPIHER Campus Avadi</p>
                 </div>
 
-                {/* Footer Link Column 3: Quick Actions */}
                 <div className="space-y-3 text-xs">
                   <h5 className="font-bold text-white uppercase tracking-wider text-[11px]">Quick Navigation</h5>
                   <div className="flex flex-col gap-2">
                     <button
                       type="button"
-                      onClick={() => setActiveTab('pass')}
+                      onClick={() => handleTabChange('pass')}
                       className="px-3.5 py-2 rounded-xl bg-[#0077c8] hover:bg-[#0066ad] text-white font-bold text-xs transition-all shadow-md flex items-center gap-2 w-fit cursor-pointer"
                     >
                       <QrIcon className="w-3.5 h-3.5" />
@@ -519,7 +537,7 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                     </button>
                     <button
                       type="button"
-                      onClick={() => setActiveTab('contact')}
+                      onClick={() => handleTabChange('contact')}
                       className="px-3.5 py-2 rounded-xl bg-[#00a887] hover:bg-[#009174] text-white font-bold text-xs transition-all shadow-md flex items-center gap-2 w-fit cursor-pointer"
                     >
                       <MapPin className="w-3.5 h-3.5" />
@@ -795,11 +813,12 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
               <button
                 key={item.id}
                 type="button"
-                onClick={() => setActiveTab(item.id)}
-                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-full transition-all duration-200 cursor-pointer ${isActive
+                onClick={() => handleTabChange(item.id)}
+                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-full transition-all duration-200 cursor-pointer ${
+                  isActive
                     ? 'bg-teal-600 text-white shadow-md shadow-teal-600/30 font-bold scale-105'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                  }`}
+                }`}
               >
                 <Icon className="w-4 h-4" />
                 <span className="text-[9px] font-bold tracking-tight">{item.label.split(' ')[0]}</span>

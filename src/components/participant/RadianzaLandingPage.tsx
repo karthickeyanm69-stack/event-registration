@@ -50,6 +50,8 @@ const PAGES: PageMeta[] = [
 
 interface RadianzaLandingPageProps {
   events: CollegeEvent[];
+  activeLandingPage?: LandingPageId;
+  onNavigateLandingPage?: (pageId: LandingPageId) => void;
   onStartNewRegistration: () => void;
   onSelectEvent: (event: CollegeEvent) => void;
   onSuccessfulAccess: (participant: Participant, registration?: Registration) => void;
@@ -199,13 +201,15 @@ const pageTransitionVariants = {
 
 export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
   events,
+  activeLandingPage = 'home',
+  onNavigateLandingPage,
   onStartNewRegistration,
   onSelectEvent,
   onSuccessfulAccess,
   onOpenConsole,
 }) => {
   // ── Multi-Page Navigation State ──
-  const [activePage, setActivePage] = useState<LandingPageId>('home');
+  const [activePage, setActivePage] = useState<LandingPageId>(activeLandingPage || 'home');
   const [pageDirection, setPageDirection] = useState<number>(1);
   const [activeCategory, setActiveCategory] = useState<'All' | EventCategory>('All');
   const [selectedEventModal, setSelectedEventModal] = useState<CollegeEvent | null>(null);
@@ -220,32 +224,27 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
   const [isVerifyingPass, setIsVerifyingPass] = useState(false);
   const [accessError, setAccessError] = useState<string | null>(null);
 
-  // Sync active page with URL hash
+  // Sync active page when parent prop changes
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '').toLowerCase() as LandingPageId;
-      if (PAGES.some((p) => p.id === hash)) {
-        const currentIndex = PAGES.findIndex((p) => p.id === activePage);
-        const newIndex = PAGES.findIndex((p) => p.id === hash);
-        setPageDirection(newIndex >= currentIndex ? 1 : -1);
-        setActivePage(hash);
-      }
-    };
-
-    if (window.location.hash) {
-      handleHashChange();
+    if (activeLandingPage && activeLandingPage !== activePage) {
+      const currentIndex = PAGES.findIndex((p) => p.id === activePage);
+      const newIndex = PAGES.findIndex((p) => p.id === activeLandingPage);
+      setPageDirection(newIndex >= currentIndex ? 1 : -1);
+      setActivePage(activeLandingPage);
     }
-
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, [activePage]);
+  }, [activeLandingPage]);
 
   const navigateToPage = (pageId: LandingPageId) => {
     const currentIndex = PAGES.findIndex((p) => p.id === activePage);
     const newIndex = PAGES.findIndex((p) => p.id === pageId);
     setPageDirection(newIndex >= currentIndex ? 1 : -1);
     setActivePage(pageId);
-    window.location.hash = pageId;
+    if (onNavigateLandingPage) {
+      onNavigateLandingPage(pageId);
+    } else {
+      const cleanPath = pageId === 'home' ? '/' : `/${pageId}`;
+      window.history.pushState({}, '', cleanPath);
+    }
     setIsMobileMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -1066,12 +1065,30 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                               <span>Live Session</span>
                             </span>
                             <div className="flex items-center gap-2">
-                              <a href="#speakers" className="hover:text-[#0077c8] transition-colors" aria-label={`${speaker.name} LinkedIn`}>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (speaker.socials?.linkedin && speaker.socials.linkedin !== '#') {
+                                    window.open(speaker.socials.linkedin, '_blank');
+                                  }
+                                }}
+                                className="hover:text-[#0077c8] transition-colors p-1 cursor-pointer"
+                                aria-label={`${speaker.name} LinkedIn`}
+                              >
                                 <Linkedin className="w-3.5 h-3.5" />
-                              </a>
-                              <a href="#speakers" className="hover:text-[#0077c8] transition-colors" aria-label={`${speaker.name} Website`}>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (speaker.socials?.web && speaker.socials.web !== '#') {
+                                    window.open(speaker.socials.web, '_blank');
+                                  }
+                                }}
+                                className="hover:text-[#0077c8] transition-colors p-1 cursor-pointer"
+                                aria-label={`${speaker.name} Website`}
+                              >
                                 <Globe className="w-3.5 h-3.5" />
-                              </a>
+                              </button>
                             </div>
                           </div>
                         </div>
