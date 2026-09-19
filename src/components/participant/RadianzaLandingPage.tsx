@@ -555,7 +555,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   </div>
 
                   {/* Foreground Content: Arranged Line-by-Line starting straight from Forehead Level */}
-                  <div className="relative z-10 pt-10 sm:pt-14 space-y-3 sm:space-y-4 max-w-[85%] sm:max-w-[70%] pointer-events-auto">
+                  <div className="relative z-10 pt-16 sm:pt-20 space-y-3 sm:space-y-3.5 max-w-[85%] sm:max-w-[70%] pointer-events-auto">
                     {/* Line 1: SPIHER PRESENTS Badge */}
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
