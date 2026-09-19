@@ -229,7 +229,7 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     venue: 'AI Lab 1, Advanced Tech Block',
     totalSlots: 45,
     slotsLeft: 20,
-    imageUrl: 'https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
     rules: [
       'Solo event.',
       'Prompts and output accuracy will be benchmarked by automated test suites.',

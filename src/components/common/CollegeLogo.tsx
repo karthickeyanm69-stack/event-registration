@@ -8,6 +8,57 @@ interface CollegeLogoProps {
 }
 
 /**
+ * Official Multi-Colored Starburst Logo from the Reference Video
+ */
+export const SpiherStarburstLogo: React.FC<{ size?: number; className?: string }> = ({
+  size = 36,
+  className = '',
+}) => {
+  const rays = [
+    { angle: 0,   color: '#e11d48' }, // Rose
+    { angle: 22.5, color: '#f97316' }, // Orange
+    { angle: 45,  color: '#f59e0b' }, // Amber
+    { angle: 67.5, color: '#eab308' }, // Yellow
+    { angle: 90,  color: '#84cc16' }, // Lime
+    { angle: 112.5, color: '#10b981' }, // Emerald
+    { angle: 135, color: '#06b6d4' }, // Cyan
+    { angle: 157.5, color: '#0077c8' }, // SPIHER Blue
+    { angle: 180, color: '#002b66' }, // Navy
+    { angle: 202.5, color: '#4f46e5' }, // Indigo
+    { angle: 225, color: '#7c3aed' }, // Purple
+    { angle: 247.5, color: '#9333ea' }, // Violet
+    { angle: 270, color: '#c026d3' }, // Fuchsia
+    { angle: 292.5, color: '#db2777' }, // Pink
+    { angle: 315, color: '#f43f5e' }, // Coral
+    { angle: 337.5, color: '#ef4444' }, // Red
+  ];
+
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 100 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={`shrink-0 ${className}`}
+    >
+      <g transform="translate(50, 50)">
+        {rays.map((ray, idx) => (
+          <path
+            key={idx}
+            d="M -3.2 0 L 0 -46 L 3.2 0 Z"
+            fill={ray.color}
+            transform={`rotate(${ray.angle})`}
+          />
+        ))}
+        {/* Core white center */}
+        <circle cx="0" cy="0" r="6" fill="#ffffff" />
+      </g>
+    </svg>
+  );
+};
+
+/**
  * Official St. Peter's Institute of Higher Education & Research Emblem
  * Vector Cross with Blue Vertical Arms, Teal Horizontal Arms, and Circuit Nodes.
  */

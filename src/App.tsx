@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrandedLoadingScreen } from './components/participant/BrandedLoadingScreen';
 import { ParticipantAccess } from './components/participant/ParticipantAccess';
+import { RadianzaLandingPage } from './components/participant/RadianzaLandingPage';
 import { OnboardingDetailsForm } from './components/participant/OnboardingDetailsForm';
 import { EventSelectionView } from './components/participant/EventSelectionView';
 import { TeamBuilderFlow } from './components/participant/TeamBuilderFlow';
@@ -375,11 +376,17 @@ export default function App() {
             />
           ) : (
             <>
-              {/* Participant Access Page (Existing Access with Roll No + DOB OR New Registration) */}
+              {/* RADIANZA '26 Flagship Landing Page & Entrance Experience */}
               {participantStep === 'access' && (
-                <ParticipantAccess
-                  onSuccessfulAccess={handleParticipantAccessSuccess}
+                <RadianzaLandingPage
+                  events={events}
                   onStartNewRegistration={handleStartNewRegistration}
+                  onSelectEvent={(event) => {
+                    setSelectedEventForReg(event);
+                    setParticipantStep('onboarding');
+                  }}
+                  onSuccessfulAccess={handleParticipantAccessSuccess}
+                  onOpenConsole={() => navigateTo('/console', 'console')}
                 />
               )}
 
