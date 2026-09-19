@@ -21,8 +21,8 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
 
     // 1. Scene, Camera & Renderer with Full Alpha Transparency
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(isMobile ? 38 : 36, width / height, 0.1, 1000);
-    camera.position.set(0, 0, isMobile ? 16.0 : 17);
+    const camera = new THREE.PerspectiveCamera(isMobile ? 36 : 36, width / height, 0.1, 1000);
+    camera.position.set(0, 0, isMobile ? 15.5 : 17);
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -32,41 +32,46 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.3;
+    renderer.toneMappingExposure = 1.35;
     mount.appendChild(renderer.domElement);
 
-    // 2. High-Contrast Cyber Lighting for Light Background
-    const ambientLight = new THREE.AmbientLight(0xffffff, 2.9);
+    // 2. High-Contrast Cyber Lighting for Soft Ice-Blue Theme
+    const ambientLight = new THREE.AmbientLight(0xffffff, 3.2);
     scene.add(ambientLight);
 
     // Key front light (Royal SPIHER Blue)
-    const keyLight = new THREE.PointLight(0x0077c8, 6.5, 70);
-    keyLight.position.set(-8, 6, 12);
+    const keyLight = new THREE.PointLight(0x0077c8, 7.0, 80);
+    keyLight.position.set(-6, 5, 14);
     scene.add(keyLight);
 
     // Rim light (Cyan #00f2fe)
-    const rimLight = new THREE.PointLight(0x00f2fe, 5.5, 60);
-    rimLight.position.set(8, 8, 4);
+    const rimLight = new THREE.PointLight(0x00f2fe, 6.0, 70);
+    rimLight.position.set(7, 7, 6);
     scene.add(rimLight);
 
     // Electric Purple accent light
-    const purpleLight = new THREE.PointLight(0x7c3aed, 4.5, 50);
-    purpleLight.position.set(2, -8, 8);
+    const purpleLight = new THREE.PointLight(0x7c3aed, 5.0, 60);
+    purpleLight.position.set(2, -7, 10);
     scene.add(purpleLight);
+
+    // Soft Fill Light (White-Blue)
+    const fillLight = new THREE.DirectionalLight(0xdbeafe, 2.0);
+    fillLight.position.set(0, 10, 10);
+    scene.add(fillLight);
 
     // 3. Master Head Group
     const headGroup = new THREE.Group();
     scene.add(headGroup);
 
     // Resting Position: Positioned on the right half, filling top-to-bottom gracefully
-    const RESTING_POS_X = isMobile ? 2.4 : 3.8; 
-    const RESTING_POS_Y = isMobile ? 0.05 : 0.05;
+    const RESTING_POS_X = isMobile ? 2.2 : 3.8; 
+    const RESTING_POS_Y = isMobile ? 0.35 : 0.05;
 
     // Starts off-screen for entrance animation
-    headGroup.position.set(isMobile ? 8.0 : 14.0, RESTING_POS_Y, 0);
+    headGroup.position.set(isMobile ? 7.0 : 14.0, RESTING_POS_Y, 0);
 
     // 4. Background Orbiting 3D Particle Cloud (Light Theme Cyber Dust)
-    const particleCount = 750;
+    const particleCount = 650;
     const particleGeo = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
@@ -76,7 +81,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const colorPurple = new THREE.Color(0x7c3aed);
 
     for (let i = 0; i < particleCount; i++) {
-      const radius = 5 + Math.random() * 8.5;
+      const radius = 4.5 + Math.random() * 8.0;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(Math.random() * 2 - 1);
 
@@ -94,7 +99,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
     const particleMat = new THREE.PointsMaterial({
-      size: isMobile ? 0.12 : 0.14,
+      size: isMobile ? 0.11 : 0.13,
       vertexColors: true,
       transparent: true,
       opacity: 0.75,
@@ -108,24 +113,25 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     scene.add(orbsGroup);
 
     const orbDefinitions = [
-      { x: isMobile ? -1.8 : -3.5, y: 1.0, z: 2.5, r: 0.65, color: 0x00f2fe, hasRing: true },
-      { x: isMobile ? -2.8 : -4.8, y: 2.2, z: 1.2, r: 0.42, color: 0x7c3aed, hasRing: false },
-      { x: isMobile ? -1.2 : -2.2, y: -1.6, z: 3.2, r: 0.75, color: 0x0077c8, hasRing: true },
-      { x: isMobile ? -3.0 : -5.0, y: -0.6, z: 1.8, r: 0.35, color: 0x00a887, hasRing: false },
+      { x: isMobile ? -1.6 : -3.5, y: isMobile ? 0.6 : 1.0, z: 2.2, r: 0.58, color: 0x00f2fe, hasRing: true },
+      { x: isMobile ? -2.5 : -4.8, y: isMobile ? 1.8 : 2.2, z: 1.0, r: 0.38, color: 0x7c3aed, hasRing: false },
+      { x: isMobile ? -1.0 : -2.2, y: isMobile ? -1.4 : -1.6, z: 2.8, r: 0.68, color: 0x0077c8, hasRing: true },
+      { x: isMobile ? -2.6 : -5.0, y: isMobile ? -0.8 : -0.6, z: 1.5, r: 0.32, color: 0x00a887, hasRing: false },
+      { x: isMobile ? -0.4 : -1.2, y: isMobile ? 2.4 : 2.8, z: 1.8, r: 0.28, color: 0xa855f7, hasRing: false },
     ];
 
     const orbMeshes: THREE.Mesh[] = [];
 
     orbDefinitions.forEach((orb) => {
-      const orbGeo = new THREE.SphereGeometry(orb.r, 24, 24);
+      const orbGeo = new THREE.SphereGeometry(orb.r, 32, 32);
       const orbMat = new THREE.MeshStandardMaterial({
         color: orb.color,
-        roughness: 0.2,
-        metalness: 0.7,
+        roughness: 0.15,
+        metalness: 0.75,
         emissive: orb.color,
         emissiveIntensity: 0.35,
         transparent: true,
-        opacity: 0.85,
+        opacity: 0.9,
       });
       const orbMesh = new THREE.Mesh(orbGeo, orbMat);
       orbMesh.position.set(orb.x, orb.y, orb.z);
@@ -133,21 +139,42 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       orbMeshes.push(orbMesh);
 
       if (orb.hasRing) {
-        const ringGeo = new THREE.RingGeometry(orb.r * 1.35, orb.r * 1.75, 32);
+        const ringGeo = new THREE.RingGeometry(orb.r * 1.35, orb.r * 1.85, 32);
         const ringMat = new THREE.MeshBasicMaterial({
           color: 0x7af1fc,
           side: THREE.DoubleSide,
           transparent: true,
-          opacity: 0.75,
+          opacity: 0.8,
         });
         const ringMesh = new THREE.Mesh(ringGeo, ringMat);
-        ringMesh.rotation.x = Math.PI / 2.4;
+        ringMesh.rotation.x = Math.PI / 2.3;
+        ringMesh.rotation.y = Math.PI / 8;
         orbMesh.add(ringMesh);
       }
     });
 
+    // 4C. Faint Orbital Arc Rings Around Face (Like in Reference)
+    const arcGroup = new THREE.Group();
+    arcGroup.position.set(RESTING_POS_X, RESTING_POS_Y, 0);
+    scene.add(arcGroup);
+
+    const arcMat = new THREE.MeshBasicMaterial({
+      color: 0x0077c8,
+      transparent: true,
+      opacity: 0.16,
+      side: THREE.DoubleSide,
+    });
+    const arcRing1 = new THREE.Mesh(new THREE.RingGeometry(3.6, 3.64, 64), arcMat);
+    arcRing1.rotation.y = -Math.PI / 5;
+    arcGroup.add(arcRing1);
+
+    const arcRing2 = new THREE.Mesh(new THREE.RingGeometry(4.8, 4.84, 64), arcMat);
+    arcRing2.rotation.y = -Math.PI / 4.5;
+    arcRing2.rotation.x = Math.PI / 10;
+    arcGroup.add(arcRing2);
+
     // 5. Target Orientation: Dynamic 3/4 front angle on mobile, profile facing left on desktop
-    const BASE_ROTATION_Y = isMobile ? -Math.PI / 6.5 : -Math.PI / 2.05;
+    const BASE_ROTATION_Y = isMobile ? -Math.PI / 5.2 : -Math.PI / 2.05;
     const BASE_ROTATION_X = 0.02;
 
     // 6. Load & Scale Cyber Head Model (`cyber_head.glb`)
@@ -176,19 +203,19 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
             const visibleFrustumHeight = 2 * Math.tan(vFOV / 2) * camera.position.z;
             const visibleFrustumWidth = visibleFrustumHeight * camera.aspect;
 
-            // Target height: prominent and large, leaving safe top margin
+            // Target height: prominent, large and unclipped
             const targetHeight = isMobile
-              ? Math.min(visibleFrustumHeight * 0.82, visibleFrustumWidth * 0.95, 10.0)
-              : Math.min(visibleFrustumHeight * 0.76, 10.0);
+              ? Math.min(visibleFrustumHeight * 0.88, visibleFrustumWidth * 1.1, 11.5)
+              : Math.min(visibleFrustumHeight * 0.78, 10.5);
             const scaleFactor = targetHeight / maxDimension;
 
-            // Layer A: Semi-Translucent Ice-Glass Base Mesh (Light Theme Volume)
+            // Layer A: Semi-Translucent Ice-Glass Base Mesh (Light Theme Porcelain Cyan)
             const solidMat = new THREE.MeshStandardMaterial({
-              color: 0xe6f4fb,
-              roughness: 0.15,
-              metalness: 0.25,
+              color: 0xedf7fc,
+              roughness: 0.18,
+              metalness: 0.35,
               transparent: true,
-              opacity: 0.65,
+              opacity: 0.78,
             });
             const solidMesh = new THREE.Mesh(geo, solidMat);
             solidMesh.scale.set(scaleFactor * 0.99, scaleFactor * 0.99, scaleFactor * 0.99);
@@ -199,7 +226,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
               color: 0x005fa3,
               wireframe: true,
               transparent: true,
-              opacity: 0.88,
+              opacity: 0.85,
             });
             const wireMesh = new THREE.Mesh(geo, wireMat);
             wireMesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
@@ -208,7 +235,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
             // Layer C: Sparkling Purple & Cyan Vertex Nodes
             const pointsMat = new THREE.PointsMaterial({
               color: 0x7c3aed,
-              size: 0.08,
+              size: 0.085,
               transparent: true,
               opacity: 0.92,
             });
