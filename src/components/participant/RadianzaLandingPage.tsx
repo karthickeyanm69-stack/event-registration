@@ -541,7 +541,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               className="w-full flex flex-col space-y-0"
             >
               {/* ── 1. HERO SECTION (3D CYBER PROFILE & CTA) ── */}
-              <section id="hero" className="relative w-full min-h-[calc(100vh-10rem)] flex items-center justify-center overflow-hidden bg-gradient-to-b from-white via-[#f0f8fc] to-white py-10 lg:py-16">
+              <section id="hero" className="relative w-full min-h-[calc(100svh-4rem)] sm:min-h-[calc(100vh-6rem)] flex items-center justify-center overflow-visible bg-gradient-to-b from-white via-[#f0f8fc] to-white py-4 sm:py-8 lg:py-16">
                 <div
                   className="absolute inset-0 pointer-events-none opacity-20"
                   style={{
@@ -549,110 +549,116 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     backgroundSize: '32px 32px',
                   }}
                 />
-                <div className="absolute top-0 right-1/4 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#00f2fe]/20 via-[#0077c8]/15 to-transparent blur-3xl pointer-events-none animate-float-slow" />
-                <div className="absolute -bottom-20 left-10 w-[550px] h-[550px] rounded-full bg-gradient-to-tr from-[#7c3aed]/12 via-[#00f2fe]/10 to-transparent blur-3xl pointer-events-none" />
+                <div className="absolute top-0 right-1/4 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] rounded-full bg-gradient-to-br from-[#00f2fe]/20 via-[#0077c8]/15 to-transparent blur-3xl pointer-events-none animate-float-slow" />
+                <div className="absolute -bottom-20 left-10 w-[350px] sm:w-[550px] h-[350px] sm:h-[550px] rounded-full bg-gradient-to-tr from-[#7c3aed]/12 via-[#00f2fe]/10 to-transparent blur-3xl pointer-events-none" />
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                  <div className="lg:col-span-6 space-y-6 sm:space-y-7 text-left">
+                <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 w-full relative z-10 flex flex-row items-center justify-between lg:grid lg:grid-cols-12 lg:gap-8 overflow-visible">
+                  {/* Left Column: Arranged typography with clean spacing matching reference */}
+                  <div className="w-[58%] sm:w-[54%] lg:w-full lg:col-span-6 space-y-3 sm:space-y-5 lg:space-y-7 text-left z-20 py-2 sm:py-4">
+                    {/* Top Institution Tag */}
                     <motion.div
-                      initial={{ opacity: 0, y: -15 }}
+                      initial={{ opacity: 0, y: -12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white shadow-xs border border-[#d4e8f5] text-[#0077c8] text-xs font-bold tracking-wide"
+                      className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-white shadow-xs border border-[#d4e8f5] text-[#0077c8] text-[10px] sm:text-xs font-bold tracking-wide"
                     >
-                      <SpiherStarburstLogo size={22} />
-                      <span className="tracking-widest uppercase font-mono text-[11px] text-[#002b66]">
+                      <SpiherStarburstLogo size={18} />
+                      <span className="tracking-widest uppercase font-mono text-[9px] sm:text-[11px] text-[#002b66]">
                         SPIHER PRESENTS
                       </span>
                     </motion.div>
 
-                    <div className="space-y-3">
+                    {/* Headline Typography & Taglines */}
+                    <div className="space-y-1.5 sm:space-y-3">
                       <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 18 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.1 }}
-                        className="text-5xl sm:text-7xl xl:text-8xl font-serif font-black tracking-tight text-[#001f4d] leading-[1.05]"
+                        className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-black tracking-tight text-[#001f4d] leading-[1.05]"
                       >
                         RADIANZA <span className="text-[#0077c8]">'26</span>
                       </motion.h1>
 
                       <motion.p
-                        initial={{ opacity: 0, y: 15 }}
+                        initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="text-xs sm:text-sm font-mono font-bold tracking-[0.22em] text-[#002b66] uppercase"
+                        className="text-[9px] sm:text-xs md:text-sm font-mono font-bold tracking-[0.16em] text-[#002b66] uppercase"
                       >
-                        NATIONAL-LEVEL TECHNICAL SYMPOSIUM
+                        NATIONAL SYMPOSIUM
                       </motion.p>
 
                       <motion.p
-                        initial={{ opacity: 0, y: 15 }}
+                        initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.25 }}
-                        className="text-sm sm:text-base text-slate-600 font-medium italic"
+                        className="text-[11px] sm:text-sm md:text-base text-slate-600 font-medium italic leading-snug"
                       >
                         "Igniting Ideas, Innovating Tomorrow"
                       </motion.p>
                     </div>
 
+                    {/* Date & Location Chips */}
                     <motion.div
-                      initial={{ opacity: 0, y: 15 }}
+                      initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.3 }}
-                      className="flex flex-wrap items-center gap-3 pt-1 text-xs font-semibold text-slate-700"
+                      className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-1.5 sm:gap-3 pt-0.5 text-[10px] sm:text-xs font-semibold text-slate-700"
                     >
-                      <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs">
-                        <Calendar className="w-4 h-4 text-[#0077c8]" />
+                      <div className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-white border border-[#d4e8f5] shadow-xs">
+                        <Calendar className="w-3.5 h-3.5 text-[#0077c8]" />
                         <span className="font-bold text-[#001f4d]">15 - 16 OCT 2026</span>
                       </div>
-                      <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs">
-                        <MapPin className="w-4 h-4 text-[#00a887]" />
-                        <span>SPIHER Campus, Coimbatore</span>
+                      <div className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-white border border-[#d4e8f5] shadow-xs">
+                        <MapPin className="w-3.5 h-3.5 text-[#00a887]" />
+                        <span>SPIHER Campus</span>
                       </div>
                     </motion.div>
 
+                    {/* Action CTA Buttons */}
                     <motion.div
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.6, delay: 0.4 }}
-                      className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2"
+                      className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3.5 pt-1 sm:pt-2"
                     >
                       <div className="relative group">
-                        <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#00f2fe] via-[#0077c8] to-[#00a887] opacity-75 blur-md group-hover:opacity-100 transition-opacity duration-300 animate-halo-pulse" />
+                        <div className="absolute -inset-0.5 sm:-inset-1 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#00f2fe] via-[#0077c8] to-[#00a887] opacity-75 blur-xs sm:blur-md group-hover:opacity-100 transition-opacity duration-300 animate-halo-pulse" />
                         <button
                           type="button"
                           onClick={onStartNewRegistration}
-                          className="relative px-9 py-4 rounded-2xl bg-gradient-to-r from-[#001f4d] via-[#002b66] to-[#0077c8] text-white font-bold text-sm tracking-wide shadow-xl flex items-center justify-center gap-2.5 overflow-hidden cursor-pointer active:scale-95 transition-transform"
+                          className="relative w-full sm:w-auto px-5 sm:px-9 py-2.5 sm:py-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#001f4d] via-[#002b66] to-[#0077c8] text-white font-bold text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-2 overflow-hidden cursor-pointer active:scale-95 transition-transform"
                         >
                           <span className="relative z-10 font-bold">Register Now</span>
-                          <ArrowRight className="w-4 h-4 text-[#7af1fc] relative z-10 group-hover:translate-x-1 transition-transform" />
+                          <ArrowRight className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-[#7af1fc] relative z-10 group-hover:translate-x-1 transition-transform" />
                         </button>
                       </div>
 
                       <button
                         type="button"
                         onClick={() => navigateToPage('events')}
-                        className="px-8 py-4 rounded-2xl bg-white hover:bg-[#f0f8fc] border-2 border-[#d4e8f5] hover:border-[#0077c8] text-[#002b66] font-bold text-sm tracking-wide shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95"
+                        className="px-4 sm:px-7 py-2.5 sm:py-4 rounded-xl sm:rounded-2xl bg-white hover:bg-[#f0f8fc] border border-[#d4e8f5] hover:border-[#0077c8] text-[#002b66] font-bold text-xs sm:text-sm tracking-wide shadow-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95"
                       >
-                        <span>View Competition Matrix</span>
-                        <ChevronRight className="w-4 h-4 text-slate-400" />
+                        <span>Competition Matrix</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                       </button>
                     </motion.div>
 
-                    <div className="pt-2 text-xs text-slate-500 flex items-center gap-2">
-                      <span>Already registered?</span>
+                    {/* Digital Pass Quick Access */}
+                    <div className="pt-0.5 sm:pt-1 text-[10px] sm:text-xs text-slate-500 flex items-center gap-1.5">
+                      <span className="hidden sm:inline">Already registered?</span>
                       <button
                         type="button"
                         onClick={() => setIsPassModalOpen(true)}
                         className="text-[#0077c8] font-bold underline hover:text-[#005fa3] cursor-pointer"
                       >
-                        Access your digital pass →
+                        Access your pass →
                       </button>
                     </div>
                   </div>
 
-                  {/* 3D Cyber Head */}
-                  <div className="lg:col-span-6 flex items-center justify-center relative w-full min-h-[460px] sm:min-h-[560px] overflow-visible">
+                  {/* Right Column: 3D Cyber Head Viewport (Unboxed, Free Floating & Fully Visible) */}
+                  <div className="w-[46%] sm:w-[48%] lg:w-full lg:col-span-6 absolute right-0 top-0 bottom-0 lg:relative flex items-center justify-center min-h-[380px] sm:min-h-[480px] lg:min-h-[580px] overflow-visible z-10 pointer-events-auto">
                     <ThreeDCyberHeadCanvas onRegisterClick={onStartNewRegistration} />
                   </div>
                 </div>

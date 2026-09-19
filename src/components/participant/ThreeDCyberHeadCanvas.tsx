@@ -15,13 +15,14 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const mount = mountRef.current;
     if (!mount) return;
 
-    const width = mount.clientWidth || 650;
-    const height = mount.clientHeight || 560;
+    const width = mount.clientWidth || 400;
+    const height = mount.clientHeight || 500;
+    const isMobile = width < 550 || window.innerWidth < 768;
 
     // 1. Scene, Camera & Renderer with Full Alpha Transparency
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 1000);
-    camera.position.set(0, 0, 16);
+    const camera = new THREE.PerspectiveCamera(isMobile ? 42 : 36, width / height, 0.1, 1000);
+    camera.position.set(0, 0, isMobile ? 18 : 17);
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -57,13 +58,12 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const headGroup = new THREE.Group();
     scene.add(headGroup);
 
-    // Resting Position: Anchored so only the front half of the head is visible in the viewport,
-    // while the back of the skull extends off-screen to the right (exactly matching user reference image).
-    const RESTING_POS_X = 4.2; 
-    const RESTING_POS_Y = 0.1;
+    // Resting Position: Seamlessly positioned on the right without box clipping
+    const RESTING_POS_X = isMobile ? 0.3 : 3.8; 
+    const RESTING_POS_Y = isMobile ? -0.1 : 0.05;
 
-    // Starts off-screen to the right (x: 14.0) for the initial slide-in entrance animation
-    headGroup.position.set(14.0, RESTING_POS_Y, 0);
+    // Starts off-screen to the right for entrance animation
+    headGroup.position.set(isMobile ? 9.0 : 14.0, RESTING_POS_Y, 0);
 
     // 4. Background Orbiting 3D Particle Cloud (Light Theme Cyber Dust)
     const particleCount = 750;
@@ -94,7 +94,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
     const particleMat = new THREE.PointsMaterial({
-      size: 0.14,
+      size: isMobile ? 0.11 : 0.14,
       vertexColors: true,
       transparent: true,
       opacity: 0.75,
@@ -102,8 +102,6 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     });
     const backgroundParticles = new THREE.Points(particleGeo, particleMat);
     scene.add(backgroundParticles);
-
-    // (Rings around the head completely removed as requested)
 
     // 5. Target Orientation: Profile facing towards the LEFT directly across at the text
     const BASE_ROTATION_Y = -Math.PI / 2.05; // ~ -88 degrees (facing left)
@@ -124,15 +122,21 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
             geo.center(); // Center around pivot
             geo.computeVertexNormals();
 
-            // Calculate bounding box and scale to span from top (SPIHER PRESENTS) to bottom (buttons)
+            // Calculate bounding box and dynamically scale to fit frustum with NO top clipping
             geo.computeBoundingBox();
             const bbox = geo.boundingBox!;
             const size = new THREE.Vector3();
             bbox.getSize(size);
             const maxDimension = Math.max(size.x, size.y, size.z) || 1;
 
-            // Target height of 11.5 units: Spans from top badge to bottom action buttons
-            const targetHeight = 11.5;
+            const vFOV = (camera.fov * Math.PI) / 180;
+            const visibleFrustumHeight = 2 * Math.tan(vFOV / 2) * camera.position.z;
+            const visibleFrustumWidth = visibleFrustumHeight * camera.aspect;
+
+            // Safe target height: leaves plenty of margin on top and bottom so head is 100% free and unclipped
+            const targetHeight = isMobile
+              ? Math.min(visibleFrustumHeight * 0.68, visibleFrustumWidth * 0.92, 7.8)
+              : Math.min(visibleFrustumHeight * 0.74, 9.6);
             const scaleFactor = targetHeight / maxDimension;
 
             // Layer A: Semi-Translucent Ice-Glass Base Mesh (Light Theme Volume)
@@ -322,27 +326,28 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
   }, []);
 
   return (
-    <div className="relative w-full h-full min-h-[480px] sm:min-h-[580px] flex items-center justify-center select-none overflow-visible">
-      {/* Three.js 3D WebGL Canvas (Free Floating, Zero Rings/Borders) */}
+    <div className="relative w-full h-full min-h-[360px] sm:min-h-[480px] lg:min-h-[560px] flex items-center justify-center select-none overflow-visible">
+      {/* Three.js 3D WebGL Canvas (Free Floating, Zero Clipping/Borders) */}
       <div
         ref={mountRef}
-        className="w-full h-full min-h-[480px] sm:min-h-[580px] flex items-center justify-center cursor-grab active:cursor-grabbing"
+        className="w-full h-full min-h-[360px] sm:min-h-[480px] lg:min-h-[560px] flex items-center justify-center cursor-grab active:cursor-grabbing overflow-visible"
       />
 
-      {/* Floating 3D Telemetry HUD Badges (Positioned near forehead matching reference image) */}
-      <div className="absolute top-6 right-8 sm:right-16 flex flex-col items-end gap-1.5 pointer-events-none">
-        <span className="px-3 py-1 rounded-xl bg-white/85 backdrop-blur-md border border-[#0077c8]/30 text-[#002b66] font-mono text-[11px] font-bold tracking-wider shadow-sm">
+      {/* Floating 3D Telemetry HUD Badges */}
+      <div className="absolute top-2 right-2 sm:top-6 sm:right-10 flex flex-col items-end gap-1 pointer-events-none z-10">
+        <span className="px-2.5 py-1 rounded-xl bg-white/90 backdrop-blur-md border border-[#0077c8]/30 text-[#002b66] font-mono text-[9px] sm:text-[11px] font-bold tracking-wider shadow-xs">
           1.00011 // 0.39
         </span>
-        <span className="text-[9.5px] font-mono font-bold text-[#7c3aed] tracking-widest uppercase">
-          mot.pos:c [SYS_OK]
+        <span className="text-[8px] sm:text-[9.5px] font-mono font-bold text-[#7c3aed] tracking-widest uppercase">
+          RAD.AI // [ACTIVE]
         </span>
       </div>
 
       {/* Interactive 3D Orbit Drag Hint */}
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-[10px] font-mono font-bold text-[#002b66] pointer-events-none">
-        <Move3d className="w-3.5 h-3.5 text-[#0077c8]" />
-        <span>Drag to rotate 3D Head 360°</span>
+      <div className="absolute bottom-1 right-2 sm:left-1/2 sm:-translate-x-1/2 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-[9px] sm:text-[10px] font-mono font-bold text-[#002b66] pointer-events-none z-10">
+        <Move3d className="w-3 h-3 text-[#0077c8]" />
+        <span className="hidden sm:inline">Drag to rotate 3D Head 360°</span>
+        <span className="sm:hidden">Drag to 3D Orbit</span>
       </div>
     </div>
   );
