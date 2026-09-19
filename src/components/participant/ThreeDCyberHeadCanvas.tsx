@@ -16,13 +16,13 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     if (!mount) return;
 
     const width = mount.clientWidth || 400;
-    const height = mount.clientHeight || 500;
-    const isMobile = width < 550 || window.innerWidth < 768;
+    const height = mount.clientHeight || 450;
+    const isMobile = width < 650 || window.innerWidth < 1024;
 
     // 1. Scene, Camera & Renderer with Full Alpha Transparency
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(isMobile ? 42 : 36, width / height, 0.1, 1000);
-    camera.position.set(0, 0, isMobile ? 18 : 17);
+    const camera = new THREE.PerspectiveCamera(isMobile ? 38 : 36, width / height, 0.1, 1000);
+    camera.position.set(0, 0, isMobile ? 16.5 : 17);
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -58,12 +58,12 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const headGroup = new THREE.Group();
     scene.add(headGroup);
 
-    // Resting Position: Seamlessly positioned on the right without box clipping
-    const RESTING_POS_X = isMobile ? 0.3 : 3.8; 
-    const RESTING_POS_Y = isMobile ? -0.1 : 0.05;
+    // Resting Position: Perfectly centered on mobile, right-anchored profile on desktop
+    const RESTING_POS_X = isMobile ? 0.0 : 3.8; 
+    const RESTING_POS_Y = isMobile ? 0.0 : 0.05;
 
-    // Starts off-screen to the right for entrance animation
-    headGroup.position.set(isMobile ? 9.0 : 14.0, RESTING_POS_Y, 0);
+    // Starts off-screen for entrance animation
+    headGroup.position.set(isMobile ? 0.0 : 14.0, isMobile ? 4.0 : RESTING_POS_Y, 0);
 
     // 4. Background Orbiting 3D Particle Cloud (Light Theme Cyber Dust)
     const particleCount = 750;
@@ -94,7 +94,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
     const particleMat = new THREE.PointsMaterial({
-      size: isMobile ? 0.11 : 0.14,
+      size: isMobile ? 0.12 : 0.14,
       vertexColors: true,
       transparent: true,
       opacity: 0.75,
@@ -103,8 +103,8 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const backgroundParticles = new THREE.Points(particleGeo, particleMat);
     scene.add(backgroundParticles);
 
-    // 5. Target Orientation: Profile facing towards the LEFT directly across at the text
-    const BASE_ROTATION_Y = -Math.PI / 2.05; // ~ -88 degrees (facing left)
+    // 5. Target Orientation: Dynamic 3/4 front angle on mobile, profile facing left on desktop
+    const BASE_ROTATION_Y = isMobile ? -Math.PI / 8 : -Math.PI / 2.05;
     const BASE_ROTATION_X = 0.02;
 
     // 6. Load & Scale Cyber Head Model (`cyber_head.glb`)
@@ -122,7 +122,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
             geo.center(); // Center around pivot
             geo.computeVertexNormals();
 
-            // Calculate bounding box and dynamically scale to fit frustum with NO top clipping
+            // Calculate bounding box and dynamically scale to be BIG and completely unclipped
             geo.computeBoundingBox();
             const bbox = geo.boundingBox!;
             const size = new THREE.Vector3();
@@ -133,10 +133,10 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
             const visibleFrustumHeight = 2 * Math.tan(vFOV / 2) * camera.position.z;
             const visibleFrustumWidth = visibleFrustumHeight * camera.aspect;
 
-            // Safe target height: leaves plenty of margin on top and bottom so head is 100% free and unclipped
+            // Target height: prominent and large, leaving safe top margin
             const targetHeight = isMobile
-              ? Math.min(visibleFrustumHeight * 0.68, visibleFrustumWidth * 0.92, 7.8)
-              : Math.min(visibleFrustumHeight * 0.74, 9.6);
+              ? Math.min(visibleFrustumHeight * 0.82, visibleFrustumWidth * 0.95, 10.0)
+              : Math.min(visibleFrustumHeight * 0.76, 10.0);
             const scaleFactor = targetHeight / maxDimension;
 
             // Layer A: Semi-Translucent Ice-Glass Base Mesh (Light Theme Volume)
