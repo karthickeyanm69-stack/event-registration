@@ -264,10 +264,12 @@ export const ChangeEventModal: React.FC<ChangeEventModalProps> = ({
 
             {/* Reason for Change Input */}
             <div className="space-y-1 text-xs">
-              <label className="font-semibold text-slate-700">
+              <label htmlFor="change-event-reason" className="font-semibold text-slate-700">
                 Reason for Event Switch (Recorded in Audit Ledger)
               </label>
               <input
+                id="change-event-reason"
+                name="changeReason"
                 type="text"
                 value={changeReason}
                 onChange={(e) => setChangeReason(e.target.value)}

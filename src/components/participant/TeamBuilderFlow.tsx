@@ -216,11 +216,13 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
         {/* Team Name Input (If Team Event) */}
         {event.isTeamEvent && (
           <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-2">
-            <label className="text-xs font-bold text-[#002b66] uppercase tracking-wider flex items-center gap-2">
+            <label htmlFor="team-name-input" className="text-xs font-bold text-[#002b66] uppercase tracking-wider flex items-center gap-2">
               <Users className="w-4 h-4 text-teal-600" />
               <span>Team Name *</span>
             </label>
             <input
+              id="team-name-input"
+              name="teamName"
               type="text"
               required
               value={teamName}
@@ -297,10 +299,12 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
                 {/* Name & Roll Number Input */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-[#002b66] uppercase tracking-wider">
+                    <label htmlFor={`member-name-${idx}`} className="text-xs font-bold text-[#002b66] uppercase tracking-wider">
                       Full Name *
                     </label>
                     <input
+                      id={`member-name-${idx}`}
+                      name={`memberName_${idx}`}
                       type="text"
                       required
                       value={member.name}
@@ -312,10 +316,12 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-[#002b66] uppercase tracking-wider">
+                    <label htmlFor={`member-roll-${idx}`} className="text-xs font-bold text-[#002b66] uppercase tracking-wider">
                       Roll / Register Number *
                     </label>
                     <input
+                      id={`member-roll-${idx}`}
+                      name={`memberRoll_${idx}`}
                       type="text"
                       required
                       value={member.rollNumber}
@@ -330,8 +336,10 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
                 {/* Quick Auto-Fill Helpers for Teammates */}
                 {!member.isLeader && (
                   <div className="flex flex-wrap gap-4 pt-1 text-xs">
-                    <label className="flex items-center gap-1.5 cursor-pointer text-slate-700 font-semibold">
+                    <label htmlFor={`same-col-${idx}`} className="flex items-center gap-1.5 cursor-pointer text-slate-700 font-semibold">
                       <input
+                        id={`same-col-${idx}`}
+                        name={`sameCollege_${idx}`}
                         type="checkbox"
                         checked={isSameCol}
                         onChange={(e) => handleToggleSameCollege(idx, e.target.checked)}
@@ -340,8 +348,10 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
                       <span>Same College as Leader</span>
                     </label>
 
-                    <label className="flex items-center gap-1.5 cursor-pointer text-slate-700 font-semibold">
+                    <label htmlFor={`same-dept-${idx}`} className="flex items-center gap-1.5 cursor-pointer text-slate-700 font-semibold">
                       <input
+                        id={`same-dept-${idx}`}
+                        name={`sameDept_${idx}`}
                         type="checkbox"
                         checked={isSameDept}
                         onChange={(e) => handleToggleSameDept(idx, e.target.checked)}
@@ -355,10 +365,12 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
                 {/* College & Department Inputs */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-[#002b66] uppercase tracking-wider">
+                    <label htmlFor={`member-col-${idx}`} className="text-xs font-bold text-[#002b66] uppercase tracking-wider">
                       College *
                     </label>
                     <input
+                      id={`member-col-${idx}`}
+                      name={`memberCol_${idx}`}
                       type="text"
                       required
                       value={member.collegeName}
@@ -369,10 +381,12 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-[#002b66] uppercase tracking-wider">
+                    <label htmlFor={`member-dept-${idx}`} className="text-xs font-bold text-[#002b66] uppercase tracking-wider">
                       Department *
                     </label>
                     <input
+                      id={`member-dept-${idx}`}
+                      name={`memberDept_${idx}`}
                       type="text"
                       required
                       value={member.department}

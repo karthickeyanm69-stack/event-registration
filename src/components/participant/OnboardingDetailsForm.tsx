@@ -280,11 +280,13 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Full Name */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
+              <label htmlFor="onboarding-name" className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
                 <User className="w-3.5 h-3.5 text-[#0077c8]" />
                 <span>Full Name (As per College ID) <span className="text-rose-500">*</span></span>
               </label>
               <input
+                id="onboarding-name"
+                name="fullName"
                 type="text"
                 required
                 value={name}
@@ -297,11 +299,13 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
             {/* Roll Number & Date of Birth (Grid) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
+                <label htmlFor="onboarding-roll" className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
                   <CreditCard className="w-3.5 h-3.5 text-[#0077c8]" />
                   <span>Roll / Register No <span className="text-rose-500">*</span></span>
                 </label>
                 <input
+                  id="onboarding-roll"
+                  name="rollNumber"
                   type="text"
                   required
                   value={rollNumber}
@@ -351,11 +355,13 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
             {/* Email & Phone */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
+                <label htmlFor="onboarding-email" className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
                   <Mail className="w-3.5 h-3.5 text-[#0077c8]" />
                   <span>Email Address <span className="text-rose-500">*</span></span>
                 </label>
                 <input
+                  id="onboarding-email"
+                  name="email"
                   type="email"
                   required
                   value={email}
@@ -366,11 +372,13 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
+                <label htmlFor="onboarding-phone" className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
                   <Phone className="w-3.5 h-3.5 text-[#0077c8]" />
                   <span>Phone / WhatsApp</span>
                 </label>
                 <input
+                  id="onboarding-phone"
+                  name="phone"
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}

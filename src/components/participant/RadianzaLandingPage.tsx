@@ -568,24 +568,24 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               <section id="hero" className="relative w-full overflow-hidden bg-gradient-to-b from-[#e3f0fc] via-[#edf6fe] to-[#f4faff]">
                 
                 {/* ─── MOBILE VIEW: EXACT PIXEL-PERFECT REFERENCE MATCH (< lg) ─── */}
-                <div className="lg:hidden relative w-full h-[calc(100dvh-4.25rem)] min-h-[560px] max-h-[840px] flex flex-col justify-between p-5 sm:p-6 pb-6 select-none overflow-hidden">
+                <div className="lg:hidden relative w-full h-[calc(100dvh-4.25rem)] min-h-[560px] max-h-[840px] flex flex-col justify-between p-5 sm:p-6 pb-6 select-none overflow-hidden touch-none">
                   {/* Subtle Background Glow Elements */}
                   <div className="absolute top-1/4 right-0 w-72 h-72 rounded-full bg-cyan-200/30 blur-3xl pointer-events-none" />
                   <div className="absolute bottom-1/3 left-0 w-60 h-60 rounded-full bg-indigo-200/25 blur-3xl pointer-events-none" />
 
-                  {/* Background 3D Cyber Scene (Head anchored on right side, aligned with forehead height) */}
-                  <div className="absolute inset-0 z-0 pointer-events-auto">
+                  {/* Background 3D Cyber Scene (Full Touch Interaction Enabled) */}
+                  <div className="absolute inset-0 z-0 touch-none">
                     <ThreeDCyberHeadCanvas onRegisterClick={onStartNewRegistration} />
                   </div>
 
-                  {/* Foreground Content: Arranged Line-by-Line starting straight from Forehead Level and spanning to Neck Level */}
-                  <div className="relative z-10 pt-20 sm:pt-24 pb-2 space-y-4 sm:space-y-5 max-w-[88%] sm:max-w-[72%] pointer-events-auto">
+                  {/* Foreground Content: Free floating text with pointer-events-none on backdrop and pointer-events-auto on buttons */}
+                  <div className="relative z-10 pt-20 sm:pt-24 pb-2 space-y-4 sm:space-y-5 max-w-[88%] sm:max-w-[72%] pointer-events-none">
                     {/* Line 1: SPIHER PRESENTS Badge */}
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md shadow-xs border border-[#d4e8f5] text-[#0077c8]"
+                      className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md shadow-xs border border-[#d4e8f5] text-[#0077c8] pointer-events-auto"
                     >
                       <SpiherStarburstLogo size={20} />
                       <span className="tracking-widest uppercase font-mono text-[10px] sm:text-[11px] font-bold text-[#002b66]">
@@ -598,7 +598,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       initial={{ opacity: 0, x: -18 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: 0.1 }}
-                      className="text-4xl sm:text-5xl font-serif font-black tracking-tight text-[#001f4d] leading-[1.05]"
+                      className="text-4xl sm:text-5xl font-serif font-black tracking-tight text-[#001f4d] leading-[1.05] pointer-events-none"
                     >
                       RADIANZA <span className="text-[#0077c8]">'26</span>
                     </motion.h1>
@@ -608,7 +608,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       initial={{ opacity: 0, x: -14 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: 0.15 }}
-                      className="text-[10.5px] sm:text-xs font-mono font-bold tracking-[0.2em] text-[#004080] uppercase"
+                      className="text-[10.5px] sm:text-xs font-mono font-bold tracking-[0.2em] text-[#004080] uppercase pointer-events-none"
                     >
                       NATIONAL-LEVEL TECHNICAL SYMPOSIUM
                     </motion.p>
@@ -618,7 +618,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: 0.2 }}
-                      className="text-xs sm:text-sm text-slate-600 font-medium italic"
+                      className="text-xs sm:text-sm text-slate-600 font-medium italic pointer-events-none"
                     >
                       "Igniting Ideas, Innovating Tomorrow"
                     </motion.p>
@@ -628,7 +628,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.25 }}
-                      className="flex flex-col sm:flex-row flex-wrap gap-2.5 pt-1"
+                      className="flex flex-col sm:flex-row flex-wrap gap-2.5 pt-1 pointer-events-auto"
                     >
                       <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-xs font-bold text-[#001f4d] w-fit">
                         <Calendar className="w-3.5 h-3.5 text-[#0077c8]" />
@@ -645,7 +645,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.5, delay: 0.3 }}
-                      className="pt-2 sm:pt-3"
+                      className="pt-2 sm:pt-3 pointer-events-auto"
                     >
                       <button
                         type="button"
@@ -659,7 +659,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   </div>
 
                   {/* Bottom Indicator Dots (Aligned with Bottom Container) */}
-                  <div className="relative z-10 flex items-center justify-center gap-2 pt-1 pb-1">
+                  <div className="relative z-10 flex items-center justify-center gap-2 pt-1 pb-1 pointer-events-none">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#002b66]"></span>
                     <span className="w-2 h-2 rounded-full bg-slate-300"></span>
                     <span className="w-2 h-2 rounded-full bg-slate-300"></span>
@@ -1989,10 +1989,12 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
 
               <form onSubmit={handlePassLookupSubmit} className="space-y-3.5">
                 <div className="space-y-1">
-                  <label className="block text-[11px] font-bold text-[#002b66] uppercase">
+                  <label htmlFor="access-roll-number" className="block text-[11px] font-bold text-[#002b66] uppercase">
                     Roll Number / Register Number
                   </label>
                   <input
+                    id="access-roll-number"
+                    name="accessRollNumber"
                     type="text"
                     required
                     value={accessRollNumber}

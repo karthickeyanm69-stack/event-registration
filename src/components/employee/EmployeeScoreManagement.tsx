@@ -113,12 +113,14 @@ export const EmployeeScoreManagement: React.FC<EmployeeScoreManagementProps> = (
     <div className="w-full max-w-2xl mx-auto space-y-5">
       {/* Registration Picker Card */}
       <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-md space-y-3">
-        <label className="text-xs font-bold text-[#002b66] flex items-center gap-2 uppercase tracking-wider">
+        <label htmlFor="eval-reg-select" className="text-xs font-bold text-[#002b66] flex items-center gap-2 uppercase tracking-wider">
           <Trophy className="w-4 h-4 text-teal-600" />
           <span>Select Participant / Team to Evaluate</span>
         </label>
 
         <select
+          id="eval-reg-select"
+          name="evaluationRegistration"
           value={selectedRegId}
           onChange={(e) => handleSelectRegistration(e.target.value)}
           className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-teal-600 focus:bg-white focus:outline-none"
@@ -167,10 +169,12 @@ export const EmployeeScoreManagement: React.FC<EmployeeScoreManagementProps> = (
 
           {/* Round Selector */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+            <label htmlFor="eval-round-input" className="text-xs font-bold text-slate-800 uppercase tracking-wider">
               Evaluation Round
             </label>
             <input
+              id="eval-round-input"
+              name="evaluationRound"
               type="text"
               value={round}
               onChange={(e) => setRound(e.target.value)}
@@ -195,6 +199,8 @@ export const EmployeeScoreManagement: React.FC<EmployeeScoreManagementProps> = (
                   <span className="font-bold text-slate-900 text-sm">{c.name}</span>
                   <div className="flex items-center gap-1.5 font-mono">
                     <input
+                      id={`criteria-num-${idx}`}
+                      name={`criteriaMarks_${idx}`}
                       type="number"
                       min={0}
                       max={c.maxMarks}
@@ -207,6 +213,8 @@ export const EmployeeScoreManagement: React.FC<EmployeeScoreManagementProps> = (
                 </div>
 
                 <input
+                  id={`criteria-range-${idx}`}
+                  name={`criteriaRange_${idx}`}
                   type="range"
                   min={0}
                   max={c.maxMarks}
@@ -220,10 +228,12 @@ export const EmployeeScoreManagement: React.FC<EmployeeScoreManagementProps> = (
 
           {/* Feedback Notes */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+            <label htmlFor="eval-feedback-input" className="text-xs font-bold text-slate-800 uppercase tracking-wider">
               Evaluator Feedback / Remarks
             </label>
             <textarea
+              id="eval-feedback-input"
+              name="evaluatorFeedback"
               rows={3}
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}

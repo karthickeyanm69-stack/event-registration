@@ -184,12 +184,14 @@ export const StaffConsoleLogin: React.FC<StaffConsoleLoginProps> = ({
 
           <div className="space-y-3">
             <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-[#002b66] uppercase tracking-wider">
+              <label htmlFor="staff-login-email" className="block text-xs font-bold text-[#002b66] uppercase tracking-wider">
                 Official Staff Email *
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
+                  id="staff-login-email"
+                  name="staffEmail"
                   type="email"
                   required
                   value={email}
@@ -201,12 +203,14 @@ export const StaffConsoleLogin: React.FC<StaffConsoleLoginProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-[#002b66] uppercase tracking-wider">
+              <label htmlFor="staff-login-password" className="block text-xs font-bold text-[#002b66] uppercase tracking-wider">
                 Password *
               </label>
               <div className="relative">
                 <Key className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
+                  id="staff-login-password"
+                  name="staffPassword"
                   type="password"
                   required
                   value={password}

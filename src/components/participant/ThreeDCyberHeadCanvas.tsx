@@ -17,6 +17,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
 
     const width = mount.clientWidth || 650;
     const height = mount.clientHeight || 560;
+    const isMobile = window.innerWidth < 1024;
 
     // 1. Scene, Camera & Renderer with Full Alpha Transparency
     const scene = new THREE.Scene();
@@ -59,10 +60,10 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
 
     // Resting Position: Anchored so only the front half of the head is visible in the viewport,
     // while the back of the skull extends off-screen to the right (exactly matching user reference image).
-    const RESTING_POS_X = 4.2; 
+    const RESTING_POS_X = 4.2;
     const RESTING_POS_Y = 0.1;
 
-    // Starts off-screen to the right (x: 14.0) for the initial slide-in entrance animation
+    // Starts off-screen to the right for initial entrance animation
     headGroup.position.set(14.0, RESTING_POS_Y, 0);
 
     // 4. Background Orbiting 3D Particle Cloud (Light Theme Cyber Dust)
@@ -135,7 +136,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
             const targetHeight = 11.5;
             const scaleFactor = targetHeight / maxDimension;
 
-            // Layer A: Semi-Translucent Ice-Glass Base Mesh (Light Theme Volume)
+            // Layer A: Semi-Translucent Ice-Glass Base Mesh
             const solidMat = new THREE.MeshStandardMaterial({
               color: 0xe6f4fb,
               roughness: 0.15,
@@ -147,7 +148,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
             solidMesh.scale.set(scaleFactor * 0.99, scaleFactor * 0.99, scaleFactor * 0.99);
             headGroup.add(solidMesh);
 
-            // Layer B: Vibrant Royal Blue Wireframe Grid (High Contrast on Light BG)
+            // Layer B: Vibrant Royal Blue Wireframe Grid
             const wireMat = new THREE.MeshBasicMaterial({
               color: 0x005fa3,
               wireframe: true,
@@ -178,7 +179,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       undefined,
       (error) => {
         console.warn('GLTF fallback active:', error);
-        const procGeo = new THREE.IcosahedronGeometry(5.2, 3);
+        const procGeo = new THREE.IcosahedronGeometry(4.8, 3);
         const procWireMat = new THREE.MeshBasicMaterial({ color: 0x005fa3, wireframe: true, transparent: true, opacity: 0.85 });
         const procMesh = new THREE.Mesh(procGeo, procWireMat);
         headGroup.add(procMesh);
@@ -192,63 +193,69 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       }
     );
 
-    // 7. Interactive Mouse Tracking & Drag Orbit Physics
+    // 7. Interactive Free Touch & Pointer 360° Physics with Inertia
     let targetRotationX = BASE_ROTATION_X;
     let targetRotationY = BASE_ROTATION_Y;
     let isDragging = false;
-    let prevMouseX = 0;
-    let prevMouseY = 0;
+    let prevPointerX = 0;
+    let prevPointerY = 0;
+    let velocityX = 0;
+    let velocityY = 0;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = mount.getBoundingClientRect();
-      const normX = (e.clientX - rect.left) / rect.width - 0.5;
-      const normY = (e.clientY - rect.top) / rect.height - 0.5;
+    const handlePointerDown = (e: PointerEvent) => {
+      isDragging = true;
+      prevPointerX = e.clientX;
+      prevPointerY = e.clientY;
+      velocityX = 0;
+      velocityY = 0;
+      try {
+        mount.setPointerCapture(e.pointerId);
+      } catch {}
+    };
 
-      if (!isDragging) {
+    const handlePointerMove = (e: PointerEvent) => {
+      if (isDragging) {
+        const deltaX = e.clientX - prevPointerX;
+        const deltaY = e.clientY - prevPointerY;
+
+        velocityX = deltaX * 0.009;
+        velocityY = deltaY * 0.007;
+
+        targetRotationY += velocityX;
+        targetRotationX += velocityY;
+
+        // Keep pitch within comfortable bounds so it doesn't flip upside down
+        targetRotationX = Math.max(-0.9, Math.min(0.9, targetRotationX));
+
+        prevPointerX = e.clientX;
+        prevPointerY = e.clientY;
+      } else if (e.pointerType === 'mouse') {
+        const rect = mount.getBoundingClientRect();
+        const normX = (e.clientX - rect.left) / rect.width - 0.5;
+        const normY = (e.clientY - rect.top) / rect.height - 0.5;
         targetRotationY = BASE_ROTATION_Y + normX * 0.45;
         targetRotationX = BASE_ROTATION_X - normY * 0.3;
-      } else {
-        const deltaX = e.clientX - prevMouseX;
-        const deltaY = e.clientY - prevMouseY;
-        targetRotationY += deltaX * 0.008;
-        targetRotationX += deltaY * 0.008;
-        prevMouseX = e.clientX;
-        prevMouseY = e.clientY;
       }
     };
 
-    const handleMouseDown = (e: MouseEvent) => {
-      isDragging = true;
-      prevMouseX = e.clientX;
-      prevMouseY = e.clientY;
-    };
-
-    const handleMouseUp = () => {
+    const handlePointerUp = (e: PointerEvent) => {
       isDragging = false;
+      try {
+        mount.releasePointerCapture(e.pointerId);
+      } catch {}
     };
 
-    const handleTouchStart = (e: TouchEvent) => {
-      if (e.touches.length === 1) {
-        isDragging = true;
-        prevMouseX = e.touches[0].clientX;
-        prevMouseY = e.touches[0].clientY;
-      }
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (isDragging && e.touches.length === 1) {
-        const deltaX = e.touches[0].clientX - prevMouseX;
-        const deltaY = e.touches[0].clientY - prevMouseY;
-        targetRotationY += deltaX * 0.01;
-        targetRotationX += deltaY * 0.01;
-        prevMouseX = e.touches[0].clientX;
-        prevMouseY = e.touches[0].clientY;
-      }
-    };
-
-    const handleTouchEnd = () => {
+    const handlePointerCancel = (e: PointerEvent) => {
       isDragging = false;
+      try {
+        mount.releasePointerCapture(e.pointerId);
+      } catch {}
     };
+
+    mount.addEventListener('pointerdown', handlePointerDown);
+    mount.addEventListener('pointermove', handlePointerMove);
+    mount.addEventListener('pointerup', handlePointerUp);
+    mount.addEventListener('pointercancel', handlePointerCancel);
 
     // 8. Scroll Tracking for Gentle Parallax Movement while scrolling
     let scrollY = window.scrollY || 0;
@@ -257,7 +264,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // 9. Animation Loop with Smooth Entrance Lerp & Gentle Scroll Parallax
+    // 9. Animation Loop with Smooth Entrance Lerp, Drag Inertia & Parallax
     let animationId: number;
     const startTime = performance.now();
 
@@ -265,19 +272,26 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       animationId = requestAnimationFrame(animate);
       const elapsedTime = (performance.now() - startTime) * 0.001;
 
-      // ── Smooth Entrance Animation: Slides from Right (x: 14.0) into Resting Position (x: 4.2) ──
+      // Smooth Entrance Animation
       headGroup.position.x += (RESTING_POS_X - headGroup.position.x) * 0.045;
+
+      // Inertia momentum coasting after release
+      if (!isDragging) {
+        velocityX *= 0.94;
+        velocityY *= 0.94;
+        targetRotationY += velocityX;
+        targetRotationX += velocityY;
+        targetRotationX = Math.max(-0.9, Math.min(0.9, targetRotationX));
+      }
 
       // Subtle breathing floating physics + gentle scroll parallax
       const scrollFactor = Math.min(scrollY / 700, 1.2);
-      const floatOffset = Math.sin(elapsedTime * 1.5) * 0.1;
+      const floatOffset = Math.sin(elapsedTime * 1.5) * 0.08;
       headGroup.position.y = (RESTING_POS_Y + floatOffset) - (scrollFactor * 0.8);
 
-      // Inertial smooth rotation lerp towards target with gentle scroll deflection
-      const effectiveTargetY = targetRotationY - (scrollFactor * 0.15);
-      const effectiveTargetX = targetRotationX - (scrollFactor * 0.1);
-      headGroup.rotation.y += (effectiveTargetY - headGroup.rotation.y) * 0.065;
-      headGroup.rotation.x += (effectiveTargetX - headGroup.rotation.x) * 0.065;
+      // Inertial smooth rotation lerp towards target
+      headGroup.rotation.y += (targetRotationY - headGroup.rotation.y) * 0.08;
+      headGroup.rotation.x += (targetRotationX - headGroup.rotation.x) * 0.08;
 
       // Particle field drift
       backgroundParticles.rotation.y = elapsedTime * 0.035;
@@ -305,13 +319,11 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
+      mount.removeEventListener('pointerdown', handlePointerDown);
+      mount.removeEventListener('pointermove', handlePointerMove);
+      mount.removeEventListener('pointerup', handlePointerUp);
+      mount.removeEventListener('pointercancel', handlePointerCancel);
       window.removeEventListener('scroll', handleScroll);
-      mount.removeEventListener('mousedown', handleMouseDown);
-      mount.removeEventListener('touchstart', handleTouchStart);
-      mount.removeEventListener('touchmove', handleTouchMove);
-      mount.removeEventListener('touchend', handleTouchEnd);
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationId);
       if (mount.contains(renderer.domElement)) {
@@ -322,15 +334,16 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
   }, []);
 
   return (
-    <div className="relative w-full h-full min-h-[480px] sm:min-h-[580px] flex items-center justify-center select-none overflow-visible">
-      {/* Three.js 3D WebGL Canvas (Free Floating, Zero Rings/Borders) */}
+    <div className="relative w-full h-full min-h-[480px] sm:min-h-[580px] flex items-center justify-center select-none overflow-visible touch-none">
+      {/* Three.js 3D WebGL Canvas (Free Floating, Zero Box/Clipping) */}
       <div
         ref={mountRef}
-        className="w-full h-full min-h-[480px] sm:min-h-[580px] flex items-center justify-center cursor-grab active:cursor-grabbing"
+        className="w-full h-full min-h-[480px] sm:min-h-[580px] flex items-center justify-center cursor-grab active:cursor-grabbing touch-none"
+        style={{ touchAction: 'none' }}
       />
 
-      {/* Floating 3D Telemetry HUD Badges (Positioned near forehead matching reference image) */}
-      <div className="absolute top-6 right-8 sm:right-16 flex flex-col items-end gap-1.5 pointer-events-none">
+      {/* Floating 3D Telemetry HUD Badges */}
+      <div className="absolute top-6 right-6 sm:right-14 flex flex-col items-end gap-1.5 pointer-events-none z-10">
         <span className="px-3 py-1 rounded-xl bg-white/85 backdrop-blur-md border border-[#0077c8]/30 text-[#002b66] font-mono text-[11px] font-bold tracking-wider shadow-sm">
           1.00011 // 0.39
         </span>
@@ -339,10 +352,10 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
         </span>
       </div>
 
-      {/* Interactive 3D Orbit Drag Hint */}
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-[10px] font-mono font-bold text-[#002b66] pointer-events-none">
+      {/* Interactive 3D Orbit Drag / Touch Hint */}
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-[10px] font-mono font-bold text-[#002b66] pointer-events-none z-10 whitespace-nowrap">
         <Move3d className="w-3.5 h-3.5 text-[#0077c8]" />
-        <span>Drag to rotate 3D Head 360°</span>
+        <span>Touch & drag to rotate 3D Head 360°</span>
       </div>
     </div>
   );

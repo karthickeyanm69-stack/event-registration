@@ -221,12 +221,14 @@ export const ParticipantAccess: React.FC<ParticipantAccessProps> = ({
               <div className="space-y-3.5">
                 {/* Roll Number Input */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-bold text-[#002b66] uppercase tracking-wider">
+                  <label htmlFor="participant-login-roll" className="block text-xs font-bold text-[#002b66] uppercase tracking-wider">
                     Roll Number / Register Number <span className="text-rose-500">*</span>
                   </label>
                   <div className="relative">
                     <CreditCard className="w-4 h-4 text-[#0077c8] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
+                      id="participant-login-roll"
+                      name="rollNumber"
                       type="text"
                       required
                       value={rollNumber}

@@ -158,11 +158,11 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   return (
     <div className={`relative w-full space-y-1 ${className}`} ref={containerRef}>
       {label && (
-        <label className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
+        <div className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
           {icon || <CalendarIcon className="w-3.5 h-3.5 text-[#0077c8]" />}
           <span>{label}</span>
           {required && <span className="text-rose-500">*</span>}
-        </label>
+        </div>
       )}
 
       {/* Trigger Box */}

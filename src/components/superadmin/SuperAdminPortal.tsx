@@ -683,8 +683,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                   {/* Row 1: Title, Category, Tagline */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Competition Title *</label>
+                      <label htmlFor="new-event-title" className="font-semibold text-slate-700">Competition Title *</label>
                       <input
+                        id="new-event-title"
+                        name="eventTitle"
                         type="text"
                         required
                         value={newEventTitle}
@@ -695,8 +697,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Category *</label>
+                      <label htmlFor="new-event-category" className="font-semibold text-slate-700">Category *</label>
                       <select
+                        id="new-event-category"
+                        name="eventCategory"
                         value={newEventCategory}
                         onChange={(e) => setNewEventCategory(e.target.value as EventCategory)}
                         className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-bold focus:border-[#0077c8] focus:outline-none"
@@ -707,8 +711,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Tagline / Short Subtitle</label>
+                      <label htmlFor="new-event-tagline" className="font-semibold text-slate-700">Tagline / Short Subtitle</label>
                       <input
+                        id="new-event-tagline"
+                        name="eventTagline"
                         type="text"
                         value={newEventTagline}
                         onChange={(e) => setNewEventTagline(e.target.value)}
@@ -721,8 +727,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                   {/* Row 2: Venue, Time, Slots, Participation */}
                   <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Venue Location *</label>
+                      <label htmlFor="new-event-venue" className="font-semibold text-slate-700">Venue Location *</label>
                       <input
+                        id="new-event-venue"
+                        name="eventVenue"
                         type="text"
                         required
                         value={newEventVenue}
@@ -733,8 +741,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Time &amp; Schedule *</label>
+                      <label htmlFor="new-event-time" className="font-semibold text-slate-700">Time &amp; Schedule *</label>
                       <input
+                        id="new-event-time"
+                        name="eventTime"
                         type="text"
                         required
                         value={newEventTime}
@@ -745,8 +755,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Total Capacity Slots *</label>
+                      <label htmlFor="new-event-slots" className="font-semibold text-slate-700">Total Capacity Slots *</label>
                       <input
+                        id="new-event-slots"
+                        name="eventSlots"
                         type="number"
                         min={5}
                         max={300}
@@ -758,8 +770,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Participation Type</label>
+                      <label htmlFor="new-event-is-team" className="font-semibold text-slate-700">Participation Type</label>
                       <select
+                        id="new-event-is-team"
+                        name="eventParticipationType"
                         value={newEventIsTeam ? 'TEAM' : 'SOLO'}
                         onChange={(e) => setNewEventIsTeam(e.target.value === 'TEAM')}
                         className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-bold focus:border-[#0077c8] focus:outline-none"
@@ -774,8 +788,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                   {newEventIsTeam && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs p-3 rounded-2xl bg-[#e8f5fb] border border-[#d4e8f5]">
                       <div className="space-y-1">
-                        <label className="font-semibold text-[#002b66]">Minimum Team Size</label>
+                        <label htmlFor="new-event-min-team" className="font-semibold text-[#002b66]">Minimum Team Size</label>
                         <input
+                          id="new-event-min-team"
+                          name="eventMinTeam"
                           type="number"
                           min={1}
                           max={10}
@@ -785,8 +801,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                         />
                       </div>
                       <div className="space-y-1">
-                        <label className="font-semibold text-[#002b66]">Maximum Team Size</label>
+                        <label htmlFor="new-event-max-team" className="font-semibold text-[#002b66]">Maximum Team Size</label>
                         <input
+                          id="new-event-max-team"
+                          name="eventMaxTeam"
                           type="number"
                           min={newEventMinTeam}
                           max={10}
@@ -800,12 +818,14 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
 
                   {/* Row 3: Event Banner Image URL & File Upload */}
                   <div className="space-y-2 text-xs">
-                    <label className="font-semibold text-slate-700 flex items-center justify-between">
+                    <label htmlFor="new-event-image-url" className="font-semibold text-slate-700 flex items-center justify-between">
                       <span>Event Banner Image</span>
                       <span className="text-[11px] text-slate-400 font-normal">Upload from device, paste URL, or pick preset</span>
                     </label>
                     <div className="flex gap-3 items-center">
                       <input
+                        id="new-event-image-url"
+                        name="eventImageUrl"
                         type="text"
                         value={newEventImageUrl}
                         onChange={(e) => setNewEventImageUrl(e.target.value)}
@@ -814,10 +834,12 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                       />
 
                       {/* Browse / File Upload Button */}
-                      <label className="px-3.5 py-2.5 rounded-xl bg-[#f0f8fc] hover:bg-[#e0f2fe] border border-[#0077c8]/30 text-[#002b66] font-bold text-xs cursor-pointer transition-colors shrink-0 flex items-center gap-1.5 shadow-2xs">
+                      <label htmlFor="event-banner-file-input" className="px-3.5 py-2.5 rounded-xl bg-[#f0f8fc] hover:bg-[#e0f2fe] border border-[#0077c8]/30 text-[#002b66] font-bold text-xs cursor-pointer transition-colors shrink-0 flex items-center gap-1.5 shadow-2xs">
                         <Upload className="w-3.5 h-3.5 text-[#0077c8]" />
                         <span>Upload File</span>
                         <input
+                          id="event-banner-file-input"
+                          name="eventBannerFile"
                           type="file"
                           accept="image/*"
                           className="hidden"
@@ -835,45 +857,52 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                           }}
                         />
                       </label>
-
-                      {/* Image Preview Box */}
-                      <div className="w-12 h-10 rounded-xl overflow-hidden bg-slate-200 shrink-0 border border-slate-300 shadow-2xs">
-                        <img src={newEventImageUrl} alt="Preview" className="w-full h-full object-cover" />
-                      </div>
                     </div>
 
-                    {/* Quick Image Presets */}
-                    <div className="flex flex-wrap gap-1.5 pt-1">
-                      <span className="text-[11px] text-slate-500 font-medium py-1">Quick Presets:</span>
-                      {[
-                        { label: '💻 Coding', url: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80' },
-                        { label: '🤖 Robotics', url: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80' },
-                        { label: '✨ AI / Prompt', url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80' },
-                        { label: '🎨 UI / Web', url: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80' },
-                        { label: '📄 Paper Pres.', url: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=800&q=80' },
-                        { label: '📷 Photography', url: 'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&w=800&q=80' },
-                        { label: '🎮 Gaming', url: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=800&q=80' },
-                        { label: '🎵 Music / Cultural', url: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80' },
-                      ].map((preset) => (
-                        <button
-                          key={preset.label}
-                          type="button"
-                          onClick={() => setNewEventImageUrl(preset.url)}
-                          className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold transition-colors cursor-pointer"
-                        >
-                          {preset.label}
-                        </button>
-                      ))}
+                    {/* Presets & Live Preview */}
+                    <div className="space-y-1.5 pt-1">
+                      <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+                        Quick Preset Posters:
+                      </span>
+                      <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
+                        {PRESET_EVENT_IMAGES.map((preset, pIdx) => {
+                          const isSelected = newEventImageUrl === preset.url;
+                          return (
+                            <button
+                              key={pIdx}
+                              type="button"
+                              onClick={() => setNewEventImageUrl(preset.url)}
+                              className={`relative rounded-xl overflow-hidden aspect-video border-2 transition-all group ${
+                                isSelected
+                                  ? 'border-[#0077c8] ring-2 ring-[#0077c8]/30 scale-105'
+                                  : 'border-slate-200 hover:border-slate-400 opacity-75 hover:opacity-100'
+                              }`}
+                              title={preset.name}
+                            >
+                              <img
+                                src={preset.url}
+                                alt={preset.name}
+                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                              />
+                              <div className="absolute inset-x-0 bottom-0 bg-black/60 backdrop-blur-xs py-0.5 px-1 text-[9px] font-bold text-white truncate text-center">
+                                {preset.name}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
 
                   {/* Row 4: Rules & Guidelines */}
                   <div className="space-y-1.5 text-xs">
-                    <label className="font-semibold text-slate-700 flex items-center justify-between">
+                    <label htmlFor="new-event-rules" className="font-semibold text-slate-700 flex items-center justify-between">
                       <span>Event Rules &amp; Evaluation Guidelines *</span>
                       <span className="text-[11px] text-slate-400 font-normal">Enter each rule on a new line</span>
                     </label>
                     <textarea
+                      id="new-event-rules"
+                      name="eventRules"
                       rows={4}
                       required
                       value={newEventRulesText}
@@ -886,8 +915,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                   {/* Row 5: Faculty Coordinator Details */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs pt-2 border-t border-slate-200">
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Faculty Coordinator Name</label>
+                      <label htmlFor="new-event-coord-name" className="font-semibold text-slate-700">Faculty Coordinator Name</label>
                       <input
+                        id="new-event-coord-name"
+                        name="coordinatorName"
                         type="text"
                         value={newEventCoordName}
                         onChange={(e) => setNewEventCoordName(e.target.value)}
@@ -897,8 +928,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Contact Phone</label>
+                      <label htmlFor="new-event-coord-phone" className="font-semibold text-slate-700">Contact Phone</label>
                       <input
+                        id="new-event-coord-phone"
+                        name="coordinatorPhone"
                         type="text"
                         value={newEventCoordPhone}
                         onChange={(e) => setNewEventCoordPhone(e.target.value)}
@@ -908,8 +941,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Email Address</label>
+                      <label htmlFor="new-event-coord-email" className="font-semibold text-slate-700">Email Address</label>
                       <input
+                        id="new-event-coord-email"
+                        name="coordinatorEmail"
                         type="email"
                         value={newEventCoordEmail}
                         onChange={(e) => setNewEventCoordEmail(e.target.value)}
@@ -1075,8 +1110,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Admin Full Name *</label>
+                      <label htmlFor="admin-full-name" className="font-semibold text-slate-700">Admin Full Name *</label>
                       <input
+                        id="admin-full-name"
+                        name="adminName"
                         type="text"
                         required
                         value={adminName}
@@ -1087,8 +1124,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Official Staff Email *</label>
+                      <label htmlFor="admin-staff-email" className="font-semibold text-slate-700">Official Staff Email *</label>
                       <input
+                        id="admin-staff-email"
+                        name="adminEmail"
                         type="email"
                         required
                         value={adminEmail}
@@ -1100,7 +1139,7 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
 
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <label className="font-semibold text-slate-700">Password / Access Pass *</label>
+                        <label htmlFor="admin-password-input" className="font-semibold text-slate-700">Password / Access Pass *</label>
                         <button
                           type="button"
                           onClick={handleGenerateAdminPassword}
@@ -1112,6 +1151,8 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                       <div className="relative">
                         <Key className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
+                          id="admin-password-input"
+                          name="adminPassword"
                           type="text"
                           required
                           value={adminPassword}
@@ -1123,8 +1164,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Department</label>
+                      <label htmlFor="admin-dept-input" className="font-semibold text-slate-700">Department</label>
                       <input
+                        id="admin-dept-input"
+                        name="adminDept"
                         type="text"
                         value={adminDept}
                         onChange={(e) => setAdminDept(e.target.value)}
@@ -1135,9 +1178,9 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
 
                   <div className="space-y-2 text-xs">
                     <div className="flex items-center justify-between">
-                      <label className="font-semibold text-slate-700">
+                      <div className="font-semibold text-slate-700">
                         Assign Permitted Competitions to Admin:
-                      </label>
+                      </div>
                       <div className="flex items-center gap-2 text-[11px]">
                         <button
                           type="button"
@@ -1163,11 +1206,14 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                         return (
                           <label
                             key={evt.id}
+                            htmlFor={`admin-assign-evt-${evt.id}`}
                             className={`p-3 rounded-2xl border cursor-pointer flex items-center gap-2.5 text-xs transition-colors ${
                               isChecked ? 'bg-teal-50 border-teal-600 text-teal-900 font-bold' : 'border-slate-200 bg-slate-50 text-slate-700'
                             }`}
                           >
                             <input
+                              id={`admin-assign-evt-${evt.id}`}
+                              name={`adminAssignedEvent_${evt.id}`}
                               type="checkbox"
                               checked={isChecked}
                               onChange={(e) => {
@@ -1757,6 +1803,8 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                       <p className="text-[11px] text-slate-500">Enable or freeze new registrations</p>
                     </div>
                     <input
+                      id="settings-reg-open"
+                      name="isRegistrationOpen"
                       type="checkbox"
                       checked={localSettings.isRegistrationOpen}
                       onChange={(e) =>
@@ -1772,6 +1820,8 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                       <p className="text-[11px] text-slate-500">Permit 1-event switch in dashboard</p>
                     </div>
                     <input
+                      id="settings-allow-event-change"
+                      name="allowEventChange"
                       type="checkbox"
                       checked={localSettings.allowEventChange}
                       onChange={(e) =>
@@ -1784,8 +1834,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="font-semibold text-slate-700">College Name</label>
+                    <label htmlFor="settings-college-name" className="font-semibold text-slate-700">College Name</label>
                     <input
+                      id="settings-college-name"
+                      name="collegeName"
                       type="text"
                       value={localSettings.collegeName}
                       onChange={(e) => setLocalSettings({ ...localSettings, collegeName: e.target.value })}
@@ -1794,8 +1846,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="font-semibold text-slate-700">Symposium Name</label>
+                    <label htmlFor="settings-symposium-name" className="font-semibold text-slate-700">Symposium Name</label>
                     <input
+                      id="settings-symposium-name"
+                      name="symposiumName"
                       type="text"
                       value={localSettings.symposiumName}
                       onChange={(e) => setLocalSettings({ ...localSettings, symposiumName: e.target.value })}

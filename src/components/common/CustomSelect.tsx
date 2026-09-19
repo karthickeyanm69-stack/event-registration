@@ -72,10 +72,10 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
   return (
     <div className={`relative w-full space-y-1 ${className}`} ref={containerRef}>
       {label && (
-        <label className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
+        <div className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
           {icon}
           <span>{label}</span>
-        </label>
+        </div>
       )}
 
       {/* Trigger Button */}
@@ -116,6 +116,8 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
                 <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 pointer-events-none" />
                 <input
                   ref={searchInputRef}
+                  id="custom-select-search-query"
+                  name="customSelectSearch"
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}

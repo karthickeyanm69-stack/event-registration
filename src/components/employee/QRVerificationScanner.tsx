@@ -370,7 +370,7 @@ export const QRVerificationScanner: React.FC<QRVerificationScannerProps> = ({
 
         {/* Selected Event Context Pill */}
         <div className="space-y-1.5">
-          <label className="text-xs font-bold text-[#002b66] flex items-center justify-between">
+          <label htmlFor="stationed-venue-select" className="text-xs font-bold text-[#002b66] flex items-center justify-between">
             <span>Stationed Competition Venue:</span>
             {selectedEventId !== 'ALL' && (
               <span className="text-[10px] font-mono text-[#0077c8] font-bold">
@@ -380,6 +380,8 @@ export const QRVerificationScanner: React.FC<QRVerificationScannerProps> = ({
           </label>
           <div className="relative">
             <select
+              id="stationed-venue-select"
+              name="stationedVenue"
               value={selectedEventId}
               disabled={currentStep !== 'SCANNING'}
               onChange={(e) => setSelectedEventId(e.target.value)}
@@ -501,12 +503,14 @@ export const QRVerificationScanner: React.FC<QRVerificationScannerProps> = ({
 
           {/* Manual Pass ID or Roll Number Verification */}
           <div className="space-y-2 pt-2 border-t border-[#e8f5fb]">
-            <label className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
+            <label htmlFor="manual-token-input" className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
               <Search className="w-3.5 h-3.5 text-[#0077c8]" />
               <span>Or Enter Pass ID / Student Roll Number:</span>
             </label>
             <div className="flex gap-2">
               <input
+                id="manual-token-input"
+                name="manualToken"
                 type="text"
                 value={manualToken}
                 onChange={(e) => setManualToken(e.target.value)}
