@@ -378,77 +378,112 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               <ArrowRight className="w-3.5 h-3.5 text-[#7af1fc]" />
             </button>
 
-            {/* Mobile Clean Hamburger Button (Matching Reference) */}
+            {/* Mobile Clean Hamburger Button (Exact Match to Reference Image 1) */}
             <button
               type="button"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden w-10 h-10 rounded-lg border-2 border-[#d97706] hover:border-[#b45309] flex items-center justify-center text-slate-800 transition-colors cursor-pointer bg-white active:scale-95"
-              aria-label="Toggle Navigation"
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="lg:hidden w-10 h-10 rounded-lg border-2 border-[#d97706] hover:border-[#b45309] flex flex-col items-center justify-center gap-[5px] p-2 bg-white transition-all cursor-pointer active:scale-95 shadow-xs"
+              aria-label="Open Navigation Menu"
             >
-              {isMobileMenuOpen ? (
-                <X className="w-5 h-5 text-slate-800" />
-              ) : (
-                <Menu className="w-5 h-5 text-slate-800" />
-              )}
+              <span className="w-5 h-[2px] bg-slate-800 rounded-full block"></span>
+              <span className="w-5 h-[2px] bg-slate-800 rounded-full block"></span>
+              <span className="w-5 h-[2px] bg-slate-800 rounded-full block"></span>
             </button>
           </div>
         </div>
 
-        {/* Mobile Slide-down Menu Drawer (Clean list matching Reference 2) */}
+        {/* Full Right-Side Slide-Over Drawer (Exact Match to Reference Image 2) */}
         <AnimatePresence>
           {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25, ease: 'easeInOut' }}
-              className="lg:hidden border-b border-slate-200 bg-white px-6 py-6 space-y-6 shadow-2xl"
-            >
-              {/* Clean Nav Links List with subtle horizontal divider lines */}
-              <nav className="flex flex-col divide-y divide-slate-100">
-                {PAGES.map((page) => {
-                  const isActive = activePage === page.id;
-                  return (
+            <div className="fixed inset-0 z-50 lg:hidden flex justify-end">
+              {/* Dimmed Blurred Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="fixed inset-0 bg-black/45 backdrop-blur-xs"
+              />
+
+              {/* White Right Slide-Over Panel */}
+              <motion.div
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', damping: 26, stiffness: 260 }}
+                className="relative z-10 w-[84%] max-w-[340px] h-full bg-white shadow-2xl flex flex-col justify-between p-6 overflow-y-auto"
+              >
+                <div>
+                  {/* Top Header Row with Logo & Gold Close Button */}
+                  <div className="flex items-center justify-between pb-5 border-b border-slate-100">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#002b66] to-[#0077c8] flex items-center justify-center p-1.5 shadow-xs">
+                        <CollegeEmblem size={22} />
+                      </div>
+                      <span className="font-serif font-black text-lg tracking-tight text-[#001f4d]">
+                        RADIANZA <span className="text-[#0077c8]">'26</span>
+                      </span>
+                    </div>
+
+                    {/* Gold Bordered Close Button (Matching Reference Image 2) */}
                     <button
-                      key={page.id}
-                      onClick={() => navigateToPage(page.id)}
-                      className={`py-4 text-left text-base font-bold transition-colors flex items-center justify-between cursor-pointer ${
-                        isActive ? 'text-[#002b66] font-extrabold' : 'text-slate-800 hover:text-[#0077c8]'
-                      }`}
+                      type="button"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="w-9 h-9 rounded-lg border-2 border-[#d97706] hover:border-[#b45309] flex items-center justify-center text-slate-800 bg-white transition-all active:scale-95 cursor-pointer shadow-xs"
+                      aria-label="Close Navigation Menu"
                     >
-                      <span>{page.navLabel}</span>
-                      {isActive && <div className="w-2 h-2 rounded-full bg-[#0077c8]" />}
+                      <X className="w-5 h-5 text-slate-800 stroke-[2.2]" />
                     </button>
-                  );
-                })}
-              </nav>
+                  </div>
 
-              {/* Bottom Big CTA Button (Matching Reference 2 Bottom CTA) */}
-              <div className="pt-2 space-y-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    onStartNewRegistration();
-                  }}
-                  className="w-full py-3.5 px-6 rounded-full bg-gradient-to-r from-[#001f4d] via-[#002b66] to-[#0077c8] hover:from-[#001433] hover:to-[#005fa3] text-white font-bold text-sm tracking-wider uppercase shadow-lg shadow-[#002b66]/25 flex items-center justify-center gap-2 cursor-pointer active:scale-95 transition-transform"
-                >
-                  <span>Register Now</span>
-                  <ArrowRight className="w-4 h-4 text-[#7af1fc]" />
-                </button>
+                  {/* Clean Nav Links List with Divider Lines */}
+                  <nav className="flex flex-col mt-3 divide-y divide-slate-100">
+                    {PAGES.map((page) => {
+                      const isActive = activePage === page.id;
+                      return (
+                        <button
+                          key={page.id}
+                          onClick={() => navigateToPage(page.id)}
+                          className={`py-4 text-left text-base transition-colors flex items-center justify-between cursor-pointer ${
+                            isActive ? 'text-[#002b66] font-bold' : 'text-slate-800 font-medium hover:text-[#0077c8]'
+                          }`}
+                        >
+                          <span>{page.navLabel}</span>
+                          {isActive && <div className="w-2 h-2 rounded-full bg-[#0077c8]" />}
+                        </button>
+                      );
+                    })}
+                  </nav>
+                </div>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    setIsPassModalOpen(true);
-                  }}
-                  className="w-full py-2.5 px-4 text-center text-xs font-bold text-slate-600 hover:text-[#0077c8] transition-colors"
-                >
-                  Access Existing Pass →
-                </button>
-              </div>
-            </motion.div>
+                {/* Bottom Big CTA Button (Matching Reference Image 2 Bottom Pill) */}
+                <div className="pt-6 pb-2 space-y-3 border-t border-slate-100">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      onStartNewRegistration();
+                    }}
+                    className="w-full py-3.5 px-6 rounded-full bg-[#e11d48] hover:bg-[#be123c] active:bg-[#9f1239] text-white font-bold text-xs tracking-widest uppercase shadow-lg shadow-rose-600/25 flex items-center justify-center gap-2 cursor-pointer active:scale-95 transition-transform"
+                  >
+                    <span>Register Now</span>
+                    <ArrowRight className="w-4 h-4 text-white" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      setIsPassModalOpen(true);
+                    }}
+                    className="w-full py-2 text-center text-xs font-bold text-slate-500 hover:text-[#002b66] transition-colors"
+                  >
+                    Access Existing Pass →
+                  </button>
+                </div>
+              </motion.div>
+            </div>
           )}
         </AnimatePresence>
       </header>
