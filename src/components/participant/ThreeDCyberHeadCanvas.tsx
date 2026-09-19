@@ -64,8 +64,8 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     scene.add(headGroup);
 
     // Resting Position: Positioned on the right half, filling top-to-bottom gracefully
-    const RESTING_POS_X = isMobile ? 2.5 : 3.8; 
-    const RESTING_POS_Y = isMobile ? 0.0 : 0.05;
+    const RESTING_POS_X = isMobile ? 2.4 : 3.8; 
+    const RESTING_POS_Y = isMobile ? -0.75 : -0.2;
 
     // Starts off-screen for entrance animation
     headGroup.position.set(isMobile ? 7.0 : 14.0, RESTING_POS_Y, 0);
@@ -138,10 +138,10 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
             const visibleFrustumHeight = 2 * Math.tan(vFOV / 2) * camera.position.z;
             const visibleFrustumWidth = visibleFrustumHeight * camera.aspect;
 
-            // Target height: prominent, large and unclipped
+            // Target height: prominent, large and filling vertical space
             const targetHeight = isMobile
-              ? Math.min(visibleFrustumHeight * 0.88, visibleFrustumWidth * 1.1, 11.5)
-              : Math.min(visibleFrustumHeight * 0.78, 10.5);
+              ? Math.min(visibleFrustumHeight * 0.96, visibleFrustumWidth * 1.3, 13.0)
+              : Math.min(visibleFrustumHeight * 0.84, 11.2);
             const scaleFactor = targetHeight / maxDimension;
 
             // Layer A: Semi-Translucent Ice-Glass Base Mesh (Light Theme Porcelain Cyan)

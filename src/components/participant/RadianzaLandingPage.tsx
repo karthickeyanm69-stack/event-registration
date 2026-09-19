@@ -554,14 +554,14 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     <ThreeDCyberHeadCanvas onRegisterClick={onStartNewRegistration} />
                   </div>
 
-                  {/* Foreground Content: Arranged Line-by-Line starting straight from Forehead Level */}
-                  <div className="relative z-10 pt-16 sm:pt-20 space-y-3 sm:space-y-3.5 max-w-[85%] sm:max-w-[70%] pointer-events-auto">
+                  {/* Foreground Content: Arranged Line-by-Line starting straight from Forehead Level and spanning to Neck Level */}
+                  <div className="relative z-10 pt-20 sm:pt-24 pb-2 space-y-4 sm:space-y-5 max-w-[88%] sm:max-w-[72%] pointer-events-auto">
                     {/* Line 1: SPIHER PRESENTS Badge */}
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-md shadow-xs border border-[#d4e8f5] text-[#0077c8]"
+                      className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md shadow-xs border border-[#d4e8f5] text-[#0077c8]"
                     >
                       <SpiherStarburstLogo size={20} />
                       <span className="tracking-widest uppercase font-mono text-[10px] sm:text-[11px] font-bold text-[#002b66]">
@@ -584,7 +584,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       initial={{ opacity: 0, x: -14 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: 0.15 }}
-                      className="text-[10px] sm:text-xs font-mono font-bold tracking-[0.18em] text-[#004080] uppercase"
+                      className="text-[10.5px] sm:text-xs font-mono font-bold tracking-[0.2em] text-[#004080] uppercase"
                     >
                       NATIONAL-LEVEL TECHNICAL SYMPOSIUM
                     </motion.p>
@@ -604,39 +604,39 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.25 }}
-                      className="flex flex-col sm:flex-row flex-wrap gap-2 pt-1"
+                      className="flex flex-col sm:flex-row flex-wrap gap-2.5 pt-1"
                     >
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-xs font-bold text-[#001f4d] w-fit">
+                      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-xs font-bold text-[#001f4d] w-fit">
                         <Calendar className="w-3.5 h-3.5 text-[#0077c8]" />
                         <span>15 - 16 OCT 2026</span>
                       </div>
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-xs font-medium text-slate-700 w-fit">
+                      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-xs font-medium text-slate-700 w-fit">
                         <MapPin className="w-3.5 h-3.5 text-[#00a887]" />
                         <span>SPIHER Campus, Coimbatore</span>
                       </div>
                     </motion.div>
 
-                    {/* Line 6: Register Now CTA Button */}
+                    {/* Line 6: Register Now CTA Button (Aligned at the bottom neck level) */}
                     <motion.div
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.5, delay: 0.3 }}
-                      className="pt-2"
+                      className="pt-2 sm:pt-3"
                     >
                       <button
                         type="button"
                         onClick={onStartNewRegistration}
-                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-[#001f4d] via-[#002b66] to-[#0077c8] hover:from-[#001433] hover:to-[#005fa3] text-white font-bold text-xs sm:text-sm shadow-md shadow-[#002b66]/25 active:scale-95 transition-transform cursor-pointer"
+                        className="inline-flex items-center gap-2.5 px-7 py-3 rounded-full bg-gradient-to-r from-[#001f4d] via-[#002b66] to-[#0077c8] hover:from-[#001433] hover:to-[#005fa3] text-white font-bold text-xs sm:text-sm shadow-lg shadow-[#002b66]/25 active:scale-95 transition-transform cursor-pointer"
                       >
                         <span>Register Now</span>
-                        <ArrowRight className="w-3.5 h-3.5 text-[#7af1fc]" />
+                        <ArrowRight className="w-4 h-4 text-[#7af1fc]" />
                       </button>
                     </motion.div>
                   </div>
 
-                  {/* Bottom Indicator Dots (Clean subtle footer) */}
-                  <div className="relative z-10 flex items-center justify-center gap-2 pt-2">
-                    <span className="w-2 h-2 rounded-full bg-[#002b66]"></span>
+                  {/* Bottom Indicator Dots (Aligned with Bottom Container) */}
+                  <div className="relative z-10 flex items-center justify-center gap-2 pt-1 pb-1">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#002b66]"></span>
                     <span className="w-2 h-2 rounded-full bg-slate-300"></span>
                     <span className="w-2 h-2 rounded-full bg-slate-300"></span>
                     <span className="w-2 h-2 rounded-full bg-slate-300"></span>
