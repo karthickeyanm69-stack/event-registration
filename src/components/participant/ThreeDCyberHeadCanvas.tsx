@@ -16,13 +16,13 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     if (!mount) return;
 
     const width = mount.clientWidth || 400;
-    const height = mount.clientHeight || 450;
+    const height = mount.clientHeight || 600;
     const isMobile = width < 650 || window.innerWidth < 1024;
 
     // 1. Scene, Camera & Renderer with Full Alpha Transparency
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(isMobile ? 38 : 36, width / height, 0.1, 1000);
-    camera.position.set(0, 0, isMobile ? 16.5 : 17);
+    camera.position.set(0, 0, isMobile ? 16.0 : 17);
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -36,7 +36,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     mount.appendChild(renderer.domElement);
 
     // 2. High-Contrast Cyber Lighting for Light Background
-    const ambientLight = new THREE.AmbientLight(0xffffff, 2.8);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 2.9);
     scene.add(ambientLight);
 
     // Key front light (Royal SPIHER Blue)
@@ -58,12 +58,12 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const headGroup = new THREE.Group();
     scene.add(headGroup);
 
-    // Resting Position: Perfectly centered on mobile, right-anchored profile on desktop
-    const RESTING_POS_X = isMobile ? 0.0 : 3.8; 
-    const RESTING_POS_Y = isMobile ? 0.0 : 0.05;
+    // Resting Position: Positioned on the right half, filling top-to-bottom gracefully
+    const RESTING_POS_X = isMobile ? 2.4 : 3.8; 
+    const RESTING_POS_Y = isMobile ? 0.05 : 0.05;
 
     // Starts off-screen for entrance animation
-    headGroup.position.set(isMobile ? 0.0 : 14.0, isMobile ? 4.0 : RESTING_POS_Y, 0);
+    headGroup.position.set(isMobile ? 8.0 : 14.0, RESTING_POS_Y, 0);
 
     // 4. Background Orbiting 3D Particle Cloud (Light Theme Cyber Dust)
     const particleCount = 750;
@@ -103,8 +103,51 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const backgroundParticles = new THREE.Points(particleGeo, particleMat);
     scene.add(backgroundParticles);
 
+    // 4B. Floating Cyber Planetary Orbs (Matching Reference Image)
+    const orbsGroup = new THREE.Group();
+    scene.add(orbsGroup);
+
+    const orbDefinitions = [
+      { x: isMobile ? -1.8 : -3.5, y: 1.0, z: 2.5, r: 0.65, color: 0x00f2fe, hasRing: true },
+      { x: isMobile ? -2.8 : -4.8, y: 2.2, z: 1.2, r: 0.42, color: 0x7c3aed, hasRing: false },
+      { x: isMobile ? -1.2 : -2.2, y: -1.6, z: 3.2, r: 0.75, color: 0x0077c8, hasRing: true },
+      { x: isMobile ? -3.0 : -5.0, y: -0.6, z: 1.8, r: 0.35, color: 0x00a887, hasRing: false },
+    ];
+
+    const orbMeshes: THREE.Mesh[] = [];
+
+    orbDefinitions.forEach((orb) => {
+      const orbGeo = new THREE.SphereGeometry(orb.r, 24, 24);
+      const orbMat = new THREE.MeshStandardMaterial({
+        color: orb.color,
+        roughness: 0.2,
+        metalness: 0.7,
+        emissive: orb.color,
+        emissiveIntensity: 0.35,
+        transparent: true,
+        opacity: 0.85,
+      });
+      const orbMesh = new THREE.Mesh(orbGeo, orbMat);
+      orbMesh.position.set(orb.x, orb.y, orb.z);
+      orbsGroup.add(orbMesh);
+      orbMeshes.push(orbMesh);
+
+      if (orb.hasRing) {
+        const ringGeo = new THREE.RingGeometry(orb.r * 1.35, orb.r * 1.75, 32);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: 0x7af1fc,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.75,
+        });
+        const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+        ringMesh.rotation.x = Math.PI / 2.4;
+        orbMesh.add(ringMesh);
+      }
+    });
+
     // 5. Target Orientation: Dynamic 3/4 front angle on mobile, profile facing left on desktop
-    const BASE_ROTATION_Y = isMobile ? -Math.PI / 8 : -Math.PI / 2.05;
+    const BASE_ROTATION_Y = isMobile ? -Math.PI / 6.5 : -Math.PI / 2.05;
     const BASE_ROTATION_X = 0.02;
 
     // 6. Load & Scale Cyber Head Model (`cyber_head.glb`)
@@ -286,6 +329,12 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       // Particle field drift
       backgroundParticles.rotation.y = elapsedTime * 0.035;
       backgroundParticles.rotation.x = Math.sin(elapsedTime * 0.05) * 0.08;
+
+      // Floating planetary orbs gentle breathing
+      orbMeshes.forEach((mesh, idx) => {
+        mesh.position.y += Math.sin(elapsedTime * 1.5 + idx * 1.2) * 0.002;
+        mesh.rotation.y += 0.008;
+      });
 
       // Pulsing keylights
       keyLight.intensity = 6.0 + Math.sin(elapsedTime * 2.5) * 1.0;
