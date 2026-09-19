@@ -38,6 +38,7 @@ import {
   Award,
   Bell,
   RefreshCw,
+  Upload,
 } from 'lucide-react';
 import {
   AttendanceRecord,
@@ -797,21 +798,46 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                     </div>
                   )}
 
-                  {/* Row 3: Event Banner Image URL & Presets */}
+                  {/* Row 3: Event Banner Image URL & File Upload */}
                   <div className="space-y-2 text-xs">
                     <label className="font-semibold text-slate-700 flex items-center justify-between">
-                      <span>Event Banner Image URL</span>
-                      <span className="text-[11px] text-slate-400 font-normal">Pick a preset or paste direct image URL</span>
+                      <span>Event Banner Image</span>
+                      <span className="text-[11px] text-slate-400 font-normal">Upload from device, paste URL, or pick preset</span>
                     </label>
                     <div className="flex gap-3 items-center">
                       <input
-                        type="url"
+                        type="text"
                         value={newEventImageUrl}
                         onChange={(e) => setNewEventImageUrl(e.target.value)}
-                        placeholder="https://images.unsplash.com/..."
-                        className="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-[#0077c8] focus:outline-none"
+                        placeholder="https://images.unsplash.com/... or upload"
+                        className="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-[#0077c8] focus:outline-none text-xs"
                       />
-                      <div className="w-12 h-10 rounded-xl overflow-hidden bg-slate-200 shrink-0 border border-slate-300">
+
+                      {/* Browse / File Upload Button */}
+                      <label className="px-3.5 py-2.5 rounded-xl bg-[#f0f8fc] hover:bg-[#e0f2fe] border border-[#0077c8]/30 text-[#002b66] font-bold text-xs cursor-pointer transition-colors shrink-0 flex items-center gap-1.5 shadow-2xs">
+                        <Upload className="w-3.5 h-3.5 text-[#0077c8]" />
+                        <span>Upload File</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onload = (event) => {
+                                if (event.target?.result) {
+                                  setNewEventImageUrl(event.target.result as string);
+                                }
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                        />
+                      </label>
+
+                      {/* Image Preview Box */}
+                      <div className="w-12 h-10 rounded-xl overflow-hidden bg-slate-200 shrink-0 border border-slate-300 shadow-2xs">
                         <img src={newEventImageUrl} alt="Preview" className="w-full h-full object-cover" />
                       </div>
                     </div>
