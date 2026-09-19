@@ -314,28 +314,20 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
       {/* ========================================================================= */}
       {/* 1. STICKY GLASSMORPHIC HEADER & NAVIGATION BAR                            */}
       {/* ========================================================================= */}
-      <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-xl border-b border-[#d4e8f5]/80 shadow-xs">
+      <header className="sticky top-0 z-40 w-full bg-white border-b border-slate-100 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
           {/* Brand Logo Lockup */}
           <div
             onClick={() => navigateToPage('home')}
             className="flex items-center gap-3 cursor-pointer select-none group"
           >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#002b66] to-[#0077c8] flex items-center justify-center p-2 shadow-sm group-hover:scale-105 transition-transform duration-200">
-              <CollegeEmblem size={28} />
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-[#002b66] to-[#0077c8] flex items-center justify-center p-2 shadow-xs group-hover:scale-105 transition-transform duration-200">
+              <CollegeEmblem size={26} />
             </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-serif font-extrabold text-lg sm:text-xl tracking-tight text-[#001f4d]">
-                  RADIANZA <span className="text-[#0077c8]">'26</span>
-                </span>
-                <span className="text-[9px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#e8f5fb] text-[#0077c8] border border-[#d4e8f5]">
-                  SPIHER
-                </span>
-              </div>
-              <p className="text-[10px] text-slate-500 font-medium tracking-wide hidden sm:block">
-                National-Level Technical Symposium
-              </p>
+            <div className="flex items-center gap-1.5">
+              <span className="font-serif font-black text-xl sm:text-2xl tracking-tight text-[#001f4d]">
+                RADIANZA <span className="text-[#0077c8]">'26</span>
+              </span>
             </div>
           </div>
 
@@ -365,98 +357,95 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
           </nav>
 
           {/* Right Header Actions */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
-            {/* Quick Access Pass Button */}
+          <div className="flex items-center gap-3">
+            {/* Quick Access Pass Button (Desktop only) */}
             <button
               type="button"
               onClick={() => setIsPassModalOpen(true)}
-              className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#f0f8fc] hover:bg-[#e4f3fa] text-[#002b66] border border-[#d4e8f5] text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95"
+              className="hidden lg:flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#f0f8fc] hover:bg-[#e4f3fa] text-[#002b66] border border-[#d4e8f5] text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95"
             >
               <QrCode className="w-3.5 h-3.5 text-[#0077c8]" />
               <span>Access Pass</span>
             </button>
 
-            {/* Primary Register CTA Button */}
+            {/* Primary Register CTA Button (Desktop only) */}
             <button
               type="button"
               onClick={onStartNewRegistration}
-              className="relative px-4 sm:px-5 py-2 rounded-xl bg-gradient-to-r from-[#002b66] via-[#005fa3] to-[#0077c8] hover:from-[#001f4d] hover:to-[#004f8a] text-white text-xs font-bold shadow-md shadow-[#0077c8]/25 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98] flex items-center gap-1.5"
+              className="hidden lg:flex relative px-5 py-2 rounded-xl bg-gradient-to-r from-[#002b66] via-[#005fa3] to-[#0077c8] hover:from-[#001f4d] hover:to-[#004f8a] text-white text-xs font-bold shadow-md shadow-[#0077c8]/25 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98] items-center gap-1.5"
             >
               <span>Register Now</span>
               <ArrowRight className="w-3.5 h-3.5 text-[#7af1fc]" />
             </button>
 
-            {/* Mobile Menu Toggle Button */}
+            {/* Mobile Clean Hamburger Button (Matching Reference) */}
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
-              aria-label="Toggle Page Navigation"
+              className="lg:hidden w-10 h-10 rounded-lg border-2 border-[#d97706] hover:border-[#b45309] flex items-center justify-center text-slate-800 transition-colors cursor-pointer bg-white active:scale-95"
+              aria-label="Toggle Navigation"
             >
-              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {isMobileMenuOpen ? (
+                <X className="w-5 h-5 text-slate-800" />
+              ) : (
+                <Menu className="w-5 h-5 text-slate-800" />
+              )}
             </button>
           </div>
         </div>
 
-        {/* Mobile Page Drawer */}
+        {/* Mobile Slide-down Menu Drawer (Clean list matching Reference 2) */}
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden border-b border-[#d4e8f5] bg-white px-6 py-5 space-y-4 shadow-xl"
+              transition={{ duration: 0.25, ease: 'easeInOut' }}
+              className="lg:hidden border-b border-slate-200 bg-white px-6 py-6 space-y-6 shadow-2xl"
             >
-              <div className="grid grid-cols-2 gap-2 text-xs font-bold">
-                {PAGES.map((page, idx) => {
+              {/* Clean Nav Links List with subtle horizontal divider lines */}
+              <nav className="flex flex-col divide-y divide-slate-100">
+                {PAGES.map((page) => {
                   const isActive = activePage === page.id;
                   return (
                     <button
                       key={page.id}
                       onClick={() => navigateToPage(page.id)}
-                      className={`p-3 rounded-xl text-left flex items-center justify-between border transition-all ${
-                        isActive
-                          ? 'bg-[#002b66] text-white border-[#002b66] shadow-sm'
-                          : 'bg-[#f8fbfe] text-slate-700 border-[#d4e8f5] hover:bg-[#eaf4fb]'
+                      className={`py-4 text-left text-base font-bold transition-colors flex items-center justify-between cursor-pointer ${
+                        isActive ? 'text-[#002b66] font-extrabold' : 'text-slate-800 hover:text-[#0077c8]'
                       }`}
                     >
-                      <div className="space-y-0.5">
-                        <span className="text-[10px] uppercase font-mono tracking-wider opacity-70 block">
-                          0{idx + 1}
-                        </span>
-                        <span>{page.navLabel}</span>
-                      </div>
-                      <ChevronRight className="w-4 h-4 opacity-50" />
+                      <span>{page.navLabel}</span>
+                      {isActive && <div className="w-2 h-2 rounded-full bg-[#0077c8]" />}
                     </button>
                   );
                 })}
-              </div>
+              </nav>
 
-              {/* In-Home Jump Links (Visible when on Home page) */}
-              {activePage === 'home' && (
-                <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-2 text-[11px] font-semibold text-slate-600">
-                  <span className="text-[10px] uppercase font-mono text-slate-400 w-full">Home Sections:</span>
-                  <button onClick={() => scrollToHomeSection('highlights')} className="hover:text-[#0077c8]">Why Radianza</button>
-                  <span>•</span>
-                  <button onClick={() => scrollToHomeSection('schedule')} className="hover:text-[#0077c8]">Schedule</button>
-                  <span>•</span>
-                  <button onClick={() => scrollToHomeSection('speakers')} className="hover:text-[#0077c8]">Speakers</button>
-                  <span>•</span>
-                  <button onClick={() => scrollToHomeSection('gallery')} className="hover:text-[#0077c8]">Gallery</button>
-                </div>
-              )}
+              {/* Bottom Big CTA Button (Matching Reference 2 Bottom CTA) */}
+              <div className="pt-2 space-y-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    onStartNewRegistration();
+                  }}
+                  className="w-full py-3.5 px-6 rounded-full bg-gradient-to-r from-[#001f4d] via-[#002b66] to-[#0077c8] hover:from-[#001433] hover:to-[#005fa3] text-white font-bold text-sm tracking-wider uppercase shadow-lg shadow-[#002b66]/25 flex items-center justify-center gap-2 cursor-pointer active:scale-95 transition-transform"
+                >
+                  <span>Register Now</span>
+                  <ArrowRight className="w-4 h-4 text-[#7af1fc]" />
+                </button>
 
-              <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
                 <button
                   type="button"
                   onClick={() => {
                     setIsMobileMenuOpen(false);
                     setIsPassModalOpen(true);
                   }}
-                  className="w-full py-2.5 px-4 rounded-xl bg-[#f0f8fc] border border-[#d4e8f5] text-[#002b66] text-xs font-bold flex items-center justify-center gap-2"
+                  className="w-full py-2.5 px-4 text-center text-xs font-bold text-slate-600 hover:text-[#0077c8] transition-colors"
                 >
-                  <QrCode className="w-4 h-4 text-[#0077c8]" />
-                  <span>Access Existing Pass</span>
+                  Access Existing Pass →
                 </button>
               </div>
             </motion.div>
@@ -465,9 +454,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
       </header>
 
       {/* ========================================================================= */}
-      {/* 2. SUB-HEADER BREADCRUMB & SECTION SHORTCUTS STRIP                        */}
+      {/* 2. SUB-HEADER BREADCRUMB STRIP (Desktop only)                              */}
       {/* ========================================================================= */}
-      <div className="w-full bg-white border-b border-[#e8f5fb] px-4 sm:px-8 py-2.5">
+      <div className="hidden sm:block w-full bg-white border-b border-[#e8f5fb] px-4 sm:px-8 py-2.5">
         <div className="max-w-7xl mx-auto flex items-center justify-between text-xs">
           <div className="flex items-center gap-2 font-mono text-[11px] text-slate-500">
             <span className="px-2 py-0.5 rounded bg-[#f0f8fc] border border-[#d4e8f5] text-[#0077c8] font-bold">
