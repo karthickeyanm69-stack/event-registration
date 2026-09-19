@@ -64,8 +64,8 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     scene.add(headGroup);
 
     // Resting Position: Positioned on the right half, filling top-to-bottom gracefully
-    const RESTING_POS_X = isMobile ? 2.2 : 3.8; 
-    const RESTING_POS_Y = isMobile ? 0.35 : 0.05;
+    const RESTING_POS_X = isMobile ? 2.1 : 3.8; 
+    const RESTING_POS_Y = isMobile ? 0.05 : 0.05;
 
     // Starts off-screen for entrance animation
     headGroup.position.set(isMobile ? 7.0 : 14.0, RESTING_POS_Y, 0);

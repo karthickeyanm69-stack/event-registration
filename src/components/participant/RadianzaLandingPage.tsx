@@ -554,8 +554,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     <ThreeDCyberHeadCanvas onRegisterClick={onStartNewRegistration} />
                   </div>
 
-                  {/* Foreground Content: Arranged Line-by-Line starting from Forehead Level */}
-                  <div className="relative z-10 pt-2 sm:pt-4 space-y-3 sm:space-y-4 max-w-[85%] pointer-events-auto">
+                  {/* Foreground Content: Arranged Line-by-Line starting straight from Forehead Level */}
+                  <div className="relative z-10 pt-10 sm:pt-14 space-y-3 sm:space-y-4 max-w-[85%] sm:max-w-[70%] pointer-events-auto">
                     {/* Line 1: SPIHER PRESENTS Badge */}
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
@@ -569,7 +569,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       </span>
                     </motion.div>
                     
-                    {/* Line 2: RADIANZA '26 Title (Starting at Forehead level) */}
+                    {/* Line 2: RADIANZA '26 Title (Aligned Straight to Forehead level) */}
                     <motion.h1
                       initial={{ opacity: 0, x: -18 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -599,7 +599,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       "Igniting Ideas, Innovating Tomorrow"
                     </motion.p>
 
-                    {/* Line 5: Date & Location Pills */}
+                    {/* Line 5: Date & Location Badges */}
                     <motion.div
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
