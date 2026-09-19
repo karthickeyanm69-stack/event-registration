@@ -108,26 +108,6 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const backgroundParticles = new THREE.Points(particleGeo, particleMat);
     scene.add(backgroundParticles);
 
-    // 4B. Faint Orbital Arc Rings Around Face
-    const arcGroup = new THREE.Group();
-    arcGroup.position.set(RESTING_POS_X, RESTING_POS_Y, 0);
-    scene.add(arcGroup);
-
-    const arcMat = new THREE.MeshBasicMaterial({
-      color: 0x0077c8,
-      transparent: true,
-      opacity: 0.16,
-      side: THREE.DoubleSide,
-    });
-    const arcRing1 = new THREE.Mesh(new THREE.RingGeometry(3.6, 3.64, 64), arcMat);
-    arcRing1.rotation.y = -Math.PI / 5;
-    arcGroup.add(arcRing1);
-
-    const arcRing2 = new THREE.Mesh(new THREE.RingGeometry(4.8, 4.84, 64), arcMat);
-    arcRing2.rotation.y = -Math.PI / 4.5;
-    arcRing2.rotation.x = Math.PI / 10;
-    arcGroup.add(arcRing2);
-
     // 5. Target Orientation: Dynamic 3/4 front angle on mobile, profile facing left on desktop
     const BASE_ROTATION_Y = isMobile ? -Math.PI / 5.2 : -Math.PI / 2.05;
     const BASE_ROTATION_X = 0.02;
