@@ -696,21 +696,22 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       </motion.div>
 
                       {/* Headline Typography & Taglines */}
-                      <div className="space-y-3">
+                      <div className="space-y-4">
                         <motion.h1
                           initial={{ opacity: 0, y: 18 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.6, delay: 0.1 }}
-                          className="text-6xl xl:text-8xl font-serif font-black tracking-tight text-[#001f4d] leading-[1.05]"
+                          className="text-6xl sm:text-7xl xl:text-8xl font-serif font-black tracking-tight text-[#001f4d] leading-[0.95]"
                         >
-                          RADIANZA <span className="text-[#0077c8]">'26</span>
+                          RADIANZA
+                          <span className="block text-[#0077c8] mt-1.5 font-sans font-black">'26</span>
                         </motion.h1>
 
                         <motion.p
                           initial={{ opacity: 0, y: 12 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.6, delay: 0.2 }}
-                          className="text-sm font-mono font-bold tracking-[0.2em] text-[#002b66] uppercase"
+                          className="text-xs sm:text-sm font-mono font-bold tracking-[0.22em] text-[#004080] uppercase pt-1"
                         >
                           NATIONAL-LEVEL TECHNICAL SYMPOSIUM
                         </motion.p>
@@ -730,13 +731,13 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.3 }}
-                        className="flex flex-wrap justify-start items-center gap-3 pt-0.5 text-xs font-semibold text-slate-700"
+                        className="flex flex-wrap justify-start items-center gap-3 pt-1 text-xs font-semibold text-slate-700"
                       >
-                        <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs">
+                        <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs">
                           <Calendar className="w-4 h-4 text-[#0077c8]" />
                           <span className="font-bold text-[#001f4d]">15 - 16 OCT 2026</span>
                         </div>
-                        <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs">
+                        <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs">
                           <MapPin className="w-4 h-4 text-[#00a887]" />
                           <span>SPIHER Campus, Coimbatore</span>
                         </div>
@@ -747,14 +748,14 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.6, delay: 0.4 }}
-                        className="flex flex-row items-center gap-4 pt-2 w-auto"
+                        className="flex flex-row items-center gap-4 pt-3 w-auto"
                       >
                         <div className="relative group w-auto">
-                          <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#00f2fe] via-[#0077c8] to-[#00a887] opacity-75 blur-md group-hover:opacity-100 transition-opacity duration-300 animate-halo-pulse" />
+                          <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#00f2fe] via-[#0077c8] to-[#00a887] opacity-60 blur-md group-hover:opacity-100 transition-opacity duration-300 animate-halo-pulse" />
                           <button
                             type="button"
                             onClick={onStartNewRegistration}
-                            className="relative w-auto px-9 py-4 rounded-2xl bg-gradient-to-r from-[#001f4d] via-[#002b66] to-[#0077c8] text-white font-bold text-sm tracking-wide shadow-xl flex items-center justify-center gap-2.5 overflow-hidden cursor-pointer active:scale-95 transition-transform"
+                            className="relative w-auto px-8 py-3.5 rounded-full bg-gradient-to-r from-[#001f4d] via-[#002b66] to-[#0077c8] hover:from-[#001433] hover:to-[#005fa3] text-white font-bold text-sm tracking-wide shadow-xl flex items-center justify-center gap-2.5 overflow-hidden cursor-pointer active:scale-95 transition-transform"
                           >
                             <span className="relative z-10 font-bold">Register Now</span>
                             <ArrowRight className="w-4 h-4 text-[#7af1fc] relative z-10 group-hover:translate-x-1 transition-transform" />
@@ -764,7 +765,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         <button
                           type="button"
                           onClick={() => navigateToPage('events')}
-                          className="w-auto px-7 py-4 rounded-2xl bg-white hover:bg-[#f0f8fc] border-2 border-[#d4e8f5] hover:border-[#0077c8] text-[#002b66] font-bold text-sm tracking-wide shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95"
+                          className="w-auto px-7 py-3.5 rounded-full bg-white hover:bg-[#f0f8fc] border border-[#d4e8f5] hover:border-[#0077c8] text-[#002b66] font-bold text-sm tracking-wide shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95"
                         >
                           <span>View Competition Matrix</span>
                           <ChevronRight className="w-4 h-4 text-slate-400" />
