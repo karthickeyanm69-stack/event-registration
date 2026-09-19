@@ -1398,98 +1398,122 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               exit="exit"
               className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-10"
             >
-              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div className="space-y-2">
-                  <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#0077c8]">
-                    COMPETITION MATRIX
-                  </span>
-                  <h2 className="text-3xl sm:text-4xl font-serif font-extrabold text-[#001f4d]">
-                    Featured Events
+              {/* Header Lockup */}
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2 border-b border-[#e8f5fb]">
+                <div className="space-y-2.5">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f0f8fc] border border-[#d4e8f5] text-[#0077c8] font-mono text-xs font-bold uppercase tracking-wider">
+                    <Trophy className="w-3.5 h-3.5 text-[#0077c8]" />
+                    <span>ARENA // COMPETITION MATRIX</span>
+                  </div>
+                  <h2 className="text-3xl sm:text-5xl font-serif font-black tracking-tight text-[#001f4d]">
+                    Featured <span className="text-[#0077c8]">Events</span>
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-600 max-w-lg">
-                    Choose your battleground. Remember that each participant can register for{' '}
-                    <strong>only one event</strong> across the symposium.
+                  <p className="text-xs sm:text-sm text-slate-600 max-w-xl leading-relaxed">
+                    Choose your battleground. Select your preferred event to compete, innovate, and showcase your expertise at RADIANZA ’26.
                   </p>
                 </div>
 
-                {/* Category Filter Pills */}
-                <div className="flex items-center gap-2 p-1.5 bg-white rounded-2xl border border-[#d4e8f5] shadow-xs">
-                  {(['All', 'Technical', 'Non-Technical'] as const).map((cat) => (
-                    <button
-                      key={cat}
-                      type="button"
-                      onClick={() => setActiveCategory(cat)}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                        activeCategory === cat
-                          ? 'bg-[#002b66] text-white shadow-sm'
-                          : 'text-slate-600 hover:text-[#002b66] hover:bg-slate-50'
-                      }`}
-                    >
-                      {cat} Events
-                    </button>
-                  ))}
+                {/* Category Filter Switcher */}
+                <div className="flex items-center gap-1.5 p-1.5 bg-[#f0f8fc] rounded-2xl border border-[#d4e8f5] shadow-xs shrink-0 self-start md:self-auto">
+                  {(['All', 'Technical', 'Non-Technical'] as const).map((cat) => {
+                    const count = cat === 'All' ? events.length : events.filter(e => e.category === cat).length;
+                    const isActive = activeCategory === cat;
+                    return (
+                      <button
+                        key={cat}
+                        type="button"
+                        onClick={() => setActiveCategory(cat)}
+                        className={`relative px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                          isActive
+                            ? 'bg-[#002b66] text-white shadow-sm'
+                            : 'text-slate-600 hover:text-[#002b66] hover:bg-white/60'
+                        }`}
+                      >
+                        <span>{cat} Events</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
+                          isActive ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
+                        }`}>
+                          {count}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Events Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Events Grid with Premium Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
                 {filteredEvents.map((event) => (
-                  <div
+                  <motion.div
                     key={event.id}
-                    className="bg-white rounded-3xl border border-[#d4e8f5] overflow-hidden shadow-xs hover:shadow-xl hover:border-[#0077c8]/60 transition-all duration-300 flex flex-col justify-between group"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="bg-white rounded-3xl border border-[#d4e8f5] hover:border-[#0077c8]/60 overflow-hidden shadow-xs hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group relative"
                   >
-                    <div className="relative h-44 w-full overflow-hidden bg-slate-100">
+                    {/* Top Image Banner */}
+                    <div className="relative h-48 w-full overflow-hidden bg-slate-900">
                       <img
                         src={event.imageUrl}
                         alt={event.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => {
+                          e.currentTarget.src = 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80';
+                        }}
+                        className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 opacity-90 group-hover:opacity-100"
                         loading="lazy"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#001f4d]/90 via-[#001f4d]/30 to-transparent" />
 
-                      <span
-                        className={`absolute top-3 left-3 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full text-white shadow-xs ${
-                          event.category === 'Technical' ? 'bg-[#0077c8]' : 'bg-[#00a887]'
-                        }`}
-                      >
-                        {event.category}
-                      </span>
+                      {/* Top Floating Badges */}
+                      <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between pointer-events-none">
+                        <span
+                          className={`text-[10.5px] font-mono font-bold uppercase tracking-wider px-3 py-1 rounded-full text-white shadow-md backdrop-blur-md ${
+                            event.category === 'Technical' ? 'bg-[#0077c8]/90' : 'bg-[#00a887]/90'
+                          }`}
+                        >
+                          {event.category}
+                        </span>
 
-                      <span className="absolute top-3 right-3 text-[10px] font-mono font-bold px-2 py-1 rounded-full bg-white/90 backdrop-blur-md text-[#002b66] shadow-xs">
-                        {event.isTeamEvent
-                          ? `${event.minTeamSize}-${event.maxTeamSize} Members`
-                          : 'Solo Event'}
-                      </span>
+                        <span className="text-[10.5px] font-mono font-bold px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#002b66] shadow-md">
+                          {event.isTeamEvent
+                            ? `${event.minTeamSize}-${event.maxTeamSize} Members`
+                            : 'Solo Event'}
+                        </span>
+                      </div>
 
-                      <div className="absolute bottom-3 left-3 right-3 text-white">
-                        <h3 className="text-base sm:text-lg font-bold leading-tight">
+                      {/* Title on Banner Overlay */}
+                      <div className="absolute bottom-3.5 left-4 right-4 text-white">
+                        <h3 className="text-lg sm:text-xl font-serif font-bold leading-tight group-hover:text-[#7af1fc] transition-colors">
                           {event.title}
                         </h3>
                       </div>
                     </div>
 
-                    <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                    {/* Card Body */}
+                    <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-5">
                       <div className="space-y-2">
-                        <p className="text-xs text-[#0077c8] font-semibold line-clamp-1">
-                          {event.tagline}
+                        <p className="text-xs font-bold text-[#0077c8] line-clamp-1">
+                          {event.tagline || 'National Level Symposium Arena'}
                         </p>
-                        <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                        <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed font-normal">
                           {event.description}
                         </p>
                       </div>
 
-                      <div className="space-y-1.5 pt-2 border-t border-slate-100 text-[11px] text-slate-600">
+                      {/* Meta Details: Time & Venue */}
+                      <div className="space-y-2 pt-3 border-t border-slate-100 text-xs text-slate-600">
                         <div className="flex items-center gap-2">
-                          <Clock className="w-3.5 h-3.5 text-[#0077c8]" />
-                          <span>{event.time}</span>
+                          <Clock className="w-3.5 h-3.5 text-[#0077c8] shrink-0" />
+                          <span className="font-medium">{event.time}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <MapPin className="w-3.5 h-3.5 text-[#00a887]" />
-                          <span className="truncate">{event.venue}</span>
+                          <MapPin className="w-3.5 h-3.5 text-[#00a887] shrink-0" />
+                          <span className="truncate font-medium">{event.venue}</span>
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-2 pt-2">
+                      {/* Action Buttons */}
+                      <div className="grid grid-cols-2 gap-2.5 pt-2">
                         <button
                           type="button"
                           onClick={() => setSelectedEventModal(event)}
@@ -1500,14 +1524,14 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         <button
                           type="button"
                           onClick={() => onSelectEvent(event)}
-                          className="w-full py-2.5 px-3 rounded-xl bg-[#002b66] hover:bg-[#0077c8] text-white text-xs font-bold shadow-xs transition-colors cursor-pointer text-center flex items-center justify-center gap-1"
+                          className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-[#001f4d] via-[#002b66] to-[#0077c8] hover:from-[#001433] hover:to-[#005fa3] text-white text-xs font-bold shadow-md shadow-[#002b66]/20 transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 active:scale-95"
                         >
                           <span>Register</span>
-                          <ArrowRight className="w-3 h-3" />
+                          <ArrowRight className="w-3.5 h-3.5 text-[#7af1fc]" />
                         </button>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </motion.div>

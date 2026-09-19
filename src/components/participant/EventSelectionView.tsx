@@ -318,6 +318,9 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
                     <img
                       src={evt.imageUrl}
                       alt={evt.title}
+                      onError={(e) => {
+                        e.currentTarget.src = 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80';
+                      }}
                       className="w-full h-full object-cover opacity-95 pointer-events-none"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent" />
@@ -482,6 +485,9 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
                 <img
                   src={evt.imageUrl}
                   alt={evt.title}
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80';
+                  }}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent" />
