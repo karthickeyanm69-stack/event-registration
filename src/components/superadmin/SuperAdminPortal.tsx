@@ -80,6 +80,17 @@ export type SuperAdminTab =
   | 'audit-logs'
   | 'system-settings';
 
+const PRESET_EVENT_IMAGES = [
+  { name: 'AI & Prompt', url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80' },
+  { name: 'UI/UX Design', url: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=800&q=80' },
+  { name: 'Web & Code', url: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80' },
+  { name: 'Tech Quiz', url: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80' },
+  { name: 'Gaming / Esports', url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80' },
+  { name: 'Live Stage', url: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=800&q=80' },
+  { name: 'Music & Singing', url: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80' },
+  { name: 'Art & Poster', url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80' },
+];
+
 export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
   superAdminUser,
   events,
@@ -104,6 +115,8 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
   const [matrixSearch, setMatrixSearch] = useState('');
   const [matrixRoleFilter, setMatrixRoleFilter] = useState<'ALL' | 'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE'>('ALL');
   const [matrixCategoryFilter, setMatrixCategoryFilter] = useState<'ALL' | 'Technical' | 'Non-Technical'>('ALL');
+  const [staffSearch, setStaffSearch] = useState('');
+  const [staffRoleFilter, setStaffRoleFilter] = useState<'ALL' | 'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE'>('ALL');
 
   // Event Management State (Create & Edit)
   const [isCreatingEvent, setIsCreatingEvent] = useState(false);
@@ -174,7 +187,7 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
   const [adminName, setAdminName] = useState('');
   const [adminEmail, setAdminEmail] = useState('');
   const [adminPassword, setAdminPassword] = useState('Admin@SPIHER2024');
-  const [adminDept, setAdminDept] = useState('Dept. of Computer Science & Engineering');
+  const [adminDept, setAdminDept] = useState('Dept. of Information Technology');
   const [adminAssignedEvents, setAdminAssignedEvents] = useState<string[]>([]);
   const [selectedPassUser, setSelectedPassUser] = useState<StaffUser | null>(null);
 
@@ -1079,34 +1092,98 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
           )}
 
           {/* ========================================================================= */}
-          {/* 3. ADMINS & STAFF GOVERNANCE */}
+          {/* 3. ADMINS & STAFF GOVERNANCE (Executive Unboxed Design)                  */}
           {/* ========================================================================= */}
           {activeTab === 'user-mgmt' && (
             <div className="space-y-6 max-w-7xl mx-auto">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm">
+              {/* Top Unboxed Header Strip */}
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">Staff & Admin Governance</h3>
-                  <p className="text-xs text-slate-500">
-                    Create event administrators, assign permitted competitions, and manage access controls.
+                  <div className="flex items-center gap-2.5">
+                    <h3 className="text-2xl font-serif font-bold text-[#002b66] tracking-tight">
+                      Staff &amp; Admin Governance
+                    </h3>
+                    <span className="text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-full bg-[#f0f8fc] text-[#0077c8] border border-[#d4e8f5]">
+                      Dept. of IT Registry
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Manage administrative roles, assign event oversight permissions, and view official digital staff passes.
                   </p>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setIsCreatingAdmin(!isCreatingAdmin)}
-                  className="py-2.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md shadow-teal-600/20 flex items-center gap-2 transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>{isCreatingAdmin ? 'Close Form' : 'Create Event Admin'}</span>
-                </button>
+                <div className="flex items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => setIsCreatingAdmin(!isCreatingAdmin)}
+                    className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white font-bold text-xs shadow-md shadow-[#0077c8]/25 flex items-center gap-2 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <Plus className="w-4 h-4 text-[#7af1fc]" />
+                    <span>{isCreatingAdmin ? 'Close Provisioning Form' : 'Create Event Admin'}</span>
+                  </button>
+                </div>
               </div>
 
-              {/* Create Admin Form */}
+              {/* 4 KPI Metric Summary Cards */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+                <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Staff</span>
+                    <Users className="w-4 h-4 text-[#0077c8]" />
+                  </div>
+                  <p className="text-2xl font-bold text-slate-900">{staffList.length}</p>
+                  <p className="text-[11px] text-slate-500 font-medium">Configured accounts</p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-purple-600">Super Admins</span>
+                    <ShieldAlert className="w-4 h-4 text-purple-600" />
+                  </div>
+                  <p className="text-2xl font-bold text-purple-900">
+                    {staffList.filter((s) => s.role === 'SUPER_ADMIN').length}
+                  </p>
+                  <p className="text-[11px] text-purple-600/80 font-medium">Global system convenors</p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#0077c8]">Event Admins</span>
+                    <Building className="w-4 h-4 text-[#0077c8]" />
+                  </div>
+                  <p className="text-2xl font-bold text-[#002b66]">
+                    {staffList.filter((s) => s.role === 'ADMIN').length}
+                  </p>
+                  <p className="text-[11px] text-slate-500 font-medium">Competitions overseers</p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-600">Evaluators</span>
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  </div>
+                  <p className="text-2xl font-bold text-emerald-900">
+                    {staffList.filter((s) => s.role === 'EMPLOYEE').length}
+                  </p>
+                  <p className="text-[11px] text-emerald-600/80 font-medium">PWA scanners &amp; judges</p>
+                </div>
+              </div>
+
+              {/* Create Admin Form Modal / Slide-down Panel */}
               {isCreatingAdmin && (
-                <form onSubmit={handleCreateAdmin} className="p-6 rounded-3xl bg-white border border-teal-300 space-y-5 animate-in fade-in shadow-md">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-teal-700">
-                    Admin Account Provisioning
-                  </h4>
+                <form
+                  onSubmit={handleCreateAdmin}
+                  className="p-6 rounded-2xl bg-white border border-[#bce0f5] shadow-lg space-y-5 animate-in fade-in"
+                >
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div>
+                      <h4 className="text-sm font-bold text-[#002b66]">Provision New Event Administrator</h4>
+                      <p className="text-xs text-slate-500">Create an official login with delegated competition oversight.</p>
+                    </div>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-50 text-[#0077c8] font-bold border border-sky-200">
+                      ADMIN PRIVILEGES
+                    </span>
+                  </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
                     <div className="space-y-1.5">
@@ -1119,7 +1196,7 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                         value={adminName}
                         onChange={(e) => setAdminName(e.target.value)}
                         placeholder="e.g. Dr. K. Senthil Nathan"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-teal-600 focus:outline-none"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-[#0077c8] focus:bg-white focus:outline-none transition-all"
                       />
                     </div>
 
@@ -1133,7 +1210,7 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                         value={adminEmail}
                         onChange={(e) => setAdminEmail(e.target.value)}
                         placeholder="admin.new@spiher.edu.in"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-teal-600 focus:outline-none"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-[#0077c8] focus:bg-white focus:outline-none transition-all"
                       />
                     </div>
 
@@ -1143,7 +1220,7 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                         <button
                           type="button"
                           onClick={handleGenerateAdminPassword}
-                          className="text-[10px] text-[#0077c8] hover:underline font-bold"
+                          className="text-[10px] text-[#0077c8] hover:underline font-bold cursor-pointer"
                         >
                           ⚡ Auto-Generate
                         </button>
@@ -1157,8 +1234,8 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                           required
                           value={adminPassword}
                           onChange={(e) => setAdminPassword(e.target.value)}
-                          placeholder="Admin@SPIHER2024"
-                          className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-mono font-bold focus:border-teal-600 focus:outline-none"
+                          placeholder="Admin@SPIHER2026"
+                          className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-mono font-bold focus:border-[#0077c8] focus:bg-white focus:outline-none transition-all"
                         />
                       </div>
                     </div>
@@ -1171,7 +1248,7 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                         type="text"
                         value={adminDept}
                         onChange={(e) => setAdminDept(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-teal-600 focus:outline-none"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-[#0077c8] focus:bg-white focus:outline-none transition-all"
                       />
                     </div>
                   </div>
@@ -1185,30 +1262,32 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                         <button
                           type="button"
                           onClick={() => setAdminAssignedEvents([])}
-                          className="text-teal-700 font-bold hover:underline"
+                          className="text-[#0077c8] font-bold hover:underline cursor-pointer"
                         >
-                          All 11 Events (Full Overseer)
+                          All 15 Events (Full Overseer)
                         </button>
                         <span className="text-slate-300">|</span>
                         <button
                           type="button"
                           onClick={() => setAdminAssignedEvents(events.map((e) => e.id))}
-                          className="text-slate-600 hover:text-slate-900"
+                          className="text-slate-600 hover:text-slate-900 cursor-pointer"
                         >
                           Select All Checkboxes
                         </button>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2 max-h-48 overflow-y-auto p-1">
                       {events.map((evt) => {
                         const isChecked = adminAssignedEvents.includes(evt.id);
                         return (
                           <label
                             key={evt.id}
                             htmlFor={`admin-assign-evt-${evt.id}`}
-                            className={`p-3 rounded-2xl border cursor-pointer flex items-center gap-2.5 text-xs transition-colors ${
-                              isChecked ? 'bg-teal-50 border-teal-600 text-teal-900 font-bold' : 'border-slate-200 bg-slate-50 text-slate-700'
+                            className={`p-2.5 rounded-xl border cursor-pointer flex items-center gap-2 text-xs transition-colors ${
+                              isChecked
+                                ? 'bg-sky-50 border-[#0077c8] text-[#002b66] font-bold shadow-2xs'
+                                : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300'
                             }`}
                           >
                             <input
@@ -1220,7 +1299,7 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                                 if (e.target.checked) setAdminAssignedEvents([...adminAssignedEvents, evt.id]);
                                 else setAdminAssignedEvents(adminAssignedEvents.filter((id) => id !== evt.id));
                               }}
-                              className="rounded text-teal-600"
+                              className="rounded text-[#0077c8]"
                             />
                             <span className="font-semibold truncate">{evt.title}</span>
                           </label>
@@ -1229,10 +1308,17 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                     </div>
                   </div>
 
-                  <div className="flex justify-end gap-3 pt-2">
+                  <div className="flex justify-end gap-3 pt-2 border-t border-slate-100">
+                    <button
+                      type="button"
+                      onClick={() => setIsCreatingAdmin(false)}
+                      className="px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer"
+                    >
+                      Cancel
+                    </button>
                     <button
                       type="submit"
-                      className="px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md cursor-pointer"
+                      className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white font-bold text-xs shadow-md shadow-[#0077c8]/20 cursor-pointer transition-all hover:scale-[1.02]"
                     >
                       Provision Admin Account &amp; Issue Pass
                     </button>
@@ -1240,95 +1326,156 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                 </form>
               )}
 
-              {/* Staff Table */}
-              <div className="bg-white border border-slate-200/90 rounded-3xl overflow-hidden shadow-sm">
+              {/* Search & Filter Toolbar */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-white rounded-2xl border border-slate-200/90 shadow-2xs">
+                <div className="relative w-full sm:w-80">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={staffSearch}
+                    onChange={(e) => setStaffSearch(e.target.value)}
+                    placeholder="Search staff by name, email, department..."
+                    className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:border-[#0077c8] focus:bg-white focus:outline-none"
+                  />
+                </div>
+
+                <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
+                  <span className="text-[11px] font-bold text-slate-400 uppercase mr-1">Role:</span>
+                  {(['ALL', 'SUPER_ADMIN', 'ADMIN', 'EMPLOYEE'] as const).map((role) => (
+                    <button
+                      key={role}
+                      type="button"
+                      onClick={() => setStaffRoleFilter(role)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                        staffRoleFilter === role
+                          ? 'bg-[#0077c8] text-white shadow-2xs font-bold'
+                          : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                      }`}
+                    >
+                      {role === 'ALL' ? 'All Roles' : role === 'SUPER_ADMIN' ? 'Super Admin' : role === 'ADMIN' ? 'Admin' : 'Evaluator'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Clean Modern Enterprise Staff Table */}
+              <div className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-2xs">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[10px]">
+                    <thead className="bg-slate-50/90 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[10px] font-bold">
                       <tr>
-                        <th className="py-4 px-5">Staff Member</th>
-                        <th className="py-4 px-5">Role</th>
-                        <th className="py-4 px-5">Department</th>
-                        <th className="py-4 px-5">Permitted Events</th>
-                        <th className="py-4 px-5">Status</th>
-                        <th className="py-4 px-5 text-right">Actions</th>
+                        <th className="py-3.5 px-5">Staff Member</th>
+                        <th className="py-3.5 px-5">Role</th>
+                        <th className="py-3.5 px-5">Department</th>
+                        <th className="py-3.5 px-5">Permitted Competitions</th>
+                        <th className="py-3.5 px-5">Account Status</th>
+                        <th className="py-3.5 px-5 text-right">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                      {staffList.map((user) => (
-                        <tr key={user.id} className="hover:bg-slate-50/70 transition-colors">
-                          <td className="py-4 px-5">
-                            <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-xl bg-teal-50 text-teal-700 font-bold flex items-center justify-center text-xs">
-                                {user.name.charAt(0)}
+                      {staffList
+                        .filter((user) => {
+                          const query = staffSearch.toLowerCase();
+                          const matches =
+                            user.name.toLowerCase().includes(query) ||
+                            user.email.toLowerCase().includes(query) ||
+                            (user.department || '').toLowerCase().includes(query);
+                          const matchesRole = staffRoleFilter === 'ALL' || user.role === staffRoleFilter;
+                          return matches && matchesRole;
+                        })
+                        .map((user) => (
+                          <tr key={user.id} className="hover:bg-slate-50/80 transition-colors">
+                            <td className="py-4 px-5">
+                              <div className="flex items-center gap-3">
+                                <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs shrink-0 border ${
+                                  user.role === 'SUPER_ADMIN'
+                                    ? 'bg-purple-50 text-purple-700 border-purple-200'
+                                    : user.role === 'ADMIN'
+                                    ? 'bg-sky-50 text-[#0077c8] border-sky-200'
+                                    : 'bg-slate-100 text-slate-700 border-slate-200'
+                                }`}>
+                                  {user.name.charAt(0)}
+                                </div>
+                                <div className="min-w-0">
+                                  <p className="font-bold text-[#002b66] truncate">{user.name}</p>
+                                  <p className="text-[11px] text-slate-500 font-mono truncate">{user.email}</p>
+                                </div>
                               </div>
-                              <div>
-                                <p className="font-bold text-slate-900">{user.name}</p>
-                                <p className="text-[11px] text-slate-500 font-mono">{user.email}</p>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="py-4 px-5">
-                            <span
-                              className={`text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-full ${
-                                user.role === 'SUPER_ADMIN'
-                                  ? 'bg-purple-100 text-purple-800'
-                                  : user.role === 'ADMIN'
-                                  ? 'bg-teal-100 text-teal-800'
-                                  : 'bg-slate-100 text-slate-700'
-                              }`}
-                            >
-                              {user.role}
-                            </span>
-                          </td>
-                          <td className="py-4 px-5 text-slate-600">{user.department}</td>
-                          <td className="py-4 px-5">
-                            {user.assignedEventIds.length === 0 ? (
-                              <span className="text-teal-700 font-bold">All Events (Global)</span>
-                            ) : (
-                              <div className="flex flex-wrap gap-1">
-                                {user.assignedEventIds.map((id) => (
-                                  <span key={id} className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px]">
-                                    {events.find((e) => e.id === id)?.title || id}
-                                  </span>
-                                ))}
-                              </div>
-                            )}
-                          </td>
-                          <td className="py-4 px-5">
-                            <span
-                              className={`text-[10px] font-bold ${
-                                user.isActive ? 'text-emerald-700' : 'text-red-700'
-                              }`}
-                            >
-                              {user.isActive ? '● Active' : '○ Deactivated'}
-                            </span>
-                          </td>
-                          <td className="py-4 px-5 text-right space-x-2">
-                            <button
-                              type="button"
-                              onClick={() => setSelectedPassUser(user)}
-                              className="py-1 px-2.5 rounded-lg text-xs font-semibold bg-[#e8f5fb] text-[#0077c8] hover:bg-[#d4e8f5] transition-colors"
-                              title="View & Share Access Pass"
-                            >
-                              🔑 View Pass
-                            </button>
-                            {user.role !== 'SUPER_ADMIN' && (
-                              <button
-                                type="button"
-                                onClick={() => handleToggleUserActive(user)}
-                                className={`py-1 px-3 rounded-lg text-xs font-semibold ${
-                                  user.isActive
-                                    ? 'bg-red-50 text-red-700 hover:bg-red-100'
-                                    : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                            </td>
+                            <td className="py-4 px-5">
+                              <span
+                                className={`text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-full border ${
+                                  user.role === 'SUPER_ADMIN'
+                                    ? 'bg-purple-50 text-purple-700 border-purple-200'
+                                    : user.role === 'ADMIN'
+                                    ? 'bg-sky-50 text-[#0077c8] border-sky-200'
+                                    : 'bg-slate-100 text-slate-700 border-slate-200'
                                 }`}
                               >
-                                {user.isActive ? 'Deactivate' : 'Activate'}
-                              </button>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
+                                {user.role === 'SUPER_ADMIN' ? 'Super Admin' : user.role === 'ADMIN' ? 'Event Admin' : 'Evaluator'}
+                              </span>
+                            </td>
+                            <td className="py-4 px-5 text-slate-600 font-medium">
+                              {user.department || 'Dept. of Information Technology'}
+                            </td>
+                            <td className="py-4 px-5">
+                              {user.assignedEventIds.length === 0 ? (
+                                <span className="text-[#0077c8] font-bold text-xs">
+                                  All 15 Events (Global)
+                                </span>
+                              ) : (
+                                <div className="flex flex-wrap gap-1 max-w-xs">
+                                  {user.assignedEventIds.map((id) => (
+                                    <span
+                                      key={id}
+                                      className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-medium border border-slate-200/60"
+                                    >
+                                      {events.find((e) => e.id === id)?.title || id}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </td>
+                            <td className="py-4 px-5">
+                              <span
+                                className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-0.5 rounded-full border ${
+                                  user.isActive
+                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                    : 'bg-rose-50 text-rose-700 border-rose-200'
+                                }`}
+                              >
+                                <span className={`w-1.5 h-1.5 rounded-full ${user.isActive ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
+                                <span>{user.isActive ? 'Active' : 'Deactivated'}</span>
+                              </span>
+                            </td>
+                            <td className="py-4 px-5 text-right">
+                              <div className="flex items-center justify-end gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => setSelectedPassUser(user)}
+                                  className="py-1 px-3 rounded-lg text-xs font-semibold bg-[#f0f8fc] hover:bg-[#d4e8f5] text-[#0077c8] border border-[#d4e8f5] flex items-center gap-1.5 transition-all cursor-pointer hover:scale-105 active:scale-95"
+                                  title="View Official Digital Credential Pass"
+                                >
+                                  <Key className="w-3.5 h-3.5" />
+                                  <span>View Pass</span>
+                                </button>
+                                {user.role !== 'SUPER_ADMIN' && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleToggleUserActive(user)}
+                                    className={`py-1 px-2.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+                                      user.isActive
+                                        ? 'border-rose-200 text-rose-600 hover:bg-rose-50'
+                                        : 'border-emerald-200 text-emerald-600 hover:bg-emerald-50'
+                                    }`}
+                                  >
+                                    {user.isActive ? 'Deactivate' : 'Activate'}
+                                  </button>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
                     </tbody>
                   </table>
                 </div>

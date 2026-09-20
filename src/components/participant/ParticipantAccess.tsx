@@ -78,11 +78,11 @@ export const ParticipantAccess: React.FC<ParticipantAccessProps> = ({
   return (
     <div className="min-h-screen w-full bg-slate-50 flex items-center justify-center p-3 sm:p-6 lg:p-10 font-sans selection:bg-[#0077c8] selection:text-white">
       {/* Main Split-Hero Card Container */}
-      <div className="w-full max-w-5xl bg-white rounded-3xl shadow-[0_25px_60px_-15px_rgba(0,43,102,0.15)] border border-[#d4e8f5] overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-auto lg:min-h-[580px]">
+      <div className="w-full max-w-5xl bg-white rounded-3xl shadow-[0_25px_60px_-15px_rgba(0,43,102,0.15)] border border-[#d4e8f5] grid grid-cols-1 lg:grid-cols-12 min-h-auto lg:min-h-[580px] relative">
         {/* ========================================================================= */}
         {/* LEFT BRANDING & INFORMATION HERO (Visible ONLY on Desktop lg+)           */}
         {/* ========================================================================= */}
-        <div className="hidden lg:flex lg:col-span-5 bg-gradient-to-br from-[#001f4d] via-[#002b66] to-[#001838] text-white p-8 sm:p-10 flex-col justify-between relative overflow-hidden">
+        <div className="hidden lg:flex lg:col-span-5 bg-gradient-to-br from-[#001f4d] via-[#002b66] to-[#001838] text-white p-8 sm:p-10 flex-col justify-between relative overflow-hidden rounded-l-3xl">
           {/* Luminous Ambient Background Glow */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#0077c8]/25 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#00a887]/20 rounded-full blur-2xl pointer-events-none" />
@@ -91,7 +91,7 @@ export const ParticipantAccess: React.FC<ParticipantAccessProps> = ({
           <div className="relative z-10 space-y-4">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15 text-[11px] font-bold text-[#7af1fc]">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>IGNITE 2026 Symposium Portal</span>
+              <span>RADIANZA 2026 Symposium Portal</span>
             </div>
 
             <div className="flex items-center gap-3">
@@ -102,9 +102,6 @@ export const ParticipantAccess: React.FC<ParticipantAccessProps> = ({
                 </h1>
                 <p className="text-[11px] text-[#7af1fc] font-medium tracking-wide">
                   Institute of Higher Education &amp; Research
-                </p>
-                <p className="text-[9px] text-white/60 uppercase tracking-wider">
-                  Deemed to be University
                 </p>
               </div>
             </div>
@@ -160,7 +157,7 @@ export const ParticipantAccess: React.FC<ParticipantAccessProps> = ({
           <div className="lg:hidden flex flex-col items-center text-center pb-2 border-b border-[#e8f5fb]">
             <CollegeLogo size="sm" />
             <span className="text-[10px] font-mono font-bold uppercase text-[#0077c8] tracking-widest mt-1">
-              IGNITE 2026 Portal
+              RADIANZA 2026 Portal
             </span>
           </div>
 
@@ -230,6 +227,7 @@ export const ParticipantAccess: React.FC<ParticipantAccessProps> = ({
                       id="participant-login-roll"
                       name="rollNumber"
                       type="text"
+                      autoComplete="off"
                       required
                       value={rollNumber}
                       onChange={(e) => setRollNumber(e.target.value.toUpperCase())}
@@ -281,7 +279,7 @@ export const ParticipantAccess: React.FC<ParticipantAccessProps> = ({
             </span>
             <div className="p-3 rounded-2xl bg-[#f8fbfe] border border-[#d4e8f5] flex items-center justify-between text-xs hover:border-[#0077c8]/40 transition-colors">
               <div>
-                <p className="font-bold text-[#002b66]">Alex Mercer (Computer Science)</p>
+                <p className="font-bold text-[#002b66]">Alex Mercer (Information Technology)</p>
                 <p className="text-[10px] text-slate-500 font-mono">
                   Roll: <strong className="text-[#0077c8]">2021CS042</strong> • DOB: 14/05/2003
                 </p>

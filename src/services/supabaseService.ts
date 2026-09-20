@@ -487,7 +487,9 @@ export class SupabaseService {
         registered_at: registration.registeredAt || new Date().toISOString(),
       };
 
-      const { error: regErr } = await supabase.from('registrations').insert(regRow);
+      const { error: regErr } = await supabase
+        .from('registrations')
+        .upsert(regRow, { onConflict: 'id' });
       if (regErr) {
         console.error('Supabase registration insert error:', regErr);
         return { success: false, error: regErr.message };

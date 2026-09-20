@@ -961,36 +961,11 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       Symposium Schedule
                     </h2>
                     <p className="text-xs sm:text-sm text-slate-500">
-                      Two days packed with innovation, live competition, expert keynotes, and grand recognitions.
+                      Official timetable across Technical, Creative &amp; Non-Technical Tracks with designated venues.
                     </p>
                   </motion.div>
 
-                  <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto p-1.5 bg-white rounded-2xl border border-[#d4e8f5]">
-                    <button
-                      type="button"
-                      onClick={() => setActiveScheduleDay(1)}
-                      className={`py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                        activeScheduleDay === 1
-                          ? 'bg-[#002b66] text-white shadow-xs'
-                          : 'text-[#002b66] hover:bg-slate-50'
-                      }`}
-                    >
-                      Day 1 (15 Oct 2026)
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setActiveScheduleDay(2)}
-                      className={`py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                        activeScheduleDay === 2
-                          ? 'bg-[#002b66] text-white shadow-xs'
-                          : 'text-[#002b66] hover:bg-slate-50'
-                      }`}
-                    >
-                      Day 2 (16 Oct 2026)
-                    </button>
-                  </div>
-
-                  <div className="relative pl-6 sm:pl-10 space-y-6 pt-4">
+                  <div className="relative pl-6 sm:pl-10 space-y-5 pt-4">
                     <motion.div
                       initial={{ scaleY: 0 }}
                       whileInView={{ scaleY: 1 }}
@@ -1000,137 +975,157 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       className="absolute left-3 sm:left-5 top-3 bottom-3 w-0.5 bg-gradient-to-b from-[#0077c8] via-[#00f2fe] to-[#00a887]"
                     />
 
-                    {activeScheduleDay === 1 ? (
-                      <>
-                        <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs">
-                          <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-[#0077c8] shadow-xs" />
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2">
-                              <span className="px-2.5 py-0.5 rounded-md bg-[#0077c8] text-white font-mono font-bold text-[10px]">
-                                09:00 AM - 10:00 AM
-                              </span>
-                              <span className="text-[10px] font-bold text-slate-400">Main Auditorium</span>
-                            </div>
-                            <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
-                              Inauguration &amp; Grand Keynote Address
-                            </h4>
-                            <p className="text-xs text-slate-600">
-                              Welcome presidential address by University Chancellor and opening by Dr. Aarav Sundaram on AI systems.
-                            </p>
-                          </div>
+                    {/* 09:00 AM - 10:00 AM: Inauguration */}
+                    <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs hover:border-[#0077c8]/40 transition-colors">
+                      <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-[#0077c8] shadow-xs" />
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2.5 py-0.5 rounded-md bg-[#0077c8] text-white font-mono font-bold text-[10px]">
+                            09:00 AM – 10:00 AM
+                          </span>
+                          <span className="text-[10px] font-bold text-slate-400">Main Hall</span>
                         </div>
+                        <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
+                          Grand Inauguration Ceremony
+                        </h4>
+                        <p className="text-xs text-slate-600">
+                          Opening address by university leadership, invocation, lighting of the lamp &amp; symposium briefing.
+                        </p>
+                      </div>
+                    </div>
 
-                        <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs">
-                          <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-[#002b66] shadow-xs" />
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2">
-                              <span className="px-2.5 py-0.5 rounded-md bg-[#002b66] text-white font-mono font-bold text-[10px]">
-                                10:30 AM - 01:00 PM
-                              </span>
-                              <span className="text-[10px] font-bold text-slate-400">Computing Labs &amp; Arenas</span>
-                            </div>
-                            <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
-                              Technical Tracks: Round 1 Sprint
-                            </h4>
-                            <p className="text-xs text-slate-600">
-                              Algorithmic problem-solving in Code-A-Thon, Web3 design sprints, and Robo-Wars qualifying matches.
-                            </p>
-                          </div>
+                    {/* 10:00 AM - 11:00 AM: Morning Non-Tech & Creative Tracks */}
+                    <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs hover:border-[#0077c8]/40 transition-colors">
+                      <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-[#002b66] shadow-xs" />
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2.5 py-0.5 rounded-md bg-[#002b66] text-white font-mono font-bold text-[10px]">
+                            10:00 AM – 11:00 AM
+                          </span>
+                          <span className="text-[10px] font-bold text-slate-400">Room 248, 247 &amp; Main Hall</span>
                         </div>
+                        <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
+                          Morning Competitions Track
+                        </h4>
+                        <p className="text-xs text-slate-600">
+                          Poster Making (Room 248), Push-up Challenge (Main Hall), Memory Game (Room 248) &amp; Face Painting (Room 247).
+                        </p>
+                      </div>
+                    </div>
 
-                        <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs">
-                          <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-[#00a887] shadow-xs" />
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2">
-                              <span className="px-2.5 py-0.5 rounded-md bg-[#00a887] text-white font-mono font-bold text-[10px]">
-                                01:00 PM - 02:00 PM
-                              </span>
-                              <span className="text-[10px] font-bold text-slate-400">Campus Food Court</span>
-                            </div>
-                            <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
-                              Networking Lunch &amp; Industry Tech Booths
-                            </h4>
-                            <p className="text-xs text-slate-600">
-                              Lunch break provided for all verified badge holders, with live tech demos from sponsor booths.
-                            </p>
-                          </div>
+                    {/* 10:00 AM - 12:00 PM: Technical Track */}
+                    <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-[#f0f8fc] border border-[#bce0f5] shadow-xs hover:border-[#0077c8]/60 transition-colors">
+                      <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-[#0077c8] shadow-xs" />
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2.5 py-0.5 rounded-md bg-[#0077c8] text-white font-mono font-bold text-[10px]">
+                            10:00 AM – 12:00 PM
+                          </span>
+                          <span className="text-[10px] font-bold text-[#0077c8] font-mono">TECHNICAL LAB • ROOM 251</span>
                         </div>
+                        <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
+                          Technical Sprint &amp; Design Competitions
+                        </h4>
+                        <p className="text-xs text-slate-600">
+                          AI Prompt Challenge, UI/UX Designathon, Logo Creation &amp; Website Creation live stage sprints.
+                        </p>
+                      </div>
+                    </div>
 
-                        <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs">
-                          <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-[#7c3aed] shadow-xs" />
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2">
-                              <span className="px-2.5 py-0.5 rounded-md bg-[#7c3aed] text-white font-mono font-bold text-[10px]">
-                                02:00 PM - 04:30 PM
-                              </span>
-                              <span className="text-[10px] font-bold text-slate-400">Design Studio &amp; Hall B</span>
-                            </div>
-                            <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
-                              UI/UX Designathon &amp; Technical Quizzes
-                            </h4>
-                            <p className="text-xs text-slate-600">
-                              Rapid wireframing challenge followed by buzzer battle trivia for tech delegates.
-                            </p>
-                          </div>
+                    {/* 11:00 AM - 12:00 PM & 12:30 PM: Connections & Treasure Hunt */}
+                    <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs hover:border-[#0077c8]/40 transition-colors">
+                      <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-[#00a887] shadow-xs" />
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2.5 py-0.5 rounded-md bg-[#00a887] text-white font-mono font-bold text-[10px]">
+                            11:00 AM – 12:30 PM
+                          </span>
+                          <span className="text-[10px] font-bold text-slate-400">Main Hall &amp; Outdoor Grounds</span>
                         </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs">
-                          <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-[#0077c8] shadow-xs" />
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2">
-                              <span className="px-2.5 py-0.5 rounded-md bg-[#0077c8] text-white font-mono font-bold text-[10px]">
-                                09:30 AM - 12:30 PM
-                              </span>
-                              <span className="text-[10px] font-bold text-slate-400">Main Conference Hall</span>
-                            </div>
-                            <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
-                              Championship Grand Finals &amp; Hackathon Demos
-                            </h4>
-                            <p className="text-xs text-slate-600">
-                              Top qualifying teams present live working prototypes to our jury panel and venture partners.
-                            </p>
-                          </div>
-                        </div>
+                        <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
+                          Connections &amp; Campus Treasure Hunt
+                        </h4>
+                        <p className="text-xs text-slate-600">
+                          Connections trivia (11:00 AM – 12:00 PM at Main Hall) &amp; Outdoor Campus Treasure Hunt (11:00 AM – 12:30 PM).
+                        </p>
+                      </div>
+                    </div>
 
-                        <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs">
-                          <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-[#002b66] shadow-xs" />
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2">
-                              <span className="px-2.5 py-0.5 rounded-md bg-[#002b66] text-white font-mono font-bold text-[10px]">
-                                01:30 PM - 03:30 PM
-                              </span>
-                              <span className="text-[10px] font-bold text-slate-400">Indoor Arena</span>
-                            </div>
-                            <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
-                              e-Sports Showdown &amp; Creative Battles
-                            </h4>
-                            <p className="text-xs text-slate-600">
-                              Multi-player gaming championships, rapid ad-zap showdowns, and photography competitions.
-                            </p>
-                          </div>
+                    {/* 12:00 PM - 01:00 PM: Tech Quiz, Rampwalk & Singing */}
+                    <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs hover:border-[#0077c8]/40 transition-colors">
+                      <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-[#7c3aed] shadow-xs" />
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2.5 py-0.5 rounded-md bg-[#7c3aed] text-white font-mono font-bold text-[10px]">
+                            12:00 PM – 01:00 PM
+                          </span>
+                          <span className="text-[10px] font-bold text-slate-400">Room 251 &amp; Main Hall</span>
                         </div>
+                        <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
+                          Tech Quiz, Rampwalk &amp; Solo Singing
+                        </h4>
+                        <p className="text-xs text-slate-600">
+                          Tech Quiz (12:00 PM – 01:00 PM @ Room 251), Rampwalk (12:00 PM – 12:30 PM) &amp; Singing (12:30 PM – 01:00 PM).
+                        </p>
+                      </div>
+                    </div>
 
-                        <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-2xl bg-[#fffef5] border border-amber-200 shadow-xs">
-                          <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-amber-500 shadow-xs" />
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2">
-                              <span className="px-2.5 py-0.5 rounded-md bg-amber-600 text-white font-mono font-bold text-[10px]">
-                                04:00 PM - 05:30 PM
-                              </span>
-                              <span className="text-[10px] font-bold text-amber-700 font-mono">VALEDICTORY</span>
-                            </div>
-                            <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
-                              Grand Valedictory, Trophy Ceremony &amp; Prize Distribution
-                            </h4>
-                            <p className="text-xs text-slate-600">
-                              Handover of the ₹50,000+ cash award pool, official certificates, and rolling championship trophy.
-                            </p>
-                          </div>
+                    {/* 01:00 PM - 01:30 PM: Lunch Break */}
+                    <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-slate-100/80 border border-slate-200 shadow-xs">
+                      <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-slate-400 shadow-xs" />
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2.5 py-0.5 rounded-md bg-slate-700 text-white font-mono font-bold text-[10px]">
+                            01:00 PM – 01:30 PM
+                          </span>
+                          <span className="text-[10px] font-bold text-slate-500">All Venues</span>
                         </div>
-                      </>
-                    )}
+                        <h4 className="text-sm sm:text-base font-bold text-slate-700">
+                          Lunch &amp; Networking Break
+                        </h4>
+                        <p className="text-xs text-slate-500">
+                          Complimentary lunch and refreshment counters for all registered delegates and pass holders.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* 01:30 PM - 03:00 PM: Free Fire & Dance */}
+                    <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs hover:border-[#0077c8]/40 transition-colors">
+                      <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-rose-500 shadow-xs" />
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2.5 py-0.5 rounded-md bg-rose-600 text-white font-mono font-bold text-[10px]">
+                            01:30 PM – 03:00 PM
+                          </span>
+                          <span className="text-[10px] font-bold text-slate-400">Room 251 &amp; Main Hall</span>
+                        </div>
+                        <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
+                          Free Fire Battle Royale &amp; Dance Showcase
+                        </h4>
+                        <p className="text-xs text-slate-600">
+                          Free Fire Squad Custom Rooms (01:30 PM – 03:00 PM @ Room 251) &amp; Dance Competitions (02:00 PM – 03:00 PM @ Main Hall).
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* 03:00 PM - 03:30 PM: Closing & Results */}
+                    <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-[#fffef5] border border-amber-200 shadow-xs">
+                      <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-amber-500 shadow-xs" />
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2.5 py-0.5 rounded-md bg-amber-600 text-white font-mono font-bold text-[10px]">
+                            03:00 PM – 03:30 PM
+                          </span>
+                          <span className="text-[10px] font-bold text-amber-700 font-mono">VALEDICTORY</span>
+                        </div>
+                        <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
+                          Event Closing, Results &amp; Trophy Distribution
+                        </h4>
+                        <p className="text-xs text-slate-600">
+                          Official announcement of winners across all 15 events, certificate awards &amp; symposium valedictory.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </section>
@@ -1996,6 +1991,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     id="access-roll-number"
                     name="accessRollNumber"
                     type="text"
+                    autoComplete="off"
                     required
                     value={accessRollNumber}
                     onChange={(e) => setAccessRollNumber(e.target.value.toUpperCase())}

@@ -39,7 +39,7 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
     {
       name: participantData.name || '',
       rollNumber: participantData.rollNumber || '',
-      department: participantData.department || 'Dept. of Computer Science & Engineering',
+      department: participantData.department || 'Dept. of Information Technology',
       collegeName: participantData.collegeName || "St. Peter's Institute of Higher Education & Research",
       dateOfBirth: participantData.dateOfBirth,
       isLeader: true,

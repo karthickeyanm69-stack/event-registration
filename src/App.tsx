@@ -339,11 +339,19 @@ export default function App() {
         document.head.appendChild(manifestLink);
       }
 
-      // 2. Register Service Worker for Native Chrome Installation
+      // 2. Register Service Worker in production only for Native Chrome Installation
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').catch((err) => {
-          console.warn('Staff PWA ServiceWorker registration warning:', err);
-        });
+        if (import.meta.env.PROD) {
+          navigator.serviceWorker.register('/sw.js').catch((err) => {
+            console.warn('Staff PWA ServiceWorker registration warning:', err);
+          });
+        } else {
+          navigator.serviceWorker.getRegistrations().then((registrations) => {
+            for (const registration of registrations) {
+              registration.unregister();
+            }
+          });
+        }
       }
     } else {
       // Remove manifest when viewing participant pages

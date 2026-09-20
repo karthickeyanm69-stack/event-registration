@@ -16,10 +16,24 @@ export interface Participant {
   createdAt: string;
 }
 
+export type CoordinatorRole =
+  | 'Faculty Coordinator'
+  | 'Student Coordinator'
+  | 'Lead Organizer'
+  | 'HOD'
+  | 'Convenor'
+  | 'Organizer (4th Year)'
+  | 'Coordinator (3rd Year)'
+  | 'Coordinators (3rd Year)'
+  | 'Asst-Coordinator (2nd Year)'
+  | 'Asst-Coordinators (2nd Year)'
+  | 'Asst-Coordinator (3rd Year)'
+  | (string & {});
+
 export interface Coordinator {
   id: string;
   name: string;
-  role: 'Faculty Coordinator' | 'Student Coordinator' | 'Lead Organizer' | 'HOD' | 'Convenor';
+  role: CoordinatorRole;
   phone: string;
   email: string;
   photoUrl: string;

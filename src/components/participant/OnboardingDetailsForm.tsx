@@ -35,7 +35,7 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
 }) => {
   const [name, setName] = useState('');
   const [collegeName, setCollegeName] = useState("St. Peter's Institute of Higher Education & Research");
-  const [department, setDepartment] = useState('Dept. of Computer Science & Engineering');
+  const [department, setDepartment] = useState('Dept. of Information Technology');
   const [rollNumber, setRollNumber] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [email, setEmail] = useState('');
@@ -44,7 +44,7 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
   const [existingRegNotice, setExistingRegNotice] = useState<{ participant: Participant; registration: Registration } | null>(null);
 
   const departments = [
-    'Dept. of Computer Science & Engineering',
+    'Dept. of Information Technology',
     'Dept. of Artificial Intelligence & Data Science',
     'Dept. of Information Technology',
     'Dept. of Electronics & Communication',
@@ -288,6 +288,7 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
                 id="onboarding-name"
                 name="fullName"
                 type="text"
+                autoComplete="name"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -307,6 +308,7 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
                   id="onboarding-roll"
                   name="rollNumber"
                   type="text"
+                  autoComplete="off"
                   required
                   value={rollNumber}
                   onChange={(e) => setRollNumber(e.target.value.toUpperCase())}
@@ -363,6 +365,7 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
                   id="onboarding-email"
                   name="email"
                   type="email"
+                  autoComplete="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -380,6 +383,7 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
                   id="onboarding-phone"
                   name="phone"
                   type="tel"
+                  autoComplete="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+91 98765 43210"

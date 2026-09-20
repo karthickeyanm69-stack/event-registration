@@ -24,6 +24,8 @@ import {
   Share2,
   Building,
   ArrowRight,
+  Menu,
+  X,
 } from 'lucide-react';
 import QRCode from 'qrcode';
 import { CollegeEvent, Coordinator, Participant, Registration } from '../../types';
@@ -43,10 +45,42 @@ interface ParticipantDashboardProps {
 
 export type ParticipantTab = 'home' | 'rules' | 'event' | 'contact' | 'pass';
 
+const defaultFallbackRegistration: Registration = {
+  id: 'reg-default',
+  registrationNumber: 'RAD-2026-88421',
+  eventId: 'evt-ai-prompt',
+  eventTitle: 'AI Prompt',
+  category: 'Technical',
+  leaderId: 'part-default',
+  leaderName: 'Alex Mercer',
+  leaderRollNumber: '2021CS042',
+  leaderEmail: 'alex.mercer@spiher.edu.in',
+  collegeName: "St. Peter's Institute of Higher Education & Research",
+  department: 'Dept. of Information Technology',
+  isTeamEvent: true,
+  teamName: 'PromptMasters',
+  members: [],
+  status: 'ACTIVE',
+  qrToken: 'SPIHER_RAD_TOKEN_V1_SEC',
+  registeredAt: new Date().toISOString(),
+};
+
+const defaultFallbackParticipant: Participant = {
+  id: 'part-default',
+  name: 'Alex Mercer',
+  rollNumber: '2021CS042',
+  department: 'Dept. of Information Technology',
+  collegeName: "St. Peter's Institute of Higher Education & Research",
+  email: 'alex.mercer@spiher.edu.in',
+  phone: '+91 98765 43210',
+  dateOfBirth: '2003-05-14',
+  createdAt: new Date().toISOString(),
+};
+
 export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
-  participant = MockDatabaseService.getParticipants()[0],
-  registration = MockDatabaseService.getRegistrations()[0],
-  events,
+  participant = MockDatabaseService.getParticipants()[0] || defaultFallbackParticipant,
+  registration = MockDatabaseService.getRegistrations()[0] || defaultFallbackRegistration,
+  events = MockDatabaseService.getEvents(),
   onSignOut,
   onEventChangedSuccess,
   onStartNewRegistration,
@@ -63,9 +97,35 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
 
   const [activeTab, setActiveTab] = useState<ParticipantTab>(getTabFromUrl());
   const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
 
-  const currentEvent = events.find((e) => e.id === registration.eventId) || events[0];
+  const fallbackEvent = MockDatabaseService.getEvents()[0] || {
+    id: 'evt-ai-prompt',
+    title: 'AI Prompt',
+    category: 'Technical',
+    tagline: 'Creative Prompt Engineering & Generative AI Challenge',
+    description: 'Test your mastery of generative AI models.',
+    isTeamEvent: true,
+    minTeamSize: 1,
+    maxTeamSize: 2,
+    price: 0,
+    date: 'Oct 24, 2026',
+    time: '10:00 AM - 12:00 PM',
+    startTime: '10:00 AM',
+    endTime: '12:00 PM',
+    venue: 'Room 251',
+    totalSlots: 40,
+    slotsLeft: 22,
+    rules: ['Individual or team of 2.', 'Allowed to use provided AI model interfaces.'],
+    coordinators: [],
+    status: 'OPEN',
+  };
+
+  const currentEvent =
+    events?.find((e) => e?.id === registration?.eventId) ||
+    events?.[0] ||
+    fallbackEvent;
 
   useEffect(() => {
     const handlePopState = () => {
@@ -90,19 +150,22 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
   });
 
   useEffect(() => {
-    if (registration.qrToken) {
+    if (registration?.qrToken) {
       const origin = window.location.origin;
-      const verifyUrl = `${origin}/?verify=${encodeURIComponent(registration.registrationNumber)}&token=${encodeURIComponent(registration.qrToken)}`;
+      const verifyUrl = `${origin}/?verify=${encodeURIComponent(registration?.registrationNumber || 'RAD-2026-PASS')}&token=${encodeURIComponent(registration?.qrToken || '')}`;
 
       QRCode.toDataURL(verifyUrl, {
         width: 320,
         margin: 1.5,
         color: { dark: '#002147', light: '#ffffff' },
-      }).then(setQrDataUrl);
+      })
+        .then(setQrDataUrl)
+        .catch((err) => console.warn('QR generation notice:', err));
     }
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
+        if (!prev) return { hours: 2, minutes: 0, seconds: 0 };
         if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
         if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 };
         if (prev.hours > 0) return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
@@ -116,29 +179,30 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
     if (!qrDataUrl) return;
     const a = document.createElement('a');
     a.href = qrDataUrl;
-    a.download = `${registration.registrationNumber}-Pass.png`;
+    a.download = `${registration?.registrationNumber || 'RAD-2026'}-Pass.png`;
     a.click();
   };
 
   const navItems: { id: ParticipantTab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { id: 'home', label: 'Overview', icon: HomeIcon },
-    { id: 'rules', label: 'Event Rules', icon: BookOpen },
-    { id: 'pass', label: 'My QR Pass', icon: QrIcon },
-    { id: 'event', label: 'Countdown & Schedule', icon: Calendar },
+    { id: 'rules', label: 'Rules', icon: BookOpen },
+    { id: 'pass', label: 'Entry Pass', icon: QrIcon },
+    { id: 'event', label: 'Schedule', icon: Calendar },
     { id: 'contact', label: 'Coordinators', icon: PhoneCall },
   ];
 
   return (
     <div className="w-full min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans overflow-x-hidden">
-      {/* Top Header Bar with Official College Logo & Glassmorphism */}
-      <header className="h-16 bg-white/80 backdrop-blur-xl border-b border-[#d4e8f5]/80 px-4 sm:px-8 lg:px-12 flex items-center sticky top-0 z-40 shadow-sm w-full transition-all">
-        <div className="max-w-[1700px] 2xl:max-w-[1920px] mx-auto w-full flex items-center justify-between">
-          <div className="flex items-center gap-3">
+      {/* Top Header Bar with Clean Brand & Desktop Navigation / Mobile Menu Trigger */}
+      <header className="h-16 bg-white/95 backdrop-blur-xl border-b border-slate-200 px-4 sm:px-6 lg:px-8 flex items-center sticky top-0 z-40 shadow-xs w-full transition-all">
+        <div className="max-w-[1700px] 2xl:max-w-[1920px] mx-auto w-full flex items-center justify-between gap-4">
+          {/* Left: Brand Identity */}
+          <div className="flex items-center gap-3 shrink-0">
             <CollegeLogo variant="compact" size="sm" showSubtitle={false} />
           </div>
 
-          {/* Desktop Navigation Links with Glassmorphism */}
-          <nav className="hidden md:flex items-center gap-1.5 bg-slate-100/70 backdrop-blur-md p-1.5 rounded-2xl border border-slate-200/80 shadow-inner">
+          {/* Center: Clean Desktop Navigation Pill Bar */}
+          <nav className="hidden md:flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200 shadow-2xs shrink-0">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -146,143 +210,224 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                 <button
                   key={item.id}
                   onClick={() => handleTabChange(item.id)}
-                  className={`flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-teal-600 text-white shadow-md shadow-teal-600/30 scale-105'
+                      ? 'bg-[#0077c8] text-white shadow-xs font-bold'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-white/80'
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5" />
+                  <Icon className="w-3.5 h-3.5 shrink-0" />
                   <span>{item.label}</span>
                 </button>
               );
             })}
           </nav>
 
-          {/* Right Header Actions: Modern Premium Action Bar */}
-          <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* Right: Desktop Actions */}
+          <div className="hidden md:flex items-center gap-2 sm:gap-2.5 shrink-0">
             {/* Participant Identity Badge */}
-            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#f0f8fc] border border-[#d4e8f5] text-xs shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="font-bold text-[#002b66] truncate max-w-[130px]">{participant.name}</span>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white text-[#0077c8] border border-[#d4e8f5] font-bold">
+            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100/90 border border-slate-200 text-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+              <span className="font-bold text-[#002b66] truncate max-w-[120px]">{participant.name}</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white text-[#0077c8] border border-slate-200 font-bold">
                 {participant.rollNumber}
               </span>
             </div>
 
-            {/* Change Event Button (Modern Deep Navy -> Royal Cyan Gradient) */}
+            {/* Change Event Button */}
             <button
               type="button"
               onClick={() => setIsChangeModalOpen(true)}
-              className="group flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white text-xs font-bold transition-all duration-200 shadow-sm shadow-[#0077c8]/20 hover:shadow-md hover:shadow-[#0077c8]/30 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              className="group flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white text-xs font-bold transition-all shadow-xs hover:shadow-sm hover:scale-[1.02] active:scale-[0.98] cursor-pointer whitespace-nowrap"
             >
-              <RefreshCw className="w-3.5 h-3.5 text-[#7af1fc] group-hover:rotate-180 transition-transform duration-500" />
-              <span className="tracking-tight whitespace-nowrap">Change Event</span>
+              <RefreshCw className="w-3.5 h-3.5 text-[#7af1fc] group-hover:rotate-180 transition-transform duration-500 shrink-0" />
+              <span>Change Event</span>
             </button>
 
-            {/* Sign Out Button (Refined Icon Button) */}
+            {/* Sign Out Button */}
             <button
               type="button"
               onClick={onSignOut}
               title="Sign Out"
-              className="p-2 rounded-xl bg-white hover:bg-rose-50 text-slate-500 hover:text-rose-600 border border-[#d4e8f5] hover:border-rose-200 shadow-xs transition-all duration-200 cursor-pointer"
+              className="p-1.5 rounded-xl bg-white hover:bg-rose-50 text-slate-500 hover:text-rose-600 border border-slate-200 hover:border-rose-200 shadow-2xs transition-all cursor-pointer shrink-0"
             >
               <LogOut className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Right Mobile Menu Button (Clean bordered box matching Reference Image) */}
+          <div className="md:hidden flex items-center">
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 rounded-lg border border-slate-300 hover:border-slate-400 bg-white text-slate-800 shadow-xs transition-colors cursor-pointer"
+              aria-label="Toggle navigation menu"
+            >
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
       </header>
 
+      {/* Mobile Slide-Over Drawer Navigation (Matching Reference Image) */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-slate-950/40 backdrop-blur-xs z-50 md:hidden transition-opacity"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      <div
+        className={`fixed inset-y-0 right-0 w-[82%] max-w-xs bg-white z-50 shadow-2xl flex flex-col justify-between transition-transform duration-300 ease-in-out md:hidden ${
+          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        {/* Drawer Top Header (Logo + [X] Close Box) */}
+        <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+          <CollegeLogo variant="compact" size="sm" showSubtitle={false} />
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="p-1.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+            aria-label="Close menu"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Drawer Nav Links (Clean list with subtle dividers like reference image) */}
+        <div className="flex-1 py-3 px-5 divide-y divide-slate-100 overflow-y-auto">
+          {navItems.map((item) => {
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  handleTabChange(item.id);
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`w-full py-4 text-left text-sm font-semibold transition-colors flex items-center justify-between cursor-pointer ${
+                  isActive ? 'text-[#0077c8] font-bold' : 'text-slate-800 hover:text-[#0077c8]'
+                }`}
+              >
+                <span>{item.label}</span>
+                {isActive && <span className="w-2 h-2 rounded-full bg-[#0077c8]" />}
+              </button>
+            );
+          })}
+
+          {/* Participant Profile Badge */}
+          <div className="pt-4 mt-2">
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs space-y-1">
+              <div className="flex items-center gap-1.5 text-emerald-600 font-bold text-[11px]">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Active Candidate</span>
+              </div>
+              <p className="font-bold text-slate-900 text-sm">{participant.name}</p>
+              <p className="font-mono text-slate-500 text-[11px]">{participant.rollNumber}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Drawer Bottom CTA (Matching red/blue pill button in reference image) */}
+        <div className="p-4 border-t border-slate-100 space-y-2 bg-slate-50/60">
+          <button
+            type="button"
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              setIsChangeModalOpen(true);
+            }}
+            className="w-full py-3.5 rounded-full bg-[#0077c8] hover:bg-[#005fa3] text-white font-extrabold text-xs uppercase tracking-wider shadow-md shadow-[#0077c8]/25 transition-all text-center flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>CHANGE EVENT</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              onSignOut();
+            }}
+            className="w-full py-2.5 rounded-full border border-slate-300 bg-white hover:bg-rose-50 text-slate-700 hover:text-rose-600 font-semibold text-xs tracking-wider transition-colors text-center flex items-center justify-center gap-1.5 cursor-pointer"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </div>
+
       {/* ========================================================================= */}
-      {/* FULL-BLEED VERTICAL HERO SECTION (Clean, Bright, Crisp & Modern White)   */}
+      {/* BRIGHT PANORAMIC CAMPUS HERO (Clean & Free-Floating Modern Layout)        */}
       {/* ========================================================================= */}
       {activeTab === 'home' && (
-        <section className="relative w-full min-h-[70vh] sm:min-h-[78vh] lg:min-h-[82vh] flex flex-col justify-between overflow-hidden bg-gradient-to-b from-white via-sky-50/40 to-slate-50 border-b border-[#e2eff7]">
-          {/* Soft St. Peter's College Building Facade Texture (Bright High-Key) */}
+        <section className="relative w-full min-h-[75vh] sm:min-h-[80vh] lg:min-h-[85vh] flex items-center overflow-hidden bg-slate-950 border-b border-slate-200">
+          {/* Bright, Vibrant High-Definition St. Peter's Campus Backdrop */}
           <img
-            src="/spiher-hero-hd.jpg?v=3"
-            alt="St. Peter's Institute Main Building"
-            className="absolute inset-0 w-full h-full object-cover object-center opacity-15 mix-blend-multiply pointer-events-none"
+            src="/spiher-hero-hd.jpg?v=9"
+            alt="St. Peter's Campus"
+            className="absolute inset-0 w-full h-full object-cover object-[center_30%] opacity-90 brightness-[1.02] contrast-[1.05] saturate-[1.08] transition-transform duration-1000"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = '/spiher-hero-building.png?v=3';
+              (e.target as HTMLImageElement).src = '/spiher-hero-building.png?v=9';
             }}
           />
-          {/* Crisp Light Luminous Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-50/95 via-white/80 to-white/70 pointer-events-none" />
 
-          {/* Top Subtle Brand Chip */}
-          <div className="relative z-10 pt-6 sm:pt-8 px-6 max-w-6xl mx-auto w-full flex items-center justify-between">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white shadow-xs border border-[#d4e8f5] text-[#0077c8] text-[11px] font-bold tracking-wide">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>SPIHER • Deemed to be University</span>
-            </div>
-            <span className="text-xs text-[#002b66] font-semibold tracking-wide hidden sm:inline-block bg-[#f0f8fc] px-3 py-1 rounded-full border border-[#d4e8f5]">
-              IGNITE 2026 • Live Platform
-            </span>
-          </div>
+          {/* Smooth directional gradient for cinematic depth and clear text legibility */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent w-full md:w-3/4 lg:w-3/5 pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-950/80 to-transparent pointer-events-none" />
 
-          {/* Central Hero Typography & Clean College Branding (Clean White Aesthetic) */}
-          <div className="relative z-10 p-4 sm:p-8 max-w-2xl mx-auto text-center space-y-4 my-auto">
-            <div className="flex justify-center">
-              <div className="p-3 rounded-2xl bg-white shadow-md border border-[#d4e8f5]">
-                <CollegeEmblem size={56} />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-extrabold text-[#001f4d] tracking-tight leading-tight drop-shadow-xs">
-                IGNITE 2026
-              </h1>
-              <p className="text-sm sm:text-lg text-[#002b66] font-bold tracking-wide max-w-lg mx-auto leading-relaxed">
-                National Level Technical &amp; Non-Technical Symposium
-              </p>
-              <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed max-w-md mx-auto">
-                Departments of Computer Science &amp; Engineering and Information Technology
-              </p>
-            </div>
-          </div>
-
-          {/* Bottom Unified Executive Pass Bar with Action Buttons (Light Theme) */}
-          <div className="relative z-10 pb-6 sm:pb-8 px-4 max-w-5xl mx-auto w-full">
-            <div className="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-white/95 backdrop-blur-xl border border-[#d4e8f5] text-slate-900 flex flex-col lg:flex-row items-center justify-between gap-4 shadow-[0_20px_50px_-15px_rgba(0,43,102,0.12)]">
-              {/* Pass Status Badge & Identity */}
-              <div className="flex flex-col sm:flex-row items-center gap-2.5 text-center sm:text-left">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold uppercase text-[9px] tracking-wider">
-                    PASS ACTIVE
-                  </span>
-                </div>
-                <div className="text-xs text-slate-700">
-                  <span className="font-semibold">{participant.name}</span>
-                  <span className="text-slate-300 mx-1.5">•</span>
-                  <strong className="text-[#001f4d]">{registration.eventTitle}</strong>
-                  <span className="text-[#0077c8] font-mono font-bold text-[11px] ml-1.5 hidden md:inline">
-                    ({registration.registrationNumber})
-                  </span>
-                </div>
+          {/* Clean, Free-Floating Content Stack (No enclosing box) */}
+          <div className="relative z-10 px-4 sm:px-8 lg:px-12 max-w-[1700px] 2xl:max-w-[1920px] mx-auto w-full py-12 sm:py-16">
+            <div className="max-w-2xl space-y-5 sm:space-y-6 text-left">
+              {/* 1. Category Tagline (Free floating, no box) */}
+              <div>
+                <p className="text-xs sm:text-sm uppercase font-extrabold tracking-widest text-[#38bdf8] drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
+                  NATIONAL LEVEL SYMPOSIUM
+                </p>
               </div>
 
-              {/* Action Buttons Unified in Bottom Bar */}
-              <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full lg:w-auto">
+              {/* 2. Sleek Modern Dominant Headline */}
+              <div className="space-y-1.5">
+                <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.05] text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]">
+                  RADIANZA <span className="text-[#38bdf8] drop-shadow-[0_0_30px_rgba(56,189,248,0.6)]">'26</span>
+                </h1>
+                <p className="text-xs sm:text-sm font-semibold tracking-wider text-slate-300 uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                  Department of Information Technology • Technical &amp; Non-Technical Symposium
+                </p>
+              </div>
+
+              {/* 3. Bridging Narrative Copy */}
+              <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-normal max-w-xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                Curated collection of 15 flagship technical and non-technical challenges. Every competition prepared, every rule perfected, every participant primed for excellence.
+              </p>
+
+              {/* 4. Action Buttons & Active Status (Clean Pill Style) */}
+              <div className="pt-2 flex flex-wrap items-center gap-3 sm:gap-4">
                 <button
                   type="button"
                   onClick={() => handleTabChange('pass')}
-                  className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white font-bold text-xs shadow-md shadow-[#0077c8]/25 flex items-center justify-center gap-2 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                  className="px-7 py-3 rounded-full bg-[#0077c8] hover:bg-[#005fa3] text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider shadow-xl shadow-cyan-950/40 border border-cyan-400/30 transition-all cursor-pointer hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-2"
                 >
                   <QrCode className="w-4 h-4 text-[#7af1fc]" />
                   <span>View My Entry Pass</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-3.5 h-3.5 text-cyan-200" />
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleTabChange('contact')}
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#f0f8fc] hover:bg-[#e4f3fa] border border-[#d4e8f5] text-[#002b66] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                  className="px-7 py-3 rounded-full border border-white/30 hover:border-white bg-slate-900/60 hover:bg-slate-900/80 backdrop-blur-sm text-white font-bold text-xs sm:text-sm uppercase tracking-wider transition-all cursor-pointer hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-2"
                 >
-                  <Building className="w-4 h-4 text-[#0077c8]" />
+                  <Building className="w-4 h-4 text-cyan-300" />
                   <span>Campus Venue</span>
                 </button>
+
+                {/* Active Indicator Chip */}
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/80 backdrop-blur-sm border border-white/15 text-xs text-slate-200 shadow-md">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="font-bold text-emerald-300 text-[10px] tracking-wider uppercase">Active</span>
+                  <span className="text-slate-200 font-mono text-xs font-bold">{registration?.registrationNumber || 'RAD-2026-PASS'}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -307,7 +452,7 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                   Empowering Technical Innovation
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-                  IGNITE 2026 brings together South India's top tech delegates to compete, collaborate, and showcase talent.
+                  RADIANZA ’26 brings together South India's top tech delegates to compete, collaborate, and showcase talent.
                 </p>
 
                 {/* Convenor Quote */}
@@ -335,7 +480,7 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                         HOD &amp; Convenor
                       </span>
                       <h3 className="text-lg font-bold text-white mt-1">Dr. K. Senthil Nathan</h3>
-                      <p className="text-xs text-slate-300">Dept. of CSE &amp; IT</p>
+                      <p className="text-xs text-slate-300">Dept. of Information Technology</p>
                     </div>
                   </div>
                 </div>
@@ -553,7 +698,7 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                 <div className="flex items-center gap-4 text-[11px] text-teal-300 font-mono font-semibold">
                   <span>Dept. of CSE &amp; IT</span>
                   <span>•</span>
-                  <span>IGNITE 2026</span>
+                  <span>RADIANZA '26</span>
                 </div>
               </div>
             </footer>
@@ -569,16 +714,16 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
               <span className="text-[10px] uppercase font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-200">
                 Rulebook &amp; Guidelines
               </span>
-              <h2 className="text-2xl font-bold text-slate-900 mt-2">{currentEvent.title}</h2>
-              <p className="text-xs text-slate-500 mt-0.5">{currentEvent.tagline}</p>
+              <h2 className="text-2xl font-bold text-slate-900 mt-2">{currentEvent?.title || 'Competition Rules'}</h2>
+              <p className="text-xs text-slate-500 mt-0.5">{currentEvent?.tagline || 'Official Guidelines'}</p>
             </div>
 
             <div className="space-y-4">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                Evaluation Guidelines ({currentEvent.rules.length} Rules)
+                Evaluation Guidelines ({(currentEvent?.rules || []).length} Rules)
               </h3>
               <div className="grid grid-cols-1 gap-3">
-                {currentEvent.rules.map((rule, idx) => (
+                {(currentEvent?.rules || []).map((rule, idx) => (
                   <div key={idx} className="flex items-start gap-3.5 p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs text-slate-800">
                     <span className="w-6 h-6 rounded-full bg-teal-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
                       {idx + 1}
@@ -605,7 +750,7 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                     <p className="text-[10px] text-[#0077c8] uppercase tracking-wider font-bold">Official Registry Pass</p>
                   </div>
                 </div>
-                <span className="font-mono text-xs font-bold text-[#0077c8]">{registration.registrationNumber}</span>
+                <span className="font-mono text-xs font-bold text-[#0077c8]">{registration?.registrationNumber || 'RAD-2026-PASS'}</span>
               </div>
 
               {/* QR Code Centrepiece */}
@@ -621,8 +766,8 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
               </div>
 
               <div className="space-y-2 text-xs">
-                <h4 className="font-bold text-lg text-slate-900">{registration.eventTitle}</h4>
-                {registration.teamName && (
+                <h4 className="font-bold text-lg text-slate-900">{registration?.eventTitle || currentEvent?.title}</h4>
+                {registration?.teamName && (
                   <p className="text-xs text-teal-700 font-semibold flex items-center gap-1">
                     <Crown className="w-3.5 h-3.5 text-amber-500" />
                     <span>{registration.teamName}</span>
@@ -632,12 +777,12 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                 <div className="grid grid-cols-2 gap-2 text-xs text-slate-600 pt-2 border-t border-slate-200">
                   <div>
                     <span className="text-[10px] text-slate-500 uppercase block font-bold">Candidate</span>
-                    <span className="font-bold text-slate-900">{registration.leaderName}</span>
-                    <span className="text-[10px] font-mono text-teal-700 block font-semibold">{registration.leaderRollNumber}</span>
+                    <span className="font-bold text-slate-900">{registration?.leaderName || participant?.name}</span>
+                    <span className="text-[10px] font-mono text-teal-700 block font-semibold">{registration?.leaderRollNumber || participant?.rollNumber}</span>
                   </div>
                   <div>
                     <span className="text-[10px] text-slate-500 uppercase block font-bold">Venue</span>
-                    <span className="font-medium text-slate-900">{currentEvent.venue}</span>
+                    <span className="font-medium text-slate-900">{currentEvent?.venue || 'Campus Venue'}</span>
                   </div>
                 </div>
               </div>
@@ -665,21 +810,21 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
               </span>
               <div className="flex items-center justify-center gap-3 sm:gap-6 pt-2">
                 <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-md min-w-[90px] text-center">
-                  <span className="text-3xl sm:text-4xl font-bold font-mono text-slate-900">{String(timeLeft.hours).padStart(2, '0')}</span>
+                  <span className="text-3xl sm:text-4xl font-bold font-mono text-slate-900">{String(timeLeft?.hours ?? 2).padStart(2, '0')}</span>
                   <span className="text-[10px] uppercase tracking-wider block text-slate-500 font-bold mt-1">Hours</span>
                 </div>
                 <span className="text-3xl font-bold text-slate-300">:</span>
                 <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-md min-w-[90px] text-center">
-                  <span className="text-3xl sm:text-4xl font-bold font-mono text-slate-900">{String(timeLeft.minutes).padStart(2, '0')}</span>
+                  <span className="text-3xl sm:text-4xl font-bold font-mono text-slate-900">{String(timeLeft?.minutes ?? 0).padStart(2, '0')}</span>
                   <span className="text-[10px] uppercase tracking-wider block text-slate-500 font-bold mt-1">Mins</span>
                 </div>
                 <span className="text-3xl font-bold text-slate-300">:</span>
                 <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-md min-w-[90px] text-center">
-                  <span className="text-3xl sm:text-4xl font-bold font-mono text-teal-600">{String(timeLeft.seconds).padStart(2, '0')}</span>
+                  <span className="text-3xl sm:text-4xl font-bold font-mono text-teal-600">{String(timeLeft?.seconds ?? 0).padStart(2, '0')}</span>
                   <span className="text-[10px] uppercase tracking-wider block text-slate-500 font-bold mt-1">Secs</span>
                 </div>
               </div>
-              <p className="text-xs text-slate-600 font-medium">Scheduled for {currentEvent.date} @ {currentEvent.time}</p>
+              <p className="text-xs text-slate-600 font-medium">Scheduled for {currentEvent?.date || 'Oct 24, 2026'} @ {currentEvent?.time || currentEvent?.startTime || '10:00 AM'}</p>
             </div>
 
             <div className="space-y-3 pt-4 border-t border-slate-200">
@@ -688,8 +833,8 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                 <span>Venue &amp; Location Navigation</span>
               </h3>
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-1.5">
-                <p className="font-bold text-slate-900 text-sm">📍 {currentEvent.venue}</p>
-                <p>St. Peter's Institute Main Campus, Block C • Follow physical signage for "{currentEvent.title}".</p>
+                <p className="font-bold text-slate-900 text-sm">📍 {currentEvent?.venue || 'Campus Venue'}</p>
+                <p>St. Peter's Institute Main Campus • Follow physical signage for "{currentEvent?.title || 'Registered Event'}".</p>
               </div>
             </div>
           </div>
@@ -700,69 +845,68 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
         {/* ========================================================================= */}
         {activeTab === 'contact' && (
           <div className="space-y-8 max-w-5xl mx-auto">
-            {/* 2 Event Employees Section */}
+            {/* Event Coordinators & Organizers Section */}
             <div className="space-y-4">
-              <div className="pb-3 border-b border-slate-200 flex items-center justify-between">
+              <div className="pb-3 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-teal-700">Support Directory</span>
-                  <h2 className="text-2xl font-bold text-slate-900 mt-0.5">Event Coordinators</h2>
+                  <span className="text-[10px] uppercase font-bold text-[#0077c8]">Support Directory</span>
+                  <h2 className="text-2xl font-bold text-[#002b66] mt-0.5">
+                    {currentEvent.title} Coordinators
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    Official student organizers &amp; event leads for your registered competition ({currentEvent.venue}).
+                  </p>
                 </div>
-                <span className="text-xs font-bold px-3 py-1 rounded-full bg-teal-50 text-teal-800 border border-teal-200">
-                  2 Event Employees
+                <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#f0f8fc] text-[#0077c8] border border-[#d4e8f5] w-fit">
+                  {currentEvent.coordinators?.length || 0} Event Leads
                 </span>
               </div>
 
-              {/* 2 Event Employees Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Employee 1 - Faculty Coordinator */}
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-4 text-xs">
-                  <div className="flex items-center gap-3.5">
-                    <img
-                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80"
-                      alt="Dr. K. Senthil Nathan"
-                      className="w-14 h-14 rounded-full object-cover border-2 border-teal-600"
-                    />
-                    <div>
-                      <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-teal-600 text-white uppercase">
-                        Employee 1 • Faculty Coordinator
-                      </span>
-                      <h4 className="font-bold text-slate-900 text-sm mt-1">Dr. K. Senthil Nathan</h4>
-                      <p className="text-[11px] text-teal-700 font-semibold">Dept. of Computer Science &amp; Engineering</p>
-                      <p className="text-xs text-slate-700 font-mono font-bold mt-1">+91 98401 23456</p>
-                    </div>
-                  </div>
-
-                  <a
-                    href="tel:+919840123456"
-                    className="p-3.5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white transition-colors shadow-md shadow-teal-600/20 shrink-0"
-                    title="Call Coordinator"
+              {/* Dynamic Event Coordinator Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {(currentEvent.coordinators || []).map((coord, idx) => (
+                  <div
+                    key={coord.id || idx}
+                    className="p-5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs flex items-center justify-between gap-4 text-xs hover:border-[#0077c8]/40 hover:shadow-md transition-all"
                   >
-                    <PhoneCall className="w-5 h-5 font-bold" />
-                  </a>
-                </div>
-
-                {/* Employee 2 - Event Evaluator */}
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-4 text-xs">
-                  <div className="flex items-center gap-3.5">
-                    <img
-                      src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80"
-                      alt="Praveen Chandran"
-                      className="w-14 h-14 rounded-full object-cover border-2 border-slate-400"
-                    />
-                    <div>
-                      <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-slate-700 text-white uppercase">
-                        Employee 2 • Event Evaluator
-                      </span>
-                      <h4 className="font-bold text-slate-900 text-sm mt-1">Praveen Chandran</h4>
-                      <p className="text-[11px] text-slate-600 font-semibold">Dept. of Computer Science</p>
-                      <p className="text-[11px] text-slate-500 font-mono mt-1">Contact details available soon</p>
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <img
+                        src={
+                          coord.photoUrl ||
+                          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80'
+                        }
+                        alt={coord.name}
+                        className="w-13 h-13 rounded-full object-cover border-2 border-[#0077c8] shrink-0"
+                      />
+                      <div className="min-w-0 space-y-0.5">
+                        <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-[#f0f8fc] text-[#0077c8] border border-[#d4e8f5] uppercase inline-block truncate max-w-full">
+                          {coord.role}
+                        </span>
+                        <h4 className="font-bold text-[#002b66] text-sm truncate">{coord.name}</h4>
+                        <p className="text-[11px] text-slate-500 truncate">{coord.department}</p>
+                        {coord.phone && (
+                          <p className="text-xs text-[#0077c8] font-mono font-bold mt-1 truncate">
+                            {coord.phone}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="p-3 rounded-2xl bg-slate-200 text-slate-600 text-[10px] font-semibold shrink-0">
-                    Coordinator
+                    {coord.phone ? (
+                      <a
+                        href={`tel:${coord.phone.replace(/[^0-9+]/g, '')}`}
+                        className="p-3 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white transition-all shadow-md shadow-[#0077c8]/20 shrink-0 cursor-pointer hover:scale-105 active:scale-95"
+                        title={`Call ${coord.name}`}
+                      >
+                        <PhoneCall className="w-4 h-4 font-bold" />
+                      </a>
+                    ) : (
+                      <div className="p-2 rounded-lg bg-slate-100 text-slate-500 text-[10px] font-semibold shrink-0">
+                        Lead
+                      </div>
+                    )}
                   </div>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -803,30 +947,96 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
         )}
       </main>
 
-      {/* Floating Mobile Bottom Navigation Bar (Floating Dock) */}
-      <div className="md:hidden fixed bottom-4 left-3 right-3 z-50 flex justify-center pointer-events-none">
-        <nav className="pointer-events-auto w-full max-w-md bg-white/95 backdrop-blur-xl border border-slate-200/90 shadow-2xl shadow-slate-900/20 rounded-full px-3 py-2 flex items-center justify-around">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => handleTabChange(item.id)}
-                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-full transition-all duration-200 cursor-pointer ${
-                  isActive
-                    ? 'bg-teal-600 text-white shadow-md shadow-teal-600/30 font-bold scale-105'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                <span className="text-[9px] font-bold tracking-tight">{item.label.split(' ')[0]}</span>
-              </button>
-            );
-          })}
-        </nav>
-      </div>
+      {/* ========================================================================= */}
+      {/* PROPER FULL-WIDTH GLOBAL FOOTER (Unboxed, Elegant & Responsive)           */}
+      {/* ========================================================================= */}
+      <footer className="w-full bg-slate-950 text-slate-400 border-t border-slate-800 mt-auto">
+        <div className="max-w-[1700px] 2xl:max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-12 py-12 lg:py-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12">
+            {/* Column 1: Brand & Institution Info */}
+            <div className="lg:col-span-5 space-y-4">
+              <div className="flex items-center gap-2.5 text-white">
+                <CollegeEmblem size={28} />
+                <span className="font-serif text-2xl font-bold tracking-tight">
+                  RADIANZA <span className="text-[#38bdf8]">'26</span>
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-md">
+                National Level Technical &amp; Non-Technical Symposium presented by the Department of Information Technology at St. Peter's Institute of Higher Education &amp; Research.
+              </p>
+              <div className="pt-2 text-xs text-slate-400 space-y-1.5 font-mono">
+                <p className="flex items-center gap-2 text-slate-300">
+                  <MapPin className="w-3.5 h-3.5 text-[#38bdf8] shrink-0" />
+                  <span>SPIHER Campus, Avadi, Chennai – 600054, Tamil Nadu</span>
+                </p>
+                <p className="flex items-center gap-2 text-slate-300">
+                  <PhoneCall className="w-3.5 h-3.5 text-[#38bdf8] shrink-0" />
+                  <span>Official Organizing Leads &amp; Student Helpdesk</span>
+                </p>
+              </div>
+            </div>
+
+            {/* Column 2: Dashboard Navigation */}
+            <div className="lg:col-span-3 space-y-3">
+              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
+                Dashboard Navigation
+              </h4>
+              <div className="flex flex-col space-y-2 text-xs">
+                {navItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      handleTabChange(item.id);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className={`text-left transition-colors cursor-pointer ${
+                      activeTab === item.id ? 'text-[#38bdf8] font-bold' : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Column 3: Event & Participant Quick Info */}
+            <div className="lg:col-span-4 space-y-3">
+              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
+                Participant Pass Status
+              </h4>
+              <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-xs space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Registered Event:</span>
+                  <span className="font-bold text-white truncate max-w-[160px]">{currentEvent.title}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Venue:</span>
+                  <span className="font-bold text-[#38bdf8]">{currentEvent.venue}</span>
+                </div>
+                <div>
+                  <span className="text-slate-400 block font-bold">Convenor Office</span>
+                  <p className="text-slate-200 font-bold">Dr. K. Senthil Nathan</p>
+                  <p className="text-slate-400">Dept. of Information Technology</p>
+                </div>
+                <div>
+                  <span className="text-slate-400 block font-bold">Inquiries</span>
+                  <span className="text-slate-300">Dept. of Information Technology</span>
+                </div>
+                <div className="flex items-center justify-between pt-1 border-t border-slate-800">
+                  <span className="text-slate-400">Digital Pass ID:</span>
+                  <span className="font-mono text-emerald-400 font-bold">{registration.registrationNumber}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Copyright Bar */}
+          <div className="pt-8 mt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+            <p>© 2026 RADIANZA • St. Peter's Institute of Higher Education &amp; Research. All Rights Reserved.</p>
+            <p className="text-[11px] text-slate-500 font-mono">Department of Information Technology</p>
+          </div>
+        </div>
+      </footer>
 
       {/* Modern Event Switcher Modal */}
       <ChangeEventModal

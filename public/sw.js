@@ -42,42 +42,58 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Do not cache or intercept Supabase API requests or dynamic POST/PUT/DELETE mutations
+  // 1. Bypass all Vite dev server files, HMR websockets, source files, and Supabase endpoints
   if (
     request.method !== 'GET' ||
     url.hostname.includes('supabase.co') ||
+    url.hostname === 'localhost' ||
+    url.hostname === '127.0.0.1' ||
     url.pathname.startsWith('/rest/v1') ||
-    url.pathname.startsWith('/auth/v1')
+    url.pathname.startsWith('/auth/v1') ||
+    url.pathname.startsWith('/@') ||
+    url.pathname.startsWith('/src/') ||
+    url.pathname.startsWith('/node_modules/') ||
+    url.search.includes('?t=') ||
+    url.search.includes('&t=') ||
+    url.search.includes('?v=') ||
+    url.search.includes('?token=') ||
+    request.headers.get('Upgrade') === 'websocket'
   ) {
     return;
   }
 
-  // For HTML navigation requests (SPA routes like /employee, /admin, /superadmin)
+  // 2. For HTML navigation requests (SPA routes like /employee, /admin, /superadmin)
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request).catch(() => {
-        return caches.match('/index.html') || caches.match('/');
+      fetch(request).catch(async () => {
+        const cachedIndex = (await caches.match('/index.html')) || (await caches.match('/'));
+        if (cachedIndex) return cachedIndex;
+        return new Response('Offline - SPIHER Events Portal', {
+          status: 503,
+          statusText: 'Service Unavailable',
+          headers: { 'Content-Type': 'text/plain' },
+        });
       })
     );
     return;
   }
 
-  // For static assets: Stale-While-Revalidate
+  // 3. For static assets: Stale-While-Revalidate
   event.respondWith(
-    caches.match(request).then((cachedResponse) => {
-      const fetchPromise = fetch(request)
-        .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-            const responseToCache = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(request, responseToCache);
-            });
-          }
-          return networkResponse;
-        })
-        .catch(() => cachedResponse);
-
-      return cachedResponse || fetchPromise;
+    caches.match(request).then(async (cachedResponse) => {
+      try {
+        const networkResponse = await fetch(request);
+        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(request, responseToCache);
+          });
+        }
+        return networkResponse;
+      } catch {
+        if (cachedResponse) return cachedResponse;
+        return new Response('', { status: 408, statusText: 'Request Timed Out' });
+      }
     })
   );
 });

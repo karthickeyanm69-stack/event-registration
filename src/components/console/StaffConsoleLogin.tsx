@@ -76,67 +76,63 @@ export const StaffConsoleLogin: React.FC<StaffConsoleLoginProps> = ({
     setIsSubmitting(true);
 
     try {
-      // 1. Try Live Supabase Authentication
+      // 1. Check Configured Staff & Demo Presets First for Instant Access
+      const localRes = MockDatabaseService.authenticateStaff(cleanEmail, cleanPassword);
+      if (localRes.success && localRes.user) {
+        setIsSubmitting(false);
+        let targetRole: PortalRole = 'employee';
+        if (localRes.user.role === 'SUPER_ADMIN') targetRole = 'superadmin';
+        else if (localRes.user.role === 'ADMIN') targetRole = 'admin';
+
+        onLoginSuccess(localRes.user, targetRole);
+        return;
+      }
+
+      // 2. Try Live Supabase Authentication for Cloud-Provisioned Staff
       if (supabase) {
-        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-          email: cleanEmail,
-          password: cleanPassword,
-        });
-
-        if (authData && authData.user) {
-          // Fetch corresponding staff user record
-          const { data: staffRow } = await supabase
-            .from('staff_users')
-            .select('*')
-            .eq('email', cleanEmail)
-            .maybeSingle();
-
-          const staffRole = staffRow?.role || authData.user.user_metadata?.role || 'EMPLOYEE';
-          const staffUser: StaffUser = {
-            id: staffRow?.id || authData.user.id,
+        try {
+          const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
             email: cleanEmail,
-            name: staffRow?.name || authData.user.user_metadata?.name || cleanEmail.split('@')[0],
-            role: staffRole,
-            department: staffRow?.department || authData.user.user_metadata?.department || 'Department',
-            assignedEventIds: staffRow?.assigned_event_ids || [],
-            isActive: true,
-          };
+            password: cleanPassword,
+          });
 
-          let targetRole: PortalRole = 'employee';
-          if (staffRole === 'SUPER_ADMIN') targetRole = 'superadmin';
-          else if (staffRole === 'ADMIN') targetRole = 'admin';
+          if (authData && authData.user && !authError) {
+            // Fetch corresponding staff user record
+            const { data: staffRow } = await supabase
+              .from('staff_users')
+              .select('*')
+              .eq('email', cleanEmail)
+              .maybeSingle();
 
-          setIsSubmitting(false);
-          onLoginSuccess(staffUser, targetRole);
-          return;
+            const staffRole = staffRow?.role || authData.user.user_metadata?.role || 'EMPLOYEE';
+            const staffUser: StaffUser = {
+              id: staffRow?.id || authData.user.id,
+              email: cleanEmail,
+              name: staffRow?.name || authData.user.user_metadata?.name || cleanEmail.split('@')[0],
+              role: staffRole,
+              department: staffRow?.department || authData.user.user_metadata?.department || 'Dept. of Information Technology',
+              assignedEventIds: staffRow?.assigned_event_ids || [],
+              isActive: true,
+            };
+
+            let targetRole: PortalRole = 'employee';
+            if (staffRole === 'SUPER_ADMIN') targetRole = 'superadmin';
+            else if (staffRole === 'ADMIN') targetRole = 'admin';
+
+            setIsSubmitting(false);
+            onLoginSuccess(staffUser, targetRole);
+            return;
+          }
+        } catch (supabaseErr) {
+          console.warn('Supabase auth attempt notice:', supabaseErr);
         }
       }
 
-      // 2. Fallback / Local Database Authentication
-      const res = MockDatabaseService.authenticateStaff(cleanEmail, cleanPassword);
       setIsSubmitting(false);
-
-      if (res.success && res.user) {
-        let targetRole: PortalRole = 'employee';
-        if (res.user.role === 'SUPER_ADMIN') targetRole = 'superadmin';
-        else if (res.user.role === 'ADMIN') targetRole = 'admin';
-
-        onLoginSuccess(res.user, targetRole);
-      } else {
-        setErrorMessage(res.error || 'Invalid staff email or password.');
-      }
+      setErrorMessage(localRes.error || 'Invalid staff email or password.');
     } catch (err: any) {
       setIsSubmitting(false);
-      // Fallback
-      const res = MockDatabaseService.authenticateStaff(cleanEmail, cleanPassword);
-      if (res.success && res.user) {
-        let targetRole: PortalRole = 'employee';
-        if (res.user.role === 'SUPER_ADMIN') targetRole = 'superadmin';
-        else if (res.user.role === 'ADMIN') targetRole = 'admin';
-        onLoginSuccess(res.user, targetRole);
-      } else {
-        setErrorMessage(err.message || 'Authentication error.');
-      }
+      setErrorMessage(err.message || 'Authentication error.');
     }
   };
 
@@ -193,6 +189,7 @@ export const StaffConsoleLogin: React.FC<StaffConsoleLoginProps> = ({
                   id="staff-login-email"
                   name="staffEmail"
                   type="email"
+                  autoComplete="username"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -212,6 +209,7 @@ export const StaffConsoleLogin: React.FC<StaffConsoleLoginProps> = ({
                   id="staff-login-password"
                   name="staffPassword"
                   type="password"
+                  autoComplete="current-password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

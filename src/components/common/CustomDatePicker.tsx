@@ -49,7 +49,9 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   className = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [openUpward, setOpenUpward] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   // Parse initial date or default to year 2003 (typical college student)
   const initialDate = value ? new Date(value) : new Date(2003, 0, 15);
@@ -70,6 +72,22 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
       }
     }
   }, [value]);
+
+  // Check viewport space to flip upward if bottom space is tight
+  const handleToggle = () => {
+    if (!isOpen && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      // If less than 320px below and more room above, open upward
+      if (spaceBelow < 320 && spaceAbove > spaceBelow) {
+        setOpenUpward(true);
+      } else {
+        setOpenUpward(false);
+      }
+    }
+    setIsOpen((prev) => !prev);
+  };
 
   // Close when clicking outside
   useEffect(() => {
@@ -167,8 +185,9 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
 
       {/* Trigger Box */}
       <button
+        ref={triggerRef}
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleToggle}
         className={`w-full px-3.5 py-2.5 rounded-xl bg-white border text-left text-sm flex items-center justify-between transition-all duration-200 cursor-pointer ${
           isOpen
             ? 'border-[#0077c8] ring-2 ring-[#0077c8]/20 shadow-md'
@@ -189,10 +208,12 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
         />
       </button>
 
-      {/* Modern Popover Calendar with Right-Anchoring to Never Overflow */}
+      {/* Modern Popover Calendar with Smart Collision Detection & Responsive Bounds */}
       {isOpen && (
         <div
-          className={`absolute z-50 mt-1.5 w-[285px] sm:w-[295px] max-w-[calc(100vw-24px)] bg-white rounded-2xl border border-[#d4e8f5] shadow-2xl p-3.5 space-y-3 animate-in fade-in zoom-in-95 duration-150 ${
+          className={`absolute z-[100] ${
+            openUpward ? 'bottom-full mb-2' : 'top-full mt-1.5'
+          } w-[285px] sm:w-[295px] max-w-[calc(100vw-24px)] bg-white rounded-2xl border border-[#d4e8f5] shadow-[0_20px_40px_rgba(0,43,102,0.18)] p-3.5 space-y-3 animate-in fade-in zoom-in-95 duration-150 ${
             align === 'right' ? 'right-0' : align === 'left' ? 'left-0' : 'left-0 sm:left-auto sm:right-0'
           }`}
         >
