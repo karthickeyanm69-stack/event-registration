@@ -121,6 +121,9 @@ export const EmployeeStateShowcase: React.FC = () => {
         {/* Quick Selection Dropdown & Pills */}
         <div className="pt-2">
           <select
+            id="employee-showcase-state"
+            name="employeeShowcaseState"
+            aria-label="Select Employee Sandbox State"
             value={selectedState}
             onChange={(e) => setSelectedState(e.target.value as EmployeeEdgeState)}
             className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-primary/60 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none"

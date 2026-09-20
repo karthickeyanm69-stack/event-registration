@@ -45,6 +45,9 @@ export const ParticipantStateShowcase: React.FC = () => {
         </p>
 
         <select
+          id="participant-showcase-state"
+          name="participantShowcaseState"
+          aria-label="Select Participant Showcase State"
           value={selectedState}
           onChange={(e) => setSelectedState(e.target.value as ParticipantEdgeState)}
           className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-primary/60 border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-900 dark:text-white focus:ring-2 focus:ring-secondary focus:outline-none"

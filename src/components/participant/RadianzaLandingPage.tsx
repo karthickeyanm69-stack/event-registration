@@ -32,6 +32,11 @@ import { MockDatabaseService } from '../../data/mockDatabase';
 import { CollegeEmblem, SpiherStarburstLogo } from '../common/CollegeLogo';
 import { CustomDatePicker } from '../common/CustomDatePicker';
 import { ThreeDCyberHeadCanvas } from './ThreeDCyberHeadCanvas';
+import {
+  EthnicBorderRibbon,
+  TopRangoliMotif,
+  BottomRangoliMotif,
+} from '../common/CulturalRangoliMotifs';
 
 export type LandingPageId = 'home' | 'events' | 'about' | 'contact';
 
@@ -252,7 +257,18 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
   const [selectedEventModal, setSelectedEventModal] = useState<CollegeEvent | null>(null);
   const [selectedGalleryModal, setSelectedGalleryModal] = useState<GalleryItem | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeScheduleDay, setActiveScheduleDay] = useState<1 | 2>(1);
+
+  // Lock body scroll when mobile navigation drawer is active
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
 
   // ── Quick Pass Access Modal State ──
   const [isPassModalOpen, setIsPassModalOpen] = useState(false);
@@ -265,7 +281,6 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
   const speakersScrollRef = React.useRef<HTMLDivElement>(null);
   const [canScrollSpeakersLeft, setCanScrollSpeakersLeft] = useState(false);
   const [canScrollSpeakersRight, setCanScrollSpeakersRight] = useState(true);
-  const [activeSpeakerIndex, setActiveSpeakerIndex] = useState(0);
   const isMouseDownSpeakersRef = React.useRef(false);
   const startXSpeakersRef = React.useRef(0);
   const scrollLeftSpeakersRef = React.useRef(0);
@@ -275,9 +290,6 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
       const { scrollLeft, scrollWidth, clientWidth } = speakersScrollRef.current;
       setCanScrollSpeakersLeft(scrollLeft > 15);
       setCanScrollSpeakersRight(scrollLeft < scrollWidth - clientWidth - 15);
-      const cardStep = 360 + 24;
-      const index = Math.round(scrollLeft / cardStep);
-      setActiveSpeakerIndex(Math.max(0, Math.min(index, SPEAKERS_DATA.length - 1)));
     }
   };
 
@@ -286,16 +298,6 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
       const scrollAmount = 384;
       speakersScrollRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      });
-    }
-  };
-
-  const scrollToSpeakerIndex = (idx: number) => {
-    if (speakersScrollRef.current) {
-      const cardStep = 360 + 24;
-      speakersScrollRef.current.scrollTo({
-        left: idx * cardStep,
         behavior: 'smooth',
       });
     }
@@ -329,7 +331,6 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
   const galleryScrollRef = React.useRef<HTMLDivElement>(null);
   const [canScrollGalleryLeft, setCanScrollGalleryLeft] = useState(false);
   const [canScrollGalleryRight, setCanScrollGalleryRight] = useState(true);
-  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
   const isMouseDownGalleryRef = React.useRef(false);
   const startXGalleryRef = React.useRef(0);
   const scrollLeftGalleryRef = React.useRef(0);
@@ -339,9 +340,6 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
       const { scrollLeft, scrollWidth, clientWidth } = galleryScrollRef.current;
       setCanScrollGalleryLeft(scrollLeft > 15);
       setCanScrollGalleryRight(scrollLeft < scrollWidth - clientWidth - 15);
-      const cardStep = 380 + 24;
-      const index = Math.round(scrollLeft / cardStep);
-      setActiveGalleryIndex(Math.max(0, Math.min(index, GALLERY_DATA.length - 1)));
     }
   };
 
@@ -491,11 +489,11 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#f8fbfe] text-slate-900 font-sans selection:bg-[#0077c8] selection:text-white flex flex-col justify-between overflow-x-hidden">
+    <div className="min-h-screen w-full bg-[#020B1C] text-[#FFF2D5] font-sans selection:bg-[#F5B942] selection:text-[#020B1C] flex flex-col justify-between overflow-x-hidden">
       {/* ========================================================================= */}
       {/* 1. STICKY GLASSMORPHIC HEADER & NAVIGATION BAR                            */}
       {/* ========================================================================= */}
-      <header className="sticky top-0 z-40 w-full bg-white border-b border-slate-100 shadow-xs">
+      <header className="sticky top-0 z-40 w-full bg-[#020B1C]/95 backdrop-blur-xl border-b border-[#F5B942]/20 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
           {/* Brand Logo Lockup */}
           <div
@@ -504,14 +502,14 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
           >
             <CollegeEmblem size={34} className="group-hover:scale-105 transition-transform duration-200" />
             <div className="flex items-center gap-1.5">
-              <span className="font-serif font-black text-xl sm:text-2xl tracking-tight text-[#001f4d]">
-                RADIANZA <span className="text-[#0077c8]">'26</span>
+              <span className="font-serif font-black text-xl sm:text-2xl tracking-tight text-[#FFF2D5]">
+                RADIANZA <span className="text-[#F5B942]">'26</span>
               </span>
             </div>
           </div>
 
           {/* Desktop Multi-Page Navigation Tabs */}
-          <nav className="hidden lg:flex items-center gap-1.5 p-1 bg-[#f0f8fc] rounded-2xl border border-[#d4e8f5]">
+          <nav className="hidden lg:flex items-center gap-1.5 p-1 bg-[#061A35] rounded-2xl border border-[#F5B942]/20 shadow-inner">
             {PAGES.map((page) => {
               const isActive = activePage === page.id;
               return (
@@ -519,13 +517,13 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   key={page.id}
                   onClick={() => navigateToPage(page.id)}
                   className={`relative px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
-                    isActive ? 'text-white' : 'text-slate-600 hover:text-[#002b66]'
+                    isActive ? 'text-[#020B1C]' : 'text-[#FFF2D5]/80 hover:text-white'
                   }`}
                 >
                   {isActive && (
                     <motion.div
                       layoutId="activePagePill"
-                      className="absolute inset-0 bg-[#002b66] rounded-xl shadow-xs"
+                      className="absolute inset-0 bg-[#F5B942] rounded-xl shadow-md"
                       transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                     />
                   )}
@@ -541,9 +539,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
             <button
               type="button"
               onClick={() => setIsPassModalOpen(true)}
-              className="hidden lg:flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#f0f8fc] hover:bg-[#e4f3fa] text-[#002b66] border border-[#d4e8f5] text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95"
+              className="hidden lg:flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#061A35] hover:bg-[#09254c] text-[#FFF2D5] border border-[#0878D1]/60 hover:border-[#0878D1] text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95"
             >
-              <QrCode className="w-3.5 h-3.5 text-[#0077c8]" />
+              <QrCode className="w-3.5 h-3.5 text-[#0878D1]" />
               <span>Access Pass</span>
             </button>
 
@@ -551,119 +549,122 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
             <button
               type="button"
               onClick={onStartNewRegistration}
-              className="hidden lg:flex relative px-5 py-2 rounded-xl bg-gradient-to-r from-[#002b66] via-[#005fa3] to-[#0077c8] hover:from-[#001f4d] hover:to-[#004f8a] text-white text-xs font-bold shadow-md shadow-[#0077c8]/25 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98] items-center gap-1.5"
+              className="hidden lg:flex relative px-5 py-2 rounded-xl bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] text-xs font-bold shadow-md shadow-[#F5B942]/30 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98] items-center gap-1.5"
             >
               <span>Register Now</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#7af1fc]" />
+              <ArrowRight className="w-3.5 h-3.5 text-[#020B1C]" />
             </button>
 
-            {/* Mobile Clean Hamburger Button (Exact Match to Reference Image 1) */}
+            {/* Mobile Clean Hamburger Button */}
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden w-10 h-10 rounded-lg border-2 border-[#d97706] hover:border-[#b45309] flex flex-col items-center justify-center gap-[5px] p-2 bg-white transition-all cursor-pointer active:scale-95 shadow-xs"
+              className="lg:hidden w-10 h-10 rounded-lg border-2 border-[#F5B942] hover:border-[#e5a730] flex flex-col items-center justify-center gap-[5px] p-2 bg-[#061A35] transition-all cursor-pointer active:scale-95 shadow-xs"
               aria-label="Open Navigation Menu"
             >
-              <span className="w-5 h-[2px] bg-slate-800 rounded-full block"></span>
-              <span className="w-5 h-[2px] bg-slate-800 rounded-full block"></span>
-              <span className="w-5 h-[2px] bg-slate-800 rounded-full block"></span>
+              <span className="w-5 h-[2px] bg-[#FFF2D5] rounded-full block"></span>
+              <span className="w-5 h-[2px] bg-[#F5B942] rounded-full block"></span>
+              <span className="w-5 h-[2px] bg-[#FFF2D5] rounded-full block"></span>
             </button>
           </div>
         </div>
+      </header>
 
-        {/* Full Right-Side Slide-Over Drawer (Exact Match to Reference Image 2) */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <div className="fixed inset-0 z-50 lg:hidden flex justify-end">
-              {/* Dimmed Blurred Backdrop */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="fixed inset-0 bg-black/45 backdrop-blur-xs"
-              />
+      {/* Full Viewport Right-Side Slide-Over Drawer for Mobile Navigation (Rendered outside header to avoid backdrop-filter clipping) */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <div className="fixed inset-0 z-[100] lg:hidden flex justify-end">
+            {/* Dimmed Blurred Backdrop spanning entire viewport */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-black/75 backdrop-blur-sm"
+            />
 
-              {/* White Right Slide-Over Panel */}
-              <motion.div
-                initial={{ x: '100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '100%' }}
-                transition={{ type: 'spring', damping: 26, stiffness: 260 }}
-                className="relative z-10 w-[84%] max-w-[340px] h-full bg-white shadow-2xl flex flex-col justify-between p-6 overflow-y-auto"
-              >
-                <div>
-                  {/* Top Header Row with Logo & Gold Close Button */}
-                  <div className="flex items-center justify-between pb-5 border-b border-slate-100">
-                    <div className="flex items-center gap-2.5">
-                      <CollegeEmblem size={28} />
-                      <span className="font-serif font-black text-lg tracking-tight text-[#001f4d]">
-                        RADIANZA <span className="text-[#0077c8]">'26</span>
-                      </span>
-                    </div>
-
-                    {/* Gold Bordered Close Button (Matching Reference Image 2) */}
-                    <button
-                      type="button"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="w-9 h-9 rounded-lg border-2 border-[#d97706] hover:border-[#b45309] flex items-center justify-center text-slate-800 bg-white transition-all active:scale-95 cursor-pointer shadow-xs"
-                      aria-label="Close Navigation Menu"
-                    >
-                      <X className="w-5 h-5 text-slate-800 stroke-[2.2]" />
-                    </button>
+            {/* Dark Right Slide-Over Panel spanning full viewport height */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 26, stiffness: 260 }}
+              className="relative z-10 w-[85%] max-w-[340px] h-[100dvh] h-screen bg-[#061A35] border-l border-[#F5B942]/30 shadow-2xl flex flex-col justify-between p-6 overflow-y-auto text-[#FFF2D5]"
+            >
+              <div>
+                {/* Top Header Row with Logo & Gold Close Button */}
+                <div className="flex items-center justify-between pb-5 border-b border-[#F5B942]/20">
+                  <div className="flex items-center gap-2.5">
+                    <CollegeEmblem size={28} />
+                    <span className="font-serif font-black text-lg tracking-tight text-[#FFF2D5]">
+                      RADIANZA <span className="text-[#F5B942]">'26</span>
+                    </span>
                   </div>
 
-                  {/* Clean Nav Links List with Divider Lines */}
-                  <nav className="flex flex-col mt-3 divide-y divide-slate-100">
-                    {PAGES.map((page) => {
-                      const isActive = activePage === page.id;
-                      return (
-                        <button
-                          key={page.id}
-                          onClick={() => navigateToPage(page.id)}
-                          className={`py-4 text-left text-base transition-colors flex items-center justify-between cursor-pointer ${
-                            isActive ? 'text-[#002b66] font-bold' : 'text-slate-800 font-medium hover:text-[#0077c8]'
-                          }`}
-                        >
-                          <span>{page.navLabel}</span>
-                          {isActive && <div className="w-2 h-2 rounded-full bg-[#0077c8]" />}
-                        </button>
-                      );
-                    })}
-                  </nav>
-                </div>
-
-                {/* Bottom Big CTA Button (Matching Reference Image 2 Bottom Pill) */}
-                <div className="pt-6 pb-2 space-y-3 border-t border-slate-100">
+                  {/* Gold Bordered Close Button */}
                   <button
                     type="button"
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      onStartNewRegistration();
-                    }}
-                    className="w-full py-3.5 px-6 rounded-full bg-[#e11d48] hover:bg-[#be123c] active:bg-[#9f1239] text-white font-bold text-xs tracking-widest uppercase shadow-lg shadow-rose-600/25 flex items-center justify-center gap-2 cursor-pointer active:scale-95 transition-transform"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-9 h-9 rounded-lg border-2 border-[#F5B942] hover:border-[#e5a730] flex items-center justify-center text-[#FFF2D5] bg-[#020B1C] transition-all active:scale-95 cursor-pointer shadow-xs"
+                    aria-label="Close Navigation Menu"
                   >
-                    <span>Register Now</span>
-                    <ArrowRight className="w-4 h-4 text-white" />
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      setIsPassModalOpen(true);
-                    }}
-                    className="w-full py-2 text-center text-xs font-bold text-slate-500 hover:text-[#002b66] transition-colors"
-                  >
-                    Access Existing Pass →
+                    <X className="w-5 h-5 text-[#FFF2D5] stroke-[2.2]" />
                   </button>
                 </div>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>
-      </header>
+
+                {/* Clean Nav Links List with Divider Lines */}
+                <nav className="flex flex-col mt-4 divide-y divide-[#F5B942]/10">
+                  {PAGES.map((page) => {
+                    const isActive = activePage === page.id;
+                    return (
+                      <button
+                        key={page.id}
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          navigateToPage(page.id);
+                        }}
+                        className={`py-4 text-left text-base transition-colors flex items-center justify-between cursor-pointer ${
+                          isActive ? 'text-[#F5B942] font-bold' : 'text-[#FFF2D5]/80 font-medium hover:text-white'
+                        }`}
+                      >
+                        <span>{page.navLabel}</span>
+                        {isActive && <div className="w-2.5 h-2.5 rounded-full bg-[#F5B942] shadow-[0_0_8px_#F5B942]" />}
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
+
+              {/* Bottom Big CTA Button */}
+              <div className="pt-6 pb-2 space-y-3 border-t border-[#F5B942]/20">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    onStartNewRegistration();
+                  }}
+                  className="w-full py-3.5 px-6 rounded-full bg-[#F5B942] hover:bg-[#e5a730] active:scale-95 text-[#020B1C] font-black text-xs tracking-widest uppercase shadow-lg shadow-[#F5B942]/30 flex items-center justify-center gap-2 cursor-pointer transition-transform"
+                >
+                  <span>Register Now</span>
+                  <ArrowRight className="w-4 h-4 text-[#020B1C]" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    setIsPassModalOpen(true);
+                  }}
+                  className="w-full py-2 text-center text-xs font-bold text-[#FFF2D5]/70 hover:text-[#F5B942] transition-colors cursor-pointer"
+                >
+                  Access Existing Pass →
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
 
 
@@ -673,7 +674,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
       <main className="flex-1 w-full relative overflow-hidden">
         <AnimatePresence mode="wait" custom={pageDirection}>
           {/* ─────────────────────────────────────────────────────────────────── */}
-          {/* PAGE 1: HOME (HERO 3D + HIGHLIGHTS + SCHEDULE + SPEAKERS + GALLERY) */}
+          {/* PAGE 1: HOME (HERO 3D + HIGHLIGHTS + SPEAKERS + GALLERY) */}
           {/* ─────────────────────────────────────────────────────────────────── */}
           {activePage === 'home' && (
             <motion.div
@@ -685,63 +686,72 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               exit="exit"
               className="w-full flex flex-col space-y-0"
             >
-              {/* ── 1. HERO SECTION (3D CYBER PROFILE & CTA) ── */}
-              <section id="hero" className="relative w-full overflow-hidden bg-gradient-to-b from-[#e3f0fc] via-[#edf6fe] to-[#f4faff]">
-                
-                {/* ─── MOBILE VIEW: EXACT PIXEL-PERFECT REFERENCE MATCH (< lg) ─── */}
-                <div className="lg:hidden relative w-full min-h-[calc(100dvh-4.25rem)] min-h-[720px] flex flex-col justify-start p-5 sm:p-6 pb-8 select-none overflow-hidden">
-                  {/* Subtle Background Glow Elements */}
-                  <div className="absolute top-1/4 right-0 w-72 h-72 rounded-full bg-cyan-200/30 blur-3xl pointer-events-none" />
-                  <div className="absolute bottom-1/3 left-0 w-60 h-60 rounded-full bg-indigo-200/25 blur-3xl pointer-events-none" />
+              {/* ── 1. HERO SECTION (DARK CULTURAL-FUTURISTIC & RANGOLI MOTIFS) ── */}
+              <section id="hero" className="relative w-full overflow-hidden bg-[#020B1C] text-[#FFF2D5]">
+                {/* Authentic Left Cultural Geometric Border Ribbon */}
+                <EthnicBorderRibbon />
 
-                  {/* Background 3D Cyber Scene (Only mounted on mobile to prevent dual-WebGL GPU crash) */}
+                {/* Cultural Rangoli / Mandala Background Ornaments */}
+                <TopRangoliMotif className="-top-12 right-2 sm:right-10 lg:right-1/4 lg:translate-x-16" />
+                <BottomRangoliMotif className="-bottom-8 right-0 sm:right-6 lg:right-10" />
+
+                {/* Ambient Glows */}
+                <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-[#0878D1]/15 blur-3xl pointer-events-none" />
+                <div className="absolute bottom-1/4 right-10 w-80 h-80 rounded-full bg-[#F5B942]/10 blur-3xl pointer-events-none" />
+                
+                {/* ─── MOBILE VIEW: EXACT REFERENCE MATCH (< lg) ─── */}
+                <div className="lg:hidden relative w-full min-h-[calc(100dvh-4.25rem)] min-h-[720px] flex flex-col justify-start p-5 sm:p-6 pl-9 sm:pl-12 pb-8 select-none overflow-hidden">
+                  {/* Background 3D Cyber Scene */}
                   {!isDesktop && (
                     <div className="absolute inset-0 z-0 pointer-events-auto">
                       <ThreeDCyberHeadCanvas onRegisterClick={onStartNewRegistration} />
                     </div>
                   )}
 
-                  {/* Foreground Content: Free floating text starting straight from the chin level of the 3D head */}
-                  <div className="relative z-10 pt-[52vh] sm:pt-[50vh] pb-2 space-y-3 sm:space-y-3.5 max-w-[88%] sm:max-w-[74%] pointer-events-none">
-                    {/* Line 1: SPIHER PRESENTS Badge (Aligned directly with the Chin of the 3D head) */}
+                  {/* Foreground Content: Starting directly from chin level */}
+                  <div className="relative z-10 pt-[50vh] sm:pt-[48vh] pb-2 space-y-3 sm:space-y-3.5 max-w-[92%] sm:max-w-[78%] pointer-events-none">
+                    {/* Line 1: SPIHER PRESENTS Badge */}
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md shadow-xs border border-[#d4e8f5] text-[#0077c8] pointer-events-auto"
+                      className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#061A35]/90 backdrop-blur-md shadow-md border border-[#F5B942]/40 text-[#FFF2D5] pointer-events-auto"
                     >
                       <CollegeEmblem size={24} />
-                      <span className="tracking-widest uppercase font-mono text-[10px] sm:text-[11px] font-bold text-[#002b66]">
+                      <span className="tracking-widest uppercase font-mono text-[10px] sm:text-[11px] font-bold text-[#FFF2D5]">
                         SPIHER PRESENTS
                       </span>
                     </motion.div>
                     
-                    {/* Line 2: RADIANZA '26 Title (Below Chin Level) */}
+                    {/* Line 2: RADIANZA '26 Title */}
                     <motion.h1
                       initial={{ opacity: 0, x: -18 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: 0.1 }}
-                      className="text-4xl sm:text-5xl font-serif font-black tracking-tight text-[#001f4d] leading-[1.05] pointer-events-none"
+                      className="text-4xl sm:text-5xl font-serif font-black tracking-tight text-[#FFF2D5] leading-[1.02] pointer-events-none"
                     >
-                      RADIANZA <span className="text-[#0077c8]">'26</span>
+                      RADIANZA <span className="text-[#F5B942]">'26</span>
                     </motion.h1>
 
-                    {/* Line 3: National-Level Technical Symposium */}
-                    <motion.p
+                    {/* Line 3: National-Level Technical Symposium with Gold Accent */}
+                    <motion.div
                       initial={{ opacity: 0, x: -14 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: 0.15 }}
-                      className="text-[10px] sm:text-xs font-mono font-bold tracking-[0.2em] text-[#004080] uppercase pointer-events-none"
+                      className="flex items-center gap-2 pointer-events-none"
                     >
-                      NATIONAL-LEVEL TECHNICAL SYMPOSIUM
-                    </motion.p>
+                      <span className="text-[10px] sm:text-xs font-mono font-bold tracking-[0.2em] text-[#FFF2D5]/90 uppercase">
+                        NATIONAL-LEVEL TECHNICAL SYMPOSIUM
+                      </span>
+                      <span className="w-8 h-[2px] bg-[#F5B942] block shrink-0" />
+                    </motion.div>
 
-                    {/* Line 4: Igniting Ideas, Innovating Tomorrow */}
+                    {/* Line 4: Tagline */}
                     <motion.p
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: 0.2 }}
-                      className="text-xs sm:text-sm text-slate-600 font-medium italic pointer-events-none"
+                      className="text-xs sm:text-sm text-[#FFF2D5]/70 font-medium italic pointer-events-none"
                     >
                       "Igniting Ideas, Innovating Tomorrow"
                     </motion.p>
@@ -753,59 +763,58 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       transition={{ duration: 0.6, delay: 0.25 }}
                       className="flex flex-col sm:flex-row flex-wrap gap-2 pt-1 pointer-events-auto"
                     >
-                      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-xs font-bold text-[#001f4d] w-fit">
-                        <Calendar className="w-3.5 h-3.5 text-[#0077c8]" />
+                      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#061A35]/90 backdrop-blur-md border border-[#F5B942]/50 shadow-xs text-xs font-bold text-[#FFF2D5] w-fit">
+                        <Calendar className="w-3.5 h-3.5 text-[#F5B942]" />
                         <span>15 - 16 OCT 2026</span>
                       </div>
-                      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-xs font-medium text-slate-700 w-fit">
-                        <MapPin className="w-3.5 h-3.5 text-[#00a887]" />
+                      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#061A35]/90 backdrop-blur-md border border-[#0878D1]/60 shadow-xs text-xs font-medium text-[#FFF2D5] w-fit">
+                        <MapPin className="w-3.5 h-3.5 text-[#0878D1]" />
                         <span>SPIHER Campus, Coimbatore</span>
                       </div>
                     </motion.div>
 
-                    {/* Line 6: Register Now CTA Button */}
+                    {/* Line 6: Action Buttons */}
                     <motion.div
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.5, delay: 0.3 }}
-                      className="pt-2 sm:pt-3 pointer-events-auto"
+                      className="pt-2 sm:pt-3 flex flex-wrap gap-2.5 pointer-events-auto"
                     >
                       <button
                         type="button"
                         onClick={onStartNewRegistration}
-                        className="inline-flex items-center gap-2.5 px-7 py-3 rounded-full bg-gradient-to-r from-[#001f4d] via-[#002b66] to-[#0077c8] hover:from-[#001433] hover:to-[#005fa3] text-white font-bold text-xs sm:text-sm shadow-lg shadow-[#002b66]/25 active:scale-95 transition-transform cursor-pointer"
+                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] font-black text-xs sm:text-sm shadow-[0_0_18px_rgba(245,185,66,0.45)] active:scale-95 transition-all cursor-pointer"
                       >
                         <span>Register Now</span>
-                        <ArrowRight className="w-4 h-4 text-[#7af1fc]" />
+                        <ArrowRight className="w-4 h-4 text-[#020B1C]" />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => navigateToPage('events')}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#061A35] hover:bg-[#0a2245] border border-[#0878D1] text-[#FFF2D5] font-bold text-xs sm:text-sm shadow-[0_0_12px_rgba(8,120,209,0.3)] active:scale-95 transition-all cursor-pointer"
+                      >
+                        <span>View Matrix</span>
+                        <ChevronRight className="w-4 h-4 text-[#0878D1]" />
                       </button>
                     </motion.div>
                   </div>
                 </div>
 
-                {/* ─── DESKTOP VIEW: EXPANDED 2-COLUMN MATRIX (>= lg) ─── */}
-                <div className="hidden lg:flex min-h-[calc(100vh-8rem)] items-center justify-center py-16 relative z-10">
-                  <div
-                    className="absolute inset-0 pointer-events-none opacity-20"
-                    style={{
-                      backgroundImage: 'radial-gradient(#0077c8 1px, transparent 1px)',
-                      backgroundSize: '32px 32px',
-                    }}
-                  />
-                  <div className="absolute top-0 right-1/4 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#00f2fe]/20 via-[#0077c8]/15 to-transparent blur-3xl pointer-events-none animate-float-slow" />
-                  <div className="absolute -bottom-20 left-10 w-[550px] h-[550px] rounded-full bg-gradient-to-tr from-[#7c3aed]/12 via-[#00f2fe]/10 to-transparent blur-3xl pointer-events-none" />
-
+                {/* ─── DESKTOP VIEW: EXACT REFERENCE IMAGE LAYOUT (>= lg) ─── */}
+                <div className="hidden lg:flex min-h-[calc(100vh-6rem)] items-center justify-center py-16 pl-12 sm:pl-16 lg:pl-20 relative z-10">
                   <div className="max-w-7xl mx-auto px-8 w-full grid grid-cols-12 gap-8 items-center overflow-visible">
                     {/* Wording: Left Column */}
                     <div className="col-span-6 space-y-7 text-left flex flex-col items-start z-20">
-                      {/* Top Institution Tag */}
+                      {/* Top Institution Pill Badge */}
                       <motion.div
                         initial={{ opacity: 0, y: -12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white shadow-xs border border-[#d4e8f5] text-[#0077c8] text-xs font-bold tracking-wide"
+                        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#061A35]/90 border border-[#F5B942]/40 text-[#FFF2D5] text-xs font-mono tracking-widest uppercase shadow-md backdrop-blur-md"
                       >
                         <CollegeEmblem size={24} />
-                        <span className="tracking-widest uppercase font-mono text-[11px] text-[#002b66]">
+                        <span className="font-bold text-[#FFF2D5]">
                           SPIHER PRESENTS
                         </span>
                       </motion.div>
@@ -816,26 +825,30 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                           initial={{ opacity: 0, y: 18 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.6, delay: 0.1 }}
-                          className="text-6xl sm:text-7xl xl:text-8xl font-serif font-black tracking-tight text-[#001f4d] leading-[0.95]"
+                          className="text-6xl sm:text-7xl xl:text-8xl font-serif font-black tracking-tight text-[#FFF2D5] leading-[0.95]"
                         >
                           RADIANZA
-                          <span className="block text-[#0077c8] mt-1.5 font-sans font-black">'26</span>
+                          <span className="block text-[#F5B942] mt-2 font-serif font-black">'26</span>
                         </motion.h1>
 
-                        <motion.p
+                        {/* Subtitle with Gold Horizontal Bar */}
+                        <motion.div
                           initial={{ opacity: 0, y: 12 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.6, delay: 0.2 }}
-                          className="text-xs sm:text-sm font-mono font-bold tracking-[0.22em] text-[#004080] uppercase pt-1"
+                          className="flex items-center gap-3 pt-1"
                         >
-                          NATIONAL-LEVEL TECHNICAL SYMPOSIUM
-                        </motion.p>
+                          <span className="text-xs sm:text-sm font-mono font-bold tracking-[0.22em] text-[#FFF2D5]/90 uppercase">
+                            NATIONAL-LEVEL TECHNICAL SYMPOSIUM
+                          </span>
+                          <span className="w-12 h-[2px] bg-[#F5B942] block" />
+                        </motion.div>
 
                         <motion.p
                           initial={{ opacity: 0, y: 12 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.6, delay: 0.25 }}
-                          className="text-base text-slate-600 font-medium italic"
+                          className="text-base sm:text-lg text-[#FFF2D5]/70 font-medium italic"
                         >
                           "Igniting Ideas, Innovating Tomorrow"
                         </motion.p>
@@ -846,15 +859,15 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.3 }}
-                        className="flex flex-wrap justify-start items-center gap-3 pt-1 text-xs font-semibold text-slate-700"
+                        className="flex flex-wrap justify-start items-center gap-3 pt-1 text-xs font-semibold text-[#FFF2D5]"
                       >
-                        <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs">
-                          <Calendar className="w-4 h-4 text-[#0077c8]" />
-                          <span className="font-bold text-[#001f4d]">15 - 16 OCT 2026</span>
+                        <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#061A35]/90 backdrop-blur-md border border-[#F5B942]/50 shadow-md">
+                          <Calendar className="w-4 h-4 text-[#F5B942]" />
+                          <span className="font-bold text-[#FFF2D5]">15 - 16 OCT 2026</span>
                         </div>
-                        <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs">
-                          <MapPin className="w-4 h-4 text-[#00a887]" />
-                          <span>SPIHER Campus, Coimbatore</span>
+                        <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#061A35]/90 backdrop-blur-md border border-[#0878D1]/60 shadow-md">
+                          <MapPin className="w-4 h-4 text-[#0878D1]" />
+                          <span className="text-[#FFF2D5]">SPIHER Campus, Coimbatore</span>
                         </div>
                       </motion.div>
 
@@ -865,42 +878,41 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         transition={{ duration: 0.6, delay: 0.4 }}
                         className="flex flex-row items-center gap-4 pt-3 w-auto"
                       >
-                        <div className="relative group w-auto">
-                          <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#00f2fe] via-[#0077c8] to-[#00a887] opacity-60 blur-md group-hover:opacity-100 transition-opacity duration-300 animate-halo-pulse" />
-                          <button
-                            type="button"
-                            onClick={onStartNewRegistration}
-                            className="relative w-auto px-8 py-3.5 rounded-full bg-gradient-to-r from-[#001f4d] via-[#002b66] to-[#0077c8] hover:from-[#001433] hover:to-[#005fa3] text-white font-bold text-sm tracking-wide shadow-xl flex items-center justify-center gap-2.5 overflow-hidden cursor-pointer active:scale-95 transition-transform"
-                          >
-                            <span className="relative z-10 font-bold">Register Now</span>
-                            <ArrowRight className="w-4 h-4 text-[#7af1fc] relative z-10 group-hover:translate-x-1 transition-transform" />
-                          </button>
-                        </div>
+                        {/* Primary Gold Glowing CTA */}
+                        <button
+                          type="button"
+                          onClick={onStartNewRegistration}
+                          className="relative w-auto px-8 py-3.5 rounded-full bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] font-black text-sm tracking-wide shadow-[0_0_24px_rgba(245,185,66,0.45)] hover:shadow-[0_0_32px_rgba(245,185,66,0.65)] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+                        >
+                          <span className="font-bold">Register Now</span>
+                          <ArrowRight className="w-4 h-4 text-[#020B1C]" />
+                        </button>
 
+                        {/* Secondary Navy/Blue CTA */}
                         <button
                           type="button"
                           onClick={() => navigateToPage('events')}
-                          className="w-auto px-7 py-3.5 rounded-full bg-white hover:bg-[#f0f8fc] border border-[#d4e8f5] hover:border-[#0077c8] text-[#002b66] font-bold text-sm tracking-wide shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95"
+                          className="w-auto px-7 py-3.5 rounded-full bg-[#061A35] hover:bg-[#0a2245] border border-[#0878D1] hover:border-[#0878D1]/80 text-[#FFF2D5] font-bold text-sm tracking-wide shadow-[0_0_16px_rgba(8,120,209,0.3)] flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95"
                         >
                           <span>View Competition Matrix</span>
-                          <ChevronRight className="w-4 h-4 text-slate-400" />
+                          <ChevronRight className="w-4 h-4 text-[#0878D1]" />
                         </button>
                       </motion.div>
 
                       {/* Digital Pass Quick Access */}
-                      <div className="pt-1 text-xs text-slate-500 flex items-center justify-start gap-2">
+                      <div className="pt-1 text-xs text-[#FFF2D5]/70 flex items-center justify-start gap-2">
                         <span>Already registered?</span>
                         <button
                           type="button"
                           onClick={() => setIsPassModalOpen(true)}
-                          className="text-[#0077c8] font-bold underline hover:text-[#005fa3] cursor-pointer"
+                          className="text-[#F5B942] font-bold underline hover:text-[#e5a730] cursor-pointer"
                         >
                           Access your digital pass →
                         </button>
                       </div>
                     </div>
 
-                    {/* 3D Cyber Head in Right Column (Only mounted on desktop) */}
+                    {/* 3D Cyber Head in Right Column */}
                     <div className="col-span-6 flex items-center justify-center relative w-full min-h-[560px] overflow-visible">
                       {isDesktop && <ThreeDCyberHeadCanvas onRegisterClick={onStartNewRegistration} />}
                     </div>
@@ -909,22 +921,22 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               </section>
 
               {/* ── 2. HIGHLIGHTS SECTION ── */}
-              <section id="highlights" className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-white border-t border-[#e8f5fb]">
-                <div className="max-w-7xl mx-auto space-y-12">
+              <section id="highlights" className="w-full py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#020B1C] border-t border-[#F5B942]/20">
+                <div className="max-w-7xl mx-auto space-y-8 sm:space-y-12">
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-40px' }}
                     transition={{ duration: 0.6 }}
-                    className="max-w-2xl text-left space-y-3"
+                    className="max-w-2xl text-left space-y-2 sm:space-y-3"
                   >
-                    <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#0077c8] bg-[#f0f8fc] px-3 py-1 rounded-full border border-[#d4e8f5]">
+                    <span className="text-[10px] sm:text-xs font-mono font-extrabold uppercase tracking-widest text-[#F5B942] bg-[#061A35] px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-[#F5B942]/30">
                       WHY
                     </span>
-                    <h2 className="text-3xl sm:text-5xl font-serif font-extrabold text-[#001f4d] tracking-tight">
-                      RADIANZA '26?
+                    <h2 className="text-2xl sm:text-5xl font-serif font-extrabold text-[#FFF2D5] tracking-tight">
+                      RADIANZA <span className="text-[#F5B942]">'26?</span>
                     </h2>
-                    <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
+                    <p className="text-xs sm:text-base text-[#FFF2D5]/70 leading-relaxed font-medium">
                       A platform to learn, build, compete and connect. Join the next generation of innovators, creators and problem solvers at SPIHER's flagship technical symposium.
                     </p>
                   </motion.div>
@@ -937,84 +949,84 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       hidden: { opacity: 0 },
                       visible: { opacity: 1, transition: { staggerChildren: 0.14 } },
                     }}
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+                    className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6"
                   >
                     <motion.div
-                      variants={{ hidden: { opacity: 0, y: 35 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}
-                      className="p-6 rounded-3xl bg-[#f0f8fc] border border-[#d4e8f5] hover:border-[#0077c8] hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 space-y-4 flex flex-col justify-between group cursor-pointer"
+                      variants={{ hidden: { opacity: 0, y: 25 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
+                      className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#061A35] border border-[#0878D1]/40 hover:border-[#0878D1] hover:shadow-[0_0_24px_rgba(8,120,209,0.3)] hover:-translate-y-1.5 transition-all duration-300 space-y-2.5 sm:space-y-4 flex flex-col justify-between group cursor-pointer"
                       onClick={() => {
                         setActiveCategory('Technical');
                         navigateToPage('events');
                       }}
                     >
-                      <div className="space-y-3">
-                        <div className="w-12 h-12 rounded-2xl bg-cyan-100 text-cyan-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Code2 className="w-6 h-6 text-[#0077c8]" />
+                      <div className="space-y-2 sm:space-y-3">
+                        <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#0878D1]/20 text-[#0878D1] flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <Code2 className="w-4.5 h-4.5 sm:w-6 sm:h-6 text-[#0878D1]" />
                         </div>
-                        <h3 className="text-lg font-bold text-[#001f4d]">Technical Events</h3>
-                        <p className="text-xs text-slate-600 leading-relaxed">
+                        <h3 className="text-sm sm:text-lg font-bold text-[#FFF2D5] leading-tight">Technical Events</h3>
+                        <p className="text-[11px] sm:text-xs text-[#FFF2D5]/70 leading-snug sm:leading-relaxed line-clamp-3 sm:line-clamp-none">
                           Code. Build. Solve. Intense algorithmic sprints, robotics combat, and full-stack challenges.
                         </p>
                       </div>
-                      <div className="flex items-center gap-1.5 text-xs font-bold text-[#0077c8] pt-2">
+                      <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-bold text-[#0878D1] pt-1 sm:pt-2">
                         <span>View Tracks</span>
-                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </motion.div>
 
                     <motion.div
-                      variants={{ hidden: { opacity: 0, y: 35 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}
-                      className="p-6 rounded-3xl bg-[#f0fdf9] border border-[#ccfbf1] hover:border-[#00a887] hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 space-y-4 flex flex-col justify-between group cursor-pointer"
+                      variants={{ hidden: { opacity: 0, y: 25 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
+                      className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#061A35] border border-[#F5B942]/30 hover:border-[#F5B942] hover:shadow-[0_0_24px_rgba(245,185,66,0.3)] hover:-translate-y-1.5 transition-all duration-300 space-y-2.5 sm:space-y-4 flex flex-col justify-between group cursor-pointer"
                       onClick={() => {
                         setActiveCategory('Non-Technical');
                         navigateToPage('events');
                       }}
                     >
-                      <div className="space-y-3">
-                        <div className="w-12 h-12 rounded-2xl bg-teal-100 text-teal-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Gamepad2 className="w-6 h-6 text-[#00a887]" />
+                      <div className="space-y-2 sm:space-y-3">
+                        <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#F5B942]/20 text-[#F5B942] flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <Gamepad2 className="w-4.5 h-4.5 sm:w-6 sm:h-6 text-[#F5B942]" />
                         </div>
-                        <h3 className="text-lg font-bold text-[#001f4d]">Non-Technical Events</h3>
-                        <p className="text-xs text-slate-600 leading-relaxed">
+                        <h3 className="text-sm sm:text-lg font-bold text-[#FFF2D5] leading-tight">Non-Technical Events</h3>
+                        <p className="text-[11px] sm:text-xs text-[#FFF2D5]/70 leading-snug sm:leading-relaxed line-clamp-3 sm:line-clamp-none">
                           Showcase. Express. Create. e-Sports, technical quizzes, design marathons, and creative arenas.
                         </p>
                       </div>
-                      <div className="flex items-center gap-1.5 text-xs font-bold text-[#00a887] pt-2">
+                      <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-bold text-[#F5B942] pt-1 sm:pt-2">
                         <span>View Tracks</span>
-                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </motion.div>
 
                     <motion.div
-                      variants={{ hidden: { opacity: 0, y: 35 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}
-                      className="p-6 rounded-3xl bg-[#f8fbfe] border border-[#d4e8f5] hover:border-[#002b66] hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 space-y-4 flex flex-col justify-between group"
+                      variants={{ hidden: { opacity: 0, y: 25 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
+                      className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#061A35] border border-[#0878D1]/30 hover:border-[#0878D1] hover:shadow-[0_0_24px_rgba(8,120,209,0.25)] hover:-translate-y-1.5 transition-all duration-300 space-y-2.5 sm:space-y-4 flex flex-col justify-between group"
                     >
-                      <div className="space-y-3">
-                        <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-800 flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Users className="w-6 h-6 text-[#002b66]" />
+                      <div className="space-y-2 sm:space-y-3">
+                        <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#0878D1]/20 text-[#0878D1] flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <Users className="w-4.5 h-4.5 sm:w-6 sm:h-6 text-[#0878D1]" />
                         </div>
-                        <h3 className="text-lg font-bold text-[#001f4d]">Networking</h3>
-                        <p className="text-xs text-slate-600 leading-relaxed">
+                        <h3 className="text-sm sm:text-lg font-bold text-[#FFF2D5] leading-tight">Networking</h3>
+                        <p className="text-[11px] sm:text-xs text-[#FFF2D5]/70 leading-snug sm:leading-relaxed line-clamp-3 sm:line-clamp-none">
                           Meet industry experts, professors, and over 500+ ambitious delegates from all across India.
                         </p>
                       </div>
-                      <span className="text-[11px] font-bold text-slate-400 font-mono">500+ DELEGATES</span>
+                      <span className="text-[10px] sm:text-[11px] font-bold text-[#0878D1] font-mono pt-1 sm:pt-2">500+ DELEGATES</span>
                     </motion.div>
 
                     <motion.div
-                      variants={{ hidden: { opacity: 0, y: 35 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}
-                      className="p-6 rounded-3xl bg-[#fffef5] border border-amber-200 hover:border-amber-400 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 space-y-4 flex flex-col justify-between group"
+                      variants={{ hidden: { opacity: 0, y: 25 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
+                      className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#061A35] border border-[#F5B942]/40 hover:border-[#F5B942] hover:shadow-[0_0_24px_rgba(245,185,66,0.35)] hover:-translate-y-1.5 transition-all duration-300 space-y-2.5 sm:space-y-4 flex flex-col justify-between group"
                     >
-                      <div className="space-y-3">
-                        <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Trophy className="w-6 h-6 text-amber-600" />
+                      <div className="space-y-2 sm:space-y-3">
+                        <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#F5B942]/20 text-[#F5B942] flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <Trophy className="w-4.5 h-4.5 sm:w-6 sm:h-6 text-[#F5B942]" />
                         </div>
-                        <h3 className="text-lg font-bold text-[#001f4d]">Exciting Prizes</h3>
-                        <p className="text-xs text-slate-600 leading-relaxed">
+                        <h3 className="text-sm sm:text-lg font-bold text-[#FFF2D5] leading-tight">Exciting Prizes</h3>
+                        <p className="text-[11px] sm:text-xs text-[#FFF2D5]/70 leading-snug sm:leading-relaxed line-clamp-3 sm:line-clamp-none">
                           Recognize talent & celebrate innovation with cash prizes, official trophies, and certificates.
                         </p>
                       </div>
-                      <span className="text-[11px] font-bold text-amber-700 font-mono">₹50,000+ POOL</span>
+                      <span className="text-[10px] sm:text-[11px] font-bold text-[#F5B942] font-mono pt-1 sm:pt-2">₹50,000+ POOL</span>
                     </motion.div>
                   </motion.div>
 
@@ -1024,7 +1036,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.7 }}
-                    className="group relative rounded-3xl overflow-hidden shadow-xl border border-[#d4e8f5] min-h-[220px] sm:min-h-[280px] flex items-end"
+                    className="group relative rounded-3xl overflow-hidden shadow-xl border border-[#F5B942]/30 min-h-[220px] sm:min-h-[280px] flex items-end"
                   >
                     <img
                       src="/spiher-hero-building.png"
@@ -1033,23 +1045,23 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       loading="lazy"
                       decoding="async"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#001f4d]/95 via-[#001f4d]/50 to-transparent" />
-                    <div className="relative z-10 p-6 sm:p-8 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#020B1C]/95 via-[#020B1C]/60 to-transparent" />
+                    <div className="relative z-10 p-6 sm:p-8 text-[#FFF2D5] flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
                       <div>
-                        <span className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded bg-[#0077c8] text-white">
+                        <span className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded bg-[#0878D1] text-white">
                           HOST CAMPUS
                         </span>
-                        <h3 className="text-xl sm:text-2xl font-serif font-bold text-white mt-2">
+                        <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#FFF2D5] mt-2">
                           St. Peter's Institute of Higher Education &amp; Research
                         </h3>
-                        <p className="text-xs text-slate-200 mt-0.5">
+                        <p className="text-xs text-[#FFF2D5]/80 mt-0.5">
                           Deemed to be University • NAAC 'A' Grade Accredited Campus
                         </p>
                       </div>
                       <button
                         type="button"
                         onClick={onStartNewRegistration}
-                        className="px-6 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-[#002b66] text-xs font-bold shadow transition-all cursor-pointer whitespace-nowrap"
+                        className="px-6 py-2.5 rounded-xl bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] text-xs font-bold shadow-md shadow-[#F5B942]/30 transition-all cursor-pointer whitespace-nowrap"
                       >
                         Join RADIANZA '26
                       </button>
@@ -1058,195 +1070,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                 </div>
               </section>
 
-              {/* ── 3. SCHEDULE TIMELINE SECTION ── */}
-              <section id="schedule" className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 border-t border-[#e2eff7]">
-                <div className="max-w-4xl mx-auto space-y-8">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-40px' }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center space-y-2"
-                  >
-                    <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#0077c8] bg-white px-3 py-1 rounded-full border border-[#d4e8f5]">
-                      AGENDA &amp; TIMELINE
-                    </span>
-                    <h2 className="text-3xl sm:text-4xl font-serif font-extrabold text-[#001f4d]">
-                      Symposium Schedule
-                    </h2>
-                    <p className="text-xs sm:text-sm text-slate-500">
-                      Official timetable across Technical, Creative &amp; Non-Technical Tracks with designated venues.
-                    </p>
-                  </motion.div>
-
-                  <div className="relative pl-6 sm:pl-10 space-y-5 pt-4">
-                    <motion.div
-                      initial={{ scaleY: 0 }}
-                      whileInView={{ scaleY: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.9, ease: 'easeOut' }}
-                      style={{ transformOrigin: 'top' }}
-                      className="absolute left-3 sm:left-5 top-3 bottom-3 w-0.5 bg-gradient-to-b from-[#0077c8] via-[#00f2fe] to-[#00a887]"
-                    />
-
-                    {/* 09:00 AM - 10:00 AM: Inauguration */}
-                    <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs hover:border-[#0077c8]/40 transition-colors">
-                      <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-[#0077c8] shadow-xs" />
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <span className="px-2.5 py-0.5 rounded-md bg-[#0077c8] text-white font-mono font-bold text-[10px]">
-                            09:00 AM – 10:00 AM
-                          </span>
-                          <span className="text-[10px] font-bold text-slate-400">Main Hall</span>
-                        </div>
-                        <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
-                          Grand Inauguration Ceremony
-                        </h4>
-                        <p className="text-xs text-slate-600">
-                          Opening address by university leadership, invocation, lighting of the lamp &amp; symposium briefing.
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* 10:00 AM - 11:00 AM: Morning Non-Tech & Creative Tracks */}
-                    <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs hover:border-[#0077c8]/40 transition-colors">
-                      <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-[#002b66] shadow-xs" />
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <span className="px-2.5 py-0.5 rounded-md bg-[#002b66] text-white font-mono font-bold text-[10px]">
-                            10:00 AM – 11:00 AM
-                          </span>
-                          <span className="text-[10px] font-bold text-slate-400">Room 248, 247 &amp; Main Hall</span>
-                        </div>
-                        <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
-                          Morning Competitions Track
-                        </h4>
-                        <p className="text-xs text-slate-600">
-                          Poster Making (Room 248), Push-up Challenge (Main Hall), Memory Game (Room 248) &amp; Face Painting (Room 247).
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* 10:00 AM - 12:00 PM: Technical Track */}
-                    <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-[#f0f8fc] border border-[#bce0f5] shadow-xs hover:border-[#0077c8]/60 transition-colors">
-                      <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-[#0077c8] shadow-xs" />
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <span className="px-2.5 py-0.5 rounded-md bg-[#0077c8] text-white font-mono font-bold text-[10px]">
-                            10:00 AM – 12:00 PM
-                          </span>
-                          <span className="text-[10px] font-bold text-[#0077c8] font-mono">TECHNICAL LAB • ROOM 251</span>
-                        </div>
-                        <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
-                          Technical Sprint &amp; Design Competitions
-                        </h4>
-                        <p className="text-xs text-slate-600">
-                          AI Prompt Challenge, UI/UX Designathon, Logo Creation &amp; Website Creation live stage sprints.
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* 11:00 AM - 12:00 PM & 12:30 PM: Connections & Treasure Hunt */}
-                    <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs hover:border-[#0077c8]/40 transition-colors">
-                      <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-[#00a887] shadow-xs" />
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <span className="px-2.5 py-0.5 rounded-md bg-[#00a887] text-white font-mono font-bold text-[10px]">
-                            11:00 AM – 12:30 PM
-                          </span>
-                          <span className="text-[10px] font-bold text-slate-400">Main Hall &amp; Outdoor Grounds</span>
-                        </div>
-                        <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
-                          Connections &amp; Campus Treasure Hunt
-                        </h4>
-                        <p className="text-xs text-slate-600">
-                          Connections trivia (11:00 AM – 12:00 PM at Main Hall) &amp; Outdoor Campus Treasure Hunt (11:00 AM – 12:30 PM).
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* 12:00 PM - 01:00 PM: Tech Quiz, Rampwalk & Singing */}
-                    <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs hover:border-[#0077c8]/40 transition-colors">
-                      <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-[#7c3aed] shadow-xs" />
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <span className="px-2.5 py-0.5 rounded-md bg-[#7c3aed] text-white font-mono font-bold text-[10px]">
-                            12:00 PM – 01:00 PM
-                          </span>
-                          <span className="text-[10px] font-bold text-slate-400">Room 251 &amp; Main Hall</span>
-                        </div>
-                        <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
-                          Tech Quiz, Rampwalk &amp; Solo Singing
-                        </h4>
-                        <p className="text-xs text-slate-600">
-                          Tech Quiz (12:00 PM – 01:00 PM @ Room 251), Rampwalk (12:00 PM – 12:30 PM) &amp; Singing (12:30 PM – 01:00 PM).
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* 01:00 PM - 01:30 PM: Lunch Break */}
-                    <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-slate-100/80 border border-slate-200 shadow-xs">
-                      <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-slate-400 shadow-xs" />
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <span className="px-2.5 py-0.5 rounded-md bg-slate-700 text-white font-mono font-bold text-[10px]">
-                            01:00 PM – 01:30 PM
-                          </span>
-                          <span className="text-[10px] font-bold text-slate-500">All Venues</span>
-                        </div>
-                        <h4 className="text-sm sm:text-base font-bold text-slate-700">
-                          Lunch &amp; Networking Break
-                        </h4>
-                        <p className="text-xs text-slate-500">
-                          Complimentary lunch and refreshment counters for all registered delegates and pass holders.
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* 01:30 PM - 03:00 PM: Free Fire & Dance */}
-                    <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs hover:border-[#0077c8]/40 transition-colors">
-                      <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-rose-500 shadow-xs" />
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <span className="px-2.5 py-0.5 rounded-md bg-rose-600 text-white font-mono font-bold text-[10px]">
-                            01:30 PM – 03:00 PM
-                          </span>
-                          <span className="text-[10px] font-bold text-slate-400">Room 251 &amp; Main Hall</span>
-                        </div>
-                        <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
-                          Free Fire Battle Royale &amp; Dance Showcase
-                        </h4>
-                        <p className="text-xs text-slate-600">
-                          Free Fire Squad Custom Rooms (01:30 PM – 03:00 PM @ Room 251) &amp; Dance Competitions (02:00 PM – 03:00 PM @ Main Hall).
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* 03:00 PM - 03:30 PM: Closing & Results */}
-                    <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-[#fffef5] border border-amber-200 shadow-xs">
-                      <div className="absolute -left-[27px] sm:-left-[35px] top-6 w-4 h-4 rounded-full bg-white border-3 border-amber-500 shadow-xs" />
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <span className="px-2.5 py-0.5 rounded-md bg-amber-600 text-white font-mono font-bold text-[10px]">
-                            03:00 PM – 03:30 PM
-                          </span>
-                          <span className="text-[10px] font-bold text-amber-700 font-mono">VALEDICTORY</span>
-                        </div>
-                        <h4 className="text-sm sm:text-base font-bold text-[#001f4d]">
-                          Event Closing, Results &amp; Trophy Distribution
-                        </h4>
-                        <p className="text-xs text-slate-600">
-                          Official announcement of winners across all 15 events, certificate awards &amp; symposium valedictory.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              {/* ── 4. SPEAKERS SECTION (HORIZONTAL SCROLLING) ── */}
-              <section id="speakers" className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-white border-t border-[#e2eff7] overflow-hidden">
-                <div className="max-w-7xl mx-auto space-y-8">
+              {/* ── 3. SPEAKERS SECTION (HORIZONTAL SCROLLING) ── */}
+              <section id="speakers" className="w-full py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#020B1C] border-t border-[#F5B942]/20 overflow-hidden">
+                <div className="max-w-7xl mx-auto space-y-5 sm:space-y-6">
                   <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
@@ -1255,32 +1081,32 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       transition={{ duration: 0.6 }}
                       className="max-w-2xl text-left space-y-3"
                     >
-                      <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#0077c8] bg-[#f0f8fc] px-3 py-1 rounded-full border border-[#d4e8f5]">
+                      <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#F5B942] bg-[#061A35] px-3 py-1 rounded-full border border-[#F5B942]/30">
                         THOUGHT LEADERS &amp; JURY
                       </span>
-                      <h2 className="text-3xl sm:text-5xl font-serif font-extrabold text-[#001f4d] tracking-tight">
+                      <h2 className="text-3xl sm:text-5xl font-serif font-extrabold text-[#FFF2D5] tracking-tight">
                         Eminent Speakers
                       </h2>
-                      <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
+                      <p className="text-sm sm:text-base text-[#FFF2D5]/70 leading-relaxed font-medium">
                         Learn directly from researchers, tech executives, and venture founders shaping the forefront of modern engineering and digital transformation.
                       </p>
                     </motion.div>
 
                     {/* Navigation Controls & Helper */}
                     <div className="flex items-center gap-3 shrink-0">
-                      <span className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-slate-400 bg-slate-50 px-3 py-2 rounded-full border border-slate-200 select-none">
+                      <span className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[#FFF2D5]/60 bg-[#061A35] px-3 py-2 rounded-full border border-[#F5B942]/20 select-none">
                         <span>← Swipe / Scroll →</span>
                       </span>
 
-                      <div className="flex items-center gap-2 bg-slate-50 p-1.5 rounded-full border border-slate-200">
+                      <div className="flex items-center gap-2 bg-[#061A35] p-1.5 rounded-full border border-[#F5B942]/20">
                         <button
                           type="button"
                           onClick={() => handleSpeakersScroll('left')}
                           disabled={!canScrollSpeakersLeft}
                           className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
                             canScrollSpeakersLeft
-                              ? 'bg-white text-[#002b66] hover:bg-[#0077c8] hover:text-white shadow-xs active:scale-95 border border-slate-200'
-                              : 'bg-transparent text-slate-300 cursor-not-allowed border border-transparent'
+                              ? 'bg-[#020B1C] text-[#FFF2D5] hover:bg-[#F5B942] hover:text-[#020B1C] shadow-xs active:scale-95 border border-[#F5B942]/30'
+                              : 'bg-transparent text-[#FFF2D5]/20 cursor-not-allowed border border-transparent'
                           }`}
                           aria-label="Scroll speakers left"
                         >
@@ -1292,8 +1118,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                           disabled={!canScrollSpeakersRight}
                           className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
                             canScrollSpeakersRight
-                              ? 'bg-white text-[#002b66] hover:bg-[#0077c8] hover:text-white shadow-xs active:scale-95 border border-slate-200'
-                              : 'bg-transparent text-slate-300 cursor-not-allowed border border-transparent'
+                              ? 'bg-[#020B1C] text-[#FFF2D5] hover:bg-[#F5B942] hover:text-[#020B1C] shadow-xs active:scale-95 border border-[#F5B942]/30'
+                              : 'bg-transparent text-[#FFF2D5]/20 cursor-not-allowed border border-transparent'
                           }`}
                           aria-label="Scroll speakers right"
                         >
@@ -1318,9 +1144,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       {SPEAKERS_DATA.map((speaker, idx) => (
                         <div
                           key={speaker.id}
-                          className="w-[300px] sm:w-[340px] md:w-[360px] shrink-0 snap-start bg-white rounded-3xl border border-[#d4e8f5] overflow-hidden shadow-xs hover:shadow-xl hover:border-[#0077c8]/60 transition-all duration-300 flex flex-col justify-between group select-none"
+                          className="w-[300px] sm:w-[340px] md:w-[360px] shrink-0 snap-start bg-[#061A35] rounded-3xl border border-[#0878D1]/30 overflow-hidden shadow-xs hover:shadow-[0_0_24px_rgba(8,120,209,0.3)] hover:border-[#0878D1] transition-all duration-300 flex flex-col justify-between group select-none"
                         >
-                          <div className="relative h-60 w-full overflow-hidden bg-slate-100">
+                          <div className="relative h-60 w-full overflow-hidden bg-[#020B1C]">
                             <img
                               src={speaker.imageUrl}
                               alt={speaker.name}
@@ -1328,39 +1154,39 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                               loading="lazy"
                               decoding="async"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent pointer-events-none" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#061A35] via-[#061A35]/30 to-transparent pointer-events-none" />
 
                             <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-                              <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/95 text-[#002b66] shadow-xs backdrop-blur-xs">
+                              <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#020B1C]/90 text-[#F5B942] border border-[#F5B942]/40 shadow-xs backdrop-blur-xs">
                                 {speaker.tag}
                               </span>
-                              <span className="text-[10px] font-mono font-bold text-white/90 bg-black/40 backdrop-blur-xs px-2 py-0.5 rounded-full border border-white/20">
+                              <span className="text-[10px] font-mono font-bold text-[#FFF2D5]/90 bg-black/50 backdrop-blur-xs px-2 py-0.5 rounded-full border border-white/20">
                                 0{idx + 1}
                               </span>
                             </div>
 
                             <div className="absolute bottom-3 left-4 right-4 text-white pointer-events-none">
-                              <h3 className="text-lg font-bold leading-tight drop-shadow-xs">{speaker.name}</h3>
-                              <p className="text-xs text-[#7af1fc] font-medium mt-0.5">{speaker.role}</p>
+                              <h3 className="text-lg font-bold leading-tight text-[#FFF2D5] drop-shadow-xs">{speaker.name}</h3>
+                              <p className="text-xs text-[#0878D1] font-medium mt-0.5">{speaker.role}</p>
                             </div>
                           </div>
 
                           <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                             <div className="space-y-2">
-                              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0077c8] block">
+                              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#F5B942] block">
                                 {speaker.organization}
                               </span>
-                              <h4 className="text-sm font-bold text-[#001f4d] leading-snug">
+                              <h4 className="text-sm font-bold text-[#FFF2D5] leading-snug">
                                 "{speaker.topic}"
                               </h4>
-                              <p className="text-xs text-slate-500 line-clamp-3 leading-relaxed">
+                              <p className="text-xs text-[#FFF2D5]/70 line-clamp-3 leading-relaxed">
                                 {speaker.bio}
                               </p>
                             </div>
 
-                            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-                              <span className="flex items-center gap-1.5 text-[11px] text-[#00a887] font-semibold">
-                                <span className="w-2 h-2 rounded-full bg-[#00a887] animate-pulse" />
+                            <div className="pt-3 border-t border-[#F5B942]/15 flex items-center justify-between text-xs text-[#FFF2D5]/50">
+                              <span className="flex items-center gap-1.5 text-[11px] text-[#0878D1] font-semibold">
+                                <span className="w-2 h-2 rounded-full bg-[#0878D1] animate-pulse" />
                                 <span>Live Keynote &amp; Q&amp;A</span>
                               </span>
                               <div className="flex items-center gap-2">
@@ -1372,7 +1198,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                                       window.open(speaker.socials.linkedin, '_blank');
                                     }
                                   }}
-                                  className="hover:text-[#0077c8] transition-colors p-1 cursor-pointer"
+                                  className="hover:text-[#F5B942] transition-colors p-1 cursor-pointer text-[#FFF2D5]/60"
                                   aria-label={`${speaker.name} LinkedIn`}
                                 >
                                   <Linkedin className="w-4 h-4" />
@@ -1385,7 +1211,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                                       window.open(speaker.socials.web, '_blank');
                                     }
                                   }}
-                                  className="hover:text-[#0077c8] transition-colors p-1 cursor-pointer"
+                                  className="hover:text-[#F5B942] transition-colors p-1 cursor-pointer text-[#FFF2D5]/60"
                                   aria-label={`${speaker.name} Website`}
                                 >
                                   <Globe className="w-4 h-4" />
@@ -1397,37 +1223,12 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       ))}
                     </div>
                   </div>
-
-                  {/* Carousel Progress Indicators */}
-                  <div className="flex items-center justify-between pt-2 px-1">
-                    <div className="flex items-center gap-2">
-                      {SPEAKERS_DATA.map((_, idx) => (
-                        <button
-                          key={idx}
-                          type="button"
-                          onClick={() => scrollToSpeakerIndex(idx)}
-                          className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                            activeSpeakerIndex === idx
-                              ? 'w-8 bg-[#0077c8]'
-                              : 'w-2 bg-slate-200 hover:bg-slate-300'
-                          }`}
-                          aria-label={`Scroll to speaker ${idx + 1}`}
-                        />
-                      ))}
-                    </div>
-
-                    <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-400">
-                      <span className="text-[#0077c8]">0{activeSpeakerIndex + 1}</span>
-                      <span>/</span>
-                      <span>0{SPEAKERS_DATA.length}</span>
-                    </div>
-                  </div>
                 </div>
               </section>
 
-              {/* ── 5. GALLERY SECTION (HORIZONTAL SCROLLING) ── */}
-              <section id="gallery" className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 border-t border-[#e2eff7] overflow-hidden">
-                <div className="max-w-7xl mx-auto space-y-8">
+              {/* ── 4. GALLERY SECTION (HORIZONTAL SCROLLING) ── */}
+              <section id="gallery" className="w-full py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#020B1C] border-t border-[#F5B942]/20 overflow-hidden">
+                <div className="max-w-7xl mx-auto space-y-5 sm:space-y-6">
                   <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
@@ -1436,33 +1237,33 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       transition={{ duration: 0.6 }}
                       className="space-y-3 text-left max-w-2xl"
                     >
-                      <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#0077c8] bg-white px-3 py-1 rounded-full border border-[#d4e8f5]">
+                      <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#0878D1] bg-[#061A35] px-3 py-1 rounded-full border border-[#0878D1]/30">
                         CAMPUS PULSE
                       </span>
-                      <h2 className="text-3xl sm:text-5xl font-serif font-extrabold text-[#001f4d] tracking-tight">
+                      <h2 className="text-3xl sm:text-5xl font-serif font-extrabold text-[#FFF2D5] tracking-tight">
                         Moments of RADIANZA
                       </h2>
-                      <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
+                      <p className="text-sm sm:text-base text-[#FFF2D5]/70 leading-relaxed font-medium">
                         Relive the electric energy, intense hacking sprints, robotics warfare, and grand valedictory celebrations from our symposium legacy.
                       </p>
                     </motion.div>
 
                     {/* Navigation Controls & Helper */}
                     <div className="flex items-center gap-3 shrink-0">
-                      <div className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-slate-400 bg-white px-3 py-2 rounded-full border border-slate-200 select-none">
-                        <Camera className="w-3.5 h-3.5 text-[#0077c8]" />
+                      <div className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-[#FFF2D5]/60 bg-[#061A35] px-3 py-2 rounded-full border border-[#F5B942]/20 select-none">
+                        <Camera className="w-3.5 h-3.5 text-[#F5B942]" />
                         <span>Click card to enlarge</span>
                       </div>
 
-                      <div className="flex items-center gap-2 bg-white p-1.5 rounded-full border border-slate-200 shadow-xs">
+                      <div className="flex items-center gap-2 bg-[#061A35] p-1.5 rounded-full border border-[#F5B942]/20 shadow-xs">
                         <button
                           type="button"
                           onClick={() => handleGalleryScroll('left')}
                           disabled={!canScrollGalleryLeft}
                           className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
                             canScrollGalleryLeft
-                              ? 'bg-[#002b66] text-white hover:bg-[#0077c8] shadow-xs active:scale-95'
-                              : 'bg-slate-100 text-slate-300 cursor-not-allowed'
+                              ? 'bg-[#020B1C] text-[#FFF2D5] hover:bg-[#F5B942] hover:text-[#020B1C] border border-[#F5B942]/30 shadow-xs active:scale-95'
+                              : 'bg-transparent text-[#FFF2D5]/20 cursor-not-allowed border border-transparent'
                           }`}
                           aria-label="Scroll gallery left"
                         >
@@ -1474,8 +1275,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                           disabled={!canScrollGalleryRight}
                           className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
                             canScrollGalleryRight
-                              ? 'bg-[#002b66] text-white hover:bg-[#0077c8] shadow-xs active:scale-95'
-                              : 'bg-slate-100 text-slate-300 cursor-not-allowed'
+                              ? 'bg-[#020B1C] text-[#FFF2D5] hover:bg-[#F5B942] hover:text-[#020B1C] border border-[#F5B942]/30 shadow-xs active:scale-95'
+                              : 'bg-transparent text-[#FFF2D5]/20 cursor-not-allowed border border-transparent'
                           }`}
                           aria-label="Scroll gallery right"
                         >
@@ -1501,7 +1302,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         <div
                           key={item.id}
                           onClick={() => setSelectedGalleryModal(item)}
-                          className="w-[300px] sm:w-[360px] md:w-[400px] shrink-0 snap-start aspect-[4/3] group relative rounded-3xl overflow-hidden bg-slate-900 shadow-md hover:shadow-2xl border border-[#d4e8f5] hover:border-[#0077c8]/60 transition-all duration-300 cursor-pointer select-none"
+                          className="w-[300px] sm:w-[360px] md:w-[400px] shrink-0 snap-start aspect-[4/3] group relative rounded-3xl overflow-hidden bg-[#061A35] shadow-md hover:shadow-2xl border border-[#F5B942]/20 hover:border-[#F5B942]/60 transition-all duration-300 cursor-pointer select-none"
                         >
                           <img
                             src={item.imageUrl}
@@ -1510,69 +1311,44 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                             loading="lazy"
                             decoding="async"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#001f4d]/95 via-[#001f4d]/40 to-transparent opacity-85 group-hover:opacity-95 transition-opacity pointer-events-none" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#020B1C]/95 via-[#020B1C]/40 to-transparent opacity-85 group-hover:opacity-95 transition-opacity pointer-events-none" />
 
                           <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#002b66] shadow-xs">
+                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#020B1C]/90 border border-[#F5B942]/40 backdrop-blur-md text-[#F5B942] shadow-xs">
                               {item.category}
                             </span>
                             <div className="flex items-center gap-2">
-                              <span className="text-[10px] font-mono font-bold text-white/90 bg-black/40 backdrop-blur-xs px-2 py-0.5 rounded-full border border-white/20">
+                              <span className="text-[10px] font-mono font-bold text-[#FFF2D5]/90 bg-black/50 backdrop-blur-xs px-2 py-0.5 rounded-full border border-white/20">
                                 0{idx + 1}
                               </span>
-                              <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                              <div className="w-8 h-8 rounded-full bg-[#F5B942]/20 border border-[#F5B942]/40 backdrop-blur-md flex items-center justify-center text-[#F5B942] opacity-0 group-hover:opacity-100 transition-opacity">
                                 <Maximize2 className="w-4 h-4" />
                               </div>
                             </div>
                           </div>
 
-                          <div className="absolute bottom-4 left-4 right-4 text-white space-y-1 transform group-hover:-translate-y-1 transition-transform pointer-events-none">
+                          <div className="absolute bottom-4 left-4 right-4 text-[#FFF2D5] space-y-1 transform group-hover:-translate-y-1 transition-transform pointer-events-none">
                             <h3 className="text-base font-bold leading-tight drop-shadow-xs">{item.title}</h3>
-                            <p className="text-xs text-slate-200 line-clamp-2 leading-relaxed">{item.caption}</p>
+                            <p className="text-xs text-[#FFF2D5]/80 line-clamp-2 leading-relaxed">{item.caption}</p>
                           </div>
                         </div>
                       ))}
                     </div>
                   </div>
-
-                  {/* Carousel Progress Indicators */}
-                  <div className="flex items-center justify-between pt-2 px-1">
-                    <div className="flex items-center gap-2">
-                      {GALLERY_DATA.map((_, idx) => (
-                        <button
-                          key={idx}
-                          type="button"
-                          onClick={() => scrollToGalleryIndex(idx)}
-                          className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                            activeGalleryIndex === idx
-                              ? 'w-8 bg-[#0077c8]'
-                              : 'w-2 bg-slate-200 hover:bg-slate-300'
-                          }`}
-                          aria-label={`Scroll to moment ${idx + 1}`}
-                        />
-                      ))}
-                    </div>
-
-                    <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-400">
-                      <span className="text-[#0077c8]">0{activeGalleryIndex + 1}</span>
-                      <span>/</span>
-                      <span>0{GALLERY_DATA.length}</span>
-                    </div>
-                  </div>
                 </div>
               </section>
 
-              {/* ── 6. QUICK BOTTOM GATEWAY TO COMPETITION MATRIX ── */}
-              <section className="w-full py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-[#001f4d] via-[#002b66] to-[#0077c8] text-white">
+              {/* ── 5. QUICK BOTTOM GATEWAY TO COMPETITION MATRIX ── */}
+              <section className="w-full py-8 sm:py-10 px-4 sm:px-6 lg:px-8 bg-[#061A35] border-t border-b border-[#F5B942]/25 text-[#FFF2D5]">
                 <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                   <div className="space-y-1 text-left">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#7af1fc]">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#F5B942]">
                       READY TO COMPETE?
                     </span>
-                    <h3 className="text-2xl font-serif font-bold text-white">
+                    <h3 className="text-2xl font-serif font-bold text-[#FFF2D5]">
                       Explore the Competition Matrix &amp; Register
                     </h3>
-                    <p className="text-xs text-slate-200">
+                    <p className="text-xs text-[#FFF2D5]/70">
                       Pick your track, build your squad, and secure your verifiable entry pass.
                     </p>
                   </div>
@@ -1580,14 +1356,14 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     <button
                       type="button"
                       onClick={() => navigateToPage('events')}
-                      className="px-6 py-3 rounded-xl bg-white hover:bg-slate-100 text-[#002b66] text-xs font-bold shadow-md transition-all cursor-pointer whitespace-nowrap"
+                      className="px-6 py-3 rounded-xl bg-[#020B1C] hover:bg-[#020B1C]/80 text-[#FFF2D5] border border-[#0878D1] text-xs font-bold shadow-md transition-all cursor-pointer whitespace-nowrap"
                     >
                       Open Events Matrix →
                     </button>
                     <button
                       type="button"
                       onClick={onStartNewRegistration}
-                      className="px-6 py-3 rounded-xl bg-[#00a887] hover:bg-[#009275] text-white text-xs font-bold shadow-md transition-all cursor-pointer whitespace-nowrap"
+                      className="px-6 py-3 rounded-xl bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] text-xs font-black shadow-md shadow-[#F5B942]/30 transition-all cursor-pointer whitespace-nowrap"
                     >
                       Register Now
                     </button>
@@ -1596,31 +1372,33 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               </section>
 
               {/* ── 7. EDITORIAL FOOTER ON HOME PAGE ── */}
-              <footer id="footer" className="w-full bg-[#030914] text-slate-400 py-16 px-4 sm:px-6 lg:px-8 border-t border-white/10">
+              <footer id="footer" className="w-full bg-[#020B1C] text-[#FFF2D5]/70 py-16 px-4 sm:px-6 lg:px-8 border-t border-[#F5B942]/20">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10">
                   <div className="md:col-span-5 space-y-4 text-left">
-                    <div className="flex items-center gap-2.5 text-white">
+                    <div className="flex items-center gap-2.5 text-[#FFF2D5]">
                       <CollegeEmblem size={32} />
-                      <span className="font-serif text-xl font-bold tracking-tight">RADIANZA '26</span>
+                      <span className="font-serif text-xl font-bold tracking-tight">
+                        RADIANZA <span className="text-[#F5B942]">'26</span>
+                      </span>
                     </div>
-                    <p className="text-xs text-slate-400 max-w-sm leading-relaxed">
+                    <p className="text-xs text-[#FFF2D5]/70 max-w-sm leading-relaxed">
                       Igniting Ideas, Innovating Tomorrow. National-Level Technical &amp; Non-Technical Symposium hosted by St. Peter's Institute of Higher Education &amp; Research.
                     </p>
-                    <div className="pt-2 text-xs text-slate-500 space-y-1">
+                    <div className="pt-2 text-xs text-[#FFF2D5]/60 space-y-1">
                       <p>📍 SPIHER Campus, Avadi, Chennai - 600054, Tamil Nadu</p>
                       <p>📞 +91 422 259 0123 • ignite2026@spiher.edu.in</p>
                     </div>
                   </div>
 
                   <div className="md:col-span-3 space-y-3 text-left">
-                    <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">Directory</h4>
+                    <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#FFF2D5]">Directory</h4>
                     <div className="flex flex-col space-y-2 text-xs">
                       {PAGES.map((p) => (
                         <button
                           key={p.id}
                           onClick={() => navigateToPage(p.id)}
                           className={`text-left transition-colors cursor-pointer ${
-                            activePage === p.id ? 'text-[#7af1fc] font-bold' : 'hover:text-white'
+                            activePage === p.id ? 'text-[#F5B942] font-bold' : 'hover:text-white'
                           }`}
                         >
                           {p.title}
@@ -1630,15 +1408,15 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   </div>
 
                   <div className="md:col-span-4 space-y-3 text-left">
-                    <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">Staff &amp; Administration</h4>
-                    <p className="text-xs text-slate-400">
+                    <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#FFF2D5]">Staff &amp; Administration</h4>
+                    <p className="text-xs text-[#FFF2D5]/70">
                       Coordinators, evaluators, and jury can access the mobile scanner and evaluator portal below.
                     </p>
                     <div className="pt-2">
                       <button
                         type="button"
                         onClick={onOpenConsole}
-                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs text-[#7af1fc] transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#061A35] hover:bg-[#09254c] border border-[#0878D1]/40 text-xs text-[#0878D1] transition-colors cursor-pointer"
                       >
                         <Lock className="w-3.5 h-3.5" />
                         <span>Staff &amp; Evaluator Console →</span>
@@ -1647,7 +1425,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   </div>
                 </div>
 
-                <div className="max-w-7xl mx-auto pt-10 mt-10 border-t border-white/10 text-center text-xs text-slate-600">
+                <div className="max-w-7xl mx-auto pt-10 mt-10 border-t border-[#F5B942]/10 text-center text-xs text-[#FFF2D5]/40">
                   <p>© 2026 RADIANZA • St. Peter's Institute of Higher Education &amp; Research. All Rights Reserved.</p>
                 </div>
               </footer>
@@ -1668,22 +1446,22 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-10"
             >
               {/* Header Lockup */}
-              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2 border-b border-[#e8f5fb]">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2 border-b border-[#F5B942]/20">
                 <div className="space-y-2.5">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f0f8fc] border border-[#d4e8f5] text-[#0077c8] font-mono text-xs font-bold uppercase tracking-wider">
-                    <Trophy className="w-3.5 h-3.5 text-[#0077c8]" />
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#061A35] border border-[#F5B942]/40 text-[#F5B942] font-mono text-xs font-bold uppercase tracking-wider">
+                    <Trophy className="w-3.5 h-3.5 text-[#F5B942]" />
                     <span>ARENA // COMPETITION MATRIX</span>
                   </div>
-                  <h2 className="text-3xl sm:text-5xl font-serif font-black tracking-tight text-[#001f4d]">
-                    Featured <span className="text-[#0077c8]">Events</span>
+                  <h2 className="text-3xl sm:text-5xl font-serif font-black tracking-tight text-[#FFF2D5]">
+                    Featured <span className="text-[#F5B942]">Events</span>
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-600 max-w-xl leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#FFF2D5]/70 max-w-xl leading-relaxed">
                     Choose your battleground. Select your preferred event to compete, innovate, and showcase your expertise at RADIANZA ’26.
                   </p>
                 </div>
 
                 {/* Category Filter Switcher */}
-                <div className="flex items-center gap-1.5 p-1.5 bg-[#f0f8fc] rounded-2xl border border-[#d4e8f5] shadow-xs shrink-0 self-start md:self-auto">
+                <div className="w-full sm:w-auto overflow-x-auto no-scrollbar flex items-center gap-1.5 p-1.5 bg-[#061A35] rounded-2xl border border-[#F5B942]/20 shadow-xs shrink-0 self-start md:self-auto">
                   {(['All', 'Technical', 'Non-Technical'] as const).map((cat) => {
                     const count = cat === 'All' ? events.length : events.filter(e => e.category === cat).length;
                     const isActive = activeCategory === cat;
@@ -1692,16 +1470,27 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         key={cat}
                         type="button"
                         onClick={() => setActiveCategory(cat)}
-                        className={`relative px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                        className={`relative px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-xs font-bold transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 whitespace-nowrap shrink-0 ${
                           isActive
-                            ? 'bg-[#002b66] text-white shadow-sm'
-                            : 'text-slate-600 hover:text-[#002b66] hover:bg-white/60'
+                            ? 'bg-[#F5B942] text-[#020B1C] shadow-md'
+                            : 'text-[#FFF2D5]/70 hover:text-[#FFF2D5] hover:bg-white/5'
                         }`}
                       >
-                        <span>{cat} Events</span>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
-                          isActive ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
-                        }`}>
+                        <span className="whitespace-nowrap">
+                          {cat === 'All' ? 'All Events' : (
+                            <>
+                              <span>{cat}</span>
+                              <span className="hidden md:inline">&nbsp;Events</span>
+                            </>
+                          )}
+                        </span>
+                        <span
+                          className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold leading-none shrink-0 transition-colors ${
+                            isActive
+                              ? 'bg-[#020B1C] text-[#F5B942]'
+                              : 'bg-[#020B1C]/80 text-[#FFF2D5]/60 border border-[#F5B942]/20'
+                          }`}
+                        >
                           {count}
                         </span>
                       </button>
@@ -1718,10 +1507,10 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
-                    className="bg-white rounded-3xl border border-[#d4e8f5] hover:border-[#0077c8]/60 overflow-hidden shadow-xs hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group relative"
+                    className="bg-[#061A35] rounded-3xl border border-[#F5B942]/20 hover:border-[#F5B942]/60 overflow-hidden shadow-xs hover:shadow-[0_0_24px_rgba(245,185,66,0.2)] transition-all duration-300 flex flex-col justify-between group relative"
                   >
                     {/* Top Image Banner */}
-                    <div className="relative h-48 w-full overflow-hidden bg-slate-900">
+                    <div className="relative h-48 w-full overflow-hidden bg-[#020B1C]">
                       <img
                         src={event.imageUrl}
                         alt={event.title}
@@ -1731,19 +1520,19 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 opacity-90 group-hover:opacity-100"
                         loading="lazy"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#001f4d]/90 via-[#001f4d]/30 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#061A35] via-[#061A35]/30 to-transparent" />
 
                       {/* Top Floating Badges */}
                       <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between pointer-events-none">
                         <span
                           className={`text-[10.5px] font-mono font-bold uppercase tracking-wider px-3 py-1 rounded-full text-white shadow-md backdrop-blur-md ${
-                            event.category === 'Technical' ? 'bg-[#0077c8]/90' : 'bg-[#00a887]/90'
+                            event.category === 'Technical' ? 'bg-[#0878D1]/90' : 'bg-[#B51F35]/90'
                           }`}
                         >
                           {event.category}
                         </span>
 
-                        <span className="text-[10.5px] font-mono font-bold px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#002b66] shadow-md">
+                        <span className="text-[10.5px] font-mono font-bold px-2.5 py-1 rounded-full bg-[#020B1C]/90 backdrop-blur-md text-[#FFF2D5] border border-[#F5B942]/30 shadow-md">
                           {event.isTeamEvent
                             ? `${event.minTeamSize}-${event.maxTeamSize} Members`
                             : 'Solo Event'}
@@ -1752,7 +1541,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
 
                       {/* Title on Banner Overlay */}
                       <div className="absolute bottom-3.5 left-4 right-4 text-white">
-                        <h3 className="text-lg sm:text-xl font-serif font-bold leading-tight group-hover:text-[#7af1fc] transition-colors">
+                        <h3 className="text-lg sm:text-xl font-serif font-bold leading-tight group-hover:text-[#F5B942] transition-colors">
                           {event.title}
                         </h3>
                       </div>
@@ -1761,22 +1550,22 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     {/* Card Body */}
                     <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-5">
                       <div className="space-y-2">
-                        <p className="text-xs font-bold text-[#0077c8] line-clamp-1">
+                        <p className="text-xs font-bold text-[#F5B942] line-clamp-1">
                           {event.tagline || 'National Level Symposium Arena'}
                         </p>
-                        <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed font-normal">
+                        <p className="text-xs text-[#FFF2D5]/70 line-clamp-2 leading-relaxed font-normal">
                           {event.description}
                         </p>
                       </div>
 
                       {/* Meta Details: Time & Venue */}
-                      <div className="space-y-2 pt-3 border-t border-slate-100 text-xs text-slate-600">
+                      <div className="space-y-2 pt-3 border-t border-[#F5B942]/15 text-xs text-[#FFF2D5]/60">
                         <div className="flex items-center gap-2">
-                          <Clock className="w-3.5 h-3.5 text-[#0077c8] shrink-0" />
+                          <Clock className="w-3.5 h-3.5 text-[#0878D1] shrink-0" />
                           <span className="font-medium">{event.time}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <MapPin className="w-3.5 h-3.5 text-[#00a887] shrink-0" />
+                          <MapPin className="w-3.5 h-3.5 text-[#F5B942] shrink-0" />
                           <span className="truncate font-medium">{event.venue}</span>
                         </div>
                       </div>
@@ -1786,17 +1575,17 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         <button
                           type="button"
                           onClick={() => setSelectedEventModal(event)}
-                          className="w-full py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold border border-slate-200 transition-colors cursor-pointer text-center"
+                          className="w-full py-2.5 px-3 rounded-xl bg-[#020B1C] hover:bg-[#020B1C]/80 text-[#FFF2D5] text-xs font-bold border border-[#F5B942]/30 transition-colors cursor-pointer text-center"
                         >
                           Details
                         </button>
                         <button
                           type="button"
                           onClick={() => onSelectEvent(event)}
-                          className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-[#001f4d] via-[#002b66] to-[#0077c8] hover:from-[#001433] hover:to-[#005fa3] text-white text-xs font-bold shadow-md shadow-[#002b66]/20 transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 active:scale-95"
+                          className="w-full py-2.5 px-3 rounded-xl bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] text-xs font-black shadow-md shadow-[#F5B942]/30 transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 active:scale-95"
                         >
                           <span>Register</span>
-                          <ArrowRight className="w-3.5 h-3.5 text-[#7af1fc]" />
+                          <ArrowRight className="w-3.5 h-3.5 text-[#020B1C]" />
                         </button>
                       </div>
                     </div>
@@ -1821,49 +1610,49 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
             >
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
                 <div className="lg:col-span-6 space-y-5 text-left">
-                  <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#0077c8] bg-white px-3 py-1 rounded-full border border-[#d4e8f5]">
+                  <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#F5B942] bg-[#061A35] px-3 py-1 rounded-full border border-[#F5B942]/30">
                     ABOUT RADIANZA '26 &amp; SPIHER
                   </span>
-                  <h2 className="text-3xl sm:text-4xl font-serif font-extrabold text-[#001f4d]">
+                  <h2 className="text-3xl sm:text-4xl font-serif font-extrabold text-[#FFF2D5]">
                     More Than Just a Symposium
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                  <p className="text-xs sm:text-sm text-[#FFF2D5]/70 leading-relaxed font-medium">
                     RADIANZA '26 is an institution-wide celebration of curiosity, engineering excellence, and interdisciplinary innovation. Bringing together over 500 delegates from engineering universities across India, faculty mentors, and technical visionaries.
                   </p>
 
-                  <div className="space-y-2 pt-1 text-xs text-slate-600">
+                  <div className="space-y-2 pt-1 text-xs text-[#FFF2D5]/80">
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-[#00a887] shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-[#0878D1] shrink-0" />
                       <span>NAAC 'A' Grade Accredited Deemed to be University</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-[#00a887] shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-[#0878D1] shrink-0" />
                       <span>UGC &amp; AICTE Approved Premier Technical Institution</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-[#00a887] shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-[#0878D1] shrink-0" />
                       <span>Cryptographically secured digital entry pass &amp; QR verification engine</span>
                     </div>
                   </div>
 
                   <div className="pt-3 grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    <div className="p-4 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs">
-                      <span className="text-2xl font-serif font-bold text-[#0077c8]">500+</span>
-                      <p className="text-xs text-slate-500 font-medium">Delegates Competing</p>
+                    <div className="p-4 rounded-2xl bg-[#061A35] border border-[#F5B942]/20 shadow-xs">
+                      <span className="text-2xl font-serif font-bold text-[#F5B942]">500+</span>
+                      <p className="text-xs text-[#FFF2D5]/70 font-medium">Delegates Competing</p>
                     </div>
-                    <div className="p-4 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs">
-                      <span className="text-2xl font-serif font-bold text-[#00a887]">12+</span>
-                      <p className="text-xs text-slate-500 font-medium">Technical Tracks</p>
+                    <div className="p-4 rounded-2xl bg-[#061A35] border border-[#F5B942]/20 shadow-xs">
+                      <span className="text-2xl font-serif font-bold text-[#0878D1]">12+</span>
+                      <p className="text-xs text-[#FFF2D5]/70 font-medium">Technical Tracks</p>
                     </div>
-                    <div className="p-4 rounded-2xl bg-white border border-[#d4e8f5] shadow-xs col-span-2 sm:col-span-1">
-                      <span className="text-2xl font-serif font-bold text-amber-600">₹50K+</span>
-                      <p className="text-xs text-slate-500 font-medium">Prize Pool</p>
+                    <div className="p-4 rounded-2xl bg-[#061A35] border border-[#F5B942]/20 shadow-xs col-span-2 sm:col-span-1">
+                      <span className="text-2xl font-serif font-bold text-[#F5B942]">₹50K+</span>
+                      <p className="text-xs text-[#FFF2D5]/70 font-medium">Prize Pool</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="lg:col-span-6 relative">
-                  <div className="relative rounded-3xl overflow-hidden shadow-2xl border-2 border-white aspect-[4/3]">
+                  <div className="relative rounded-3xl overflow-hidden shadow-2xl border-2 border-[#F5B942]/30 aspect-[4/3]">
                     <img
                       src="/spiher-hero-building.png"
                       alt="St. Peter's Institute Main Campus Building"
@@ -1871,9 +1660,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       loading="lazy"
                       decoding="async"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#001f4d]/80 via-transparent to-transparent" />
-                    <div className="absolute bottom-4 left-4 right-4 text-white">
-                      <p className="text-xs font-mono font-bold uppercase text-[#7af1fc]">Host Institution</p>
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#020B1C]/90 via-transparent to-transparent" />
+                    <div className="absolute bottom-4 left-4 right-4 text-[#FFF2D5]">
+                      <p className="text-xs font-mono font-bold uppercase text-[#F5B942]">Host Institution</p>
                       <h4 className="text-base font-bold">St. Peter's Institute of Higher Education and Research</h4>
                     </div>
                   </div>
@@ -1895,103 +1684,105 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               exit="exit"
               className="w-full flex-1 flex flex-col justify-between"
             >
-              <section className="w-full py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#001838] via-[#002b66] to-[#030914] text-white relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#00f2fe]/15 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-[#00a887]/15 rounded-full blur-3xl pointer-events-none" />
+              <section className="w-full py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#020B1C] via-[#061A35] to-[#020B1C] text-[#FFF2D5] relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#0878D1]/15 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-[#F5B942]/10 rounded-full blur-3xl pointer-events-none" />
 
                 <div className="max-w-4xl mx-auto text-center relative z-10 space-y-8">
-                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md">
-                    <Flame className="w-4 h-4 text-amber-400" />
-                    <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#7af1fc]">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#061A35] border border-[#F5B942]/40 backdrop-blur-md">
+                    <Flame className="w-4 h-4 text-[#F5B942]" />
+                    <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#F5B942]">
                       REGISTRATIONS ARE LIVE
                     </span>
                   </div>
 
-                  <h2 className="text-3xl sm:text-6xl font-serif font-extrabold text-white tracking-tight leading-tight">
-                    Be a Part of RADIANZA '26
+                  <h2 className="text-3xl sm:text-6xl font-serif font-extrabold text-[#FFF2D5] tracking-tight leading-tight">
+                    Be a Part of RADIANZA <span className="text-[#F5B942]">'26</span>
                   </h2>
 
-                  <p className="text-xs sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed">
+                  <p className="text-xs sm:text-base text-[#FFF2D5]/70 max-w-xl mx-auto leading-relaxed">
                     Secure your registration today. Pick your competition track, build your team, and download your cryptographically verified entry pass.
                   </p>
 
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto pt-2">
-                    <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-                      <span className="text-2xl sm:text-3xl font-serif font-bold text-[#7af1fc]">
+                    <div className="p-4 rounded-2xl bg-[#061A35]/80 border border-[#F5B942]/20 backdrop-blur-md">
+                      <span className="text-2xl sm:text-3xl font-serif font-bold text-[#F5B942]">
                         {totalRegisteredCount}+
                       </span>
-                      <p className="text-[11px] text-slate-400 mt-1 uppercase font-mono">Delegates</p>
+                      <p className="text-[11px] text-[#FFF2D5]/60 mt-1 uppercase font-mono">Delegates</p>
                     </div>
-                    <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-                      <span className="text-2xl sm:text-3xl font-serif font-bold text-[#00f2fe]">
+                    <div className="p-4 rounded-2xl bg-[#061A35]/80 border border-[#0878D1]/30 backdrop-blur-md">
+                      <span className="text-2xl sm:text-3xl font-serif font-bold text-[#0878D1]">
                         {totalSlotsLeft}
                       </span>
-                      <p className="text-[11px] text-slate-400 mt-1 uppercase font-mono">Slots Left</p>
+                      <p className="text-[11px] text-[#FFF2D5]/60 mt-1 uppercase font-mono">Slots Left</p>
                     </div>
-                    <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-                      <span className="text-2xl sm:text-3xl font-serif font-bold text-emerald-400">
+                    <div className="p-4 rounded-2xl bg-[#061A35]/80 border border-[#F5B942]/20 backdrop-blur-md">
+                      <span className="text-2xl sm:text-3xl font-serif font-bold text-[#FFF2D5]">
                         45+
                       </span>
-                      <p className="text-[11px] text-slate-400 mt-1 uppercase font-mono">Institutions</p>
+                      <p className="text-[11px] text-[#FFF2D5]/60 mt-1 uppercase font-mono">Institutions</p>
                     </div>
-                    <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-                      <span className="text-2xl sm:text-3xl font-serif font-bold text-amber-400">
+                    <div className="p-4 rounded-2xl bg-[#061A35]/80 border border-[#F5B942]/30 backdrop-blur-md">
+                      <span className="text-2xl sm:text-3xl font-serif font-bold text-[#F5B942]">
                         ₹50,000+
                       </span>
-                      <p className="text-[11px] text-slate-400 mt-1 uppercase font-mono">Cash Awards</p>
+                      <p className="text-[11px] text-[#FFF2D5]/60 mt-1 uppercase font-mono">Cash Awards</p>
                     </div>
                   </div>
 
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                     <div className="relative group w-full sm:w-auto">
-                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#00f2fe] via-[#0077c8] to-[#00a887] opacity-80 blur-md animate-halo-pulse" />
+                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#F5B942] to-[#0878D1] opacity-70 blur-md animate-halo-pulse" />
                       <button
                         type="button"
                         onClick={onStartNewRegistration}
-                        className="relative w-full sm:w-auto px-10 py-4 rounded-2xl bg-gradient-to-r from-[#0077c8] via-[#00a887] to-[#00f2fe] text-[#001f4d] font-bold text-sm tracking-wide shadow-2xl flex items-center justify-center gap-2 cursor-pointer active:scale-95 transition-transform"
+                        className="relative w-full sm:w-auto px-10 py-4 rounded-2xl bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] font-black text-sm tracking-wide shadow-2xl flex items-center justify-center gap-2 cursor-pointer active:scale-95 transition-transform"
                       >
                         <span>Register Now</span>
-                        <ArrowRight className="w-4 h-4" />
+                        <ArrowRight className="w-4 h-4 text-[#020B1C]" />
                       </button>
                     </div>
 
                     <button
                       type="button"
                       onClick={() => setIsPassModalOpen(true)}
-                      className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-sm transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-95"
+                      className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#061A35] hover:bg-[#0a264a] border border-[#0878D1] text-[#FFF2D5] font-bold text-sm transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-95"
                     >
-                      <QrCode className="w-4 h-4 text-[#7af1fc]" />
+                      <QrCode className="w-4 h-4 text-[#0878D1]" />
                       <span>Already Registered? View Pass</span>
                     </button>
                   </div>
                 </div>
               </section>
 
-              <footer className="w-full bg-[#030914] text-slate-400 py-16 px-4 sm:px-6 lg:px-8 border-t border-white/10">
+              <footer className="w-full bg-[#020B1C] text-[#FFF2D5]/70 py-16 px-4 sm:px-6 lg:px-8 border-t border-[#F5B942]/20">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10">
                   <div className="md:col-span-5 space-y-4">
-                    <div className="flex items-center gap-2.5 text-white">
+                    <div className="flex items-center gap-2.5 text-[#FFF2D5]">
                       <CollegeEmblem size={32} />
-                      <span className="font-serif text-xl font-bold tracking-tight">RADIANZA '26</span>
+                      <span className="font-serif text-xl font-bold tracking-tight">
+                        RADIANZA <span className="text-[#F5B942]">'26</span>
+                      </span>
                     </div>
-                    <p className="text-xs text-slate-400 max-w-sm leading-relaxed">
+                    <p className="text-xs text-[#FFF2D5]/70 max-w-sm leading-relaxed">
                       Igniting Ideas, Innovating Tomorrow. National-Level Technical &amp; Non-Technical Symposium hosted by St. Peter's Institute of Higher Education &amp; Research.
                     </p>
-                    <div className="pt-2 text-xs text-slate-500 space-y-1">
+                    <div className="pt-2 text-xs text-[#FFF2D5]/60 space-y-1">
                       <p>📍 SPIHER Campus, Avadi, Chennai - 600054, Tamil Nadu</p>
                       <p>📞 +91 422 259 0123 • ignite2026@spiher.edu.in</p>
                     </div>
                   </div>
 
                   <div className="md:col-span-3 space-y-3">
-                    <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">Directory</h4>
+                    <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#FFF2D5]">Directory</h4>
                     <div className="flex flex-col space-y-2 text-xs">
                       {PAGES.map((p) => (
                         <button
                           key={p.id}
                           onClick={() => navigateToPage(p.id)}
                           className={`text-left transition-colors cursor-pointer ${
-                            activePage === p.id ? 'text-[#7af1fc] font-bold' : 'hover:text-white'
+                            activePage === p.id ? 'text-[#F5B942] font-bold' : 'hover:text-white'
                           }`}
                         >
                           {p.title}
@@ -2001,15 +1792,15 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   </div>
 
                   <div className="md:col-span-4 space-y-3">
-                    <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">Staff &amp; Administration</h4>
-                    <p className="text-xs text-slate-400">
+                    <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#FFF2D5]">Staff &amp; Administration</h4>
+                    <p className="text-xs text-[#FFF2D5]/70">
                       Coordinators, evaluators, and jury can access the mobile scanner and evaluator portal below.
                     </p>
                     <div className="pt-2">
                       <button
                         type="button"
                         onClick={onOpenConsole}
-                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs text-[#7af1fc] transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#061A35] hover:bg-[#09254c] border border-[#0878D1]/40 text-xs text-[#0878D1] transition-colors cursor-pointer"
                       >
                         <Lock className="w-3.5 h-3.5" />
                         <span>Staff &amp; Evaluator Console →</span>
@@ -2018,7 +1809,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   </div>
                 </div>
 
-                <div className="max-w-7xl mx-auto pt-10 mt-10 border-t border-white/10 text-center text-xs text-slate-600">
+                <div className="max-w-7xl mx-auto pt-10 mt-10 border-t border-[#F5B942]/10 text-center text-xs text-[#FFF2D5]/40">
                   <p>© 2026 RADIANZA • St. Peter's Institute of Higher Education &amp; Research. All Rights Reserved.</p>
                 </div>
               </footer>
@@ -2030,16 +1821,16 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
       {/* ========================================================================= */}
       {/* 4. PERSISTENT BOTTOM PAGE CONTROLLER & STEPPER                            */}
       {/* ========================================================================= */}
-      <nav className="w-full bg-white/95 backdrop-blur-lg border-t border-[#d4e8f5] px-4 sm:px-8 py-3 z-30 shadow-lg">
+      <nav className="w-full bg-[#020B1C]/95 backdrop-blur-lg border-t border-[#F5B942]/20 px-4 sm:px-8 py-3 z-30 shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           {/* Previous Page Button */}
           {prevPage ? (
             <button
               type="button"
               onClick={() => navigateToPage(prevPage.id)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 hover:bg-[#eaf4fb] text-[#002b66] border border-[#d4e8f5] text-xs font-bold transition-all cursor-pointer active:scale-95"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#061A35] hover:bg-[#0a2245] text-[#FFF2D5] border border-[#F5B942]/30 text-xs font-bold transition-all cursor-pointer active:scale-95"
             >
-              <ArrowLeft className="w-4 h-4 text-[#0077c8]" />
+              <ArrowLeft className="w-4 h-4 text-[#F5B942]" />
               <span className="hidden sm:inline">Previous:</span>
               <span>{prevPage.navLabel}</span>
             </button>
@@ -2058,8 +1849,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   aria-label={`Go to ${page.navLabel}`}
                   className={`transition-all duration-300 rounded-full cursor-pointer ${
                     isActive
-                      ? 'w-7 sm:w-8 h-2.5 bg-[#002b66]'
-                      : 'w-2.5 h-2.5 bg-slate-200 hover:bg-[#0077c8]/50'
+                      ? 'w-7 sm:w-8 h-2.5 bg-[#F5B942]'
+                      : 'w-2.5 h-2.5 bg-[#061A35] border border-[#F5B942]/30 hover:bg-[#0878D1]/50'
                   }`}
                 />
               );
@@ -2071,19 +1862,19 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
             <button
               type="button"
               onClick={() => navigateToPage(nextPage.id)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white text-xs font-bold shadow-sm transition-all cursor-pointer active:scale-95"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] text-xs font-black shadow-sm transition-all cursor-pointer active:scale-95"
             >
               <span className="hidden sm:inline">Next:</span>
               <span>{nextPage.navLabel}</span>
-              <ArrowRight className="w-4 h-4 text-[#7af1fc]" />
+              <ArrowRight className="w-4 h-4 text-[#020B1C]" />
             </button>
           ) : (
             <button
               type="button"
               onClick={() => navigateToPage('home')}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#002b66] text-white text-xs font-bold transition-all cursor-pointer active:scale-95"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#061A35] border border-[#0878D1] text-[#FFF2D5] text-xs font-bold transition-all cursor-pointer active:scale-95"
             >
-              <Compass className="w-4 h-4 text-[#7af1fc]" />
+              <Compass className="w-4 h-4 text-[#0878D1]" />
               <span>Back to Home</span>
             </button>
           )}
@@ -2096,63 +1887,63 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
       {/* Event Details Modal */}
       <AnimatePresence>
         {selectedEventModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-[#d4e8f5] overflow-hidden flex flex-col max-h-[90vh]"
+              className="w-full max-w-xl bg-[#061A35] rounded-3xl shadow-2xl border border-[#F5B942]/30 overflow-hidden flex flex-col max-h-[90vh] text-[#FFF2D5]"
             >
-              <div className="relative h-40 w-full overflow-hidden bg-slate-900">
+              <div className="relative h-40 w-full overflow-hidden bg-[#020B1C]">
                 <img
                   src={selectedEventModal.imageUrl}
                   alt={selectedEventModal.title}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#061A35] via-transparent to-transparent" />
                 <button
                   type="button"
                   onClick={() => setSelectedEventModal(null)}
-                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-950/60 text-white flex items-center justify-center hover:bg-slate-950 transition-colors cursor-pointer"
+                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#020B1C]/80 text-[#FFF2D5] flex items-center justify-center hover:text-[#F5B942] transition-colors cursor-pointer border border-[#F5B942]/30"
                 >
                   ✕
                 </button>
                 <div className="absolute bottom-3 left-4 right-4 text-white">
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#0077c8] text-white mr-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#0878D1] text-white mr-2">
                     {selectedEventModal.category}
                   </span>
-                  <h3 className="text-xl font-bold mt-1">{selectedEventModal.title}</h3>
+                  <h3 className="text-xl font-bold mt-1 text-[#FFF2D5]">{selectedEventModal.title}</h3>
                 </div>
               </div>
 
               <div className="p-6 space-y-4 overflow-y-auto flex-1 text-xs">
                 <div>
-                  <h4 className="font-bold text-[#001f4d] uppercase tracking-wider text-[11px] mb-1">
+                  <h4 className="font-bold text-[#F5B942] uppercase tracking-wider text-[11px] mb-1 font-mono">
                     About the Event
                   </h4>
-                  <p className="text-slate-600 leading-relaxed">{selectedEventModal.description}</p>
+                  <p className="text-[#FFF2D5]/80 leading-relaxed">{selectedEventModal.description}</p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 p-3 rounded-2xl bg-[#f0f8fc] border border-[#d4e8f5]">
+                <div className="grid grid-cols-2 gap-3 p-3 rounded-2xl bg-[#020B1C] border border-[#F5B942]/20">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block">Venue</span>
-                    <span className="font-bold text-[#002b66]">{selectedEventModal.venue}</span>
+                    <span className="text-[10px] uppercase font-bold text-[#FFF2D5]/50 block font-mono">Venue</span>
+                    <span className="font-bold text-[#FFF2D5]">{selectedEventModal.venue}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block">Time</span>
-                    <span className="font-bold text-[#002b66]">{selectedEventModal.time}</span>
+                    <span className="text-[10px] uppercase font-bold text-[#FFF2D5]/50 block font-mono">Time</span>
+                    <span className="font-bold text-[#F5B942]">{selectedEventModal.time}</span>
                   </div>
                 </div>
 
                 {selectedEventModal.rules && (
                   <div>
-                    <h4 className="font-bold text-[#001f4d] uppercase tracking-wider text-[11px] mb-2">
+                    <h4 className="font-bold text-[#F5B942] uppercase tracking-wider text-[11px] mb-2 font-mono">
                       Rules &amp; Guidelines
                     </h4>
-                    <ul className="space-y-1.5 text-slate-600">
+                    <ul className="space-y-1.5 text-[#FFF2D5]/80">
                       {selectedEventModal.rules.map((rule, idx) => (
                         <li key={idx} className="flex items-start gap-2">
-                          <span className="text-[#0077c8] font-bold">•</span>
+                          <span className="text-[#F5B942] font-bold">•</span>
                           <span>{rule}</span>
                         </li>
                       ))}
@@ -2161,8 +1952,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                 )}
               </div>
 
-              <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-500">
+              <div className="p-4 bg-[#020B1C] border-t border-[#F5B942]/20 flex items-center justify-between">
+                <span className="text-xs font-bold text-[#FFF2D5]/60">
                   {selectedEventModal.isTeamEvent ? 'Team Participation' : 'Solo Registration'}
                 </span>
                 <button
@@ -2172,7 +1963,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     setSelectedEventModal(null);
                     onSelectEvent(evt);
                   }}
-                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] text-white font-bold text-xs shadow cursor-pointer hover:scale-105 transition-all"
+                  className="px-6 py-2.5 rounded-xl bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] font-black text-xs shadow-md shadow-[#F5B942]/30 cursor-pointer hover:scale-105 transition-all"
                 >
                   Register for this Event →
                 </button>
@@ -2185,12 +1976,12 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
       {/* Gallery Lightbox Modal */}
       <AnimatePresence>
         {selectedGalleryModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.92 }}
-              className="w-full max-w-3xl bg-slate-900 rounded-3xl shadow-2xl border border-white/20 overflow-hidden flex flex-col"
+              className="w-full max-w-3xl bg-[#061A35] rounded-3xl shadow-2xl border border-[#F5B942]/30 overflow-hidden flex flex-col"
             >
               <div className="relative aspect-video w-full overflow-hidden bg-black flex items-center justify-center">
                 <img
@@ -2201,115 +1992,154 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedGalleryModal(null)}
-                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-colors cursor-pointer"
+                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#020B1C]/80 border border-[#F5B942]/40 text-[#FFF2D5] hover:text-[#F5B942] flex items-center justify-center transition-colors cursor-pointer"
                 >
                   ✕
                 </button>
-                <span className="absolute top-4 left-4 text-[11px] font-mono font-bold uppercase px-3 py-1 rounded-full bg-[#0077c8] text-white">
+                <span className="absolute top-4 left-4 text-[11px] font-mono font-bold uppercase px-3 py-1 rounded-full bg-[#020B1C]/90 text-[#F5B942] border border-[#F5B942]/40">
                   {selectedGalleryModal.category}
                 </span>
               </div>
-              <div className="p-6 text-white space-y-2">
+              <div className="p-6 text-[#FFF2D5] space-y-2">
                 <h3 className="text-xl font-bold font-serif">{selectedGalleryModal.title}</h3>
-                <p className="text-xs text-slate-300 leading-relaxed">{selectedGalleryModal.caption}</p>
+                <p className="text-xs text-[#FFF2D5]/80 leading-relaxed">{selectedGalleryModal.caption}</p>
               </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
 
-      {/* Quick Pass Access Modal */}
+      {/* Quick Pass Access Modal (Redesigned Responsive Glassmorphic Dialog) */}
       <AnimatePresence>
         {isPassModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+            {/* Dimmed Blurred Backdrop */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-[#d4e8f5] overflow-hidden p-6 space-y-5"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setIsPassModalOpen(false)}
+              className="fixed inset-0 bg-black/80 backdrop-blur-md"
+            />
+
+            {/* Radiant Dark Cultural-Futuristic Modal Card */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 15 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 320 }}
+              className="relative z-10 w-full max-w-md bg-[#061A35] rounded-3xl shadow-[0_25px_60px_-15px_rgba(2,11,28,0.9),0_0_30px_rgba(245,185,66,0.15)] border border-[#F5B942]/35 overflow-hidden text-[#FFF2D5]"
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-xl bg-[#e8f5fb] text-[#0077c8]">
-                    <QrCode className="w-5 h-5" />
+              {/* Top Cultural Gradient Accent Line */}
+              <div className="h-1 w-full bg-gradient-to-r from-[#0878D1] via-[#F5B942] to-[#B51F35]" />
+
+              <div className="p-6 sm:p-7 space-y-5">
+                {/* Header Lockup */}
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 rounded-2xl bg-[#020B1C] border border-[#F5B942]/40 text-[#F5B942] flex items-center justify-center shadow-[0_0_15px_rgba(245,185,66,0.2)] shrink-0">
+                      <QrCode className="w-5 h-5 text-[#F5B942]" />
+                    </div>
+                    <div>
+                      <h3 className="font-serif font-black text-lg sm:text-xl text-[#FFF2D5] tracking-tight">
+                        Access Event Pass
+                      </h3>
+                      <p className="text-xs text-[#FFF2D5]/70 mt-0.5">
+                        Enter your credentials to view your QR pass.
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-serif font-bold text-base text-[#001f4d]">Access Event Pass</h3>
-                    <p className="text-[11px] text-slate-500">Enter your credentials to view your QR pass.</p>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsPassModalOpen(false)}
+                    className="w-8 h-8 rounded-xl bg-[#020B1C] border border-[#F5B942]/30 text-[#FFF2D5]/70 hover:text-[#F5B942] hover:border-[#F5B942] flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-95"
+                    aria-label="Close modal"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Error Banner */}
+                {accessError && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-3.5 rounded-2xl bg-rose-950/70 border border-rose-500/50 text-rose-200 text-xs flex items-start gap-2.5 shadow-sm"
+                  >
+                    <AlertCircle className="w-4 h-4 shrink-0 text-rose-400 mt-0.5" />
+                    <span className="leading-snug">{accessError}</span>
+                  </motion.div>
+                )}
+
+                {/* Input Form */}
+                <form onSubmit={handlePassLookupSubmit} className="space-y-4">
+                  <div className="space-y-1.5">
+                    <label
+                      htmlFor="access-roll-number"
+                      className="block text-[11px] font-bold text-[#FFF2D5]/80 uppercase font-mono tracking-wider flex items-center gap-1.5"
+                    >
+                      <Lock className="w-3.5 h-3.5 text-[#F5B942]" />
+                      <span>Roll Number / Register Number</span>
+                      <span className="text-[#F5B942]">*</span>
+                    </label>
+                    <input
+                      id="access-roll-number"
+                      name="accessRollNumber"
+                      type="text"
+                      autoComplete="off"
+                      required
+                      value={accessRollNumber}
+                      onChange={(e) => setAccessRollNumber(e.target.value.toUpperCase())}
+                      placeholder="e.g. 2021CS042"
+                      className="w-full px-4 py-2.5 rounded-xl bg-[#020B1C] border border-[#F5B942]/30 text-xs sm:text-sm font-mono font-bold text-[#FFF2D5] placeholder:text-[#FFF2D5]/30 focus:outline-none focus:border-[#F5B942] focus:ring-2 focus:ring-[#F5B942]/20 transition-all shadow-inner uppercase"
+                    />
                   </div>
+
+                  <div className="space-y-1.5">
+                    <CustomDatePicker
+                      id="access-dob"
+                      name="accessDob"
+                      value={accessDob}
+                      onChange={setAccessDob}
+                      label="Date of Birth"
+                      placeholder="Select Date of Birth"
+                      required
+                      variant="dark"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isVerifyingPass}
+                    className="w-full py-3.5 mt-2 rounded-2xl bg-gradient-to-r from-[#F5B942] via-[#f7c55e] to-[#e5a730] hover:brightness-105 active:scale-[0.98] text-[#020B1C] font-black text-xs sm:text-sm tracking-wider uppercase shadow-lg shadow-[#F5B942]/25 flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-50"
+                  >
+                    {isVerifyingPass ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-[#020B1C] border-t-transparent rounded-full animate-spin" />
+                        <span>Verifying Credentials...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Open My Pass</span>
+                        <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+                      </>
+                    )}
+                  </button>
+                </form>
+
+                {/* Demo Autofill Helper Chip */}
+                <div className="pt-3 border-t border-[#F5B942]/15 flex items-center justify-between gap-2 text-xs">
+                  <span className="text-[11px] text-[#FFF2D5]/60 font-medium">Demo user:</span>
+                  <button
+                    type="button"
+                    onClick={() => handleDemoFill('2021CS042', '2003-05-14')}
+                    className="px-3 py-1.5 rounded-xl bg-[#020B1C] border border-[#F5B942]/30 hover:border-[#F5B942] hover:bg-[#F5B942]/10 text-[#F5B942] font-mono text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 active:scale-95"
+                  >
+                    <span>⚡ Autofill 2021CS042</span>
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setIsPassModalOpen(false)}
-                  className="text-slate-400 hover:text-slate-600 text-lg cursor-pointer"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {accessError && (
-                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
-                  <span>{accessError}</span>
-                </div>
-              )}
-
-              <form onSubmit={handlePassLookupSubmit} className="space-y-3.5">
-                <div className="space-y-1">
-                  <label htmlFor="access-roll-number" className="block text-[11px] font-bold text-[#002b66] uppercase">
-                    Roll Number / Register Number
-                  </label>
-                  <input
-                    id="access-roll-number"
-                    name="accessRollNumber"
-                    type="text"
-                    autoComplete="off"
-                    required
-                    value={accessRollNumber}
-                    onChange={(e) => setAccessRollNumber(e.target.value.toUpperCase())}
-                    placeholder="e.g. 2021CS042"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-[#d4e8f5] text-xs font-mono font-bold text-[#002b66] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0077c8]"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <CustomDatePicker
-                    value={accessDob}
-                    onChange={setAccessDob}
-                    label="Date of Birth"
-                    placeholder="Select Date of Birth"
-                    required
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isVerifyingPass}
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white font-bold text-xs shadow-md shadow-[#0077c8]/25 flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-50"
-                >
-                  {isVerifyingPass ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      <span>Verifying...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Open My Pass</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-              </form>
-
-              <div className="pt-2 border-t border-slate-100 text-[11px] flex items-center justify-between text-slate-500">
-                <span>Demo user (Alex):</span>
-                <button
-                  type="button"
-                  onClick={() => handleDemoFill('2021CS042', '2003-05-14')}
-                  className="text-[#0077c8] font-bold underline cursor-pointer"
-                >
-                  Autofill 2021CS042
-                </button>
               </div>
             </motion.div>
           </div>

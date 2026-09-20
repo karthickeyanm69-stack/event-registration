@@ -12,6 +12,8 @@ interface CustomSelectProps {
   options: (string | Option)[];
   value: string;
   onChange: (value: string) => void;
+  id?: string;
+  name?: string;
   placeholder?: string;
   searchable?: boolean;
   label?: string;
@@ -24,6 +26,8 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
   options,
   value,
   onChange,
+  id,
+  name,
   placeholder = 'Select an option...',
   searchable = false,
   label,
@@ -31,6 +35,9 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
   disabled = false,
   className = '',
 }) => {
+  const autoId = React.useId ? React.useId().replace(/:/g, '') : 'sel';
+  const selectId = id || `custom-select-${autoId}`;
+  const selectName = name || `select-${autoId}`;
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
@@ -78,9 +85,21 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
         </div>
       )}
 
+      {/* Hidden input for form submission & browser autofill compliance */}
+      <input
+        type="hidden"
+        id={selectId}
+        name={selectName}
+        value={value}
+        readOnly
+      />
+
       {/* Trigger Button */}
       <button
         type="button"
+        id={`${selectId}-trigger`}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
         disabled={disabled}
         onClick={() => setIsOpen(!isOpen)}
         className={`w-full px-3.5 py-2.5 rounded-xl bg-white border text-left text-sm flex items-center justify-between transition-all duration-200 cursor-pointer ${
@@ -116,8 +135,8 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
                 <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 pointer-events-none" />
                 <input
                   ref={searchInputRef}
-                  id="custom-select-search-query"
-                  name="customSelectSearch"
+                  id={`${selectId}-search`}
+                  name={`${selectName}Search`}
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}

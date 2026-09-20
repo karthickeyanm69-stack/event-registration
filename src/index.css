@@ -2,36 +2,41 @@
 
 @layer base {
   :root {
-    /* ─── RADIANZA '26 Official Color System ─── */
-    --navy:        #001f4d;
-    --navy-mid:    #002b66;
-    --navy-deep:   #001838;
-    --blue:        #0077c8;
-    --blue-hover:  #005fa3;
-    --cyan:        #00f2fe;
-    --teal:        #00a887;
-    --teal-hover:  #009174;
-    --purple:      #7c3aed;
-    --purple-soft: #a78bfa;
-    --gold:        #f59e0b;
+    /* ─── RADIANZA ’26 Dark Cultural-Futuristic Color Palette ─── */
+    --midnight:      #020B1C;
+    --navy:          #061A35;
+    --navy-surface:  #0a2245;
+    --ivory:         #FFF2D5;
+    --gold:          #F5B942;
+    --gold-hover:    #e5a730;
+    --gold-glow:     rgba(245, 185, 66, 0.45);
+    --blue:          #0878D1;
+    --blue-hover:    #0664b0;
+    --blue-glow:     rgba(8, 120, 209, 0.45);
+    --cyan:          #00f2fe;
+    --crimson:       #B51F35;
+    --crimson-hover: #9c172b;
 
-    /* Surfaces */
-    --bg-light:    #ffffff;
-    --bg-ice:      #f0f8fc;
-    --bg-dark:     #030914;
-    --bg-dark-mid: #001020;
+    /* Semantic Mappings */
+    --bg-dark:       #020B1C;
+    --bg-card:       #061A35;
+    --text-primary:  #FFF2D5;
+    --text-secondary:#cbd5e1;
+    --border-gold:   rgba(245, 185, 66, 0.35);
+    --border-blue:   rgba(8, 120, 209, 0.4);
 
-    /* SPIHER Legacy tokens */
-    --spiher-navy:   #002b66;
-    --spiher-blue:   #0077c8;
-    --spiher-teal:   #00a887;
-    --spiher-ice:    #e8f5fb;
-    --spiher-border: #d4e8f5;
+    /* Legacy compatibility tokens */
+    --navy-mid:      #061A35;
+    --navy-deep:     #020B1C;
+    --teal:          #00a887;
+    --purple:        #7c3aed;
+    --spiher-navy:   #061A35;
+    --spiher-blue:   #0878D1;
   }
 
   html, body {
-    background-color: #ffffff;
-    color: var(--navy);
+    background-color: #020B1C;
+    color: #FFF2D5;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

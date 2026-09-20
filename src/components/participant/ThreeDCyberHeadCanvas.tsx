@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { motion } from 'motion/react';
 import { Sparkles } from 'lucide-react';
 import { CollegeEmblem } from '../common/CollegeLogo';
-
+// RADIANZA '26 3D Cyber Head Component
 interface ThreeDCyberHeadCanvasProps {
   onRegisterClick?: () => void;
 }
@@ -85,9 +85,9 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
 
     const gridMat = new THREE.PointsMaterial({
       size: isMobile ? 0.052 : 0.056,
-      color: 0x0077c8,
+      color: 0x0878D1,
       transparent: true,
-      opacity: 0.32,
+      opacity: 0.35,
       depthWrite: false,
     });
     disposables.push(gridMat);
@@ -131,13 +131,16 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       c.width = 64; c.height = 64;
       const ctx = c.getContext('2d');
       if (ctx) {
-        const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 28);
-        g.addColorStop(0, 'rgba(255,255,255,1)');
-        g.addColorStop(0.35, 'rgba(186,230,253,0.75)');
-        g.addColorStop(1, 'rgba(56,189,248,0)');
+        // Luminous warm golden aura gradient
+        const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 30);
+        g.addColorStop(0, 'rgba(255,255,255,1.0)');
+        g.addColorStop(0.25, 'rgba(255,235,170,0.90)');
+        g.addColorStop(0.55, 'rgba(245,185,66,0.45)');
+        g.addColorStop(1, 'rgba(245,185,66,0.0)');
         ctx.fillStyle = g;
         ctx.fillRect(0, 0, 64, 64);
 
+        // Crisp 4-pointed diamond star flare
         ctx.beginPath();
         ctx.moveTo(32, 2);
         ctx.quadraticCurveTo(32, 32, 62, 32);
@@ -145,7 +148,18 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
         ctx.quadraticCurveTo(32, 32, 2, 32);
         ctx.quadraticCurveTo(32, 32, 32, 2);
         ctx.closePath();
-        ctx.fillStyle = 'rgba(255,255,255,0.95)';
+        ctx.fillStyle = 'rgba(255,255,255,0.98)';
+        ctx.fill();
+
+        // Secondary subtle diagonal sparkle
+        ctx.beginPath();
+        ctx.moveTo(32, 14);
+        ctx.quadraticCurveTo(32, 32, 50, 32);
+        ctx.quadraticCurveTo(32, 32, 32, 50);
+        ctx.quadraticCurveTo(32, 32, 14, 32);
+        ctx.quadraticCurveTo(32, 32, 32, 14);
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(255,245,215,0.7)';
         ctx.fill();
       }
       return new THREE.CanvasTexture(c);
@@ -153,7 +167,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const starTex = makeStarTex();
     disposables.push(starTex);
 
-    // ── 6. Background Digital Particle Field (Cyan / Royal Blue / Purple / Lavender) ──
+    // ── 6. Background Digital Particle Field (Golden Embers & Cyber Bits) ──
     const PC_MAIN = isMobile ? 85 : 120;
     const pGeo = new THREE.BufferGeometry();
     const pPos = new Float32Array(PC_MAIN * 3);
@@ -161,11 +175,12 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const pVelY = new Float32Array(PC_MAIN);
     const pPhase = new Float32Array(PC_MAIN);
 
-    const cCyan = new THREE.Color('#00e5ff');
-    const cSky = new THREE.Color('#38bdf8');
-    const cBlue = new THREE.Color('#0077c8');
-    const cViolet = new THREE.Color('#a855f7');
-    const cLavender = new THREE.Color('#c084fc');
+    const cGold = new THREE.Color('#F5B942');
+    const cAmber = new THREE.Color('#FF9E1B');
+    const cEmber = new THREE.Color('#FF6B20');
+    const cCyan = new THREE.Color('#00F2FE');
+    const cSky = new THREE.Color('#38BDF8');
+    const cBlue = new THREE.Color('#0878D1');
 
     for (let i = 0; i < PC_MAIN; i++) {
       // Distributed across the hero negative space and depth
@@ -175,8 +190,15 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       pVelY[i] = 0.005 + Math.random() * 0.008;
       pPhase[i] = Math.random() * Math.PI * 2;
 
+      // Golden embers towards center/right, cyan/blue towards left face
+      const isRightSide = pPos[i * 3] > -1.2;
       const r = Math.random();
-      const col = r > 0.65 ? cCyan : r > 0.45 ? cSky : r > 0.25 ? cBlue : r > 0.12 ? cViolet : cLavender;
+      let col: THREE.Color;
+      if (isRightSide) {
+        col = r > 0.55 ? cGold : r > 0.2 ? cAmber : cEmber;
+      } else {
+        col = r > 0.55 ? cCyan : r > 0.2 ? cSky : cBlue;
+      }
       pCol[i * 3] = col.r; pCol[i * 3 + 1] = col.g; pCol[i * 3 + 2] = col.b;
     }
     pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
@@ -210,8 +232,11 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       microVelY[i] = 0.0035 + Math.random() * 0.006;
       microPhase[i] = Math.random() * Math.PI * 2;
 
+      const isRightSide = microPos[i * 3] > -1.2;
       const r = Math.random();
-      const col = r > 0.5 ? cCyan : r > 0.25 ? cLavender : cBlue;
+      const col = isRightSide
+        ? (r > 0.5 ? cGold : cAmber)
+        : (r > 0.5 ? cCyan : cBlue);
       microCol[i * 3] = col.r; microCol[i * 3 + 1] = col.g; microCol[i * 3 + 2] = col.b;
     }
     microGeo.setAttribute('position', new THREE.BufferAttribute(microPos, 3));
@@ -230,6 +255,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     scene.add(new THREE.Points(microGeo, microMat));
 
     // ── 7. Load GLB & Build Clean Frontside-Only Sculptural Mesh ──
+    let starMat: THREE.PointsMaterial | null = null;
     const loader = new GLTFLoader();
     loader.load(
       '/cyber_head.glb',
@@ -254,21 +280,46 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
           const maxY = bb.max.y;
           const H = sz.y;
 
-          // Landmarks from geometry:
+          // Anatomical landmarks in model space:
           const dynNose = new THREE.Vector3(0.0, 1.10, 2.59);
           const dynLips = new THREE.Vector3(0.0, 0.57, 2.35);
+          const chinPoint = new THREE.Vector3(0.0, 0.08, 2.18);
           const dynRightEar = new THREE.Vector3(1.72, 1.50, -0.16);
           const dynLeftEar = new THREE.Vector3(-1.72, 1.50, -0.16);
           const dynRightEye = new THREE.Vector3(0.65, 1.94, 1.98);
           const dynLeftEye = new THREE.Vector3(-0.65, 1.94, 1.98);
+          const jawCornerRight = new THREE.Vector3(1.42, 0.62, 0.25);
+          const jawCornerLeft = new THREE.Vector3(-1.42, 0.62, 0.25);
 
-          // Color Palette:
-          const colBase = new THREE.Color('#0062b8'); // Deep Royal Electric Blue
-          const colEarViolet = new THREE.Color('#7c3aed'); // Deep Violet for Ear Concha
-          const colEarDark = new THREE.Color('#581c87'); // Dark Violet
-          const colEyeViolet = new THREE.Color('#6366f1'); // Indigo for Eye socket
-          const colLipViolet = new THREE.Color('#8b5cf6'); // Subtle Violet for Lips
-          const colNeck = new THREE.Color('#c084fc'); // Lavender for Neck dissolution
+          // Fast inline 3D point-to-segment distance helper
+          const distToSegment = (
+            px: number, py: number, pz: number,
+            a: THREE.Vector3, b: THREE.Vector3
+          ): number => {
+            const abX = b.x - a.x, abY = b.y - a.y, abZ = b.z - a.z;
+            const apX = px - a.x, apY = py - a.y, apZ = pz - a.z;
+            const lenSq = abX * abX + abY * abY + abZ * abZ;
+            if (lenSq <= 0.00001) {
+              const dx = px - a.x, dy = py - a.y, dz = pz - a.z;
+              return Math.sqrt(dx * dx + dy * dy + dz * dz);
+            }
+            const t = Math.max(0, Math.min(1, (apX * abX + apY * abY + apZ * abZ) / lenSq));
+            const projX = a.x + abX * t;
+            const projY = a.y + abY * t;
+            const projZ = a.z + abZ * t;
+            const dx = px - projX, dy = py - projY, dz = pz - projZ;
+            return Math.sqrt(dx * dx + dy * dy + dz * dz);
+          };
+
+          // Curated Dual-Tone Cultural-Futuristic Palette:
+          const colFaceCyan = new THREE.Color('#00F2FE');   // Crisp electric cyan node / highlight
+          const colFaceBlue = new THREE.Color('#0878D1');   // Vibrant sapphire tech blue wire
+          const colGoldLight = new THREE.Color('#FFE899');  // Radiant Ivory Gold highlights
+          const colGold = new THREE.Color('#F5B942');       // Signature Radianza Gold
+          const colAmber = new THREE.Color('#FF9514');      // Luminous warm Amber
+          const colDeepAmber = new THREE.Color('#D6580B');  // Rich ear concha / shadow gold
+          const colCrimson = new THREE.Color('#B51F35');    // Cultural Crimson accent for ear depth
+          const colNeckVoid = new THREE.Color('#020B1C');   // Midnight background dissolve
 
           const vColors = new Float32Array(N * 3);
           const pColors = new Float32Array(N * 3);
@@ -276,84 +327,170 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
           const tmpC = new THREE.Color();
           const starIdx: number[] = [];
 
-          const earRadius = 0.85;
-          const eyeRadius = 0.55;
-          const lipRadius = 0.45;
-
           for (let i = 0; i < N; i++) {
-            tmpV.set(PA.getX(i), PA.getY(i), PA.getZ(i));
+            const vx = PA.getX(i);
+            const vy = PA.getY(i);
+            const vz = PA.getZ(i);
+            tmpV.set(vx, vy, vz);
 
-            let maxH = 0;
-            let hColor = colBase;
+            const relY = (vy - minY) / H;
 
-            // 1. Ear Highlight
-            const dRE = tmpV.distanceTo(dynRightEar);
-            const dLE = tmpV.distanceTo(dynLeftEar);
-            const earDist = Math.min(dRE, dLE);
-            if (earDist < earRadius) {
-              const f = Math.pow(1.0 - earDist / earRadius, 1.4);
-              if (f > maxH) {
-                maxH = f;
-                hColor = earDist < earRadius * 0.45 ? colEarDark : colEarViolet;
+            // 1. Crown & Cranial Dome (Golden wireframe arch across top of skull)
+            let crownFactor = 0;
+            if (relY > 0.74) {
+              crownFactor = Math.min(1.0, (relY - 0.74) / 0.12);
+              if (vz > 1.4) {
+                // Forehead front smoothly connects to blue brow
+                crownFactor *= Math.max(0.0, 1.0 - (vz - 1.4) / 0.65);
               }
+              if (relY > 0.88) crownFactor = Math.max(crownFactor, 0.95);
             }
 
-            // 2. Eye Highlight
+            // 2. Occiput (Back of skull curvature)
+            let occiputFactor = 0;
+            if (vz < 0.35 && relY > 0.32) {
+              occiputFactor = Math.min(1.0, (0.35 - vz) / 0.50);
+            }
+
+            // 3. Ear & Temporal Cluster (Minimal, delicate golden accent)
+            const dREar = tmpV.distanceTo(dynRightEar);
+            const dLEar = tmpV.distanceTo(dynLeftEar);
+            const dEar = Math.min(dREar, dLEar);
+            let earFactor = 0;
+            if (dEar < 1.05) {
+              // Minimal, refined golden accent on ear matching user request
+              earFactor = Math.pow(1.0 - dEar / 1.05, 1.8) * 0.35;
+            }
+
+            // 4. Jawline Mandible Contour (Subtle golden contour strictly behind the chin!)
+            const dJawR = Math.min(
+              distToSegment(vx, vy, vz, dynRightEar, jawCornerRight),
+              distToSegment(vx, vy, vz, jawCornerRight, chinPoint)
+            );
+            const dJawL = Math.min(
+              distToSegment(vx, vy, vz, dynLeftEar, jawCornerLeft),
+              distToSegment(vx, vy, vz, jawCornerLeft, chinPoint)
+            );
+            const dJaw = Math.min(dJawR, dJawL);
+            let jawFactor = 0;
+            // Kept strictly behind the chin (vz < 1.55) so the chin stays minimal in gold
+            if (dJaw < 0.45 && vz < 1.55) {
+              jawFactor = Math.pow(1.0 - dJaw / 0.45, 1.3) * 0.40;
+            }
+
+            // 5. Neck & Throat (Gold strands descending under the jaw)
+            let neckFactor = 0;
+            if (relY >= 0.12 && relY <= 0.46 && vz < 1.60) {
+              const topFade = relY > 0.38 ? (0.46 - relY) / 0.08 : 1.0;
+              const bottomFade = relY < 0.18 ? (relY - 0.12) / 0.06 : 1.0;
+              neckFactor = Math.min(1.0, topFade * bottomFade * 0.88);
+            }
+
+            // 6. Eye Focal Ember (Incandescent golden spark in the blue face)
             const dREye = tmpV.distanceTo(dynRightEye);
             const dLEye = tmpV.distanceTo(dynLeftEye);
-            const eyeDist = Math.min(dREye, dLEye);
-            if (eyeDist < eyeRadius) {
-              const f = Math.pow(1.0 - eyeDist / eyeRadius, 1.6) * 0.45;
-              if (f > maxH) {
-                maxH = f;
-                hColor = colEyeViolet;
+            const dEye = Math.min(dREye, dLEye);
+            let eyeFactor = 0;
+            if (dEye < 0.48) {
+              eyeFactor = Math.pow(1.0 - dEye / 0.48, 1.4);
+            }
+
+            // Combine anatomical gold weights:
+            let goldWeight = Math.max(crownFactor, occiputFactor, earFactor, jawFactor, neckFactor, eyeFactor);
+
+            // 7. Facial Profile Shield (Strictly keeps nose, lips, mouth, AND CHIN in pure electric cyan/blue!)
+            // Any vertex on the front facial and chin profile (vz > 1.60) has gold suppressed to MINIMAL/ZERO!
+            const dNose = tmpV.distanceTo(dynNose);
+            const dLips = tmpV.distanceTo(dynLips);
+            const dChin = tmpV.distanceTo(chinPoint);
+
+            if (eyeFactor < 0.25) {
+              if (dNose < 0.85) {
+                goldWeight = 0.0;
+              }
+              if (dLips < 0.65) {
+                goldWeight = 0.0;
+              }
+              // Chin front tip & curve: completely minimal/zero gold! (Image 1 fix)
+              if (dChin < 0.65 || (vz > 1.60 && vy < 0.40 && vy > -0.70)) {
+                goldWeight = 0.0;
+              }
+              // Cheek front shield
+              if (vz > 1.05 && relY > 0.46 && relY < 0.76 && dEar > 0.80 && dJaw > 0.35) {
+                goldWeight = Math.min(goldWeight, 0.10);
               }
             }
 
-            // 3. Lip Highlight
-            const lipDist = tmpV.distanceTo(dynLips);
-            if (lipDist < lipRadius) {
-              const f = Math.pow(1.0 - lipDist / lipRadius, 1.8) * 0.35;
-              if (f > maxH) {
-                maxH = f;
-                hColor = colLipViolet;
+            // ── Wireframe Color Assignment ──
+            if (goldWeight > 0.05) {
+              // Blend base gold & amber with ivory highlights
+              const baseGold = tmpC.copy(colGold).lerp(colAmber, 0.25);
+              if (crownFactor > 0.6 || eyeFactor > 0.4 || neckFactor > 0.6) {
+                baseGold.lerp(colGoldLight, 0.35);
+              }
+              tmpC.copy(colFaceBlue).lerp(baseGold, goldWeight);
+            } else {
+              tmpC.copy(colFaceBlue);
+              if (dNose < 0.65 || dLips < 0.50 || dChin < 0.55) {
+                tmpC.lerp(colFaceCyan, 0.45);
               }
             }
 
-            // Blend base with highlight
-            tmpC.copy(colBase).lerp(hColor, maxH);
-
-            // 4. Neck fade at lower torso into soft lavender-pink
-            const relY = (tmpV.y - minY) / H;
-            if (relY < 0.28) {
-              const neckFade = Math.pow(1.0 - relY / 0.28, 1.3) * 0.85;
-              tmpC.lerp(colNeck, neckFade);
+            // Lower torso / clavicle dissolve into midnight page background
+            if (relY < 0.20) {
+              const dissolve = Math.pow(1.0 - relY / 0.20, 1.4);
+              tmpC.lerp(colNeckVoid, dissolve * 0.95);
             }
 
             vColors[i * 3] = tmpC.r;
             vColors[i * 3 + 1] = tmpC.g;
             vColors[i * 3 + 2] = tmpC.b;
 
-            // Point node colors
-            if (earDist < earRadius) {
-              pColors[i * 3] = colEarViolet.r;
-              pColors[i * 3 + 1] = colEarViolet.g;
-              pColors[i * 3 + 2] = colEarViolet.b;
-            } else if (maxH > 0.2) {
-              pColors[i * 3] = colEyeViolet.r;
-              pColors[i * 3 + 1] = colEyeViolet.g;
-              pColors[i * 3 + 2] = colEyeViolet.b;
+            // ── Vertex Node Color Assignment (Points Mesh) ──
+            if (goldWeight > 0.35) {
+              let pC = (vy > 1.8 || neckFactor > 0.5) ? colGoldLight : colGold;
+              if (dEar < 0.70) pC = colAmber;
+              if (eyeFactor > 0.40) pC = colGoldLight;
+              pColors[i * 3] = pC.r;
+              pColors[i * 3 + 1] = pC.g;
+              pColors[i * 3 + 2] = pC.b;
             } else {
-              pColors[i * 3] = 0.0;
-              pColors[i * 3 + 1] = 0.85;
-              pColors[i * 3 + 2] = 1.0;
+              const pC = (dNose < 0.80 || dLips < 0.60 || dChin < 0.60) ? colFaceCyan : colFaceBlue;
+              pColors[i * 3] = pC.r;
+              pColors[i * 3 + 1] = pC.g;
+              pColors[i * 3 + 2] = pC.b;
             }
 
-            // Star Sparkle Candidates
-            const isFacingCamera = tmpV.x > -0.6;
-            const isAboveNeck = relY > 0.26;
-            if (isFacingCamera && isAboveNeck) {
-              if (maxH > 0.25 || (i % 7 === 0 && tmpV.z > 0.15)) {
+            if (relY < 0.18) {
+              const d = Math.pow(1.0 - relY / 0.18, 1.5);
+              pColors[i * 3] *= (1.0 - d);
+              pColors[i * 3 + 1] *= (1.0 - d);
+              pColors[i * 3 + 2] *= (1.0 - d);
+            }
+
+            // ── Star Sparkle Placement (Selected Key Anatomical Accents) ──
+            const isFacingCamera = vx > -0.50;
+            const isAboveShoulder = relY > 0.20;
+
+            if (isFacingCamera && isAboveShoulder) {
+              // 1. Eye focal spark (highest priority)
+              if (dREye < 0.26) {
+                starIdx.push(i);
+              }
+              // 2. Ear subtle glint (rare, minimal)
+              else if (dREar < 0.55 && vx > 1.40 && i % 8 === 0) {
+                starIdx.push(i);
+              }
+              // 3. Cranial crown curve sparkles
+              else if (relY > 0.86 && vx > 0.15 && i % 7 === 0) {
+                starIdx.push(i);
+              }
+              // 4. Golden throat & neck strands sparkles
+              else if (neckFactor > 0.70 && vx > 0.10 && i % 6 === 0) {
+                starIdx.push(i);
+              }
+              // 5. Facial nose bridge and cheek crest glints
+              else if ((dNose < 0.28 || (vz > 1.35 && vy > 1.3 && vy < 1.7 && vx > 0.95)) && i % 10 === 0) {
                 starIdx.push(i);
               }
             }
@@ -361,20 +498,19 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
 
           geo.setAttribute('color', new THREE.BufferAttribute(vColors, 3));
 
-          // ── Layer A: Opaque Frontside Sculptural Core Shader ──
-          // 1. side: THREE.FrontSide with depthWrite: true -> 100% OPAQUE TO BACKFACES.
-          //    Completely hides internal mouth cavities, eye sockets, and the other ear!
-          // 2. Base is luminous pale ice-blue (#f4f9fd) with subtle Fresnel edge rim.
-          // 3. Ear concha receives rich violet shading matching reference art!
-          // 4. Neck base smoothly dissolves into page background (#edf6fe).
+          // ── Layer A: Opaque Frontside Dual-Tone Sculptural Core Shader ──
           const coreShaderMat = new THREE.ShaderMaterial({
             uniforms: {
-              uCoreColor: { value: new THREE.Color('#f4f9fd') },
-              uRimColor: { value: new THREE.Color('#bae6fd') },
-              uEarColor: { value: new THREE.Color('#6d28d9') },
-              uBgColor: { value: new THREE.Color('#edf6fe') },
+              uCoreColor: { value: new THREE.Color('#020B1C') },
+              uBlueRim: { value: new THREE.Color('#0878D1') },
+              uGoldRim: { value: new THREE.Color('#F5B942') },
+              uAmberRim: { value: new THREE.Color('#FF9514') },
+              uEarColor: { value: new THREE.Color('#D6580B') },
+              uCrimsonColor: { value: new THREE.Color('#B51F35') },
+              uEyeColor: { value: new THREE.Color('#F5B942') },
+              uBgColor: { value: new THREE.Color('#020B1C') },
               uRightEar: { value: dynRightEar },
-              uEarRadius: { value: earRadius },
+              uRightEye: { value: dynRightEye },
               uMinY: { value: minY },
               uMaxY: { value: maxY },
             },
@@ -395,29 +531,61 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
               varying vec3 vViewDir;
               varying vec3 vModelPos;
               uniform vec3 uCoreColor;
-              uniform vec3 uRimColor;
+              uniform vec3 uBlueRim;
+              uniform vec3 uGoldRim;
+              uniform vec3 uAmberRim;
               uniform vec3 uEarColor;
+              uniform vec3 uCrimsonColor;
+              uniform vec3 uEyeColor;
               uniform vec3 uBgColor;
               uniform vec3 uRightEar;
-              uniform float uEarRadius;
+              uniform vec3 uRightEye;
               uniform float uMinY;
               uniform float uMaxY;
 
               void main() {
-                // Subtle fresnel rim along outer silhouette
-                float fresnel = pow(1.0 - abs(dot(vViewDir, vNormal)), 2.0);
-                vec3 col = mix(uCoreColor, uRimColor, fresnel * 0.40);
+                float ndotv = abs(dot(vViewDir, vNormal));
+                float fresnel = pow(1.0 - ndotv, 2.2);
 
-                // Deep violet shading inside ear concha
+                float relY = (vModelPos.y - uMinY) / (uMaxY - uMinY);
+
+                // Determine rim tone: Gold/Amber for crown/back/neck/chin, Blue for upper facial profile
+                // Strictly restrict faceFactor to upper face (relY > 0.46 and vModelPos.z > 0.6)
+                float faceFactor = smoothstep(0.6, 1.3, vModelPos.z) * smoothstep(0.82, 0.70, relY) * smoothstep(0.44, 0.52, relY);
                 float earDist = distance(vModelPos, uRightEar);
-                if (earDist < uEarRadius) {
-                  float earF = pow(1.0 - earDist / uEarRadius, 1.4);
-                  col = mix(col, uEarColor, earF * 0.85);
+                if (earDist < 1.1) {
+                  faceFactor *= smoothstep(0.4, 1.1, earDist);
+                }
+
+                vec3 rimColor = mix(uGoldRim, uBlueRim, faceFactor);
+                if (relY > 0.85 || vModelPos.z < 0.1 || relY < 0.44) {
+                  rimColor = mix(uGoldRim, uAmberRim, 0.35);
+                }
+
+                vec3 col = mix(uCoreColor, rimColor, fresnel * 0.58);
+
+                // Ear internal warmth (amber & crimson depth)
+                if (earDist < 0.95) {
+                  float earF = pow(1.0 - earDist / 0.95, 1.3);
+                  vec3 earHue = mix(uEarColor, uCrimsonColor, clamp((0.45 - earDist) / 0.35, 0.0, 1.0));
+                  col = mix(col, earHue, earF * 0.85);
+                }
+
+                // Eye orbital golden warmth
+                float eyeDist = distance(vModelPos, uRightEye);
+                if (eyeDist < 0.48) {
+                  float eyeF = pow(1.0 - eyeDist / 0.48, 1.5);
+                  col = mix(col, uEyeColor, eyeF * 0.92);
+                }
+
+                // Throat, neck & chin rich radiant golden ambient warmth
+                if (relY >= 0.14 && relY <= 0.48 && vModelPos.z < 2.2) {
+                  float throatWarmth = smoothstep(0.14, 0.22, relY) * smoothstep(0.50, 0.44, relY);
+                  col += uGoldRim * (0.24 * throatWarmth);
                 }
 
                 // Smooth dissolve at neck base into page background
-                float relY = (vModelPos.y - uMinY) / (uMaxY - uMinY);
-                float bottomFade = clamp((0.26 - relY) / 0.22, 0.0, 1.0);
+                float bottomFade = clamp((0.22 - relY) / 0.16, 0.0, 1.0);
                 col = mix(col, uBgColor, bottomFade);
 
                 gl_FragColor = vec4(col, 1.0);
@@ -432,13 +600,13 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
           solidMesh.scale.setScalar(S);
           headGroup.add(solidMesh);
 
-          // ── Layer B: Frontside Royal Blue Triangular Wireframe Grid ──
+          // ── Layer B: Frontside Dual-Tone Gold & Cyan Triangular Wireframe ──
           const wireMat = new THREE.MeshBasicMaterial({
             vertexColors: true,
             wireframe: true,
             side: THREE.FrontSide,
             transparent: true,
-            opacity: 0.95,
+            opacity: 0.96,
             polygonOffset: true,
             polygonOffsetFactor: -4.0,
             polygonOffsetUnits: -8.0,
@@ -450,16 +618,16 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
           wireMesh.scale.setScalar(S * 1.001);
           headGroup.add(wireMesh);
 
-          // ── Layer C: Sparkling Purple & Cyan Vertex Nodes ──
+          // ── Layer C: Sparkling Gold & Cyan Vertex Nodes ──
           const pointsGeo = geo.clone();
           pointsGeo.setAttribute('color', new THREE.BufferAttribute(pColors, 3));
           disposables.push(pointsGeo);
 
           const pointsMat = new THREE.PointsMaterial({
-            size: isMobile ? 0.075 : 0.085,
+            size: isMobile ? 0.050 : 0.058,
             vertexColors: true,
             transparent: true,
-            opacity: 0.90,
+            opacity: 0.68,
             depthWrite: false,
           });
           disposables.push(pointsMat);
@@ -467,7 +635,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
           pointsMesh.scale.setScalar(S * 1.002);
           headGroup.add(pointsMesh);
 
-          // ── Layer D: 4-Pointed Diamond Star Sparkles ──
+          // ── Layer D: 4-Pointed Diamond Star Sparkles (Luminous Texture) ──
           if (starIdx.length > 0) {
             const sGeo = new THREE.BufferGeometry();
             const sPos = new Float32Array(starIdx.length * 3);
@@ -477,25 +645,25 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
               sPos[si * 3] = PA.getX(oi) * S * 1.003;
               sPos[si * 3 + 1] = PA.getY(oi) * S * 1.003;
               sPos[si * 3 + 2] = PA.getZ(oi) * S * 1.003;
-              sCol[si * 3] = Math.min(1.0, vColors[oi * 3] * 1.35);
-              sCol[si * 3 + 1] = Math.min(1.0, vColors[oi * 3 + 1] * 1.35);
-              sCol[si * 3 + 2] = Math.min(1.0, vColors[oi * 3 + 2] * 1.35);
+              sCol[si * 3] = Math.min(1.0, vColors[oi * 3] * 1.40);
+              sCol[si * 3 + 1] = Math.min(1.0, vColors[oi * 3 + 1] * 1.40);
+              sCol[si * 3 + 2] = Math.min(1.0, vColors[oi * 3 + 2] * 1.40);
             }
             sGeo.setAttribute('position', new THREE.BufferAttribute(sPos, 3));
             sGeo.setAttribute('color', new THREE.BufferAttribute(sCol, 3));
             disposables.push(sGeo);
 
-            const sMat = new THREE.PointsMaterial({
-              size: isMobile ? 0.11 : 0.13,
+            starMat = new THREE.PointsMaterial({
+              size: isMobile ? 0.16 : 0.22,
               map: starTex,
               vertexColors: true,
               transparent: true,
-              opacity: 0.90,
+              opacity: 0.94,
               blending: THREE.AdditiveBlending,
               depthWrite: false,
             });
-            disposables.push(sMat);
-            headGroup.add(new THREE.Points(sGeo, sMat));
+            disposables.push(starMat);
+            headGroup.add(new THREE.Points(sGeo, starMat));
           }
         });
 
@@ -606,6 +774,11 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
 
       // Cyber dot grid breathing pulse
       gridMat.opacity = 0.28 + Math.sin(t * 1.2) * 0.06;
+
+      // 4-pointed diamond star sparkle breathing twinkle
+      if (starMat) {
+        starMat.opacity = 0.82 + Math.sin(t * 2.6) * 0.16;
+      }
 
       // Background square particles drift
       const pArr = pGeo.attributes.position.array as Float32Array;

@@ -320,6 +320,8 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
               {/* Modern Custom Date Picker with right-aligned popover */}
               <div className="space-y-1.5">
                 <CustomDatePicker
+                  id="onboarding-dob"
+                  name="dateOfBirth"
                   value={dateOfBirth}
                   onChange={setDateOfBirth}
                   label="Date of Birth"
@@ -333,6 +335,8 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
             {/* College Name Custom Select */}
             <div className="space-y-1.5">
               <CustomSelect
+                id="onboarding-college"
+                name="collegeName"
                 label="College / Institution *"
                 icon={<Building className="w-3.5 h-3.5 text-[#0077c8]" />}
                 options={collegeList}
@@ -345,6 +349,8 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
             {/* Department Custom Select */}
             <div className="space-y-1.5">
               <CustomSelect
+                id="onboarding-department"
+                name="department"
                 label="Department / Specialization *"
                 icon={<GraduationCap className="w-3.5 h-3.5 text-[#0077c8]" />}
                 options={departments}

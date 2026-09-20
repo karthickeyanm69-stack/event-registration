@@ -73,6 +73,7 @@ export const EventsListing: React.FC<EventsListingProps> = ({
           </span>
           <input
             id="event-search-input"
+            name="eventSearch"
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}

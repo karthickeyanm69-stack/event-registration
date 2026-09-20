@@ -517,6 +517,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                 <div className="relative flex-1 max-w-md">
                   <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
+                    id="admin-reg-search"
+                    name="regSearch"
                     type="text"
                     value={regSearch}
                     onChange={(e) => setRegSearch(e.target.value)}
@@ -527,6 +529,9 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
                 <div className="flex items-center gap-3">
                   <select
+                    id="admin-reg-filter-event"
+                    name="regFilterEvent"
+                    aria-label="Filter registrations by competition"
                     value={regFilterEvent}
                     onChange={(e) => setRegFilterEvent(e.target.value)}
                     className="px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs text-slate-900 font-semibold"
@@ -744,9 +749,12 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Staff Full Name *</label>
+                      <label htmlFor="admin-emp-name" className="font-semibold text-slate-700">Staff Full Name *</label>
                       <input
+                        id="admin-emp-name"
+                        name="empName"
                         type="text"
+                        autoComplete="name"
                         required
                         value={empName}
                         onChange={(e) => setEmpName(e.target.value)}
@@ -756,9 +764,12 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Official Email ID *</label>
+                      <label htmlFor="admin-emp-email" className="font-semibold text-slate-700">Official Email ID *</label>
                       <input
+                        id="admin-emp-email"
+                        name="empEmail"
                         type="email"
+                        autoComplete="email"
                         required
                         value={empEmail}
                         onChange={(e) => setEmpEmail(e.target.value)}
@@ -769,7 +780,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <label className="font-semibold text-slate-700">Password / Pass *</label>
+                        <label htmlFor="admin-emp-password" className="font-semibold text-slate-700">Password / Pass *</label>
                         <button
                           type="button"
                           onClick={handleGenerateEmpPassword}
@@ -781,6 +792,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                       <div className="relative">
                         <Key className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
+                          id="admin-emp-password"
+                          name="empPassword"
                           type="text"
                           required
                           value={empPassword}
@@ -792,8 +805,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-slate-700">Department</label>
+                      <label htmlFor="admin-emp-dept" className="font-semibold text-slate-700">Department</label>
                       <input
+                        id="admin-emp-dept"
+                        name="empDept"
                         type="text"
                         value={empDept}
                         onChange={(e) => setEmpDept(e.target.value)}
@@ -803,8 +818,11 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   </div>
 
                   <div className="space-y-1.5 text-xs max-w-md">
-                    <label className="font-semibold text-slate-700">Assigned Competition *</label>
+                    <label htmlFor="admin-emp-event" className="font-semibold text-slate-700">Assigned Competition *</label>
                     <select
+                      id="admin-emp-event"
+                      name="empEventId"
+                      aria-label="Assigned Competition"
                       value={empEventId}
                       onChange={(e) => setEmpEventId(e.target.value)}
                       className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 font-bold focus:border-cyan-600 focus:outline-none"

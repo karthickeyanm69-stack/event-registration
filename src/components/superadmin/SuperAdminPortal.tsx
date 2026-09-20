@@ -1331,6 +1331,8 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                 <div className="relative w-full sm:w-80">
                   <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
+                    id="superadmin-staff-search"
+                    name="staffSearch"
                     type="text"
                     value={staffSearch}
                     onChange={(e) => setStaffSearch(e.target.value)}
@@ -1571,6 +1573,8 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                   <div className="relative flex-1 max-w-md">
                     <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
+                      id="superadmin-matrix-search"
+                      name="matrixSearch"
                       type="text"
                       value={matrixSearch}
                       onChange={(e) => setMatrixSearch(e.target.value)}
@@ -1883,6 +1887,9 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
 
                 <div className="flex items-center gap-3">
                   <select
+                    id="superadmin-log-filter-role"
+                    name="logFilterRole"
+                    aria-label="Filter Audit Logs by Role"
                     value={logFilterRole}
                     onChange={(e) => setLogFilterRole(e.target.value)}
                     className="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 text-xs font-bold text-slate-900"
@@ -2006,8 +2013,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="font-semibold text-slate-700">Theme Announcement Banner</label>
+                  <label htmlFor="settings-theme-banner" className="font-semibold text-slate-700">Theme Announcement Banner</label>
                   <textarea
+                    id="settings-theme-banner"
+                    name="themeBannerText"
                     rows={2}
                     value={localSettings.themeBannerText}
                     onChange={(e) => setLocalSettings({ ...localSettings, themeBannerText: e.target.value })}
