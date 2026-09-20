@@ -90,9 +90,9 @@ self.addEventListener('fetch', (event) => {
           });
         }
         return networkResponse;
-      } catch {
+      } catch (err) {
         if (cachedResponse) return cachedResponse;
-        return new Response('', { status: 408, statusText: 'Request Timed Out' });
+        throw err;
       }
     })
   );

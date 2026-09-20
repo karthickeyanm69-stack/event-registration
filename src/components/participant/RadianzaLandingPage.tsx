@@ -224,6 +224,22 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
   const [isVerifyingPass, setIsVerifyingPass] = useState(false);
   const [accessError, setAccessError] = useState<string | null>(null);
 
+  // Track viewport to guarantee ONLY ONE 3D WebGL canvas is mounted in the DOM at any time
+  const [isDesktop, setIsDesktop] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 1024;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const handleViewportChange = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    window.addEventListener('resize', handleViewportChange);
+    return () => window.removeEventListener('resize', handleViewportChange);
+  }, []);
+
   // Sync active page when parent prop changes
   useEffect(() => {
     if (activeLandingPage && activeLandingPage !== activePage) {
@@ -568,18 +584,20 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               <section id="hero" className="relative w-full overflow-hidden bg-gradient-to-b from-[#e3f0fc] via-[#edf6fe] to-[#f4faff]">
                 
                 {/* ─── MOBILE VIEW: EXACT PIXEL-PERFECT REFERENCE MATCH (< lg) ─── */}
-                <div className="lg:hidden relative w-full h-[calc(100dvh-4.25rem)] min-h-[560px] max-h-[840px] flex flex-col justify-between p-5 sm:p-6 pb-6 select-none overflow-hidden touch-none">
+                <div className="lg:hidden relative w-full h-[calc(100dvh-4.25rem)] min-h-[560px] max-h-[820px] flex flex-col justify-between p-5 sm:p-6 pb-4 select-none overflow-hidden">
                   {/* Subtle Background Glow Elements */}
                   <div className="absolute top-1/4 right-0 w-72 h-72 rounded-full bg-cyan-200/30 blur-3xl pointer-events-none" />
                   <div className="absolute bottom-1/3 left-0 w-60 h-60 rounded-full bg-indigo-200/25 blur-3xl pointer-events-none" />
 
-                  {/* Background 3D Cyber Scene (Full Touch Interaction Enabled) */}
-                  <div className="absolute inset-0 z-0 touch-none">
-                    <ThreeDCyberHeadCanvas onRegisterClick={onStartNewRegistration} />
-                  </div>
+                  {/* Background 3D Cyber Scene (Only mounted on mobile to prevent dual-WebGL GPU crash) */}
+                  {!isDesktop && (
+                    <div className="absolute inset-0 z-0 pointer-events-auto">
+                      <ThreeDCyberHeadCanvas onRegisterClick={onStartNewRegistration} />
+                    </div>
+                  )}
 
                   {/* Foreground Content: Free floating text with pointer-events-none on backdrop and pointer-events-auto on buttons */}
-                  <div className="relative z-10 pt-20 sm:pt-24 pb-2 space-y-4 sm:space-y-5 max-w-[88%] sm:max-w-[72%] pointer-events-none">
+                  <div className="relative z-10 pt-6 sm:pt-10 pb-2 space-y-3.5 sm:space-y-4 max-w-[86%] sm:max-w-[70%] pointer-events-none">
                     {/* Line 1: SPIHER PRESENTS Badge */}
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
@@ -608,7 +626,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       initial={{ opacity: 0, x: -14 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: 0.15 }}
-                      className="text-[10.5px] sm:text-xs font-mono font-bold tracking-[0.2em] text-[#004080] uppercase pointer-events-none"
+                      className="text-[10px] sm:text-xs font-mono font-bold tracking-[0.2em] text-[#004080] uppercase pointer-events-none"
                     >
                       NATIONAL-LEVEL TECHNICAL SYMPOSIUM
                     </motion.p>
@@ -628,7 +646,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.25 }}
-                      className="flex flex-col sm:flex-row flex-wrap gap-2.5 pt-1 pointer-events-auto"
+                      className="flex flex-col sm:flex-row flex-wrap gap-2 pt-1 pointer-events-auto"
                     >
                       <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-xs font-bold text-[#001f4d] w-fit">
                         <Calendar className="w-3.5 h-3.5 text-[#0077c8]" />
@@ -640,7 +658,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       </div>
                     </motion.div>
 
-                    {/* Line 6: Register Now CTA Button (Aligned at the bottom neck level) */}
+                    {/* Line 6: Register Now CTA Button */}
                     <motion.div
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -658,8 +676,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     </motion.div>
                   </div>
 
-                  {/* Bottom Indicator Dots (Aligned with Bottom Container) */}
-                  <div className="relative z-10 flex items-center justify-center gap-2 pt-1 pb-1 pointer-events-none">
+                  {/* Bottom Indicator Dots (Cleanly positioned at bottom with breathing room) */}
+                  <div className="relative z-10 flex items-center justify-center gap-2 pt-2 pb-1 pointer-events-none">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#002b66]"></span>
                     <span className="w-2 h-2 rounded-full bg-slate-300"></span>
                     <span className="w-2 h-2 rounded-full bg-slate-300"></span>
@@ -785,9 +803,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       </div>
                     </div>
 
-                    {/* 3D Cyber Head in Right Column */}
+                    {/* 3D Cyber Head in Right Column (Only mounted on desktop) */}
                     <div className="col-span-6 flex items-center justify-center relative w-full min-h-[560px] overflow-visible">
-                      <ThreeDCyberHeadCanvas onRegisterClick={onStartNewRegistration} />
+                      {isDesktop && <ThreeDCyberHeadCanvas onRegisterClick={onStartNewRegistration} />}
                     </div>
                   </div>
                 </div>
