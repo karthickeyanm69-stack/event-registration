@@ -11,11 +11,19 @@ export default defineConfig(() => {
         '@': path.resolve(__dirname, '.'),
       },
     },
+    legacy: {
+      skipWebSocketTokenCheck: true,
+    },
     server: {
-      // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modify—file watching is disabled to prevent flickering during agent edits.
-      hmr: process.env.DISABLE_HMR !== 'true',
-      // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
+      port: 3000,
+      host: '0.0.0.0',
+      allowedHosts: true,
+      hmr:
+        process.env.DISABLE_HMR !== 'true'
+          ? {
+              clientPort: 3000,
+            }
+          : false,
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
     },
     build: {

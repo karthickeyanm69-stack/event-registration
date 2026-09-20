@@ -117,6 +117,28 @@ const SPEAKERS_DATA: SpeakerItem[] = [
     tag: 'Design Lead',
     socials: { linkedin: '#', web: '#' },
   },
+  {
+    id: 'spk-5',
+    name: 'Dr. Vikramaditya Sengupta',
+    role: 'Director of Cloud Infra',
+    organization: 'Hyperscale Networks • CNCF Ambassador',
+    topic: 'Distributed Low-Latency Edge Mesh Architectures',
+    bio: 'Pioneering ultra-reliable global distributed mesh systems powering million-RPS microsecond fintech and telecom cores.',
+    imageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80',
+    tag: 'Cloud Architect',
+    socials: { linkedin: '#', web: '#' },
+  },
+  {
+    id: 'spk-6',
+    name: 'Dr. Shalini Kulkarni',
+    role: 'Quantum Computing Lead',
+    organization: 'DeepTech Ventures • IIT Madras Alum',
+    topic: 'Post-Quantum Cryptography & Quantum Supremacy',
+    bio: 'Leading research on quantum key distribution protocols and lattice-based post-quantum cryptography standards.',
+    imageUrl: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=600&q=80',
+    tag: 'Quantum Pioneer',
+    socials: { linkedin: '#', web: '#' },
+  },
 ];
 
 // ── Gallery Data ──
@@ -171,6 +193,20 @@ const GALLERY_DATA: GalleryItem[] = [
     caption: 'Celebrating triumph, cash prize distribution, and overall championship trophy handover.',
     imageUrl: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80',
   },
+  {
+    id: 'gal-7',
+    title: 'Precision Drone Racing Championship',
+    category: 'Aerial Tech',
+    caption: 'FPV drone pilots navigating high-speed neon obstacle gates in the campus indoor arena.',
+    imageUrl: 'https://images.unsplash.com/photo-1527977966376-1c8408f9f108?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'gal-8',
+    title: 'Gaming & LAN Arena Showdown',
+    category: 'Esports',
+    caption: 'Electrifying esports showdowns with live casting, tactical gameplay, and cheering audiences.',
+    imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80',
+  },
 ];
 
 // ── Motion Variants for Directional Page Redirection ──
@@ -224,6 +260,134 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
   const [accessDob, setAccessDob] = useState('');
   const [isVerifyingPass, setIsVerifyingPass] = useState(false);
   const [accessError, setAccessError] = useState<string | null>(null);
+
+  // ── Horizontal Speakers Scrolling State ──
+  const speakersScrollRef = React.useRef<HTMLDivElement>(null);
+  const [canScrollSpeakersLeft, setCanScrollSpeakersLeft] = useState(false);
+  const [canScrollSpeakersRight, setCanScrollSpeakersRight] = useState(true);
+  const [activeSpeakerIndex, setActiveSpeakerIndex] = useState(0);
+  const isMouseDownSpeakersRef = React.useRef(false);
+  const startXSpeakersRef = React.useRef(0);
+  const scrollLeftSpeakersRef = React.useRef(0);
+
+  const checkSpeakersScroll = () => {
+    if (speakersScrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = speakersScrollRef.current;
+      setCanScrollSpeakersLeft(scrollLeft > 15);
+      setCanScrollSpeakersRight(scrollLeft < scrollWidth - clientWidth - 15);
+      const cardStep = 360 + 24;
+      const index = Math.round(scrollLeft / cardStep);
+      setActiveSpeakerIndex(Math.max(0, Math.min(index, SPEAKERS_DATA.length - 1)));
+    }
+  };
+
+  const handleSpeakersScroll = (direction: 'left' | 'right') => {
+    if (speakersScrollRef.current) {
+      const scrollAmount = 384;
+      speakersScrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  const scrollToSpeakerIndex = (idx: number) => {
+    if (speakersScrollRef.current) {
+      const cardStep = 360 + 24;
+      speakersScrollRef.current.scrollTo({
+        left: idx * cardStep,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  const handleSpeakersMouseDown = (e: React.MouseEvent) => {
+    if (!speakersScrollRef.current) return;
+    isMouseDownSpeakersRef.current = true;
+    startXSpeakersRef.current = e.pageX - speakersScrollRef.current.offsetLeft;
+    scrollLeftSpeakersRef.current = speakersScrollRef.current.scrollLeft;
+  };
+
+  const handleSpeakersMouseLeave = () => {
+    isMouseDownSpeakersRef.current = false;
+  };
+
+  const handleSpeakersMouseUp = () => {
+    isMouseDownSpeakersRef.current = false;
+  };
+
+  const handleSpeakersMouseMove = (e: React.MouseEvent) => {
+    if (!isMouseDownSpeakersRef.current || !speakersScrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - speakersScrollRef.current.offsetLeft;
+    const walk = (x - startXSpeakersRef.current) * 1.5;
+    speakersScrollRef.current.scrollLeft = scrollLeftSpeakersRef.current - walk;
+    checkSpeakersScroll();
+  };
+
+  // ── Horizontal Moments of RADIANZA Gallery State ──
+  const galleryScrollRef = React.useRef<HTMLDivElement>(null);
+  const [canScrollGalleryLeft, setCanScrollGalleryLeft] = useState(false);
+  const [canScrollGalleryRight, setCanScrollGalleryRight] = useState(true);
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
+  const isMouseDownGalleryRef = React.useRef(false);
+  const startXGalleryRef = React.useRef(0);
+  const scrollLeftGalleryRef = React.useRef(0);
+
+  const checkGalleryScroll = () => {
+    if (galleryScrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = galleryScrollRef.current;
+      setCanScrollGalleryLeft(scrollLeft > 15);
+      setCanScrollGalleryRight(scrollLeft < scrollWidth - clientWidth - 15);
+      const cardStep = 380 + 24;
+      const index = Math.round(scrollLeft / cardStep);
+      setActiveGalleryIndex(Math.max(0, Math.min(index, GALLERY_DATA.length - 1)));
+    }
+  };
+
+  const handleGalleryScroll = (direction: 'left' | 'right') => {
+    if (galleryScrollRef.current) {
+      const scrollAmount = 404;
+      galleryScrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  const scrollToGalleryIndex = (idx: number) => {
+    if (galleryScrollRef.current) {
+      const cardStep = 380 + 24;
+      galleryScrollRef.current.scrollTo({
+        left: idx * cardStep,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  const handleGalleryMouseDown = (e: React.MouseEvent) => {
+    if (!galleryScrollRef.current) return;
+    isMouseDownGalleryRef.current = true;
+    startXGalleryRef.current = e.pageX - galleryScrollRef.current.offsetLeft;
+    scrollLeftGalleryRef.current = galleryScrollRef.current.scrollLeft;
+  };
+
+  const handleGalleryMouseLeave = () => {
+    isMouseDownGalleryRef.current = false;
+  };
+
+  const handleGalleryMouseUp = () => {
+    isMouseDownGalleryRef.current = false;
+  };
+
+  const handleGalleryMouseMove = (e: React.MouseEvent) => {
+    if (!isMouseDownGalleryRef.current || !galleryScrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - galleryScrollRef.current.offsetLeft;
+    const walk = (x - startXGalleryRef.current) * 1.5;
+    galleryScrollRef.current.scrollLeft = scrollLeftGalleryRef.current - walk;
+    checkGalleryScroll();
+  };
 
   // Track viewport to guarantee ONLY ONE 3D WebGL canvas is mounted in the DOM at any time
   const [isDesktop, setIsDesktop] = useState<boolean>(() => {
@@ -525,7 +689,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               <section id="hero" className="relative w-full overflow-hidden bg-gradient-to-b from-[#e3f0fc] via-[#edf6fe] to-[#f4faff]">
                 
                 {/* ─── MOBILE VIEW: EXACT PIXEL-PERFECT REFERENCE MATCH (< lg) ─── */}
-                <div className="lg:hidden relative w-full h-[calc(100dvh-4.25rem)] min-h-[560px] max-h-[820px] flex flex-col justify-between p-5 sm:p-6 pb-4 select-none overflow-hidden">
+                <div className="lg:hidden relative w-full min-h-[calc(100dvh-4.25rem)] min-h-[720px] flex flex-col justify-start p-5 sm:p-6 pb-8 select-none overflow-hidden">
                   {/* Subtle Background Glow Elements */}
                   <div className="absolute top-1/4 right-0 w-72 h-72 rounded-full bg-cyan-200/30 blur-3xl pointer-events-none" />
                   <div className="absolute bottom-1/3 left-0 w-60 h-60 rounded-full bg-indigo-200/25 blur-3xl pointer-events-none" />
@@ -537,9 +701,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     </div>
                   )}
 
-                  {/* Foreground Content: Free floating text with pointer-events-none on backdrop and pointer-events-auto on buttons */}
-                  <div className="relative z-10 pt-6 sm:pt-10 pb-2 space-y-3.5 sm:space-y-4 max-w-[86%] sm:max-w-[70%] pointer-events-none">
-                    {/* Line 1: SPIHER PRESENTS Badge */}
+                  {/* Foreground Content: Free floating text starting straight from the chin level of the 3D head */}
+                  <div className="relative z-10 pt-[52vh] sm:pt-[50vh] pb-2 space-y-3 sm:space-y-3.5 max-w-[88%] sm:max-w-[74%] pointer-events-none">
+                    {/* Line 1: SPIHER PRESENTS Badge (Aligned directly with the Chin of the 3D head) */}
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -552,7 +716,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       </span>
                     </motion.div>
                     
-                    {/* Line 2: RADIANZA '26 Title (Aligned Straight to Forehead level) */}
+                    {/* Line 2: RADIANZA '26 Title (Below Chin Level) */}
                     <motion.h1
                       initial={{ opacity: 0, x: -18 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -1080,163 +1244,320 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                 </div>
               </section>
 
-              {/* ── 4. SPEAKERS SECTION ── */}
-              <section id="speakers" className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-white border-t border-[#e2eff7]">
-                <div className="max-w-7xl mx-auto space-y-12">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-40px' }}
-                    transition={{ duration: 0.6 }}
-                    className="max-w-2xl text-left space-y-3"
-                  >
-                    <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#0077c8] bg-[#f0f8fc] px-3 py-1 rounded-full border border-[#d4e8f5]">
-                      THOUGHT LEADERS &amp; JURY
-                    </span>
-                    <h2 className="text-3xl sm:text-5xl font-serif font-extrabold text-[#001f4d] tracking-tight">
-                      Eminent Speakers
-                    </h2>
-                    <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
-                      Learn directly from researchers, tech executives, and venture founders shaping the forefront of modern engineering and digital transformation.
-                    </p>
-                  </motion.div>
+              {/* ── 4. SPEAKERS SECTION (HORIZONTAL SCROLLING) ── */}
+              <section id="speakers" className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-white border-t border-[#e2eff7] overflow-hidden">
+                <div className="max-w-7xl mx-auto space-y-8">
+                  <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: '-40px' }}
+                      transition={{ duration: 0.6 }}
+                      className="max-w-2xl text-left space-y-3"
+                    >
+                      <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#0077c8] bg-[#f0f8fc] px-3 py-1 rounded-full border border-[#d4e8f5]">
+                        THOUGHT LEADERS &amp; JURY
+                      </span>
+                      <h2 className="text-3xl sm:text-5xl font-serif font-extrabold text-[#001f4d] tracking-tight">
+                        Eminent Speakers
+                      </h2>
+                      <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
+                        Learn directly from researchers, tech executives, and venture founders shaping the forefront of modern engineering and digital transformation.
+                      </p>
+                    </motion.div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {SPEAKERS_DATA.map((speaker) => (
-                      <div
-                        key={speaker.id}
-                        className="bg-white rounded-3xl border border-[#d4e8f5] overflow-hidden shadow-xs hover:shadow-xl hover:border-[#0077c8]/60 transition-all duration-300 flex flex-col justify-between group"
-                      >
-                        <div className="relative h-56 w-full overflow-hidden bg-slate-100">
-                          <img
-                            src={speaker.imageUrl}
-                            alt={speaker.name}
-                            className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                            loading="lazy"
-                            decoding="async"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+                    {/* Navigation Controls & Helper */}
+                    <div className="flex items-center gap-3 shrink-0">
+                      <span className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-slate-400 bg-slate-50 px-3 py-2 rounded-full border border-slate-200 select-none">
+                        <span>← Swipe / Scroll →</span>
+                      </span>
 
-                          <span className="absolute top-3 left-3 text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/95 text-[#002b66] shadow-xs">
-                            {speaker.tag}
-                          </span>
+                      <div className="flex items-center gap-2 bg-slate-50 p-1.5 rounded-full border border-slate-200">
+                        <button
+                          type="button"
+                          onClick={() => handleSpeakersScroll('left')}
+                          disabled={!canScrollSpeakersLeft}
+                          className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
+                            canScrollSpeakersLeft
+                              ? 'bg-white text-[#002b66] hover:bg-[#0077c8] hover:text-white shadow-xs active:scale-95 border border-slate-200'
+                              : 'bg-transparent text-slate-300 cursor-not-allowed border border-transparent'
+                          }`}
+                          aria-label="Scroll speakers left"
+                        >
+                          <ChevronLeft className="w-5 h-5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleSpeakersScroll('right')}
+                          disabled={!canScrollSpeakersRight}
+                          className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
+                            canScrollSpeakersRight
+                              ? 'bg-white text-[#002b66] hover:bg-[#0077c8] hover:text-white shadow-xs active:scale-95 border border-slate-200'
+                              : 'bg-transparent text-slate-300 cursor-not-allowed border border-transparent'
+                          }`}
+                          aria-label="Scroll speakers right"
+                        >
+                          <ChevronRight className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
 
-                          <div className="absolute bottom-3 left-3 right-3 text-white">
-                            <h3 className="text-base font-bold leading-tight">{speaker.name}</h3>
-                            <p className="text-[11px] text-[#7af1fc] font-medium mt-0.5">{speaker.role}</p>
+                  {/* Horizontal Scroll Track */}
+                  <div className="relative -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+                    <div
+                      ref={speakersScrollRef}
+                      onScroll={checkSpeakersScroll}
+                      onMouseDown={handleSpeakersMouseDown}
+                      onMouseLeave={handleSpeakersMouseLeave}
+                      onMouseUp={handleSpeakersMouseUp}
+                      onMouseMove={handleSpeakersMouseMove}
+                      className="flex gap-6 overflow-x-auto pb-6 pt-2 scroll-smooth snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none focus:outline-hidden no-scrollbar"
+                      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                    >
+                      {SPEAKERS_DATA.map((speaker, idx) => (
+                        <div
+                          key={speaker.id}
+                          className="w-[300px] sm:w-[340px] md:w-[360px] shrink-0 snap-start bg-white rounded-3xl border border-[#d4e8f5] overflow-hidden shadow-xs hover:shadow-xl hover:border-[#0077c8]/60 transition-all duration-300 flex flex-col justify-between group select-none"
+                        >
+                          <div className="relative h-60 w-full overflow-hidden bg-slate-100">
+                            <img
+                              src={speaker.imageUrl}
+                              alt={speaker.name}
+                              className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500 pointer-events-none"
+                              loading="lazy"
+                              decoding="async"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent pointer-events-none" />
+
+                            <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                              <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/95 text-[#002b66] shadow-xs backdrop-blur-xs">
+                                {speaker.tag}
+                              </span>
+                              <span className="text-[10px] font-mono font-bold text-white/90 bg-black/40 backdrop-blur-xs px-2 py-0.5 rounded-full border border-white/20">
+                                0{idx + 1}
+                              </span>
+                            </div>
+
+                            <div className="absolute bottom-3 left-4 right-4 text-white pointer-events-none">
+                              <h3 className="text-lg font-bold leading-tight drop-shadow-xs">{speaker.name}</h3>
+                              <p className="text-xs text-[#7af1fc] font-medium mt-0.5">{speaker.role}</p>
+                            </div>
                           </div>
-                        </div>
 
-                        <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                          <div className="space-y-2">
-                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0077c8] block">
-                              {speaker.organization}
-                            </span>
-                            <h4 className="text-xs font-bold text-[#001f4d] leading-snug line-clamp-2">
-                              "{speaker.topic}"
-                            </h4>
-                            <p className="text-xs text-slate-500 line-clamp-3 leading-relaxed">
-                              {speaker.bio}
-                            </p>
-                          </div>
+                          <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                            <div className="space-y-2">
+                              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0077c8] block">
+                                {speaker.organization}
+                              </span>
+                              <h4 className="text-sm font-bold text-[#001f4d] leading-snug">
+                                "{speaker.topic}"
+                              </h4>
+                              <p className="text-xs text-slate-500 line-clamp-3 leading-relaxed">
+                                {speaker.bio}
+                              </p>
+                            </div>
 
-                          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-                            <span className="flex items-center gap-1 text-[11px] text-[#00a887] font-semibold">
-                              <Mic className="w-3.5 h-3.5" />
-                              <span>Live Session</span>
-                            </span>
-                            <div className="flex items-center gap-2">
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  if (speaker.socials?.linkedin && speaker.socials.linkedin !== '#') {
-                                    window.open(speaker.socials.linkedin, '_blank');
-                                  }
-                                }}
-                                className="hover:text-[#0077c8] transition-colors p-1 cursor-pointer"
-                                aria-label={`${speaker.name} LinkedIn`}
-                              >
-                                <Linkedin className="w-3.5 h-3.5" />
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  if (speaker.socials?.web && speaker.socials.web !== '#') {
-                                    window.open(speaker.socials.web, '_blank');
-                                  }
-                                }}
-                                className="hover:text-[#0077c8] transition-colors p-1 cursor-pointer"
-                                aria-label={`${speaker.name} Website`}
-                              >
-                                <Globe className="w-3.5 h-3.5" />
-                              </button>
+                            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                              <span className="flex items-center gap-1.5 text-[11px] text-[#00a887] font-semibold">
+                                <span className="w-2 h-2 rounded-full bg-[#00a887] animate-pulse" />
+                                <span>Live Keynote &amp; Q&amp;A</span>
+                              </span>
+                              <div className="flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (speaker.socials?.linkedin && speaker.socials.linkedin !== '#') {
+                                      window.open(speaker.socials.linkedin, '_blank');
+                                    }
+                                  }}
+                                  className="hover:text-[#0077c8] transition-colors p-1 cursor-pointer"
+                                  aria-label={`${speaker.name} LinkedIn`}
+                                >
+                                  <Linkedin className="w-4 h-4" />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (speaker.socials?.web && speaker.socials.web !== '#') {
+                                      window.open(speaker.socials.web, '_blank');
+                                    }
+                                  }}
+                                  className="hover:text-[#0077c8] transition-colors p-1 cursor-pointer"
+                                  aria-label={`${speaker.name} Website`}
+                                >
+                                  <Globe className="w-4 h-4" />
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Carousel Progress Indicators */}
+                  <div className="flex items-center justify-between pt-2 px-1">
+                    <div className="flex items-center gap-2">
+                      {SPEAKERS_DATA.map((_, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => scrollToSpeakerIndex(idx)}
+                          className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                            activeSpeakerIndex === idx
+                              ? 'w-8 bg-[#0077c8]'
+                              : 'w-2 bg-slate-200 hover:bg-slate-300'
+                          }`}
+                          aria-label={`Scroll to speaker ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
+
+                    <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-400">
+                      <span className="text-[#0077c8]">0{activeSpeakerIndex + 1}</span>
+                      <span>/</span>
+                      <span>0{SPEAKERS_DATA.length}</span>
+                    </div>
                   </div>
                 </div>
               </section>
 
-              {/* ── 5. GALLERY SECTION ── */}
-              <section id="gallery" className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 border-t border-[#e2eff7]">
-                <div className="max-w-7xl mx-auto space-y-12">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-40px' }}
-                    transition={{ duration: 0.6 }}
-                    className="flex flex-col md:flex-row md:items-end justify-between gap-6"
-                  >
-                    <div className="space-y-2">
+              {/* ── 5. GALLERY SECTION (HORIZONTAL SCROLLING) ── */}
+              <section id="gallery" className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 border-t border-[#e2eff7] overflow-hidden">
+                <div className="max-w-7xl mx-auto space-y-8">
+                  <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: '-40px' }}
+                      transition={{ duration: 0.6 }}
+                      className="space-y-3 text-left max-w-2xl"
+                    >
                       <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#0077c8] bg-white px-3 py-1 rounded-full border border-[#d4e8f5]">
                         CAMPUS PULSE
                       </span>
                       <h2 className="text-3xl sm:text-5xl font-serif font-extrabold text-[#001f4d] tracking-tight">
                         Moments of RADIANZA
                       </h2>
-                      <p className="text-sm sm:text-base text-slate-600 max-w-xl">
+                      <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
                         Relive the electric energy, intense hacking sprints, robotics warfare, and grand valedictory celebrations from our symposium legacy.
                       </p>
-                    </div>
+                    </motion.div>
 
-                    <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
-                      <Camera className="w-4 h-4 text-[#0077c8]" />
-                      <span>Click any image to view details</span>
-                    </div>
-                  </motion.div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {GALLERY_DATA.map((item) => (
-                      <div
-                        key={item.id}
-                        onClick={() => setSelectedGalleryModal(item)}
-                        className="group relative rounded-3xl overflow-hidden bg-slate-900 shadow-md hover:shadow-2xl border border-[#d4e8f5] transition-all duration-300 cursor-pointer aspect-[4/3]"
-                      >
-                        <img
-                          src={item.imageUrl}
-                          alt={item.title}
-                          className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
-                          loading="lazy"
-                          decoding="async"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#001f4d]/90 via-[#001f4d]/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity" />
-
-                        <span className="absolute top-4 left-4 text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[#002b66] shadow-xs">
-                          {item.category}
-                        </span>
-
-                        <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Maximize2 className="w-4 h-4" />
-                        </div>
-
-                        <div className="absolute bottom-4 left-4 right-4 text-white space-y-1 transform group-hover:-translate-y-1 transition-transform">
-                          <h3 className="text-base font-bold leading-tight">{item.title}</h3>
-                          <p className="text-xs text-slate-200 line-clamp-2">{item.caption}</p>
-                        </div>
+                    {/* Navigation Controls & Helper */}
+                    <div className="flex items-center gap-3 shrink-0">
+                      <div className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-slate-400 bg-white px-3 py-2 rounded-full border border-slate-200 select-none">
+                        <Camera className="w-3.5 h-3.5 text-[#0077c8]" />
+                        <span>Click card to enlarge</span>
                       </div>
-                    ))}
+
+                      <div className="flex items-center gap-2 bg-white p-1.5 rounded-full border border-slate-200 shadow-xs">
+                        <button
+                          type="button"
+                          onClick={() => handleGalleryScroll('left')}
+                          disabled={!canScrollGalleryLeft}
+                          className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
+                            canScrollGalleryLeft
+                              ? 'bg-[#002b66] text-white hover:bg-[#0077c8] shadow-xs active:scale-95'
+                              : 'bg-slate-100 text-slate-300 cursor-not-allowed'
+                          }`}
+                          aria-label="Scroll gallery left"
+                        >
+                          <ChevronLeft className="w-5 h-5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleGalleryScroll('right')}
+                          disabled={!canScrollGalleryRight}
+                          className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
+                            canScrollGalleryRight
+                              ? 'bg-[#002b66] text-white hover:bg-[#0077c8] shadow-xs active:scale-95'
+                              : 'bg-slate-100 text-slate-300 cursor-not-allowed'
+                          }`}
+                          aria-label="Scroll gallery right"
+                        >
+                          <ChevronRight className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Horizontal Scroll Track */}
+                  <div className="relative -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+                    <div
+                      ref={galleryScrollRef}
+                      onScroll={checkGalleryScroll}
+                      onMouseDown={handleGalleryMouseDown}
+                      onMouseLeave={handleGalleryMouseLeave}
+                      onMouseUp={handleGalleryMouseUp}
+                      onMouseMove={handleGalleryMouseMove}
+                      className="flex gap-6 overflow-x-auto pb-6 pt-2 scroll-smooth snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none focus:outline-hidden no-scrollbar"
+                      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                    >
+                      {GALLERY_DATA.map((item, idx) => (
+                        <div
+                          key={item.id}
+                          onClick={() => setSelectedGalleryModal(item)}
+                          className="w-[300px] sm:w-[360px] md:w-[400px] shrink-0 snap-start aspect-[4/3] group relative rounded-3xl overflow-hidden bg-slate-900 shadow-md hover:shadow-2xl border border-[#d4e8f5] hover:border-[#0077c8]/60 transition-all duration-300 cursor-pointer select-none"
+                        >
+                          <img
+                            src={item.imageUrl}
+                            alt={item.title}
+                            className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500 pointer-events-none"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#001f4d]/95 via-[#001f4d]/40 to-transparent opacity-85 group-hover:opacity-95 transition-opacity pointer-events-none" />
+
+                          <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#002b66] shadow-xs">
+                              {item.category}
+                            </span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] font-mono font-bold text-white/90 bg-black/40 backdrop-blur-xs px-2 py-0.5 rounded-full border border-white/20">
+                                0{idx + 1}
+                              </span>
+                              <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                                <Maximize2 className="w-4 h-4" />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="absolute bottom-4 left-4 right-4 text-white space-y-1 transform group-hover:-translate-y-1 transition-transform pointer-events-none">
+                            <h3 className="text-base font-bold leading-tight drop-shadow-xs">{item.title}</h3>
+                            <p className="text-xs text-slate-200 line-clamp-2 leading-relaxed">{item.caption}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Carousel Progress Indicators */}
+                  <div className="flex items-center justify-between pt-2 px-1">
+                    <div className="flex items-center gap-2">
+                      {GALLERY_DATA.map((_, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => scrollToGalleryIndex(idx)}
+                          className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                            activeGalleryIndex === idx
+                              ? 'w-8 bg-[#0077c8]'
+                              : 'w-2 bg-slate-200 hover:bg-slate-300'
+                          }`}
+                          aria-label={`Scroll to moment ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
+
+                    <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-400">
+                      <span className="text-[#0077c8]">0{activeGalleryIndex + 1}</span>
+                      <span>/</span>
+                      <span>0{GALLERY_DATA.length}</span>
+                    </div>
                   </div>
                 </div>
               </section>

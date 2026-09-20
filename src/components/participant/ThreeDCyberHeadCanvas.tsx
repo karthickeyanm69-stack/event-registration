@@ -65,15 +65,17 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const disposables: Array<{ dispose: () => void }> = [];
 
     // ── 3. Background Subtle Cyber Dot Matrix Grid Effect ──
-    const gridRows = 18;
-    const gridCols = 18;
+    const gridRows = isMobile ? 26 : 30;
+    const gridCols = isMobile ? 26 : 34;
     const gridGeo = new THREE.BufferGeometry();
     const gridPos = new Float32Array(gridRows * gridCols * 3);
+    const colStep = 15.6 / (gridCols - 1);
+    const rowStep = 13.2 / (gridRows - 1);
     let gIdx = 0;
     for (let r = 0; r < gridRows; r++) {
       for (let c = 0; c < gridCols; c++) {
-        gridPos[gIdx * 3] = -7.5 + c * 0.90;
-        gridPos[gIdx * 3 + 1] = -5.8 + r * 0.70;
+        gridPos[gIdx * 3] = -7.8 + c * colStep;
+        gridPos[gIdx * 3 + 1] = -6.6 + r * rowStep;
         gridPos[gIdx * 3 + 2] = -4.5;
         gIdx++;
       }
@@ -82,10 +84,10 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     disposables.push(gridGeo);
 
     const gridMat = new THREE.PointsMaterial({
-      size: 0.038,
+      size: isMobile ? 0.052 : 0.056,
       color: 0x0077c8,
       transparent: true,
-      opacity: 0.20,
+      opacity: 0.32,
       depthWrite: false,
     });
     disposables.push(gridMat);
@@ -151,26 +153,30 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const starTex = makeStarTex();
     disposables.push(starTex);
 
-    // ── 6. Background Digital Particle Field (Cyan / Royal Blue / Purple) ──
-    const PC = isMobile ? 38 : 58;
+    // ── 6. Background Digital Particle Field (Cyan / Royal Blue / Purple / Lavender) ──
+    const PC_MAIN = isMobile ? 85 : 120;
     const pGeo = new THREE.BufferGeometry();
-    const pPos = new Float32Array(PC * 3);
-    const pCol = new Float32Array(PC * 3);
-    const pVelY = new Float32Array(PC);
+    const pPos = new Float32Array(PC_MAIN * 3);
+    const pCol = new Float32Array(PC_MAIN * 3);
+    const pVelY = new Float32Array(PC_MAIN);
+    const pPhase = new Float32Array(PC_MAIN);
 
     const cCyan = new THREE.Color('#00e5ff');
+    const cSky = new THREE.Color('#38bdf8');
     const cBlue = new THREE.Color('#0077c8');
-    const cViolet = new THREE.Color('#c084fc');
+    const cViolet = new THREE.Color('#a855f7');
+    const cLavender = new THREE.Color('#c084fc');
 
-    for (let i = 0; i < PC; i++) {
-      // Floating in the negative space on the left
-      pPos[i * 3] = -1.5 - Math.random() * 6.5;
-      pPos[i * 3 + 1] = (Math.random() - 0.45) * 11.0;
+    for (let i = 0; i < PC_MAIN; i++) {
+      // Distributed across the hero negative space and depth
+      pPos[i * 3] = -7.8 + Math.random() * 11.5;
+      pPos[i * 3 + 1] = (Math.random() - 0.5) * 13.0;
       pPos[i * 3 + 2] = (Math.random() - 0.5) * 5.0;
-      pVelY[i] = 0.005 + Math.random() * 0.007;
+      pVelY[i] = 0.005 + Math.random() * 0.008;
+      pPhase[i] = Math.random() * Math.PI * 2;
 
       const r = Math.random();
-      const col = r > 0.55 ? cCyan : r > 0.22 ? cBlue : cViolet;
+      const col = r > 0.65 ? cCyan : r > 0.45 ? cSky : r > 0.25 ? cBlue : r > 0.12 ? cViolet : cLavender;
       pCol[i * 3] = col.r; pCol[i * 3 + 1] = col.g; pCol[i * 3 + 2] = col.b;
     }
     pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
@@ -178,16 +184,50 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     disposables.push(pGeo);
 
     const pMat = new THREE.PointsMaterial({
-      size: isMobile ? 0.20 : 0.25,
+      size: isMobile ? 0.22 : 0.28,
       map: squareTex,
       vertexColors: true,
       transparent: true,
-      opacity: 0.82,
+      opacity: 0.88,
       depthWrite: false,
       blending: THREE.NormalBlending,
     });
     disposables.push(pMat);
     scene.add(new THREE.Points(pGeo, pMat));
+
+    // ── 6b. Secondary Micro Cyber Data Bits (Sharp, high-density cyber particles) ──
+    const PC_MICRO = isMobile ? 65 : 90;
+    const microGeo = new THREE.BufferGeometry();
+    const microPos = new Float32Array(PC_MICRO * 3);
+    const microCol = new Float32Array(PC_MICRO * 3);
+    const microVelY = new Float32Array(PC_MICRO);
+    const microPhase = new Float32Array(PC_MICRO);
+
+    for (let i = 0; i < PC_MICRO; i++) {
+      microPos[i * 3] = -7.5 + Math.random() * 11.0;
+      microPos[i * 3 + 1] = (Math.random() - 0.5) * 13.0;
+      microPos[i * 3 + 2] = (Math.random() - 0.5) * 4.0;
+      microVelY[i] = 0.0035 + Math.random() * 0.006;
+      microPhase[i] = Math.random() * Math.PI * 2;
+
+      const r = Math.random();
+      const col = r > 0.5 ? cCyan : r > 0.25 ? cLavender : cBlue;
+      microCol[i * 3] = col.r; microCol[i * 3 + 1] = col.g; microCol[i * 3 + 2] = col.b;
+    }
+    microGeo.setAttribute('position', new THREE.BufferAttribute(microPos, 3));
+    microGeo.setAttribute('color', new THREE.BufferAttribute(microCol, 3));
+    disposables.push(microGeo);
+
+    const microMat = new THREE.PointsMaterial({
+      size: isMobile ? 0.12 : 0.14,
+      map: squareTex,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.82,
+      depthWrite: false,
+    });
+    disposables.push(microMat);
+    scene.add(new THREE.Points(microGeo, microMat));
 
     // ── 7. Load GLB & Build Clean Frontside-Only Sculptural Mesh ──
     const loader = new GLTFLoader();
@@ -564,16 +604,32 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       headGroup.rotation.y += (targetRotY - headGroup.rotation.y) * 0.075;
       headGroup.rotation.x += (targetRotX - headGroup.rotation.x) * 0.075;
 
-      // Background particles drift
+      // Cyber dot grid breathing pulse
+      gridMat.opacity = 0.28 + Math.sin(t * 1.2) * 0.06;
+
+      // Background square particles drift
       const pArr = pGeo.attributes.position.array as Float32Array;
-      for (let i = 0; i < PC; i++) {
+      for (let i = 0; i < PC_MAIN; i++) {
         pArr[i * 3 + 1] += pVelY[i];
-        pArr[i * 3] += Math.sin(t * 0.8 + i) * 0.002;
-        if (pArr[i * 3 + 1] > 6.0) {
-          pArr[i * 3 + 1] = -5.0;
+        pArr[i * 3] += Math.sin(t * 0.85 + pPhase[i]) * 0.0025;
+        if (pArr[i * 3 + 1] > 6.5) {
+          pArr[i * 3 + 1] = -6.5;
+          pArr[i * 3] = -7.8 + Math.random() * 11.5;
         }
       }
       pGeo.attributes.position.needsUpdate = true;
+
+      // Micro cyber data bits drift
+      const mArr = microGeo.attributes.position.array as Float32Array;
+      for (let i = 0; i < PC_MICRO; i++) {
+        mArr[i * 3 + 1] += microVelY[i];
+        mArr[i * 3] += Math.cos(t * 0.75 + microPhase[i]) * 0.0018;
+        if (mArr[i * 3 + 1] > 6.5) {
+          mArr[i * 3 + 1] = -6.5;
+          mArr[i * 3] = -7.5 + Math.random() * 11.0;
+        }
+      }
+      microGeo.attributes.position.needsUpdate = true;
 
       renderer.render(scene, camera);
     };
