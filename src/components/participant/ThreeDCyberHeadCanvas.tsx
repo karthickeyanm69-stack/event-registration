@@ -95,23 +95,17 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     purpleLight.position.set(2, -8, 8);
     scene.add(purpleLight);
 
-    // 4. Master Head Group & Adaptive Frustum Calculations
+    // 4. Master Head Group: Exactly matches user reference position
     const headGroup = new THREE.Group();
     scene.add(headGroup);
 
-    // Calculate camera visible bounds at z=0
-    const vFOV = (camera.fov * Math.PI) / 180;
-    const frustumHeight = 2 * Math.tan(vFOV / 2) * camera.position.z;
-    const frustumWidth = frustumHeight * (initialWidth / initialHeight);
+    // Exact resting position matching reference image: Anchored so only the front half of the
+    // head is visible looking left across at the text, while the back of the skull extends off-screen to the right.
+    const RESTING_POS_X = 4.2;
+    const RESTING_POS_Y = 0.1;
 
-    // Dynamic Resting Position:
-    // On mobile portrait (frustumWidth ~ 5.5): position at ~ +1.4 so head sits nicely on right facing text
-    // On desktop: position at ~ +3.8
-    let restingPosX = isMobileInitial ? Math.min(frustumWidth * 0.28, 1.55) : 3.8;
-    let restingPosY = isMobileInitial ? -0.15 : 0.1;
-
-    // Starts slightly to the right for initial entrance
-    headGroup.position.set(restingPosX + 4.0, restingPosY, 0);
+    // Starts slightly to the right for initial smooth entrance
+    headGroup.position.set(13.5, RESTING_POS_Y, 0);
 
     // 5. Optimized Particle Swarm (Reduced count for mobile memory efficiency)
     const particleCount = isMobileInitial ? 350 : 650;
@@ -188,10 +182,8 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
             bbox.getSize(size);
             const maxDimension = Math.max(size.x, size.y, size.z) || 1;
 
-            // Target height: dynamically fits mobile without clipping or overflowing
-            const targetHeight = isMobileInitial
-              ? Math.min(frustumHeight * 0.75, frustumWidth * 1.15, 8.5)
-              : 11.2;
+            // Target height: 11.5 units spans prominently matching original reference layout
+            const targetHeight = 11.5;
             const scaleFactor = targetHeight / maxDimension;
 
             // Layer A: Semi-Translucent Ice-Glass Base Mesh
@@ -222,7 +214,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
             // Layer C: Sparkling Purple & Cyan Vertex Nodes
             const pointsMat = new THREE.PointsMaterial({
               color: 0x7c3aed,
-              size: isMobileInitial ? 0.065 : 0.08,
+              size: isMobileInitial ? 0.07 : 0.08,
               transparent: true,
               opacity: 0.9,
             });
@@ -240,7 +232,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       undefined,
       (error) => {
         console.warn('GLTF load failed, using procedural cyber polyhedron:', error);
-        const procGeo = new THREE.IcosahedronGeometry(isMobileInitial ? 3.4 : 4.6, 2);
+        const procGeo = new THREE.IcosahedronGeometry(4.8, 3);
         disposables.push(procGeo);
 
         const procWireMat = new THREE.MeshBasicMaterial({
@@ -255,7 +247,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
 
         const procPointsMat = new THREE.PointsMaterial({
           color: 0x7c3aed,
-          size: 0.1,
+          size: 0.11,
           transparent: true,
           opacity: 0.9,
         });
@@ -268,12 +260,15 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       }
     );
 
-    // 8. Pointer Drag Physics
+    // 8. Pointer & Touch Physics with Non-Sticky Native Vertical Scrolling
     let targetRotationX = BASE_ROTATION_X;
     let targetRotationY = BASE_ROTATION_Y;
     let isDragging = false;
     let prevPointerX = 0;
     let prevPointerY = 0;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchGestureLocked: 'scroll' | 'rotate' | null = null;
     let velocityX = 0;
     let velocityY = 0;
 
@@ -281,41 +276,73 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       isDragging = true;
       prevPointerX = e.clientX;
       prevPointerY = e.clientY;
+      touchStartX = e.clientX;
+      touchStartY = e.clientY;
+      touchGestureLocked = null;
       velocityX = 0;
       velocityY = 0;
-      try {
-        mount.setPointerCapture(e.pointerId);
-      } catch {}
+      // Only capture pointer for mouse; for touch, allow native scroll engine to work freely
+      if (e.pointerType === 'mouse') {
+        try {
+          mount.setPointerCapture(e.pointerId);
+        } catch {}
+      }
     };
 
     const handlePointerMove = (e: PointerEvent) => {
-      if (isDragging) {
-        const deltaX = e.clientX - prevPointerX;
-        const deltaY = e.clientY - prevPointerY;
-
-        velocityX = deltaX * 0.009;
-        velocityY = deltaY * 0.007;
-
-        targetRotationY += velocityX;
-        targetRotationX += velocityY;
-        targetRotationX = Math.max(-0.85, Math.min(0.85, targetRotationX));
-
-        prevPointerX = e.clientX;
-        prevPointerY = e.clientY;
-      } else if (e.pointerType === 'mouse') {
-        const rect = mount.getBoundingClientRect();
-        const normX = (e.clientX - rect.left) / rect.width - 0.5;
-        const normY = (e.clientY - rect.top) / rect.height - 0.5;
-        targetRotationY = BASE_ROTATION_Y + normX * 0.4;
-        targetRotationX = BASE_ROTATION_X - normY * 0.25;
+      if (!isDragging) {
+        if (e.pointerType === 'mouse') {
+          const rect = mount.getBoundingClientRect();
+          const normX = (e.clientX - rect.left) / rect.width - 0.5;
+          const normY = (e.clientY - rect.top) / rect.height - 0.5;
+          targetRotationY = BASE_ROTATION_Y + normX * 0.4;
+          targetRotationX = BASE_ROTATION_X - normY * 0.25;
+        }
+        return;
       }
+
+      const totalDeltaX = e.clientX - touchStartX;
+      const totalDeltaY = e.clientY - touchStartY;
+
+      // On touch devices, distinguish vertical page scrolling from horizontal 3D rotation
+      if (e.pointerType === 'touch' && !touchGestureLocked) {
+        if (Math.abs(totalDeltaY) > 6 && Math.abs(totalDeltaY) > Math.abs(totalDeltaX)) {
+          // Intent is vertical scroll -> immediately release 3D dragging so native browser page scroll is 100% smooth!
+          touchGestureLocked = 'scroll';
+          isDragging = false;
+          return;
+        } else if (Math.abs(totalDeltaX) > 6 && Math.abs(totalDeltaX) >= Math.abs(totalDeltaY)) {
+          touchGestureLocked = 'rotate';
+        }
+      }
+
+      if (e.pointerType === 'touch' && touchGestureLocked === 'scroll') {
+        isDragging = false;
+        return;
+      }
+
+      const deltaX = e.clientX - prevPointerX;
+      const deltaY = e.clientY - prevPointerY;
+
+      velocityX = deltaX * 0.009;
+      velocityY = deltaY * 0.007;
+
+      targetRotationY += velocityX;
+      targetRotationX += velocityY;
+      targetRotationX = Math.max(-0.85, Math.min(0.85, targetRotationX));
+
+      prevPointerX = e.clientX;
+      prevPointerY = e.clientY;
     };
 
     const handlePointerUp = (e: PointerEvent) => {
       isDragging = false;
-      try {
-        mount.releasePointerCapture(e.pointerId);
-      } catch {}
+      touchGestureLocked = null;
+      if (e.pointerType === 'mouse') {
+        try {
+          mount.releasePointerCapture(e.pointerId);
+        } catch {}
+      }
     };
 
     mount.addEventListener('pointerdown', handlePointerDown);
@@ -339,7 +366,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       const elapsedTime = (performance.now() - startTime) * 0.001;
 
       // Smooth slide-in towards resting position
-      headGroup.position.x += (restingPosX - headGroup.position.x) * 0.05;
+      headGroup.position.x += (RESTING_POS_X - headGroup.position.x) * 0.045;
 
       // Inertia decay
       if (!isDragging) {
@@ -353,7 +380,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       // Gentle vertical float + scroll parallax
       const scrollFactor = Math.min(scrollY / 700, 1.0);
       const floatOffset = Math.sin(elapsedTime * 1.5) * 0.08;
-      headGroup.position.y = (restingPosY + floatOffset) - (scrollFactor * 0.6);
+      headGroup.position.y = (RESTING_POS_Y + floatOffset) - (scrollFactor * 0.7);
 
       // Smooth rotation lerp
       headGroup.rotation.y += (targetRotationY - headGroup.rotation.y) * 0.08;
@@ -377,17 +404,10 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       if (!mount) return;
       const w = mount.clientWidth || window.innerWidth;
       const h = mount.clientHeight || window.innerHeight;
-      const isMob = window.innerWidth < 1024;
 
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
-
-      // Re-calculate visible frustum on orientation change or desktop resize
-      const curFrustumHeight = 2 * Math.tan(vFOV / 2) * camera.position.z;
-      const curFrustumWidth = curFrustumHeight * (w / h);
-      restingPosX = isMob ? Math.min(curFrustumWidth * 0.28, 1.55) : 3.8;
-      restingPosY = isMob ? -0.15 : 0.1;
     };
 
     window.addEventListener('resize', handleResize);
@@ -439,12 +459,12 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
   }
 
   return (
-    <div className="relative w-full h-full min-h-[440px] sm:min-h-[540px] flex items-center justify-center select-none overflow-visible">
-      {/* Three.js 3D WebGL Canvas Layer */}
+    <div className="relative w-full h-full min-h-[440px] sm:min-h-[540px] flex items-center justify-center select-none overflow-visible pointer-events-auto">
+      {/* Three.js 3D WebGL Canvas Layer - touchAction pan-y preserves smooth native vertical page scrolling */}
       <div
         ref={mountRef}
         className="w-full h-full min-h-[440px] sm:min-h-[540px] flex items-center justify-center cursor-grab active:cursor-grabbing"
-        style={{ touchAction: 'none' }}
+        style={{ touchAction: 'pan-y' }}
       />
 
       {/* Floating 3D Telemetry HUD Badges */}
@@ -457,10 +477,10 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
         </span>
       </div>
 
-      {/* Interactive 3D Orbit Drag / Touch Hint */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-[10px] font-mono font-bold text-[#002b66] pointer-events-none z-10 whitespace-nowrap">
+      {/* Interactive 3D Orbit Drag Hint (Desktop Only) */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-[10px] font-mono font-bold text-[#002b66] pointer-events-none z-10 whitespace-nowrap hidden lg:flex">
         <Move3d className="w-3.5 h-3.5 text-[#0077c8]" />
-        <span>Touch & drag to rotate 3D Head 360°</span>
+        <span>Drag to rotate 3D Head 360°</span>
       </div>
     </div>
   );

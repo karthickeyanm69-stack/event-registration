@@ -25,6 +25,7 @@ import {
   ChevronRight,
   ChevronLeft,
   Compass,
+  Move3d,
 } from 'lucide-react';
 import { CollegeEvent, EventCategory, Participant, Registration } from '../../types';
 import { MockDatabaseService } from '../../data/mockDatabase';
@@ -676,12 +677,18 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     </motion.div>
                   </div>
 
-                  {/* Bottom Indicator Dots (Cleanly positioned at bottom with breathing room) */}
-                  <div className="relative z-10 flex items-center justify-center gap-2 pt-2 pb-1 pointer-events-none">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#002b66]"></span>
-                    <span className="w-2 h-2 rounded-full bg-slate-300"></span>
-                    <span className="w-2 h-2 rounded-full bg-slate-300"></span>
-                    <span className="w-2 h-2 rounded-full bg-slate-300"></span>
+                  {/* Bottom Interactive Hint & Navigation Indicator Dots */}
+                  <div className="relative z-10 flex flex-col items-center justify-center gap-2 pb-2 pointer-events-none select-none">
+                    <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-[10px] font-mono font-bold text-[#002b66] whitespace-nowrap">
+                      <Move3d className="w-3.5 h-3.5 text-[#0077c8]" />
+                      <span>Touch & drag to rotate 3D Head 360°</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 pt-0.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#002b66]"></span>
+                      <span className="w-2 h-2 rounded-full bg-slate-300"></span>
+                      <span className="w-2 h-2 rounded-full bg-slate-300"></span>
+                      <span className="w-2 h-2 rounded-full bg-slate-300"></span>
+                    </div>
                   </div>
                 </div>
 
