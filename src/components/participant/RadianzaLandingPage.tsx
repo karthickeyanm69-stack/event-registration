@@ -338,9 +338,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
             onClick={() => navigateToPage('home')}
             className="flex items-center gap-3 cursor-pointer select-none group"
           >
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-[#002b66] to-[#0077c8] flex items-center justify-center p-2 shadow-xs group-hover:scale-105 transition-transform duration-200">
-              <CollegeEmblem size={26} />
-            </div>
+            <CollegeEmblem size={34} className="group-hover:scale-105 transition-transform duration-200" />
             <div className="flex items-center gap-1.5">
               <span className="font-serif font-black text-xl sm:text-2xl tracking-tight text-[#001f4d]">
                 RADIANZA <span className="text-[#0077c8]">'26</span>
@@ -435,9 +433,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   {/* Top Header Row with Logo & Gold Close Button */}
                   <div className="flex items-center justify-between pb-5 border-b border-slate-100">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#002b66] to-[#0077c8] flex items-center justify-center p-1.5 shadow-xs">
-                        <CollegeEmblem size={22} />
-                      </div>
+                      <CollegeEmblem size={28} />
                       <span className="font-serif font-black text-lg tracking-tight text-[#001f4d]">
                         RADIANZA <span className="text-[#0077c8]">'26</span>
                       </span>
@@ -505,63 +501,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
         </AnimatePresence>
       </header>
 
-      {/* ========================================================================= */}
-      {/* 2. SUB-HEADER BREADCRUMB STRIP (Desktop only)                              */}
-      {/* ========================================================================= */}
-      <div className="hidden sm:block w-full bg-white border-b border-[#e8f5fb] px-4 sm:px-8 py-2.5">
-        <div className="max-w-7xl mx-auto flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2 font-mono text-[11px] text-slate-500">
-            <span className="px-2 py-0.5 rounded bg-[#f0f8fc] border border-[#d4e8f5] text-[#0077c8] font-bold">
-              PAGE {currentPageIndex + 1} / {PAGES.length}
-            </span>
-            <span className="text-slate-300">•</span>
-            <span className="font-bold text-[#001f4d] uppercase tracking-wider">
-              {PAGES[currentPageIndex].title}
-            </span>
-          </div>
 
-          {/* Quick Section Shortcuts on Home or Page Switcher */}
-          {activePage === 'home' ? (
-            <div className="hidden md:flex items-center gap-4 text-[11px] font-semibold text-slate-600">
-              <span className="text-slate-400 font-mono text-[10px] uppercase">Jump To:</span>
-              <button onClick={() => scrollToHomeSection('highlights')} className="hover:text-[#0077c8] cursor-pointer">
-                Highlights
-              </button>
-              <button onClick={() => scrollToHomeSection('schedule')} className="hover:text-[#0077c8] cursor-pointer">
-                Schedule
-              </button>
-              <button onClick={() => scrollToHomeSection('speakers')} className="hover:text-[#0077c8] cursor-pointer">
-                Speakers
-              </button>
-              <button onClick={() => scrollToHomeSection('gallery')} className="hover:text-[#0077c8] cursor-pointer">
-                Gallery
-              </button>
-            </div>
-          ) : (
-            <div className="hidden md:flex items-center gap-2 text-[11px] font-bold">
-              {prevPage && (
-                <button
-                  onClick={() => navigateToPage(prevPage.id)}
-                  className="flex items-center gap-1 text-slate-500 hover:text-[#0077c8] transition-colors cursor-pointer"
-                >
-                  <ChevronLeft className="w-3.5 h-3.5" />
-                  <span>{prevPage.navLabel}</span>
-                </button>
-              )}
-              {prevPage && nextPage && <span className="text-slate-300">|</span>}
-              {nextPage && (
-                <button
-                  onClick={() => navigateToPage(nextPage.id)}
-                  className="flex items-center gap-1 text-[#0077c8] hover:text-[#002b66] transition-colors cursor-pointer"
-                >
-                  <span>{nextPage.navLabel}</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
 
       {/* ========================================================================= */}
       {/* 3. MULTI-PAGE ANIMATED ROUTER                                             */}
@@ -606,7 +546,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       transition={{ duration: 0.5 }}
                       className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md shadow-xs border border-[#d4e8f5] text-[#0077c8] pointer-events-auto"
                     >
-                      <SpiherStarburstLogo size={20} />
+                      <CollegeEmblem size={24} />
                       <span className="tracking-widest uppercase font-mono text-[10px] sm:text-[11px] font-bold text-[#002b66]">
                         SPIHER PRESENTS
                       </span>
@@ -676,20 +616,6 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       </button>
                     </motion.div>
                   </div>
-
-                  {/* Bottom Interactive Hint & Navigation Indicator Dots */}
-                  <div className="relative z-10 flex flex-col items-center justify-center gap-2 pb-2 pointer-events-none select-none">
-                    <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-[10px] font-mono font-bold text-[#002b66] whitespace-nowrap">
-                      <Move3d className="w-3.5 h-3.5 text-[#0077c8]" />
-                      <span>Touch & drag to rotate 3D Head 360°</span>
-                    </div>
-                    <div className="flex items-center justify-center gap-2 pt-0.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#002b66]"></span>
-                      <span className="w-2 h-2 rounded-full bg-slate-300"></span>
-                      <span className="w-2 h-2 rounded-full bg-slate-300"></span>
-                      <span className="w-2 h-2 rounded-full bg-slate-300"></span>
-                    </div>
-                  </div>
                 </div>
 
                 {/* ─── DESKTOP VIEW: EXPANDED 2-COLUMN MATRIX (>= lg) ─── */}
@@ -714,7 +640,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         transition={{ duration: 0.5 }}
                         className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white shadow-xs border border-[#d4e8f5] text-[#0077c8] text-xs font-bold tracking-wide"
                       >
-                        <SpiherStarburstLogo size={20} />
+                        <CollegeEmblem size={24} />
                         <span className="tracking-widest uppercase font-mono text-[11px] text-[#002b66]">
                           SPIHER PRESENTS
                         </span>
@@ -937,12 +863,11 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     className="group relative rounded-3xl overflow-hidden shadow-xl border border-[#d4e8f5] min-h-[220px] sm:min-h-[280px] flex items-end"
                   >
                     <img
-                      src="/spiher-hero-hd.jpg"
+                      src="/spiher-hero-building.png"
                       alt="St. Peter's Institute Campus"
                       className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/spiher-hero-building.png';
-                      }}
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#001f4d]/95 via-[#001f4d]/50 to-transparent" />
                     <div className="relative z-10 p-6 sm:p-8 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
@@ -1188,6 +1113,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                             alt={speaker.name}
                             className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                             loading="lazy"
+                            decoding="async"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
 
@@ -1293,6 +1219,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                           alt={item.title}
                           className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
                           loading="lazy"
+                          decoding="async"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#001f4d]/90 via-[#001f4d]/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity" />
 
@@ -1620,9 +1547,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       src="/spiher-hero-building.png"
                       alt="St. Peter's Institute Main Campus Building"
                       className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/spiher-hero-hd.jpg';
-                      }}
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#001f4d]/80 via-transparent to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4 text-white">

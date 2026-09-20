@@ -1,457 +1,652 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { Move3d, Sparkles } from 'lucide-react';
-import { SpiherStarburstLogo } from '../common/CollegeLogo';
+import { motion } from 'motion/react';
+import { Sparkles } from 'lucide-react';
+import { CollegeEmblem } from '../common/CollegeLogo';
 
 interface ThreeDCyberHeadCanvasProps {
   onRegisterClick?: () => void;
 }
 
-export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ onRegisterClick }) => {
+export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ onRegisterClick: _onRegisterClick }) => {
   const mountRef = useRef<HTMLDivElement>(null);
-  const [modelLoaded, setModelLoaded] = useState(false);
   const [webglSupported, setWebglSupported] = useState(true);
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
 
-    // Helper: test if WebGL is available
-    const checkWebGLAvailability = (): boolean => {
+    // ── WebGL Availability Check ──
+    const checkWebGL = (): boolean => {
       try {
-        const canvas = document.createElement('canvas');
-        return !!(
-          window.WebGLRenderingContext &&
-          (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
-        );
-      } catch {
-        return false;
-      }
+        const c = document.createElement('canvas');
+        return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
+      } catch { return false; }
     };
+    if (!checkWebGL()) { setWebglSupported(false); return; }
 
-    if (!checkWebGLAvailability()) {
-      console.warn('WebGL is not supported or restricted in this environment.');
-      setWebglSupported(false);
-      return;
-    }
+    const isMobile = window.innerWidth < 1024;
+    const initialW = mount.clientWidth || (isMobile ? window.innerWidth : 650);
+    const initialH = mount.clientHeight || (isMobile ? 700 : 580);
 
-    const initialWidth = mount.clientWidth || window.innerWidth || 650;
-    const initialHeight = mount.clientHeight || (window.innerWidth < 1024 ? 600 : 560);
-    const isMobileInitial = window.innerWidth < 1024;
-
-    // 1. Scene & Camera Setup
+    // ── 1. Scene & Camera ──
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(38, initialWidth / initialHeight, 0.1, 100);
+
+    // Camera calibrated: FOV=38, position z=16
+    // Frustum height = 11.02 units at z=0 (from y=-5.51 to y=+5.51)
+    const camera = new THREE.PerspectiveCamera(38, initialW / initialH, 0.1, 100);
     camera.position.set(0, 0, 16);
 
-    // 2. Safe WebGL Renderer Creation with try/catch
+    // ── 2. Renderer ──
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({
         alpha: true,
-        antialias: !isMobileInitial, // Disable antialiasing on mobile to save GPU memory
+        antialias: !isMobile,
         powerPreference: 'default',
-        precision: isMobileInitial ? 'mediump' : 'highp',
+        precision: isMobile ? 'mediump' : 'highp',
       });
-    } catch (err) {
-      console.error('Failed to create WebGLRenderer:', err);
+    } catch {
       setWebglSupported(false);
       return;
     }
-
-    renderer.setSize(initialWidth, initialHeight);
-    // Strict DPR capping: 1.25 on mobile prevents high-resolution buffer crashes, 1.75 max on desktop
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobileInitial ? 1.25 : 1.75));
+    renderer.setSize(initialW, initialH);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 1.75));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.25;
+    renderer.toneMappingExposure = 1.0;
     mount.appendChild(renderer.domElement);
 
-    // Prevent Chrome from permanently replacing canvas with [x_x] on context loss
-    const handleContextLost = (e: Event) => {
-      e.preventDefault();
-      console.warn('WebGL Context Lost - handled gracefully.');
-    };
-    const handleContextRestored = () => {
-      console.info('WebGL Context Restored.');
-    };
-
+    const handleContextLost = (e: Event) => { e.preventDefault(); };
+    const handleContextRestored = () => { };
     renderer.domElement.addEventListener('webglcontextlost', handleContextLost, false);
     renderer.domElement.addEventListener('webglcontextrestored', handleContextRestored, false);
 
-    // 3. High-Contrast Cyber Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 2.5);
-    scene.add(ambientLight);
+    const disposables: Array<{ dispose: () => void }> = [];
 
-    const keyLight = new THREE.PointLight(0x0077c8, 5.5, 60);
-    keyLight.position.set(-8, 6, 12);
-    scene.add(keyLight);
+    // ── 3. Background Subtle Cyber Dot Matrix Grid Effect ──
+    const gridRows = 18;
+    const gridCols = 18;
+    const gridGeo = new THREE.BufferGeometry();
+    const gridPos = new Float32Array(gridRows * gridCols * 3);
+    let gIdx = 0;
+    for (let r = 0; r < gridRows; r++) {
+      for (let c = 0; c < gridCols; c++) {
+        gridPos[gIdx * 3] = -7.5 + c * 0.90;
+        gridPos[gIdx * 3 + 1] = -5.8 + r * 0.70;
+        gridPos[gIdx * 3 + 2] = -4.5;
+        gIdx++;
+      }
+    }
+    gridGeo.setAttribute('position', new THREE.BufferAttribute(gridPos, 3));
+    disposables.push(gridGeo);
 
-    const rimLight = new THREE.PointLight(0x00f2fe, 4.5, 50);
-    rimLight.position.set(8, 8, 4);
-    scene.add(rimLight);
+    const gridMat = new THREE.PointsMaterial({
+      size: 0.038,
+      color: 0x0077c8,
+      transparent: true,
+      opacity: 0.20,
+      depthWrite: false,
+    });
+    disposables.push(gridMat);
+    scene.add(new THREE.Points(gridGeo, gridMat));
 
-    const purpleLight = new THREE.PointLight(0x7c3aed, 3.8, 45);
-    purpleLight.position.set(2, -8, 8);
-    scene.add(purpleLight);
-
-    // 4. Master Head Group: Exactly matches user reference position
+    // ── 4. Master Head Group & Calibrated Vertical Sizing (Zero Top/Bottom Clipping) ──
     const headGroup = new THREE.Group();
     scene.add(headGroup);
 
-    // Exact resting position matching reference image: Anchored so only the front half of the
-    // head is visible looking left across at the text, while the back of the skull extends off-screen to the right.
-    const RESTING_POS_X = 4.2;
-    const RESTING_POS_Y = 0.1;
+    // Restored large front-half profile visibility & positioning:
+    // - TARGET_HEIGHT = 11.6 on mobile (12.0 on desktop) spanning top to bottom
+    // - RESTING_POS_X = 3.65 on mobile (3.8 on desktop) so only the front half is visible, skull back is off-screen
+    // - RESTING_POS_Y = 0.05 on mobile (0.1 on desktop)
+    const RESTING_POS_X = isMobile ? 3.65 : 3.8;
+    const RESTING_POS_Y = isMobile ? 0.05 : 0.1;
+    const TARGET_HEIGHT = isMobile ? 11.6 : 12.0;
 
-    // Starts slightly to the right for initial smooth entrance
-    headGroup.position.set(13.5, RESTING_POS_Y, 0);
+    // Start off-screen right for initial entrance slide-in
+    headGroup.position.set(RESTING_POS_X + 6.0, RESTING_POS_Y, 0);
 
-    // 5. Optimized Particle Swarm (Reduced count for mobile memory efficiency)
-    const particleCount = isMobileInitial ? 350 : 650;
-    const particleGeo = new THREE.BufferGeometry();
-    const positions = new Float32Array(particleCount * 3);
-    const colors = new Float32Array(particleCount * 3);
+    // Left-facing pure profile (-88 degrees)
+    const BASE_ROT_Y = -Math.PI / 2.05;
+    const BASE_ROT_X = -0.02;
 
-    const colorBlue = new THREE.Color(0x0077c8);
-    const colorCyan = new THREE.Color(0x00f2fe);
-    const colorPurple = new THREE.Color(0x7c3aed);
+    // ── 5. Particle Textures ──
+    const makeSquareTex = () => {
+      const c = document.createElement('canvas');
+      c.width = 32; c.height = 32;
+      const ctx = c.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(2, 2, 28, 28);
+      }
+      return new THREE.CanvasTexture(c);
+    };
+    const squareTex = makeSquareTex();
+    disposables.push(squareTex);
 
-    for (let i = 0; i < particleCount; i++) {
-      const radius = 4.5 + Math.random() * 7.5;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(Math.random() * 2 - 1);
+    const makeStarTex = () => {
+      const c = document.createElement('canvas');
+      c.width = 64; c.height = 64;
+      const ctx = c.getContext('2d');
+      if (ctx) {
+        const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 28);
+        g.addColorStop(0, 'rgba(255,255,255,1)');
+        g.addColorStop(0.35, 'rgba(186,230,253,0.75)');
+        g.addColorStop(1, 'rgba(56,189,248,0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, 64, 64);
 
-      positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-      positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-      positions[i * 3 + 2] = radius * Math.cos(phi);
+        ctx.beginPath();
+        ctx.moveTo(32, 2);
+        ctx.quadraticCurveTo(32, 32, 62, 32);
+        ctx.quadraticCurveTo(32, 32, 32, 62);
+        ctx.quadraticCurveTo(32, 32, 2, 32);
+        ctx.quadraticCurveTo(32, 32, 32, 2);
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(255,255,255,0.95)';
+        ctx.fill();
+      }
+      return new THREE.CanvasTexture(c);
+    };
+    const starTex = makeStarTex();
+    disposables.push(starTex);
 
-      const chosenColor = Math.random() > 0.5 ? colorBlue : Math.random() > 0.25 ? colorCyan : colorPurple;
-      colors[i * 3] = chosenColor.r;
-      colors[i * 3 + 1] = chosenColor.g;
-      colors[i * 3 + 2] = chosenColor.b;
+    // ── 6. Background Digital Particle Field (Cyan / Royal Blue / Purple) ──
+    const PC = isMobile ? 38 : 58;
+    const pGeo = new THREE.BufferGeometry();
+    const pPos = new Float32Array(PC * 3);
+    const pCol = new Float32Array(PC * 3);
+    const pVelY = new Float32Array(PC);
+
+    const cCyan = new THREE.Color('#00e5ff');
+    const cBlue = new THREE.Color('#0077c8');
+    const cViolet = new THREE.Color('#c084fc');
+
+    for (let i = 0; i < PC; i++) {
+      // Floating in the negative space on the left
+      pPos[i * 3] = -1.5 - Math.random() * 6.5;
+      pPos[i * 3 + 1] = (Math.random() - 0.45) * 11.0;
+      pPos[i * 3 + 2] = (Math.random() - 0.5) * 5.0;
+      pVelY[i] = 0.005 + Math.random() * 0.007;
+
+      const r = Math.random();
+      const col = r > 0.55 ? cCyan : r > 0.22 ? cBlue : cViolet;
+      pCol[i * 3] = col.r; pCol[i * 3 + 1] = col.g; pCol[i * 3 + 2] = col.b;
     }
+    pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+    pGeo.setAttribute('color', new THREE.BufferAttribute(pCol, 3));
+    disposables.push(pGeo);
 
-    particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-    const particleMat = new THREE.PointsMaterial({
-      size: isMobileInitial ? 0.11 : 0.13,
+    const pMat = new THREE.PointsMaterial({
+      size: isMobile ? 0.20 : 0.25,
+      map: squareTex,
       vertexColors: true,
       transparent: true,
-      opacity: 0.7,
+      opacity: 0.82,
+      depthWrite: false,
       blending: THREE.NormalBlending,
     });
-    const backgroundParticles = new THREE.Points(particleGeo, particleMat);
-    scene.add(backgroundParticles);
+    disposables.push(pMat);
+    scene.add(new THREE.Points(pGeo, pMat));
 
-    // 6. Base Target Orientation: Profile facing left towards text
-    const BASE_ROTATION_Y = -Math.PI / 2.05; // ~ -88 degrees
-    const BASE_ROTATION_X = 0.02;
-
-    // Track allocated geometries and materials for complete leak-free cleanup
-    const disposables: Array<{ dispose: () => void }> = [
-      particleGeo,
-      particleMat,
-      ambientLight,
-      keyLight,
-      rimLight,
-      purpleLight,
-    ];
-
-    // 7. Load Model with Shared Geometry Optimization
+    // ── 7. Load GLB & Build Clean Frontside-Only Sculptural Mesh ──
     const loader = new GLTFLoader();
-
     loader.load(
       '/cyber_head.glb',
       (gltf) => {
-        const root = gltf.scene;
+        gltf.scene.traverse((child) => {
+          if (!(child as THREE.Mesh).isMesh) return;
+          const src = (child as THREE.Mesh).geometry;
+          const geo = src.clone();
+          geo.computeVertexNormals();
+          disposables.push(geo);
 
-        root.traverse((child) => {
-          if ((child as THREE.Mesh).isMesh) {
-            const originalMesh = child as THREE.Mesh;
-            // Use SINGLE geometry instance instead of cloning 3 separate times (66% GPU memory savings!)
-            const geo = originalMesh.geometry;
-            geo.center();
-            geo.computeVertexNormals();
-            disposables.push(geo);
+          geo.computeBoundingBox();
+          const bb = geo.boundingBox!;
+          const sz = new THREE.Vector3();
+          bb.getSize(sz);
+          const maxDim = Math.max(sz.x, sz.y, sz.z) || 1;
+          const S = TARGET_HEIGHT / maxDim;
 
-            geo.computeBoundingBox();
-            const bbox = geo.boundingBox!;
-            const size = new THREE.Vector3();
-            bbox.getSize(size);
-            const maxDimension = Math.max(size.x, size.y, size.z) || 1;
+          const PA = geo.attributes.position;
+          const N = PA.count;
+          const minY = bb.min.y;
+          const maxY = bb.max.y;
+          const H = sz.y;
 
-            // Target height: 11.5 units spans prominently matching original reference layout
-            const targetHeight = 11.5;
-            const scaleFactor = targetHeight / maxDimension;
+          // Landmarks from geometry:
+          const dynNose = new THREE.Vector3(0.0, 1.10, 2.59);
+          const dynLips = new THREE.Vector3(0.0, 0.57, 2.35);
+          const dynRightEar = new THREE.Vector3(1.72, 1.50, -0.16);
+          const dynLeftEar = new THREE.Vector3(-1.72, 1.50, -0.16);
+          const dynRightEye = new THREE.Vector3(0.65, 1.94, 1.98);
+          const dynLeftEye = new THREE.Vector3(-0.65, 1.94, 1.98);
 
-            // Layer A: Semi-Translucent Ice-Glass Base Mesh
-            const solidMat = new THREE.MeshStandardMaterial({
-              color: 0xe6f4fb,
-              roughness: 0.2,
-              metalness: 0.2,
+          // Color Palette:
+          const colBase = new THREE.Color('#0062b8'); // Deep Royal Electric Blue
+          const colEarViolet = new THREE.Color('#7c3aed'); // Deep Violet for Ear Concha
+          const colEarDark = new THREE.Color('#581c87'); // Dark Violet
+          const colEyeViolet = new THREE.Color('#6366f1'); // Indigo for Eye socket
+          const colLipViolet = new THREE.Color('#8b5cf6'); // Subtle Violet for Lips
+          const colNeck = new THREE.Color('#c084fc'); // Lavender for Neck dissolution
+
+          const vColors = new Float32Array(N * 3);
+          const pColors = new Float32Array(N * 3);
+          const tmpV = new THREE.Vector3();
+          const tmpC = new THREE.Color();
+          const starIdx: number[] = [];
+
+          const earRadius = 0.85;
+          const eyeRadius = 0.55;
+          const lipRadius = 0.45;
+
+          for (let i = 0; i < N; i++) {
+            tmpV.set(PA.getX(i), PA.getY(i), PA.getZ(i));
+
+            let maxH = 0;
+            let hColor = colBase;
+
+            // 1. Ear Highlight
+            const dRE = tmpV.distanceTo(dynRightEar);
+            const dLE = tmpV.distanceTo(dynLeftEar);
+            const earDist = Math.min(dRE, dLE);
+            if (earDist < earRadius) {
+              const f = Math.pow(1.0 - earDist / earRadius, 1.4);
+              if (f > maxH) {
+                maxH = f;
+                hColor = earDist < earRadius * 0.45 ? colEarDark : colEarViolet;
+              }
+            }
+
+            // 2. Eye Highlight
+            const dREye = tmpV.distanceTo(dynRightEye);
+            const dLEye = tmpV.distanceTo(dynLeftEye);
+            const eyeDist = Math.min(dREye, dLEye);
+            if (eyeDist < eyeRadius) {
+              const f = Math.pow(1.0 - eyeDist / eyeRadius, 1.6) * 0.45;
+              if (f > maxH) {
+                maxH = f;
+                hColor = colEyeViolet;
+              }
+            }
+
+            // 3. Lip Highlight
+            const lipDist = tmpV.distanceTo(dynLips);
+            if (lipDist < lipRadius) {
+              const f = Math.pow(1.0 - lipDist / lipRadius, 1.8) * 0.35;
+              if (f > maxH) {
+                maxH = f;
+                hColor = colLipViolet;
+              }
+            }
+
+            // Blend base with highlight
+            tmpC.copy(colBase).lerp(hColor, maxH);
+
+            // 4. Neck fade at lower torso into soft lavender-pink
+            const relY = (tmpV.y - minY) / H;
+            if (relY < 0.28) {
+              const neckFade = Math.pow(1.0 - relY / 0.28, 1.3) * 0.85;
+              tmpC.lerp(colNeck, neckFade);
+            }
+
+            vColors[i * 3] = tmpC.r;
+            vColors[i * 3 + 1] = tmpC.g;
+            vColors[i * 3 + 2] = tmpC.b;
+
+            // Point node colors
+            if (earDist < earRadius) {
+              pColors[i * 3] = colEarViolet.r;
+              pColors[i * 3 + 1] = colEarViolet.g;
+              pColors[i * 3 + 2] = colEarViolet.b;
+            } else if (maxH > 0.2) {
+              pColors[i * 3] = colEyeViolet.r;
+              pColors[i * 3 + 1] = colEyeViolet.g;
+              pColors[i * 3 + 2] = colEyeViolet.b;
+            } else {
+              pColors[i * 3] = 0.0;
+              pColors[i * 3 + 1] = 0.85;
+              pColors[i * 3 + 2] = 1.0;
+            }
+
+            // Star Sparkle Candidates
+            const isFacingCamera = tmpV.x > -0.6;
+            const isAboveNeck = relY > 0.26;
+            if (isFacingCamera && isAboveNeck) {
+              if (maxH > 0.25 || (i % 7 === 0 && tmpV.z > 0.15)) {
+                starIdx.push(i);
+              }
+            }
+          }
+
+          geo.setAttribute('color', new THREE.BufferAttribute(vColors, 3));
+
+          // ── Layer A: Opaque Frontside Sculptural Core Shader ──
+          // 1. side: THREE.FrontSide with depthWrite: true -> 100% OPAQUE TO BACKFACES.
+          //    Completely hides internal mouth cavities, eye sockets, and the other ear!
+          // 2. Base is luminous pale ice-blue (#f4f9fd) with subtle Fresnel edge rim.
+          // 3. Ear concha receives rich violet shading matching reference art!
+          // 4. Neck base smoothly dissolves into page background (#edf6fe).
+          const coreShaderMat = new THREE.ShaderMaterial({
+            uniforms: {
+              uCoreColor: { value: new THREE.Color('#f4f9fd') },
+              uRimColor: { value: new THREE.Color('#bae6fd') },
+              uEarColor: { value: new THREE.Color('#6d28d9') },
+              uBgColor: { value: new THREE.Color('#edf6fe') },
+              uRightEar: { value: dynRightEar },
+              uEarRadius: { value: earRadius },
+              uMinY: { value: minY },
+              uMaxY: { value: maxY },
+            },
+            vertexShader: `
+              varying vec3 vNormal;
+              varying vec3 vViewDir;
+              varying vec3 vModelPos;
+              void main() {
+                vNormal = normalize(normalMatrix * normal);
+                vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+                vViewDir = normalize(-mvPos.xyz);
+                vModelPos = position;
+                gl_Position = projectionMatrix * mvPos;
+              }
+            `,
+            fragmentShader: `
+              varying vec3 vNormal;
+              varying vec3 vViewDir;
+              varying vec3 vModelPos;
+              uniform vec3 uCoreColor;
+              uniform vec3 uRimColor;
+              uniform vec3 uEarColor;
+              uniform vec3 uBgColor;
+              uniform vec3 uRightEar;
+              uniform float uEarRadius;
+              uniform float uMinY;
+              uniform float uMaxY;
+
+              void main() {
+                // Subtle fresnel rim along outer silhouette
+                float fresnel = pow(1.0 - abs(dot(vViewDir, vNormal)), 2.0);
+                vec3 col = mix(uCoreColor, uRimColor, fresnel * 0.40);
+
+                // Deep violet shading inside ear concha
+                float earDist = distance(vModelPos, uRightEar);
+                if (earDist < uEarRadius) {
+                  float earF = pow(1.0 - earDist / uEarRadius, 1.4);
+                  col = mix(col, uEarColor, earF * 0.85);
+                }
+
+                // Smooth dissolve at neck base into page background
+                float relY = (vModelPos.y - uMinY) / (uMaxY - uMinY);
+                float bottomFade = clamp((0.26 - relY) / 0.22, 0.0, 1.0);
+                col = mix(col, uBgColor, bottomFade);
+
+                gl_FragColor = vec4(col, 1.0);
+              }
+            `,
+            side: THREE.FrontSide,
+            depthTest: true,
+            depthWrite: true,
+          });
+          disposables.push(coreShaderMat);
+          const solidMesh = new THREE.Mesh(geo, coreShaderMat);
+          solidMesh.scale.setScalar(S);
+          headGroup.add(solidMesh);
+
+          // ── Layer B: Frontside Royal Blue Triangular Wireframe Grid ──
+          const wireMat = new THREE.MeshBasicMaterial({
+            vertexColors: true,
+            wireframe: true,
+            side: THREE.FrontSide,
+            transparent: true,
+            opacity: 0.95,
+            polygonOffset: true,
+            polygonOffsetFactor: -4.0,
+            polygonOffsetUnits: -8.0,
+            depthTest: true,
+            depthWrite: false,
+          });
+          disposables.push(wireMat);
+          const wireMesh = new THREE.Mesh(geo, wireMat);
+          wireMesh.scale.setScalar(S * 1.001);
+          headGroup.add(wireMesh);
+
+          // ── Layer C: Sparkling Purple & Cyan Vertex Nodes ──
+          const pointsGeo = geo.clone();
+          pointsGeo.setAttribute('color', new THREE.BufferAttribute(pColors, 3));
+          disposables.push(pointsGeo);
+
+          const pointsMat = new THREE.PointsMaterial({
+            size: isMobile ? 0.075 : 0.085,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.90,
+            depthWrite: false,
+          });
+          disposables.push(pointsMat);
+          const pointsMesh = new THREE.Points(pointsGeo, pointsMat);
+          pointsMesh.scale.setScalar(S * 1.002);
+          headGroup.add(pointsMesh);
+
+          // ── Layer D: 4-Pointed Diamond Star Sparkles ──
+          if (starIdx.length > 0) {
+            const sGeo = new THREE.BufferGeometry();
+            const sPos = new Float32Array(starIdx.length * 3);
+            const sCol = new Float32Array(starIdx.length * 3);
+            for (let si = 0; si < starIdx.length; si++) {
+              const oi = starIdx[si];
+              sPos[si * 3] = PA.getX(oi) * S * 1.003;
+              sPos[si * 3 + 1] = PA.getY(oi) * S * 1.003;
+              sPos[si * 3 + 2] = PA.getZ(oi) * S * 1.003;
+              sCol[si * 3] = Math.min(1.0, vColors[oi * 3] * 1.35);
+              sCol[si * 3 + 1] = Math.min(1.0, vColors[oi * 3 + 1] * 1.35);
+              sCol[si * 3 + 2] = Math.min(1.0, vColors[oi * 3 + 2] * 1.35);
+            }
+            sGeo.setAttribute('position', new THREE.BufferAttribute(sPos, 3));
+            sGeo.setAttribute('color', new THREE.BufferAttribute(sCol, 3));
+            disposables.push(sGeo);
+
+            const sMat = new THREE.PointsMaterial({
+              size: isMobile ? 0.11 : 0.13,
+              map: starTex,
+              vertexColors: true,
               transparent: true,
-              opacity: 0.62,
+              opacity: 0.90,
+              blending: THREE.AdditiveBlending,
+              depthWrite: false,
             });
-            disposables.push(solidMat);
-            const solidMesh = new THREE.Mesh(geo, solidMat);
-            solidMesh.scale.set(scaleFactor * 0.99, scaleFactor * 0.99, scaleFactor * 0.99);
-            headGroup.add(solidMesh);
-
-            // Layer B: Vibrant Royal Blue Wireframe Grid
-            const wireMat = new THREE.MeshBasicMaterial({
-              color: 0x005fa3,
-              wireframe: true,
-              transparent: true,
-              opacity: 0.88,
-            });
-            disposables.push(wireMat);
-            const wireMesh = new THREE.Mesh(geo, wireMat);
-            wireMesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
-            headGroup.add(wireMesh);
-
-            // Layer C: Sparkling Purple & Cyan Vertex Nodes
-            const pointsMat = new THREE.PointsMaterial({
-              color: 0x7c3aed,
-              size: isMobileInitial ? 0.07 : 0.08,
-              transparent: true,
-              opacity: 0.9,
-            });
-            disposables.push(pointsMat);
-            const pointsMesh = new THREE.Points(geo, pointsMat);
-            pointsMesh.scale.set(scaleFactor * 1.003, scaleFactor * 1.003, scaleFactor * 1.003);
-            headGroup.add(pointsMesh);
+            disposables.push(sMat);
+            headGroup.add(new THREE.Points(sGeo, sMat));
           }
         });
 
-        headGroup.rotation.y = BASE_ROTATION_Y;
-        headGroup.rotation.x = BASE_ROTATION_X;
-        setModelLoaded(true);
+        headGroup.rotation.y = BASE_ROT_Y;
+        headGroup.rotation.x = BASE_ROT_X;
       },
       undefined,
-      (error) => {
-        console.warn('GLTF load failed, using procedural cyber polyhedron:', error);
-        const procGeo = new THREE.IcosahedronGeometry(4.8, 3);
-        disposables.push(procGeo);
-
-        const procWireMat = new THREE.MeshBasicMaterial({
-          color: 0x005fa3,
-          wireframe: true,
-          transparent: true,
-          opacity: 0.85,
-        });
-        disposables.push(procWireMat);
-        const procMesh = new THREE.Mesh(procGeo, procWireMat);
-        headGroup.add(procMesh);
-
-        const procPointsMat = new THREE.PointsMaterial({
-          color: 0x7c3aed,
-          size: 0.11,
-          transparent: true,
-          opacity: 0.9,
-        });
-        disposables.push(procPointsMat);
-        const procPoints = new THREE.Points(procGeo, procPointsMat);
-        headGroup.add(procPoints);
-
-        headGroup.rotation.y = BASE_ROTATION_Y;
-        setModelLoaded(true);
+      (err) => {
+        console.warn('GLB load error:', err);
       }
     );
 
-    // 8. Pointer & Touch Physics with Non-Sticky Native Vertical Scrolling
-    let targetRotationX = BASE_ROTATION_X;
-    let targetRotationY = BASE_ROTATION_Y;
+    // ── 8. Interactive Drag & Touch Orbit Physics ──
+    let targetRotX = BASE_ROT_X;
+    let targetRotY = BASE_ROT_Y;
     let isDragging = false;
-    let prevPointerX = 0;
-    let prevPointerY = 0;
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchGestureLocked: 'scroll' | 'rotate' | null = null;
-    let velocityX = 0;
-    let velocityY = 0;
+    let prevX = 0, prevY = 0;
+    let startX = 0, startY = 0;
+    let locked: 'scroll' | 'rotate' | null = null;
+    let velX = 0, velY = 0;
 
-    const handlePointerDown = (e: PointerEvent) => {
+    const onPointerDown = (e: PointerEvent) => {
       isDragging = true;
-      prevPointerX = e.clientX;
-      prevPointerY = e.clientY;
-      touchStartX = e.clientX;
-      touchStartY = e.clientY;
-      touchGestureLocked = null;
-      velocityX = 0;
-      velocityY = 0;
-      // Only capture pointer for mouse; for touch, allow native scroll engine to work freely
-      if (e.pointerType === 'mouse') {
-        try {
-          mount.setPointerCapture(e.pointerId);
-        } catch {}
-      }
+      prevX = e.clientX;
+      prevY = e.clientY;
+      startX = e.clientX;
+      startY = e.clientY;
+      locked = null;
+      velX = 0; velY = 0;
     };
 
-    const handlePointerMove = (e: PointerEvent) => {
-      if (!isDragging) {
-        if (e.pointerType === 'mouse') {
-          const rect = mount.getBoundingClientRect();
-          const normX = (e.clientX - rect.left) / rect.width - 0.5;
-          const normY = (e.clientY - rect.top) / rect.height - 0.5;
-          targetRotationY = BASE_ROTATION_Y + normX * 0.4;
-          targetRotationX = BASE_ROTATION_X - normY * 0.25;
-        }
-        return;
-      }
+    const onPointerMove = (e: PointerEvent) => {
+      if (!isDragging) return;
+      const dx = e.clientX - prevX;
+      const dy = e.clientY - prevY;
 
-      const totalDeltaX = e.clientX - touchStartX;
-      const totalDeltaY = e.clientY - touchStartY;
-
-      // On touch devices, distinguish vertical page scrolling from horizontal 3D rotation
-      if (e.pointerType === 'touch' && !touchGestureLocked) {
-        if (Math.abs(totalDeltaY) > 6 && Math.abs(totalDeltaY) > Math.abs(totalDeltaX)) {
-          // Intent is vertical scroll -> immediately release 3D dragging so native browser page scroll is 100% smooth!
-          touchGestureLocked = 'scroll';
+      // Smooth vertical scroll pass-through on mobile
+      if (locked === null && (Math.abs(e.clientX - startX) > 6 || Math.abs(e.clientY - startY) > 6)) {
+        if (Math.abs(e.clientY - startY) > Math.abs(e.clientX - startX) * 1.5) {
+          locked = 'scroll';
           isDragging = false;
           return;
-        } else if (Math.abs(totalDeltaX) > 6 && Math.abs(totalDeltaX) >= Math.abs(totalDeltaY)) {
-          touchGestureLocked = 'rotate';
+        } else {
+          locked = 'rotate';
         }
       }
 
-      if (e.pointerType === 'touch' && touchGestureLocked === 'scroll') {
-        isDragging = false;
-        return;
-      }
+      if (locked === 'scroll') return;
 
-      const deltaX = e.clientX - prevPointerX;
-      const deltaY = e.clientY - prevPointerY;
+      velX = dx * 0.0035;
+      velY = dy * 0.0025;
+      targetRotY += velX;
+      targetRotX = Math.max(-0.65, Math.min(0.65, targetRotX + velY));
 
-      velocityX = deltaX * 0.009;
-      velocityY = deltaY * 0.007;
-
-      targetRotationY += velocityX;
-      targetRotationX += velocityY;
-      targetRotationX = Math.max(-0.85, Math.min(0.85, targetRotationX));
-
-      prevPointerX = e.clientX;
-      prevPointerY = e.clientY;
+      prevX = e.clientX;
+      prevY = e.clientY;
     };
 
-    const handlePointerUp = (e: PointerEvent) => {
+    const onPointerUp = () => {
       isDragging = false;
-      touchGestureLocked = null;
-      if (e.pointerType === 'mouse') {
-        try {
-          mount.releasePointerCapture(e.pointerId);
-        } catch {}
-      }
+      locked = null;
     };
 
-    mount.addEventListener('pointerdown', handlePointerDown);
-    mount.addEventListener('pointermove', handlePointerMove);
-    mount.addEventListener('pointerup', handlePointerUp);
-    mount.addEventListener('pointercancel', handlePointerUp);
+    mount.addEventListener('pointerdown', onPointerDown, { passive: true });
+    mount.addEventListener('pointermove', onPointerMove, { passive: true });
+    mount.addEventListener('pointerup', onPointerUp, { passive: true });
+    mount.addEventListener('pointercancel', onPointerUp, { passive: true });
 
-    // 9. Scroll Tracking
-    let scrollY = window.scrollY || 0;
-    const handleScroll = () => {
-      scrollY = window.scrollY || 0;
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    // ── 9. Scroll Tracking for Gentle Parallax ──
+    let scrollY = window.scrollY;
+    const onScroll = () => { scrollY = window.scrollY; };
+    window.addEventListener('scroll', onScroll, { passive: true });
 
-    // 10. Animation Loop
-    let animationId: number;
-    const startTime = performance.now();
+    // ── 10. Animation Loop with Viewport & Tab Visibility Pause ──
+    let rafId: number;
+    let isVisibleInViewport = true;
+    let isTabActive = !document.hidden;
+    let isAnimating = false;
+    const t0 = performance.now();
 
     const animate = () => {
-      animationId = requestAnimationFrame(animate);
-      const elapsedTime = (performance.now() - startTime) * 0.001;
+      if (!isVisibleInViewport || !isTabActive) {
+        isAnimating = false;
+        return;
+      }
+      isAnimating = true;
+      rafId = requestAnimationFrame(animate);
 
-      // Smooth slide-in towards resting position
+      const t = (performance.now() - t0) * 0.001;
+
+      // Smooth slide-in towards RESTING_POS_X
       headGroup.position.x += (RESTING_POS_X - headGroup.position.x) * 0.045;
 
-      // Inertia decay
+      // Inertia Damping
       if (!isDragging) {
-        velocityX *= 0.94;
-        velocityY *= 0.94;
-        targetRotationY += velocityX;
-        targetRotationX += velocityY;
-        targetRotationX = Math.max(-0.85, Math.min(0.85, targetRotationX));
+        velX *= 0.92; velY *= 0.92;
+        targetRotY += velX;
+        targetRotX = Math.max(-0.65, Math.min(0.65, targetRotX + velY));
       }
 
-      // Gentle vertical float + scroll parallax
-      const scrollFactor = Math.min(scrollY / 700, 1.0);
-      const floatOffset = Math.sin(elapsedTime * 1.5) * 0.08;
-      headGroup.position.y = (RESTING_POS_Y + floatOffset) - (scrollFactor * 0.7);
+      // Gentle floating physics & scroll parallax
+      const scrollFrac = Math.min(scrollY / 750, 1.0);
+      headGroup.position.y = RESTING_POS_Y + Math.sin(t * 1.3) * 0.06 - scrollFrac * 0.45;
 
       // Smooth rotation lerp
-      headGroup.rotation.y += (targetRotationY - headGroup.rotation.y) * 0.08;
-      headGroup.rotation.x += (targetRotationX - headGroup.rotation.x) * 0.08;
+      headGroup.rotation.y += (targetRotY - headGroup.rotation.y) * 0.075;
+      headGroup.rotation.x += (targetRotX - headGroup.rotation.x) * 0.075;
 
-      // Particle drift
-      backgroundParticles.rotation.y = elapsedTime * 0.03;
-      backgroundParticles.rotation.x = Math.sin(elapsedTime * 0.05) * 0.06;
-
-      // Subtle light pulse
-      keyLight.intensity = 5.0 + Math.sin(elapsedTime * 2.2) * 0.8;
-      rimLight.intensity = 4.2 + Math.cos(elapsedTime * 1.8) * 0.6;
+      // Background particles drift
+      const pArr = pGeo.attributes.position.array as Float32Array;
+      for (let i = 0; i < PC; i++) {
+        pArr[i * 3 + 1] += pVelY[i];
+        pArr[i * 3] += Math.sin(t * 0.8 + i) * 0.002;
+        if (pArr[i * 3 + 1] > 6.0) {
+          pArr[i * 3 + 1] = -5.0;
+        }
+      }
+      pGeo.attributes.position.needsUpdate = true;
 
       renderer.render(scene, camera);
     };
 
-    animate();
+    const startAnimation = () => {
+      if (!isAnimating && isVisibleInViewport && isTabActive) {
+        animate();
+      }
+    };
+    startAnimation();
 
-    // 11. Dynamic Resize Handler
-    const handleResize = () => {
+    // IntersectionObserver to pause loop when scrolled away
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleInViewport = entry.isIntersecting;
+        if (isVisibleInViewport) {
+          startAnimation();
+        }
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(mount);
+
+    // Tab Visibility change listener
+    const handleVisibilityChange = () => {
+      isTabActive = !document.hidden;
+      if (isTabActive) {
+        startAnimation();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // ── 11. Responsive Resize ──
+    const onResize = () => {
       if (!mount) return;
-      const w = mount.clientWidth || window.innerWidth;
-      const h = mount.clientHeight || window.innerHeight;
-
+      const w = mount.clientWidth || (isMobile ? window.innerWidth : 650);
+      const h = mount.clientHeight || (isMobile ? 700 : 580);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
     };
+    window.addEventListener('resize', onResize);
 
-    window.addEventListener('resize', handleResize);
-
+    // ── Cleanup ──
     return () => {
-      mount.removeEventListener('pointerdown', handlePointerDown);
-      mount.removeEventListener('pointermove', handlePointerMove);
-      mount.removeEventListener('pointerup', handlePointerUp);
-      mount.removeEventListener('pointercancel', handlePointerUp);
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      mount.removeEventListener('pointerdown', onPointerDown);
+      mount.removeEventListener('pointermove', onPointerMove);
+      mount.removeEventListener('pointerup', onPointerUp);
+      mount.removeEventListener('pointercancel', onPointerUp);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
       renderer.domElement.removeEventListener('webglcontextlost', handleContextLost);
       renderer.domElement.removeEventListener('webglcontextrestored', handleContextRestored);
-      cancelAnimationFrame(animationId);
-
-      // Full disposal of all GPU assets
-      disposables.forEach((item) => {
-        try {
-          item.dispose();
-        } catch {}
-      });
-
-      if (mount.contains(renderer.domElement)) {
-        mount.removeChild(renderer.domElement);
-      }
+      cancelAnimationFrame(rafId);
+      disposables.forEach(d => { try { d.dispose(); } catch { } });
+      if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
       renderer.dispose();
       renderer.forceContextLoss();
     };
   }, []);
 
-  // Fallback if device has no WebGL or GPU crashed permanently
   if (!webglSupported) {
     return (
-      <div className="relative w-full h-full min-h-[440px] sm:min-h-[540px] flex items-center justify-center select-none overflow-hidden">
-        <div className="relative flex flex-col items-center justify-center gap-4 text-center p-6">
-          <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl bg-white/90 backdrop-blur-xl border border-[#0077c8]/30 shadow-lg shadow-[#0077c8]/15 flex items-center justify-center animate-pulse">
-            <SpiherStarburstLogo size={56} />
+      <div className="relative w-full h-full min-h-[440px] sm:min-h-[540px] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4 p-6 text-center">
+          <div className="w-24 h-24 rounded-3xl bg-white/90 border border-[#0077c8]/30 shadow-lg flex items-center justify-center animate-pulse">
+            <CollegeEmblem size={52} roundedBg />
           </div>
-          <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 border border-[#d4e8f5] text-[10px] font-mono font-bold text-[#002b66]">
-              <Sparkles className="w-3 h-3 text-[#0077c8]" />
-              <span>RADIANZA 3D CORE ACTIVE</span>
-            </div>
-            <p className="text-[11px] text-slate-500 font-mono">SPIHER Flagship Technical Symposium</p>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 border border-[#d4e8f5] text-[10px] font-mono font-bold text-[#002b66]">
+            <Sparkles className="w-3 h-3 text-[#0077c8]" />
+            <span>RADIANZA 3D CORE</span>
           </div>
         </div>
       </div>
@@ -459,30 +654,18 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
   }
 
   return (
-    <div className="relative w-full h-full min-h-[440px] sm:min-h-[540px] flex items-center justify-center select-none overflow-visible pointer-events-auto">
-      {/* Three.js 3D WebGL Canvas Layer - touchAction pan-y preserves smooth native vertical page scrolling */}
+    <motion.div
+      initial={{ opacity: 0, x: 30, scale: 0.96 }}
+      animate={{ opacity: 1, x: 0, scale: 1 }}
+      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      className="relative w-full h-full min-h-[480px] sm:min-h-[580px] flex items-center justify-center select-none overflow-visible pointer-events-auto"
+    >
       <div
         ref={mountRef}
-        className="w-full h-full min-h-[440px] sm:min-h-[540px] flex items-center justify-center cursor-grab active:cursor-grabbing"
+        className="w-full h-full min-h-[480px] sm:min-h-[580px] cursor-grab active:cursor-grabbing"
         style={{ touchAction: 'pan-y' }}
       />
-
-      {/* Floating 3D Telemetry HUD Badges */}
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-10 flex flex-col items-end gap-1 pointer-events-none z-10">
-        <span className="px-2.5 py-1 rounded-xl bg-white/90 backdrop-blur-md border border-[#0077c8]/30 text-[#002b66] font-mono text-[10px] sm:text-[11px] font-bold tracking-wider shadow-xs">
-          1.00011 // 0.39
-        </span>
-        <span className="text-[9px] font-mono font-bold text-[#7c3aed] tracking-widest uppercase">
-          mot.pos:c [SYS_OK]
-        </span>
-      </div>
-
-      {/* Interactive 3D Orbit Drag Hint (Desktop Only) */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#d4e8f5] shadow-xs text-[10px] font-mono font-bold text-[#002b66] pointer-events-none z-10 whitespace-nowrap hidden lg:flex">
-        <Move3d className="w-3.5 h-3.5 text-[#0077c8]" />
-        <span>Drag to rotate 3D Head 360°</span>
-      </div>
-    </div>
+    </motion.div>
   );
 };
 

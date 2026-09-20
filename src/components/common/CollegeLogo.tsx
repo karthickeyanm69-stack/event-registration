@@ -60,11 +60,12 @@ export const SpiherStarburstLogo: React.FC<{ size?: number; className?: string }
 
 /**
  * Official St. Peter's Institute of Higher Education & Research Emblem
- * Vector Cross with Blue Vertical Arms, Teal Horizontal Arms, and Circuit Nodes.
+ * Vector Cross with Blue Vertical Arms, Teal/Green Horizontal Arms, Circuit Nodes, and Base Line.
  */
-export const CollegeEmblem: React.FC<{ size?: number | string; className?: string }> = ({
+export const CollegeEmblem: React.FC<{ size?: number | string; className?: string; roundedBg?: boolean }> = ({
   size = 48,
   className = '',
+  roundedBg = false,
 }) => {
   return (
     <svg
@@ -75,60 +76,50 @@ export const CollegeEmblem: React.FC<{ size?: number | string; className?: strin
       xmlns="http://www.w3.org/2000/svg"
       className={`shrink-0 ${className}`}
     >
-      {/* Top Vertical Arm (Vibrant Blue #0077c8) */}
-      <path
-        d="M36 4 H64 V36 H36 Z"
-        fill="#0077c8"
-        rx="2"
-      />
-      {/* Bottom Vertical Arm (Vibrant Blue #0077c8) */}
-      <path
-        d="M36 64 H64 V96 H36 Z"
-        fill="#0077c8"
-        rx="2"
-      />
-      {/* Left Horizontal Arm (Vibrant Teal #00a887) */}
-      <path
-        d="M4 36 H36 V64 H4 Z"
-        fill="#00a887"
-        rx="2"
-      />
-      {/* Right Horizontal Arm (Vibrant Teal #00a887) */}
-      <path
-        d="M64 36 H96 V64 H64 Z"
-        fill="#00a887"
-        rx="2"
-      />
+      {roundedBg && (
+        <rect width="100" height="110" rx="20" fill="url(#emblemBgGrad)" />
+      )}
+      <defs>
+        <linearGradient id="emblemBgGrad" x1="0" y1="0" x2="0" y2="110" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#005fa3" />
+          <stop offset="1" stopColor="#002b66" />
+        </linearGradient>
+      </defs>
 
-      {/* Central Star/Cross Node Connection (White) */}
+      {/* Top Vertical Arm (Royal Blue) */}
+      <path d="M37 5 H63 V37 H37 Z" fill="#0066cc" rx="3" />
+      {/* Bottom Vertical Arm (Royal Blue) */}
+      <path d="M37 63 H63 V95 H37 Z" fill="#0066cc" rx="3" />
+      {/* Left Horizontal Arm (Teal / Green) */}
+      <path d="M5 37 H37 V63 H5 Z" fill="#00a887" rx="3" />
+      {/* Right Horizontal Arm (Teal / Green) */}
+      <path d="M63 37 H95 V63 H63 Z" fill="#00a887" rx="3" />
+
+      {/* Central Node & Circuit Lines (White) */}
       <circle cx="50" cy="50" r="4.5" fill="#ffffff" />
 
-      {/* Top Circuit Line & Node */}
-      <line x1="50" y1="50" x2="50" y2="18" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="50" cy="18" r="4" fill="#ffffff" />
+      <line x1="50" y1="50" x2="50" y2="20" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" />
+      <circle cx="50" cy="20" r="3.5" fill="#ffffff" />
 
-      {/* Bottom Circuit Line & Node */}
-      <line x1="50" y1="50" x2="50" y2="82" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="50" cy="82" r="4" fill="#ffffff" />
+      <line x1="50" y1="50" x2="50" y2="80" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" />
+      <circle cx="50" cy="80" r="3.5" fill="#ffffff" />
 
-      {/* Left Circuit Line & Node */}
-      <line x1="50" y1="50" x2="18" y2="50" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="18" cy="50" r="4" fill="#ffffff" />
+      <line x1="50" y1="50" x2="20" y2="50" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" />
+      <circle cx="20" cy="50" r="3.5" fill="#ffffff" />
 
-      {/* Right Circuit Line & Node */}
-      <line x1="50" y1="50" x2="82" y2="50" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="82" cy="50" r="4" fill="#ffffff" />
+      <line x1="50" y1="50" x2="80" y2="50" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" />
+      <circle cx="80" cy="50" r="3.5" fill="#ffffff" />
 
-      {/* Bottom Motto Badge */}
-      <rect x="0" y="99" width="100" height="10" rx="1.5" fill="#0077c8" />
+      {/* Motto Bar matching reference Image 2 */}
+      <rect x="2" y="99" width="96" height="9" rx="1.5" fill="#0066cc" />
       <text
         x="50"
-        y="107"
+        y="105.8"
         fill="#ffffff"
-        fontSize="5"
+        fontSize="4.5"
         fontWeight="bold"
         textAnchor="middle"
-        letterSpacing="0.4"
+        letterSpacing="0.2"
         fontFamily="sans-serif"
       >
         IGNITE • INSPIRE • INNOVATE

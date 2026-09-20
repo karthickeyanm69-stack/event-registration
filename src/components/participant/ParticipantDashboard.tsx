@@ -364,12 +364,11 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
         <section className="relative w-full min-h-[75vh] sm:min-h-[80vh] lg:min-h-[85vh] flex items-center overflow-hidden bg-slate-950 border-b border-slate-200">
           {/* Bright, Vibrant High-Definition St. Peter's Campus Backdrop */}
           <img
-            src="/spiher-hero-hd.jpg?v=9"
+            src="/spiher-hero-building.png"
             alt="St. Peter's Campus"
             className="absolute inset-0 w-full h-full object-cover object-[center_30%] opacity-90 brightness-[1.02] contrast-[1.05] saturate-[1.08] transition-transform duration-1000"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = '/spiher-hero-building.png?v=9';
-            }}
+            loading="lazy"
+            decoding="async"
           />
 
           {/* Smooth directional gradient for cinematic depth and clear text legibility */}
