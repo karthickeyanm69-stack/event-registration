@@ -31,11 +31,9 @@ import { CollegeEvent, EventCategory, Participant, Registration } from '../../ty
 import { MockDatabaseService } from '../../data/mockDatabase';
 import { CollegeEmblem, SpiherStarburstLogo } from '../common/CollegeLogo';
 import { CustomDatePicker } from '../common/CustomDatePicker';
-import { ThreeDCyberHeadCanvas } from './ThreeDCyberHeadCanvas';
+import { HeroArtwork } from './HeroArtwork';
 import {
   EthnicBorderRibbon,
-  TopRangoliMotif,
-  BottomRangoliMotif,
 } from '../common/CulturalRangoliMotifs';
 
 export type LandingPageId = 'home' | 'events' | 'about' | 'contact';
@@ -555,16 +553,16 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               <ArrowRight className="w-3.5 h-3.5 text-[#020B1C]" />
             </button>
 
-            {/* Mobile Clean Hamburger Button */}
+            {/* Mobile Clean Hamburger Button matching reference */}
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden w-10 h-10 rounded-lg border-2 border-[#F5B942] hover:border-[#e5a730] flex flex-col items-center justify-center gap-[5px] p-2 bg-[#061A35] transition-all cursor-pointer active:scale-95 shadow-xs"
+              className="lg:hidden w-10 h-10 rounded-lg border border-[#F5B942]/70 hover:border-[#F5B942] flex flex-col items-center justify-center gap-[4.5px] p-2 bg-[#020B1C]/60 backdrop-blur-sm transition-all cursor-pointer active:scale-95 shadow-xs"
               aria-label="Open Navigation Menu"
             >
-              <span className="w-5 h-[2px] bg-[#FFF2D5] rounded-full block"></span>
               <span className="w-5 h-[2px] bg-[#F5B942] rounded-full block"></span>
-              <span className="w-5 h-[2px] bg-[#FFF2D5] rounded-full block"></span>
+              <span className="w-5 h-[2px] bg-[#F5B942] rounded-full block"></span>
+              <span className="w-5 h-[2px] bg-[#F5B942] rounded-full block"></span>
             </button>
           </div>
         </div>
@@ -691,25 +689,15 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                 {/* Authentic Left Cultural Geometric Border Ribbon */}
                 <EthnicBorderRibbon />
 
-                {/* Cultural Rangoli / Mandala Background Ornaments */}
-                <TopRangoliMotif className="-top-12 right-2 sm:right-10 lg:right-1/4 lg:translate-x-16" />
-                <BottomRangoliMotif className="-bottom-8 right-0 sm:right-6 lg:right-10" />
-
-                {/* Ambient Glows */}
-                <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-[#0878D1]/15 blur-3xl pointer-events-none" />
-                <div className="absolute bottom-1/4 right-10 w-80 h-80 rounded-full bg-[#F5B942]/10 blur-3xl pointer-events-none" />
-                
                 {/* ─── MOBILE VIEW: EXACT REFERENCE MATCH (< lg) ─── */}
-                <div className="lg:hidden relative w-full min-h-[calc(100dvh-4.25rem)] min-h-[720px] flex flex-col justify-start p-5 sm:p-6 pl-9 sm:pl-12 pb-8 select-none overflow-hidden">
-                  {/* Background 3D Cyber Scene */}
-                  {!isDesktop && (
-                    <div className="absolute inset-0 z-0 pointer-events-auto">
-                      <ThreeDCyberHeadCanvas onRegisterClick={onStartNewRegistration} />
-                    </div>
-                  )}
+                <div className="lg:hidden relative w-full min-h-[calc(100dvh-4.25rem)] min-h-[720px] flex flex-col justify-end p-5 sm:p-6 pl-9 sm:pl-12 pb-8 select-none overflow-hidden">
+                  {/* Background Reference Poster Artwork */}
+                  <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
+                    <HeroArtwork isMobile={true} />
+                  </div>
 
-                  {/* Foreground Content: Starting directly from chin level */}
-                  <div className="relative z-10 pt-[50vh] sm:pt-[48vh] pb-2 space-y-3 sm:space-y-3.5 max-w-[92%] sm:max-w-[78%] pointer-events-none">
+                  {/* Foreground Content: Exactly at lower-left matching reference image */}
+                  <div className="relative z-10 pt-[48vh] sm:pt-[46vh] pb-1 space-y-3 sm:space-y-3.5 max-w-[94%] sm:max-w-[80%] pointer-events-none">
                     {/* Line 1: SPIHER PRESENTS Badge */}
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
@@ -723,12 +711,13 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       </span>
                     </motion.div>
                     
-                    {/* Line 2: RADIANZA '26 Title */}
+                    {/* Line 2: RADIANZA '26 Title in authentic high-contrast serif */}
                     <motion.h1
                       initial={{ opacity: 0, x: -18 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: 0.1 }}
-                      className="text-4xl sm:text-5xl font-serif font-black tracking-tight text-[#FFF2D5] leading-[1.02] pointer-events-none"
+                      style={{ fontFamily: "'Cinzel', 'Playfair Display', serif" }}
+                      className="text-4xl sm:text-5xl font-black tracking-tight text-[#FFF2D5] leading-[1.02] pointer-events-none"
                     >
                       RADIANZA <span className="text-[#F5B942]">'26</span>
                     </motion.h1>
@@ -825,10 +814,11 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                           initial={{ opacity: 0, y: 18 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.6, delay: 0.1 }}
-                          className="text-6xl sm:text-7xl xl:text-8xl font-serif font-black tracking-tight text-[#FFF2D5] leading-[0.95]"
+                          style={{ fontFamily: "'Cinzel', 'Playfair Display', serif" }}
+                          className="text-6xl sm:text-7xl xl:text-8xl font-black tracking-tight text-[#FFF2D5] leading-[0.95]"
                         >
                           RADIANZA
-                          <span className="block text-[#F5B942] mt-2 font-serif font-black">'26</span>
+                          <span className="block text-[#F5B942] mt-2 font-black">'26</span>
                         </motion.h1>
 
                         {/* Subtitle with Gold Horizontal Bar */}
@@ -912,9 +902,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       </div>
                     </div>
 
-                    {/* 3D Cyber Head in Right Column */}
-                    <div className="col-span-6 flex items-center justify-center relative w-full min-h-[560px] overflow-visible">
-                      {isDesktop && <ThreeDCyberHeadCanvas onRegisterClick={onStartNewRegistration} />}
+                    {/* Right Column: Reference Hero Artwork Showcase */}
+                    <div className="col-span-6 flex items-center justify-center relative w-full h-[680px] overflow-visible">
+                      <HeroArtwork isMobile={false} />
                     </div>
                   </div>
                 </div>
