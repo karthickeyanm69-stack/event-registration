@@ -51,6 +51,7 @@ const PAGES: PageMeta[] = [
 ];
 
 interface RadianzaLandingPageProps {
+  isRevealed?: boolean;
   events: CollegeEvent[];
   activeLandingPage?: LandingPageId;
   onNavigateLandingPage?: (pageId: LandingPageId) => void;
@@ -211,7 +212,7 @@ const GALLERY_DATA: GalleryItem[] = [
 ];
 
 // ── Motion Variants for Directional Page Redirection ──
-const pageTransitionVariants = {
+const pageTransitionVariants: any = {
   enter: (direction: number) => ({
     x: direction > 0 ? 45 : -45,
     opacity: 0,
@@ -238,6 +239,7 @@ const pageTransitionVariants = {
 };
 
 export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
+  isRevealed = true,
   events,
   activeLandingPage = 'home',
   onNavigateLandingPage,
@@ -489,7 +491,12 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
       {/* ========================================================================= */}
       {/* 1. STICKY GLASSMORPHIC HEADER & NAVIGATION BAR                            */}
       {/* ========================================================================= */}
-      <header className="sticky top-0 z-40 w-full bg-[#050505]/95 backdrop-blur-xl border-b border-[#C1121F]/20 shadow-md">
+      <motion.header
+        initial={{ opacity: 0, y: -18 }}
+        animate={isRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: -18 }}
+        transition={{ duration: 0.55 }}
+        className="sticky top-0 z-40 w-full bg-[#050505]/95 backdrop-blur-xl border-b border-[#C1121F]/20 shadow-md"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
           {/* Brand Logo Lockup */}
           <div
@@ -564,7 +571,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
             </button>
           </div>
         </div>
-      </header>
+      </motion.header>
 
       {/* Full Viewport Right-Side Slide-Over Drawer for Mobile Navigation (Rendered outside header to avoid backdrop-filter clipping) */}
       <AnimatePresence>
@@ -692,7 +699,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   {/* Background 3D Cyber Scene */}
                   {!isDesktop && (
                     <div className="absolute inset-0 z-0 pointer-events-auto">
-                      <ThreeDCyberHeadCanvas onRegisterClick={onStartNewRegistration} />
+                      <ThreeDCyberHeadCanvas isRevealed={isRevealed} onRegisterClick={onStartNewRegistration} />
                     </div>
                   )}
 
@@ -701,8 +708,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     {/* Line 1: Department of IT Badge */}
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5 }}
+                      animate={isRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }}
+                      transition={{ duration: 0.5, delay: 0.05 }}
                       className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0D0D12]/90 backdrop-blur-md shadow-md border border-[#C1121F]/40 text-[#FFFFFF] shadow-[0_0_15px_rgba(193,18,31,0.2)] pointer-events-auto"
                     >
                       <CollegeEmblem size={24} />
@@ -713,9 +720,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     
                     {/* Line 2: RADIANZA '26 Title */}
                     <motion.h1
-                      initial={{ opacity: 0, x: -18 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.6, delay: 0.1 }}
+                      initial={{ opacity: 0, x: -25 }}
+                      animate={isRevealed ? { opacity: 1, x: 0 } : { opacity: 0, x: -25 }}
+                      transition={{ duration: 0.65, delay: 0.15 }}
                       className="text-4xl sm:text-5xl font-serif font-black tracking-tight text-[#FFFFFF] leading-[1.02] pointer-events-none"
                     >
                       RADIANZA <span className="text-[#FF1738]">'26</span>
@@ -723,9 +730,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
 
                     {/* Line 3: National-Level Technical Symposium with Red Gradient Accent */}
                     <motion.div
-                      initial={{ opacity: 0, x: -14 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.6, delay: 0.15 }}
+                      initial={{ opacity: 0, x: -18 }}
+                      animate={isRevealed ? { opacity: 1, x: 0 } : { opacity: 0, x: -18 }}
+                      transition={{ duration: 0.6, delay: 0.25 }}
                       className="flex items-center gap-2 pointer-events-none"
                     >
                       <span className="text-[10px] sm:text-xs font-mono font-bold tracking-[0.2em] text-[#FFFFFF]/90 uppercase">
@@ -736,9 +743,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
 
                     {/* Line 4: Tagline */}
                     <motion.p
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.6, delay: 0.2 }}
+                      initial={{ opacity: 0, x: -14 }}
+                      animate={isRevealed ? { opacity: 1, x: 0 } : { opacity: 0, x: -14 }}
+                      transition={{ duration: 0.6, delay: 0.35 }}
                       className="text-xs sm:text-sm text-[#9CA3AF] font-medium italic pointer-events-none"
                     >
                       "Igniting Ideas, Innovating Tomorrow"
@@ -746,9 +753,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
 
                     {/* Line 5: Date & Location Badges */}
                     <motion.div
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: 0.25 }}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={isRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+                      transition={{ duration: 0.6, delay: 0.45 }}
                       className="flex flex-col sm:flex-row flex-wrap gap-2 pt-1 pointer-events-auto"
                     >
                       <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0D0D12]/90 backdrop-blur-md border border-[#C1121F]/50 shadow-xs text-xs font-bold text-[#FFFFFF] w-fit">
@@ -763,9 +770,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
 
                     {/* Line 6: Action Buttons */}
                     <motion.div
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.5, delay: 0.3 }}
+                      initial={{ opacity: 0, scale: 0.92 }}
+                      animate={isRevealed ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.92 }}
+                      transition={{ duration: 0.55, delay: 0.55 }}
                       className="pt-2 sm:pt-3 flex flex-wrap gap-2.5 pointer-events-auto"
                     >
                       <button
@@ -797,8 +804,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       {/* Top Institution Pill Badge */}
                       <motion.div
                         initial={{ opacity: 0, y: -12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
+                        animate={isRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: -12 }}
+                        transition={{ duration: 0.5, delay: 0.05 }}
                         className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#0D0D12]/90 border border-[#C1121F]/40 text-[#FFFFFF] text-xs font-mono tracking-wider uppercase shadow-md shadow-[#C1121F]/15 backdrop-blur-md"
                       >
                         <CollegeEmblem size={24} />
@@ -810,9 +817,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       {/* Headline Typography & Taglines */}
                       <div className="space-y-4">
                         <motion.h1
-                          initial={{ opacity: 0, y: 18 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.6, delay: 0.1 }}
+                          initial={{ opacity: 0, x: -35 }}
+                          animate={isRevealed ? { opacity: 1, x: 0 } : { opacity: 0, x: -35 }}
+                          transition={{ duration: 0.65, delay: 0.15 }}
                           className="text-6xl sm:text-7xl xl:text-8xl font-serif font-black tracking-tight text-[#FFFFFF] leading-[0.95]"
                         >
                           RADIANZA
@@ -821,9 +828,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
 
                         {/* Subtitle with Red Horizontal Bar */}
                         <motion.div
-                          initial={{ opacity: 0, y: 12 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.6, delay: 0.2 }}
+                          initial={{ opacity: 0, x: -25 }}
+                          animate={isRevealed ? { opacity: 1, x: 0 } : { opacity: 0, x: -25 }}
+                          transition={{ duration: 0.6, delay: 0.25 }}
                           className="flex items-center gap-3 pt-1"
                         >
                           <span className="text-xs sm:text-sm font-mono font-bold tracking-[0.22em] text-[#FFFFFF]/90 uppercase">
@@ -833,9 +840,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         </motion.div>
 
                         <motion.p
-                          initial={{ opacity: 0, y: 12 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.6, delay: 0.25 }}
+                          initial={{ opacity: 0, x: -18 }}
+                          animate={isRevealed ? { opacity: 1, x: 0 } : { opacity: 0, x: -18 }}
+                          transition={{ duration: 0.6, delay: 0.35 }}
                           className="text-base sm:text-lg text-[#9CA3AF] font-medium italic"
                         >
                           "Igniting Ideas, Innovating Tomorrow"
@@ -844,9 +851,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
 
                       {/* Date & Location Chips */}
                       <motion.div
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.3 }}
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={isRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+                        transition={{ duration: 0.6, delay: 0.45 }}
                         className="flex flex-wrap justify-start items-center gap-3 pt-1 text-xs font-semibold text-[#FFFFFF]"
                       >
                         <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#0D0D12]/90 backdrop-blur-md border border-[#C1121F]/50 shadow-md shadow-[#C1121F]/15">
@@ -861,9 +868,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
 
                       {/* Action CTA Buttons */}
                       <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.6, delay: 0.4 }}
+                        initial={{ opacity: 0, scale: 0.92 }}
+                        animate={isRevealed ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.92 }}
+                        transition={{ duration: 0.6, delay: 0.55 }}
                         className="flex flex-row items-center gap-4 pt-3 w-auto"
                       >
                         {/* Primary Crimson Glowing CTA */}
@@ -888,7 +895,12 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       </motion.div>
 
                       {/* Digital Pass Quick Access */}
-                      <div className="pt-1 text-xs text-[#9CA3AF] flex items-center justify-start gap-2">
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={isRevealed ? { opacity: 1 } : { opacity: 0 }}
+                        transition={{ duration: 0.5, delay: 0.65 }}
+                        className="pt-1 text-xs text-[#9CA3AF] flex items-center justify-start gap-2"
+                      >
                         <span>Already registered?</span>
                         <button
                           type="button"
@@ -897,12 +909,12 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         >
                           Access your digital pass →
                         </button>
-                      </div>
+                      </motion.div>
                     </div>
 
                     {/* 3D Cyber Head in Right Column */}
                     <div className="col-span-6 flex items-center justify-center relative w-full min-h-[560px] overflow-visible">
-                      {isDesktop && <ThreeDCyberHeadCanvas onRegisterClick={onStartNewRegistration} />}
+                      {isDesktop && <ThreeDCyberHeadCanvas isRevealed={isRevealed} onRegisterClick={onStartNewRegistration} />}
                     </div>
                   </div>
                 </div>

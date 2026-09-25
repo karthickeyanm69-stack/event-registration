@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrandedLoadingScreen } from './components/participant/BrandedLoadingScreen';
+import { InteractiveWebReveal } from './components/participant/InteractiveWebReveal';
 import { ParticipantAccess } from './components/participant/ParticipantAccess';
 import { RadianzaLandingPage } from './components/participant/RadianzaLandingPage';
 import { OnboardingDetailsForm } from './components/participant/OnboardingDetailsForm';
@@ -33,7 +33,7 @@ const STAFF_AUTH_SESSION_KEY = 'SPIHER_STAFF_AUTH_SESSION';
 export default function App() {
   // 1. URL Route Detection (Separate routes for /participant, /console, /employee, /admin, /superadmin)
   const [currentRole, setCurrentRole] = useState<PortalRole>('participant');
-  const [isInitialLoading, setIsInitialLoading] = useState<boolean>(true);
+  const [isRevealed, setIsRevealed] = useState<boolean>(false);
   const [authRedirectNotice, setAuthRedirectNotice] = useState<string | null>(null);
 
   // 2. Database Reactive State
@@ -483,93 +483,90 @@ export default function App() {
       {/* 1. PARTICIPANT PORTAL (PUBLIC FACING ONLY - NO STAFF SWITCHER)            */}
       {/* ========================================================================= */}
       {currentRole === 'participant' && (
-        <div className="flex-1 flex flex-col items-center justify-start w-full">
-          {/* Branded Animated Video Loading Splash Screen */}
-          {isInitialLoading ? (
-            <BrandedLoadingScreen
-              collegeName={settings.collegeName}
-              symposiumName={settings.symposiumName}
-              onFinish={() => setIsInitialLoading(false)}
+        <div className="flex-1 flex flex-col items-center justify-start w-full relative">
+          {/* Interactive Web Pull Reveal Experience */}
+          {!isRevealed && (
+            <InteractiveWebReveal
+              onComplete={() => setIsRevealed(true)}
             />
-          ) : (
-            <>
-              {/* RADIANZA '26 Flagship Landing Page & Entrance Experience */}
-              {participantStep === 'access' && (
-                <RadianzaLandingPage
-                  events={events}
-                  activeLandingPage={landingPageId}
-                  onNavigateLandingPage={(pageId) => {
-                    const cleanPath = pageId === 'home' ? '/' : `/${pageId}`;
-                    navigateTo(cleanPath, 'participant', 'access', pageId);
-                  }}
-                  onStartNewRegistration={handleStartNewRegistration}
-                  onSelectEvent={(event) => {
-                    setSelectedEventForReg(event);
-                    navigateTo('/register', 'participant', 'onboarding');
-                  }}
-                  onSuccessfulAccess={handleParticipantAccessSuccess}
-                  onOpenConsole={() => navigateTo('/console', 'console', 'access', 'home')}
-                />
-              )}
+          )}
 
-              {/* Onboarding Form (Personal, College, Roll No, DOB, Email) */}
-              {participantStep === 'onboarding' && (
-                <OnboardingDetailsForm
-                  onBackToAccess={() => navigateTo('/', 'participant', 'access', 'home')}
-                  onContinueToEvents={handleOnboardingContinue}
-                  onRedirectToExistingDashboard={(part, reg) => {
-                    setCurrentParticipant(part);
-                    setCurrentRegistration(reg);
-                    navigateTo('/dashboard', 'participant', 'dashboard');
-                  }}
-                />
-              )}
+          {/* RADIANZA '26 Flagship Landing Page & Entrance Experience */}
+          {participantStep === 'access' && (
+            <RadianzaLandingPage
+              isRevealed={isRevealed}
+              events={events}
+              activeLandingPage={landingPageId}
+              onNavigateLandingPage={(pageId) => {
+                const cleanPath = pageId === 'home' ? '/' : `/${pageId}`;
+                navigateTo(cleanPath, 'participant', 'access', pageId);
+              }}
+              onStartNewRegistration={handleStartNewRegistration}
+              onSelectEvent={(event) => {
+                setSelectedEventForReg(event);
+                navigateTo('/register', 'participant', 'onboarding');
+              }}
+              onSuccessfulAccess={handleParticipantAccessSuccess}
+              onOpenConsole={() => navigateTo('/console', 'console', 'access', 'home')}
+            />
+          )}
 
-              {/* Event Selection (Technical vs Non-Technical) */}
-              {participantStep === 'events' && (
-                <EventSelectionView
-                  events={events}
-                  participantData={onboardingDraft}
-                  onBackToOnboarding={() => navigateTo('/register', 'participant', 'onboarding')}
-                  onSelectEvent={handleSelectEvent}
-                />
-              )}
+          {/* Onboarding Form (Personal, College, Roll No, DOB, Email) */}
+          {participantStep === 'onboarding' && (
+            <OnboardingDetailsForm
+              onBackToAccess={() => navigateTo('/', 'participant', 'access', 'home')}
+              onContinueToEvents={handleOnboardingContinue}
+              onRedirectToExistingDashboard={(part, reg) => {
+                setCurrentParticipant(part);
+                setCurrentRegistration(reg);
+                navigateTo('/dashboard', 'participant', 'dashboard');
+              }}
+            />
+          )}
 
-              {/* Team Builder (Team Leader default + Teammates + Same College/Dept + 1-Event Check) */}
-              {participantStep === 'team' && selectedEventForReg && (
-                <TeamBuilderFlow
-                  event={selectedEventForReg}
-                  participantData={onboardingDraft}
-                  onBackToEventSelection={() => navigateTo('/register/events', 'participant', 'events')}
-                  onSubmitTeamAndRegister={handleSubmitTeamAndRegister}
-                />
-              )}
+          {/* Event Selection (Technical vs Non-Technical) */}
+          {participantStep === 'events' && (
+            <EventSelectionView
+              events={events}
+              participantData={onboardingDraft}
+              onBackToOnboarding={() => navigateTo('/register', 'participant', 'onboarding')}
+              onSelectEvent={handleSelectEvent}
+            />
+          )}
 
-              {/* Registration Success & Vector QR Pass Display with Download */}
-              {participantStep === 'success' && currentRegistration && (
-                <RegistrationSuccessPass
-                  registration={currentRegistration}
-                  event={events.find((e) => e.id === currentRegistration.eventId)}
-                  onProceedToDashboard={() => navigateTo('/dashboard', 'participant', 'dashboard')}
-                />
-              )}
+          {/* Team Builder (Team Leader default + Teammates + Same College/Dept + 1-Event Check) */}
+          {participantStep === 'team' && selectedEventForReg && (
+            <TeamBuilderFlow
+              event={selectedEventForReg}
+              participantData={onboardingDraft}
+              onBackToEventSelection={() => navigateTo('/register/events', 'participant', 'events')}
+              onSubmitTeamAndRegister={handleSubmitTeamAndRegister}
+            />
+          )}
 
-              {/* Participant Dashboard / Public Landing (Home, Rules, Campus, Support, Entry Pass) */}
-              {participantStep === 'dashboard' && (
-                <ParticipantDashboard
-                  participant={currentParticipant || MockDatabaseService.getParticipants()[0]}
-                  registration={currentRegistration || MockDatabaseService.getRegistrations()[0]}
-                  events={events}
-                  onSignOut={handleParticipantLogout}
-                  onStartNewRegistration={handleStartNewRegistration}
-                  onOpenAccessLogin={handleParticipantLogout}
-                  onEventChangedSuccess={(newReg) => {
-                    setCurrentRegistration(newReg);
-                    loadDatabaseData();
-                  }}
-                />
-              )}
-            </>
+          {/* Registration Success & Vector QR Pass Display with Download */}
+          {participantStep === 'success' && currentRegistration && (
+            <RegistrationSuccessPass
+              registration={currentRegistration}
+              event={events.find((e) => e.id === currentRegistration.eventId)}
+              onProceedToDashboard={() => navigateTo('/dashboard', 'participant', 'dashboard')}
+            />
+          )}
+
+          {/* Participant Dashboard / Public Landing (Home, Rules, Campus, Support, Entry Pass) */}
+          {participantStep === 'dashboard' && (
+            <ParticipantDashboard
+              participant={currentParticipant || MockDatabaseService.getParticipants()[0]}
+              registration={currentRegistration || MockDatabaseService.getRegistrations()[0]}
+              events={events}
+              onSignOut={handleParticipantLogout}
+              onStartNewRegistration={handleStartNewRegistration}
+              onOpenAccessLogin={handleParticipantLogout}
+              onEventChangedSuccess={(newReg) => {
+                setCurrentRegistration(newReg);
+                loadDatabaseData();
+              }}
+            />
           )}
         </div>
       )}

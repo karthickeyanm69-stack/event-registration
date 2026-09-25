@@ -4,14 +4,29 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { motion } from 'motion/react';
 import { Sparkles } from 'lucide-react';
 import { CollegeEmblem } from '../common/CollegeLogo';
-// RADIANZA '26 3D Cyber Head Component
+
+// RADIANZA '26 — 3D Spider-Man Head Canvas
+// - Right-to-Left Slide-In Entrance Animation (matching 2nd-tag)
+// - Large front-half profile positioning
+// - PBR Studio Lighting + Cyan Rim Glow + Disintegration Particles
+// - Interactive Touch/Drag & Mouse Parallax Physics
+
 interface ThreeDCyberHeadCanvasProps {
+  isRevealed?: boolean;
   onRegisterClick?: () => void;
 }
 
-export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ onRegisterClick: _onRegisterClick }) => {
+export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({
+  isRevealed = true,
+  onRegisterClick: _onRegisterClick,
+}) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const [webglSupported, setWebglSupported] = useState(true);
+  const isRevealedPropRef = useRef(isRevealed);
+
+  useEffect(() => {
+    isRevealedPropRef.current = isRevealed;
+  }, [isRevealed]);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -32,29 +47,27 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
 
     // ── 1. Scene & Camera ──
     const scene = new THREE.Scene();
-
-    // Camera calibrated: FOV=38, position z=16
-    // Frustum height = 11.02 units at z=0 (from y=-5.51 to y=+5.51)
     const camera = new THREE.PerspectiveCamera(38, initialW / initialH, 0.1, 100);
     camera.position.set(0, 0, 16);
 
-    // ── 2. Renderer ──
+    // ── 2. Renderer with Exact Color Pipeline ──
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({
         alpha: true,
-        antialias: !isMobile,
-        powerPreference: 'default',
-        precision: isMobile ? 'mediump' : 'highp',
+        antialias: true,
+        powerPreference: 'high-performance',
+        precision: 'highp',
       });
     } catch {
       setWebglSupported(false);
       return;
     }
     renderer.setSize(initialW, initialH);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 1.75));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2.0));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.0;
+    renderer.toneMappingExposure = 1.35;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
     mount.appendChild(renderer.domElement);
 
     const handleContextLost = (e: Event) => { e.preventDefault(); };
@@ -64,615 +77,267 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
 
     const disposables: Array<{ dispose: () => void }> = [];
 
-    // ── 3. Background Subtle Cyber Dot Matrix Grid Effect ──
-    const gridRows = isMobile ? 26 : 30;
-    const gridCols = isMobile ? 26 : 34;
-    const gridGeo = new THREE.BufferGeometry();
-    const gridPos = new Float32Array(gridRows * gridCols * 3);
-    const colStep = 15.6 / (gridCols - 1);
-    const rowStep = 13.2 / (gridRows - 1);
-    let gIdx = 0;
-    for (let r = 0; r < gridRows; r++) {
-      for (let c = 0; c < gridCols; c++) {
-        gridPos[gIdx * 3] = -7.8 + c * colStep;
-        gridPos[gIdx * 3 + 1] = -6.6 + r * rowStep;
-        gridPos[gIdx * 3 + 2] = -4.5;
-        gIdx++;
-      }
-    }
-    gridGeo.setAttribute('position', new THREE.BufferAttribute(gridPos, 3));
-    disposables.push(gridGeo);
+    // ── 3. High-Fidelity Studio Lighting (Exact 2nd-Tag Reference) ──
+    const ambientLight = new THREE.AmbientLight(0x6A1520, 2.4);
+    scene.add(ambientLight);
 
-    const gridMat = new THREE.PointsMaterial({
-      size: isMobile ? 0.052 : 0.056,
-      color: 0xC1121F, // Deep Crimson web grid
-      transparent: true,
-      opacity: 0.30,
-      depthWrite: false,
-    });
-    disposables.push(gridMat);
-    scene.add(new THREE.Points(gridGeo, gridMat));
+    // Main Key Light illuminating the face, eye, nose, cheek
+    const keyLight = new THREE.DirectionalLight(0xFFFFFF, 3.6);
+    keyLight.position.set(6, 7, 9);
+    scene.add(keyLight);
 
-    // ── 4. Master Head Group & Calibrated Vertical Sizing (Zero Top/Bottom Clipping) ──
+    // Soft Fill Light
+    const fillLight = new THREE.DirectionalLight(0xFFD5D5, 1.8);
+    fillLight.position.set(-3, 6, 8);
+    scene.add(fillLight);
+
+    // Cyan Rim Light outlining the rear contour
+    const cyanRimLight = new THREE.DirectionalLight(0x40E0D0, 4.2);
+    cyanRimLight.position.set(-7, 2, -6);
+    scene.add(cyanRimLight);
+
+    // Crimson Under-Glow for chin & throat
+    const bottomLight = new THREE.DirectionalLight(0xC1121F, 1.8);
+    bottomLight.position.set(0, -7, 4);
+    scene.add(bottomLight);
+
+    // ── 4. Master Head Group & Calibrated 2nd-Tag Positioning ──
     const headGroup = new THREE.Group();
     scene.add(headGroup);
 
-    // Restored large front-half profile visibility & positioning:
-    // - TARGET_HEIGHT = 11.6 on mobile (12.0 on desktop) spanning top to bottom
-    // - RESTING_POS_X = 3.65 on mobile (3.8 on desktop) so only the front half is visible, skull back is off-screen
-    // - RESTING_POS_Y = 0.05 on mobile (0.1 on desktop)
-    const RESTING_POS_X = isMobile ? 3.65 : 3.8;
-    const RESTING_POS_Y = isMobile ? 0.05 : 0.1;
+    // Calibrated Resting Coordinates
+    const RESTING_POS_X = isMobile ? 2.85 : 3.75;
+    const RESTING_POS_Y = isMobile ? 0.15 : 0.20;
     const TARGET_HEIGHT = isMobile ? 11.6 : 12.0;
 
-    // Start off-screen right for initial entrance slide-in
-    headGroup.position.set(RESTING_POS_X + 6.0, RESTING_POS_Y, 0);
+    // Rotated prominently towards the user (-27° yaw) for full frontal/3-quarter face view
+    const BASE_ROT_Y = -Math.PI / 6.5;
+    const BASE_ROT_X = -0.035;
 
-    // Left-facing pure profile (-88 degrees)
-    const BASE_ROT_Y = -Math.PI / 2.05;
-    const BASE_ROT_X = -0.02;
+    // Start off-screen right staged for entrance slide-in upon reveal
+    const OFFSCREEN_X = RESTING_POS_X + (isMobile ? 5.5 : 7.0);
+    headGroup.position.set(OFFSCREEN_X, RESTING_POS_Y, 0);
+    headGroup.rotation.y = BASE_ROT_Y - 0.40;
+    headGroup.rotation.x = BASE_ROT_X;
 
-    // ── 5. Particle Textures ──
-    const makeSquareTex = () => {
-      const c = document.createElement('canvas');
-      c.width = 32; c.height = 32;
-      const ctx = c.getContext('2d');
-      if (ctx) {
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(2, 2, 28, 28);
-      }
-      return new THREE.CanvasTexture(c);
-    };
-    const squareTex = makeSquareTex();
-    disposables.push(squareTex);
-
-    const makeStarTex = () => {
+    // ── 5. Cyan Glowing Particle Textures ──
+    const makeGlowDotTex = () => {
       const c = document.createElement('canvas');
       c.width = 64; c.height = 64;
       const ctx = c.getContext('2d');
       if (ctx) {
-        // Luminous red aura gradient for laser sparkles
         const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 30);
         g.addColorStop(0, 'rgba(255,255,255,1.0)');
-        g.addColorStop(0.25, 'rgba(255,180,195,0.90)');
-        g.addColorStop(0.55, 'rgba(255,23,56,0.50)');
-        g.addColorStop(1, 'rgba(193,18,31,0.0)');
+        g.addColorStop(0.18, 'rgba(100,250,235,0.95)');
+        g.addColorStop(0.48, 'rgba(30,210,195,0.42)');
+        g.addColorStop(1, 'rgba(0,180,165,0.0)');
         ctx.fillStyle = g;
         ctx.fillRect(0, 0, 64, 64);
-
-        // Crisp 4-pointed diamond star flare
-        ctx.beginPath();
-        ctx.moveTo(32, 2);
-        ctx.quadraticCurveTo(32, 32, 62, 32);
-        ctx.quadraticCurveTo(32, 32, 32, 62);
-        ctx.quadraticCurveTo(32, 32, 2, 32);
-        ctx.quadraticCurveTo(32, 32, 32, 2);
-        ctx.closePath();
-        ctx.fillStyle = 'rgba(255,255,255,0.98)';
-        ctx.fill();
-
-        // Secondary subtle diagonal sparkle
-        ctx.beginPath();
-        ctx.moveTo(32, 14);
-        ctx.quadraticCurveTo(32, 32, 50, 32);
-        ctx.quadraticCurveTo(32, 32, 32, 50);
-        ctx.quadraticCurveTo(32, 32, 14, 32);
-        ctx.quadraticCurveTo(32, 32, 32, 14);
-        ctx.closePath();
-        ctx.fillStyle = 'rgba(255,245,215,0.7)';
-        ctx.fill();
       }
       return new THREE.CanvasTexture(c);
     };
-    const starTex = makeStarTex();
-    disposables.push(starTex);
+    const glowDotTex = makeGlowDotTex();
+    disposables.push(glowDotTex);
 
-    // ── 6. Background Digital Particle Field (Crimson Embers & Red Cyber Sparks) ──
-    const PC_MAIN = isMobile ? 85 : 120;
-    const pGeo = new THREE.BufferGeometry();
-    const pPos = new Float32Array(PC_MAIN * 3);
-    const pCol = new Float32Array(PC_MAIN * 3);
-    const pVelY = new Float32Array(PC_MAIN);
-    const pPhase = new Float32Array(PC_MAIN);
+    // ── Eye Glowing Laser Light & Flare (Matching Video Reference) ──
+    const eyeLight = new THREE.PointLight(0x70FFFF, 0, 7.0);
+    eyeLight.position.set(0.60, 1.25, 2.75);
+    headGroup.add(eyeLight);
 
-    const cRedGlow = new THREE.Color('#FF1738');
-    const cCrimson = new THREE.Color('#C1121F');
-    const cDeepRed = new THREE.Color('#780016');
-    const cWhite = new THREE.Color('#FFFFFF');
-    const cSilver = new THREE.Color('#E5E7EB');
-
-    for (let i = 0; i < PC_MAIN; i++) {
-      // Distributed across the hero negative space and depth
-      pPos[i * 3] = -7.8 + Math.random() * 11.5;
-      pPos[i * 3 + 1] = (Math.random() - 0.5) * 13.0;
-      pPos[i * 3 + 2] = (Math.random() - 0.5) * 5.0;
-      pVelY[i] = 0.005 + Math.random() * 0.008;
-      pPhase[i] = Math.random() * Math.PI * 2;
-
-      // Glowing crimson and red sparks with occasional white cyber nodes
-      const r = Math.random();
-      let col: THREE.Color;
-      if (r > 0.65) {
-        col = cRedGlow;
-      } else if (r > 0.25) {
-        col = cCrimson;
-      } else if (r > 0.08) {
-        col = cDeepRed;
-      } else {
-        col = cWhite;
-      }
-      pCol[i * 3] = col.r; pCol[i * 3 + 1] = col.g; pCol[i * 3 + 2] = col.b;
-    }
-    pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-    pGeo.setAttribute('color', new THREE.BufferAttribute(pCol, 3));
-    disposables.push(pGeo);
-
-    const pMat = new THREE.PointsMaterial({
-      size: isMobile ? 0.22 : 0.28,
-      map: squareTex,
-      vertexColors: true,
+    const eyeGlowMat = new THREE.SpriteMaterial({
+      map: glowDotTex,
+      color: new THREE.Color(0x90FFFF),
       transparent: true,
-      opacity: 0.88,
-      depthWrite: false,
-      blending: THREE.NormalBlending,
-    });
-    disposables.push(pMat);
-    scene.add(new THREE.Points(pGeo, pMat));
-
-    // ── 6b. Secondary Micro Cyber Data Bits (Sharp, high-density cyber particles) ──
-    const PC_MICRO = isMobile ? 65 : 90;
-    const microGeo = new THREE.BufferGeometry();
-    const microPos = new Float32Array(PC_MICRO * 3);
-    const microCol = new Float32Array(PC_MICRO * 3);
-    const microVelY = new Float32Array(PC_MICRO);
-    const microPhase = new Float32Array(PC_MICRO);
-
-    for (let i = 0; i < PC_MICRO; i++) {
-      microPos[i * 3] = -7.5 + Math.random() * 11.0;
-      microPos[i * 3 + 1] = (Math.random() - 0.5) * 13.0;
-      microPos[i * 3 + 2] = (Math.random() - 0.5) * 4.0;
-      microVelY[i] = 0.0035 + Math.random() * 0.006;
-      microPhase[i] = Math.random() * Math.PI * 2;
-
-      const r = Math.random();
-      const col = r > 0.6 ? cRedGlow : r > 0.2 ? cCrimson : cSilver;
-      microCol[i * 3] = col.r; microCol[i * 3 + 1] = col.g; microCol[i * 3 + 2] = col.b;
-    }
-    microGeo.setAttribute('position', new THREE.BufferAttribute(microPos, 3));
-    microGeo.setAttribute('color', new THREE.BufferAttribute(microCol, 3));
-    disposables.push(microGeo);
-
-    const microMat = new THREE.PointsMaterial({
-      size: isMobile ? 0.12 : 0.14,
-      map: squareTex,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.82,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
-    disposables.push(microMat);
-    scene.add(new THREE.Points(microGeo, microMat));
+    disposables.push(eyeGlowMat);
+    const eyeSprite = new THREE.Sprite(eyeGlowMat);
+    eyeSprite.position.set(0.60, 1.25, 2.70);
+    eyeSprite.scale.set(1.35, 1.35, 1.35);
+    headGroup.add(eyeSprite);
 
-    // ── 7. Load GLB & Build Clean Frontside-Only Sculptural Mesh ──
-    let starMat: THREE.PointsMaterial | null = null;
+    // ── 6. Load GLB Model with Native PBR Materials ──
+    let headMaterials: THREE.MeshStandardMaterial[] = [];
+    let disintGeoRef: THREE.BufferGeometry | null = null;
+    let disintMatRef: THREE.PointsMaterial | null = null;
+
     const loader = new GLTFLoader();
     loader.load(
-      '/cyber_head.glb',
+      '/spider_man_head.glb',
       (gltf) => {
+        const box = new THREE.Box3().setFromObject(gltf.scene);
+        const size = new THREE.Vector3();
+        box.getSize(size);
+        const maxDim = Math.max(size.x, size.y, size.z) || 1;
+        const scaleFactor = TARGET_HEIGHT / maxDim;
+
+        gltf.scene.scale.setScalar(scaleFactor);
+        const center = new THREE.Vector3();
+        box.getCenter(center);
+        gltf.scene.position.set(-center.x * scaleFactor, -center.y * scaleFactor, -center.z * scaleFactor);
+
         gltf.scene.traverse((child) => {
-          if (!(child as THREE.Mesh).isMesh) return;
-          const src = (child as THREE.Mesh).geometry;
-          const geo = src.clone();
-          geo.computeVertexNormals();
-          disposables.push(geo);
+          if ((child as THREE.Mesh).isMesh) {
+            const mesh = child as THREE.Mesh;
+            const geo = mesh.geometry;
+            geo.computeVertexNormals();
 
-          geo.computeBoundingBox();
-          const bb = geo.boundingBox!;
-          const sz = new THREE.Vector3();
-          bb.getSize(sz);
-          const maxDim = Math.max(sz.x, sz.y, sz.z) || 1;
-          const S = TARGET_HEIGHT / maxDim;
+            if (mesh.material) {
+              const oldMat = mesh.material as THREE.MeshStandardMaterial;
+              const newMat = new THREE.MeshStandardMaterial({
+                map: oldMat.map || null,
+                roughnessMap: oldMat.roughnessMap || null,
+                roughness: 0.40,
+                metalness: 0.12,
+                side: THREE.FrontSide,
+              });
 
-          const PA = geo.attributes.position;
-          const N = PA.count;
-          const minY = bb.min.y;
-          const maxY = bb.max.y;
-          const H = sz.y;
-
-          // Anatomical landmarks in model space:
-          const dynNose = new THREE.Vector3(0.0, 1.10, 2.59);
-          const dynLips = new THREE.Vector3(0.0, 0.57, 2.35);
-          const chinPoint = new THREE.Vector3(0.0, 0.08, 2.18);
-          const dynRightEar = new THREE.Vector3(1.72, 1.50, -0.16);
-          const dynLeftEar = new THREE.Vector3(-1.72, 1.50, -0.16);
-          const dynRightEye = new THREE.Vector3(0.65, 1.94, 1.98);
-          const dynLeftEye = new THREE.Vector3(-0.65, 1.94, 1.98);
-          const jawCornerRight = new THREE.Vector3(1.42, 0.62, 0.25);
-          const jawCornerLeft = new THREE.Vector3(-1.42, 0.62, 0.25);
-
-          // Fast inline 3D point-to-segment distance helper
-          const distToSegment = (
-            px: number, py: number, pz: number,
-            a: THREE.Vector3, b: THREE.Vector3
-          ): number => {
-            const abX = b.x - a.x, abY = b.y - a.y, abZ = b.z - a.z;
-            const apX = px - a.x, apY = py - a.y, apZ = pz - a.z;
-            const lenSq = abX * abX + abY * abY + abZ * abZ;
-            if (lenSq <= 0.00001) {
-              const dx = px - a.x, dy = py - a.y, dz = pz - a.z;
-              return Math.sqrt(dx * dx + dy * dy + dz * dz);
-            }
-            const t = Math.max(0, Math.min(1, (apX * abX + apY * abY + apZ * abZ) / lenSq));
-            const projX = a.x + abX * t;
-            const projY = a.y + abY * t;
-            const projZ = a.z + abZ * t;
-            const dx = px - projX, dy = py - projY, dz = pz - projZ;
-            return Math.sqrt(dx * dx + dy * dy + dz * dz);
-          };
-
-          // Curated Spider-Man Inspired Dark Futuristic Palette:
-          // 70% Near-Black (#050505), 20% Deep Crimson (#C1121F), 5% Bright Red Glow (#FF1738), 5% White/Light Gray
-          const colRedGlow = new THREE.Color('#FF1738');   // Bright red laser glow & active nodes
-          const colCrimson = new THREE.Color('#C1121F');   // Signature Deep Crimson wireframe
-          const colDarkCrimson = new THREE.Color('#780016'); // Shaded jaw & cranial depth
-          const colWhite = new THREE.Color('#FFFFFF');     // High-tech white node sparks & edge highlights
-          const colSilver = new THREE.Color('#E5E7EB');    // Sleek metallic silver wire
-          const colVoid = new THREE.Color('#050505');      // 70% Near-black dissolve
-
-          const vColors = new Float32Array(N * 3);
-          const pColors = new Float32Array(N * 3);
-          const tmpV = new THREE.Vector3();
-          const tmpC = new THREE.Color();
-          const starIdx: number[] = [];
-
-          for (let i = 0; i < N; i++) {
-            const vx = PA.getX(i);
-            const vy = PA.getY(i);
-            const vz = PA.getZ(i);
-            tmpV.set(vx, vy, vz);
-
-            const relY = (vy - minY) / H;
-
-            // 1. Crown & Cranial Dome (Golden wireframe arch across top of skull)
-            let crownFactor = 0;
-            if (relY > 0.74) {
-              crownFactor = Math.min(1.0, (relY - 0.74) / 0.12);
-              if (vz > 1.4) {
-                // Forehead front smoothly connects to blue brow
-                crownFactor *= Math.max(0.0, 1.0 - (vz - 1.4) / 0.65);
+              if (newMat.map) {
+                newMat.map.colorSpace = THREE.SRGBColorSpace;
+                newMat.map.needsUpdate = true;
               }
-              if (relY > 0.88) crownFactor = Math.max(crownFactor, 0.95);
+
+              mesh.material = newMat;
+              disposables.push(newMat);
+              headMaterials.push(newMat);
             }
 
-            // 2. Occiput (Back of skull curvature)
-            let occiputFactor = 0;
-            if (vz < 0.35 && relY > 0.32) {
-              occiputFactor = Math.min(1.0, (0.35 - vz) / 0.50);
-            }
+            // ═════════════════════════════════════════════════════════════════
+            // DISINTEGRATION PARTICLE CLOUD (Trailing off the rear skull curve)
+            // ═════════════════════════════════════════════════════════════════
+            const posAttr = geo.attributes.position;
+            const vertexCount = posAttr.count;
+            const P_COUNT = isMobile ? 950 : 1600;
 
-            // 3. Ear & Temporal Cluster (Minimal, delicate golden accent)
-            const dREar = tmpV.distanceTo(dynRightEar);
-            const dLEar = tmpV.distanceTo(dynLeftEar);
-            const dEar = Math.min(dREar, dLEar);
-            let earFactor = 0;
-            if (dEar < 1.05) {
-              // Minimal, refined golden accent on ear matching user request
-              earFactor = Math.pow(1.0 - dEar / 1.05, 1.8) * 0.35;
-            }
+            const disintGeo = new THREE.BufferGeometry();
+            const dPos = new Float32Array(P_COUNT * 3);
+            const dBase = new Float32Array(P_COUNT * 3);
+            const dDrift = new Float32Array(P_COUNT * 3);
+            const dColor = new Float32Array(P_COUNT * 3);
+            const dSpeed = new Float32Array(P_COUNT);
+            const dPhase = new Float32Array(P_COUNT);
 
-            // 4. Jawline Mandible Contour (Subtle golden contour strictly behind the chin!)
-            const dJawR = Math.min(
-              distToSegment(vx, vy, vz, dynRightEar, jawCornerRight),
-              distToSegment(vx, vy, vz, jawCornerRight, chinPoint)
-            );
-            const dJawL = Math.min(
-              distToSegment(vx, vy, vz, dynLeftEar, jawCornerLeft),
-              distToSegment(vx, vy, vz, jawCornerLeft, chinPoint)
-            );
-            const dJaw = Math.min(dJawR, dJawL);
-            let jawFactor = 0;
-            // Kept strictly behind the chin (vz < 1.55) so the chin stays minimal in gold
-            if (dJaw < 0.45 && vz < 1.55) {
-              jawFactor = Math.pow(1.0 - dJaw / 0.45, 1.3) * 0.40;
-            }
+            const cCyan1 = new THREE.Color('#90FFFF');
+            const cCyan2 = new THREE.Color('#40E0D0');
+            const cCyan3 = new THREE.Color('#1DB5A5');
 
-            // 5. Neck & Throat (Gold strands descending under the jaw)
-            let neckFactor = 0;
-            if (relY >= 0.12 && relY <= 0.46 && vz < 1.60) {
-              const topFade = relY > 0.38 ? (0.46 - relY) / 0.08 : 1.0;
-              const bottomFade = relY < 0.18 ? (relY - 0.12) / 0.06 : 1.0;
-              neckFactor = Math.min(1.0, topFade * bottomFade * 0.88);
-            }
+            let pIdx = 0;
+            for (let i = 0; i < vertexCount && pIdx < P_COUNT; i += Math.max(1, Math.floor(vertexCount / P_COUNT))) {
+              const vx = posAttr.getX(i);
+              const vy = posAttr.getY(i);
+              const vz = posAttr.getZ(i);
 
-            // 6. Eye Focal Ember (Incandescent golden spark in the blue face)
-            const dREye = tmpV.distanceTo(dynRightEye);
-            const dLEye = tmpV.distanceTo(dynLeftEye);
-            const dEye = Math.min(dREye, dLEye);
-            let eyeFactor = 0;
-            if (dEye < 0.48) {
-              eyeFactor = Math.pow(1.0 - dEye / 0.48, 1.4);
-            }
+              if (vz < 0.12 || vx > 0.15) {
+                const scaledX = (vx - center.x) * scaleFactor;
+                const scaledY = (vy - center.y) * scaleFactor;
+                const scaledZ = (vz - center.z) * scaleFactor;
 
-            // Combine anatomical gold weights:
-            let goldWeight = Math.max(crownFactor, occiputFactor, earFactor, jawFactor, neckFactor, eyeFactor);
+                dBase[pIdx * 3] = scaledX;
+                dBase[pIdx * 3 + 1] = scaledY;
+                dBase[pIdx * 3 + 2] = scaledZ;
 
-            // 7. Facial Profile Shield (Strictly keeps nose, lips, mouth, AND CHIN in pure electric cyan/blue!)
-            // Any vertex on the front facial and chin profile (vz > 1.60) has gold suppressed to MINIMAL/ZERO!
-            const dNose = tmpV.distanceTo(dynNose);
-            const dLips = tmpV.distanceTo(dynLips);
-            const dChin = tmpV.distanceTo(chinPoint);
+                dPos[pIdx * 3] = scaledX;
+                dPos[pIdx * 3 + 1] = scaledY;
+                dPos[pIdx * 3 + 2] = scaledZ;
 
-            if (eyeFactor < 0.25) {
-              if (dNose < 0.85) {
-                goldWeight = 0.0;
-              }
-              if (dLips < 0.65) {
-                goldWeight = 0.0;
-              }
-              // Chin front tip & curve: completely minimal/zero gold! (Image 1 fix)
-              if (dChin < 0.65 || (vz > 1.60 && vy < 0.40 && vy > -0.70)) {
-                goldWeight = 0.0;
-              }
-              // Cheek front shield
-              if (vz > 1.05 && relY > 0.46 && relY < 0.76 && dEar > 0.80 && dJaw > 0.35) {
-                goldWeight = Math.min(goldWeight, 0.10);
+                dDrift[pIdx * 3] = 0.4 + Math.random() * 1.6;
+                dDrift[pIdx * 3 + 1] = 0.2 + Math.random() * 1.5;
+                dDrift[pIdx * 3 + 2] = -(0.7 + Math.random() * 2.2);
+
+                dSpeed[pIdx] = 0.24 + Math.random() * 0.45;
+                dPhase[pIdx] = Math.random() * Math.PI * 2;
+
+                const u = Math.random();
+                const col = u > 0.65 ? cCyan1 : u > 0.25 ? cCyan2 : cCyan3;
+                dColor[pIdx * 3] = col.r;
+                dColor[pIdx * 3 + 1] = col.g;
+                dColor[pIdx * 3 + 2] = col.b;
+
+                pIdx++;
               }
             }
 
-            // ── Wireframe Color Assignment ──
-            if (goldWeight > 0.05) {
-              // Accent areas (crown, eye, ear, jaw) glow with bright red & crimson
-              const baseAccent = tmpC.copy(colRedGlow).lerp(colCrimson, 0.35);
-              if (crownFactor > 0.6 || eyeFactor > 0.4) {
-                baseAccent.lerp(colWhite, 0.30);
-              }
-              tmpC.copy(colCrimson).lerp(baseAccent, goldWeight);
-            } else {
-              // Base wireframe is deep crimson with silver/white profile edge
-              tmpC.copy(colCrimson);
-              if (dNose < 0.65 || dLips < 0.50 || dChin < 0.55) {
-                tmpC.lerp(colSilver, 0.45);
-              }
-            }
+            disintGeo.setAttribute('position', new THREE.BufferAttribute(dPos.slice(0, pIdx * 3), 3));
+            disintGeo.setAttribute('color', new THREE.BufferAttribute(dColor.slice(0, pIdx * 3), 3));
+            disposables.push(disintGeo);
 
-            // Lower torso / clavicle dissolve into near-black page background
-            if (relY < 0.20) {
-              const dissolve = Math.pow(1.0 - relY / 0.20, 1.4);
-              tmpC.lerp(colVoid, dissolve * 0.95);
-            }
+            (disintGeo as any)._dBase = dBase;
+            (disintGeo as any)._dDrift = dDrift;
+            (disintGeo as any)._dSpeed = dSpeed;
+            (disintGeo as any)._dPhase = dPhase;
+            (disintGeo as any)._pCount = pIdx;
+            disintGeoRef = disintGeo;
 
-            vColors[i * 3] = tmpC.r;
-            vColors[i * 3 + 1] = tmpC.g;
-            vColors[i * 3 + 2] = tmpC.b;
-
-            // ── Vertex Node Color Assignment (Points Mesh) ──
-            if (goldWeight > 0.35) {
-              let pC = (vy > 1.8 || neckFactor > 0.5) ? colRedGlow : colCrimson;
-              if (eyeFactor > 0.40) pC = colWhite;
-              pColors[i * 3] = pC.r;
-              pColors[i * 3 + 1] = pC.g;
-              pColors[i * 3 + 2] = pC.b;
-            } else {
-              const pC = (dNose < 0.80 || dLips < 0.60 || dChin < 0.60) ? colWhite : colRedGlow;
-              pColors[i * 3] = pC.r;
-              pColors[i * 3 + 1] = pC.g;
-              pColors[i * 3 + 2] = pC.b;
-            }
-
-            if (relY < 0.18) {
-              const d = Math.pow(1.0 - relY / 0.18, 1.5);
-              pColors[i * 3] *= (1.0 - d);
-              pColors[i * 3 + 1] *= (1.0 - d);
-              pColors[i * 3 + 2] *= (1.0 - d);
-            }
-
-            // ── Star Sparkle Placement (Selected Key Anatomical Accents) ──
-            const isFacingCamera = vx > -0.50;
-            const isAboveShoulder = relY > 0.20;
-
-            if (isFacingCamera && isAboveShoulder) {
-              // 1. Eye focal spark (highest priority)
-              if (dREye < 0.26) {
-                starIdx.push(i);
-              }
-              // 2. Ear subtle glint (rare, minimal)
-              else if (dREar < 0.55 && vx > 1.40 && i % 8 === 0) {
-                starIdx.push(i);
-              }
-              // 3. Cranial crown curve sparkles
-              else if (relY > 0.86 && vx > 0.15 && i % 7 === 0) {
-                starIdx.push(i);
-              }
-              // 4. Golden throat & neck strands sparkles
-              else if (neckFactor > 0.70 && vx > 0.10 && i % 6 === 0) {
-                starIdx.push(i);
-              }
-              // 5. Facial nose bridge and cheek crest glints
-              else if ((dNose < 0.28 || (vz > 1.35 && vy > 1.3 && vy < 1.7 && vx > 0.95)) && i % 10 === 0) {
-                starIdx.push(i);
-              }
-            }
-          }
-
-          geo.setAttribute('color', new THREE.BufferAttribute(vColors, 3));
-
-          // ── Layer A: Opaque Frontside Dual-Tone Sculptural Core Shader ──
-          const coreShaderMat = new THREE.ShaderMaterial({
-            uniforms: {
-              uCoreColor: { value: new THREE.Color('#050505') },
-              uBlueRim: { value: new THREE.Color('#C1121F') },
-              uGoldRim: { value: new THREE.Color('#FF1738') },
-              uAmberRim: { value: new THREE.Color('#C1121F') },
-              uEarColor: { value: new THREE.Color('#780016') },
-              uCrimsonColor: { value: new THREE.Color('#C1121F') },
-              uEyeColor: { value: new THREE.Color('#FF1738') },
-              uBgColor: { value: new THREE.Color('#050505') },
-              uRightEar: { value: dynRightEar },
-              uRightEye: { value: dynRightEye },
-              uMinY: { value: minY },
-              uMaxY: { value: maxY },
-            },
-            vertexShader: `
-              varying vec3 vNormal;
-              varying vec3 vViewDir;
-              varying vec3 vModelPos;
-              void main() {
-                vNormal = normalize(normalMatrix * normal);
-                vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
-                vViewDir = normalize(-mvPos.xyz);
-                vModelPos = position;
-                gl_Position = projectionMatrix * mvPos;
-              }
-            `,
-            fragmentShader: `
-              varying vec3 vNormal;
-              varying vec3 vViewDir;
-              varying vec3 vModelPos;
-              uniform vec3 uCoreColor;
-              uniform vec3 uBlueRim;
-              uniform vec3 uGoldRim;
-              uniform vec3 uAmberRim;
-              uniform vec3 uEarColor;
-              uniform vec3 uCrimsonColor;
-              uniform vec3 uEyeColor;
-              uniform vec3 uBgColor;
-              uniform vec3 uRightEar;
-              uniform vec3 uRightEye;
-              uniform float uMinY;
-              uniform float uMaxY;
-
-              void main() {
-                float ndotv = abs(dot(vViewDir, vNormal));
-                float fresnel = pow(1.0 - ndotv, 2.2);
-
-                float relY = (vModelPos.y - uMinY) / (uMaxY - uMinY);
-
-                // Determine rim tone: Gold/Amber for crown/back/neck/chin, Blue for upper facial profile
-                // Strictly restrict faceFactor to upper face (relY > 0.46 and vModelPos.z > 0.6)
-                float faceFactor = smoothstep(0.6, 1.3, vModelPos.z) * smoothstep(0.82, 0.70, relY) * smoothstep(0.44, 0.52, relY);
-                float earDist = distance(vModelPos, uRightEar);
-                if (earDist < 1.1) {
-                  faceFactor *= smoothstep(0.4, 1.1, earDist);
-                }
-
-                vec3 rimColor = mix(uGoldRim, uBlueRim, faceFactor);
-                if (relY > 0.85 || vModelPos.z < 0.1 || relY < 0.44) {
-                  rimColor = mix(uGoldRim, uAmberRim, 0.35);
-                }
-
-                vec3 col = mix(uCoreColor, rimColor, fresnel * 0.58);
-
-                // Ear internal warmth (amber & crimson depth)
-                if (earDist < 0.95) {
-                  float earF = pow(1.0 - earDist / 0.95, 1.3);
-                  vec3 earHue = mix(uEarColor, uCrimsonColor, clamp((0.45 - earDist) / 0.35, 0.0, 1.0));
-                  col = mix(col, earHue, earF * 0.85);
-                }
-
-                // Eye orbital golden warmth
-                float eyeDist = distance(vModelPos, uRightEye);
-                if (eyeDist < 0.48) {
-                  float eyeF = pow(1.0 - eyeDist / 0.48, 1.5);
-                  col = mix(col, uEyeColor, eyeF * 0.92);
-                }
-
-                // Throat, neck & chin rich radiant golden ambient warmth
-                if (relY >= 0.14 && relY <= 0.48 && vModelPos.z < 2.2) {
-                  float throatWarmth = smoothstep(0.14, 0.22, relY) * smoothstep(0.50, 0.44, relY);
-                  col += uGoldRim * (0.24 * throatWarmth);
-                }
-
-                // Smooth dissolve at neck base into page background
-                float bottomFade = clamp((0.22 - relY) / 0.16, 0.0, 1.0);
-                col = mix(col, uBgColor, bottomFade);
-
-                gl_FragColor = vec4(col, 1.0);
-              }
-            `,
-            side: THREE.FrontSide,
-            depthTest: true,
-            depthWrite: true,
-          });
-          disposables.push(coreShaderMat);
-          const solidMesh = new THREE.Mesh(geo, coreShaderMat);
-          solidMesh.scale.setScalar(S);
-          headGroup.add(solidMesh);
-
-          // ── Layer B: Frontside Dual-Tone Gold & Cyan Triangular Wireframe ──
-          const wireMat = new THREE.MeshBasicMaterial({
-            vertexColors: true,
-            wireframe: true,
-            side: THREE.FrontSide,
-            transparent: true,
-            opacity: 0.96,
-            polygonOffset: true,
-            polygonOffsetFactor: -4.0,
-            polygonOffsetUnits: -8.0,
-            depthTest: true,
-            depthWrite: false,
-          });
-          disposables.push(wireMat);
-          const wireMesh = new THREE.Mesh(geo, wireMat);
-          wireMesh.scale.setScalar(S * 1.001);
-          headGroup.add(wireMesh);
-
-          // ── Layer C: Sparkling Gold & Cyan Vertex Nodes ──
-          const pointsGeo = geo.clone();
-          pointsGeo.setAttribute('color', new THREE.BufferAttribute(pColors, 3));
-          disposables.push(pointsGeo);
-
-          const pointsMat = new THREE.PointsMaterial({
-            size: isMobile ? 0.050 : 0.058,
-            vertexColors: true,
-            transparent: true,
-            opacity: 0.68,
-            depthWrite: false,
-          });
-          disposables.push(pointsMat);
-          const pointsMesh = new THREE.Points(pointsGeo, pointsMat);
-          pointsMesh.scale.setScalar(S * 1.002);
-          headGroup.add(pointsMesh);
-
-          // ── Layer D: 4-Pointed Diamond Star Sparkles (Luminous Texture) ──
-          if (starIdx.length > 0) {
-            const sGeo = new THREE.BufferGeometry();
-            const sPos = new Float32Array(starIdx.length * 3);
-            const sCol = new Float32Array(starIdx.length * 3);
-            for (let si = 0; si < starIdx.length; si++) {
-              const oi = starIdx[si];
-              sPos[si * 3] = PA.getX(oi) * S * 1.003;
-              sPos[si * 3 + 1] = PA.getY(oi) * S * 1.003;
-              sPos[si * 3 + 2] = PA.getZ(oi) * S * 1.003;
-              sCol[si * 3] = Math.min(1.0, vColors[oi * 3] * 1.40);
-              sCol[si * 3 + 1] = Math.min(1.0, vColors[oi * 3 + 1] * 1.40);
-              sCol[si * 3 + 2] = Math.min(1.0, vColors[oi * 3 + 2] * 1.40);
-            }
-            sGeo.setAttribute('position', new THREE.BufferAttribute(sPos, 3));
-            sGeo.setAttribute('color', new THREE.BufferAttribute(sCol, 3));
-            disposables.push(sGeo);
-
-            starMat = new THREE.PointsMaterial({
-              size: isMobile ? 0.16 : 0.22,
-              map: starTex,
+            const disintMat = new THREE.PointsMaterial({
+              size: isMobile ? 0.065 : 0.085,
+              map: glowDotTex,
               vertexColors: true,
               transparent: true,
-              opacity: 0.94,
+              opacity: 0.92,
               blending: THREE.AdditiveBlending,
               depthWrite: false,
             });
-            disposables.push(starMat);
-            headGroup.add(new THREE.Points(sGeo, starMat));
+            disposables.push(disintMat);
+            disintMatRef = disintMat;
+
+            const disintPoints = new THREE.Points(disintGeo, disintMat);
+            headGroup.add(disintPoints);
           }
         });
 
+        headGroup.add(gltf.scene);
         headGroup.rotation.y = BASE_ROT_Y;
         headGroup.rotation.x = BASE_ROT_X;
       },
       undefined,
       (err) => {
-        console.warn('GLB load error:', err);
+        console.warn('spider_man_head.glb load error:', err);
       }
     );
+
+    // ── 7. Floating Ambient Embers ──
+    const EMBER_COUNT = isMobile ? 40 : 60;
+    const emberGeo = new THREE.BufferGeometry();
+    const emberPos = new Float32Array(EMBER_COUNT * 3);
+    const emberCol = new Float32Array(EMBER_COUNT * 3);
+    const emberVelY = new Float32Array(EMBER_COUNT);
+    const emberPhase = new Float32Array(EMBER_COUNT);
+
+    const cRed = new THREE.Color('#FF1738');
+    const cCrimson = new THREE.Color('#C1121F');
+    const cCyanGlow = new THREE.Color('#40E0D0');
+
+    for (let i = 0; i < EMBER_COUNT; i++) {
+      emberPos[i * 3] = -5.0 + Math.random() * 10.0;
+      emberPos[i * 3 + 1] = (Math.random() - 0.5) * 11.0;
+      emberPos[i * 3 + 2] = -2.0 + Math.random() * 4.0;
+      emberVelY[i] = 0.0035 + Math.random() * 0.006;
+      emberPhase[i] = Math.random() * Math.PI * 2;
+
+      const r = Math.random();
+      const col = r > 0.7 ? cRed : r > 0.35 ? cCrimson : cCyanGlow;
+      emberCol[i * 3] = col.r;
+      emberCol[i * 3 + 1] = col.g;
+      emberCol[i * 3 + 2] = col.b;
+    }
+
+    emberGeo.setAttribute('position', new THREE.BufferAttribute(emberPos, 3));
+    emberGeo.setAttribute('color', new THREE.BufferAttribute(emberCol, 3));
+    disposables.push(emberGeo);
+
+    const emberMat = new THREE.PointsMaterial({
+      size: isMobile ? 0.10 : 0.13,
+      map: glowDotTex,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.75,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    disposables.push(emberMat);
+    scene.add(new THREE.Points(emberGeo, emberMat));
 
     // ── 8. Interactive Drag & Touch Orbit Physics ──
     let targetRotX = BASE_ROT_X;
@@ -694,11 +359,18 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     };
 
     const onPointerMove = (e: PointerEvent) => {
-      if (!isDragging) return;
+      if (!isDragging) {
+        const rect = mount.getBoundingClientRect();
+        const nx = ((e.clientX - rect.left) / rect.width - 0.5) * 2.0;
+        const ny = ((e.clientY - rect.top) / rect.height - 0.5) * 2.0;
+        targetRotY = BASE_ROT_Y + nx * 0.22;
+        targetRotX = BASE_ROT_X - ny * 0.15;
+        return;
+      }
+
       const dx = e.clientX - prevX;
       const dy = e.clientY - prevY;
 
-      // Smooth vertical scroll pass-through on mobile
       if (locked === null && (Math.abs(e.clientX - startX) > 6 || Math.abs(e.clientY - startY) > 6)) {
         if (Math.abs(e.clientY - startY) > Math.abs(e.clientX - startX) * 1.5) {
           locked = 'scroll';
@@ -726,16 +398,42 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     };
 
     mount.addEventListener('pointerdown', onPointerDown, { passive: true });
-    mount.addEventListener('pointermove', onPointerMove, { passive: true });
-    mount.addEventListener('pointerup', onPointerUp, { passive: true });
-    mount.addEventListener('pointercancel', onPointerUp, { passive: true });
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    window.addEventListener('pointerup', onPointerUp, { passive: true });
 
-    // ── 9. Scroll Tracking for Gentle Parallax ──
+    // ── 9. Scroll Tracking ──
     let scrollY = window.scrollY;
     const onScroll = () => { scrollY = window.scrollY; };
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    // ── 10. Animation Loop with Viewport & Tab Visibility Pause ──
+    // ── 9.1. Interactive Reveal Event Listener ──
+    let revealActive = isRevealed !== undefined ? !isRevealed : true;
+    let revealProgress = 0.0;
+    let revealDragging = false;
+    let revealSnapping = false;
+    let revealPointerX = window.innerWidth * 0.5;
+    let revealPointerY = window.innerHeight * 0.4;
+
+    const onRevealProgress = (e: Event) => {
+      const customEvent = e as CustomEvent<{
+        progress: number;
+        isDragging: boolean;
+        isSnapping: boolean;
+        isRevealed: boolean;
+        pointerX: number;
+        pointerY: number;
+      }>;
+      if (!customEvent.detail) return;
+      revealActive = !customEvent.detail.isRevealed;
+      revealProgress = customEvent.detail.progress;
+      revealDragging = customEvent.detail.isDragging;
+      revealSnapping = customEvent.detail.isSnapping;
+      revealPointerX = customEvent.detail.pointerX;
+      revealPointerY = customEvent.detail.pointerY;
+    };
+    window.addEventListener('radianza:reveal-progress', onRevealProgress);
+
+    // ── 10. Animation Loop ──
     let rafId: number;
     let isVisibleInViewport = true;
     let isTabActive = !document.hidden;
@@ -752,17 +450,77 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
 
       const t = (performance.now() - t0) * 0.001;
 
-      // Smooth slide-in towards RESTING_POS_X
-      headGroup.position.x += (RESTING_POS_X - headGroup.position.x) * 0.045;
+      // ── Reactive Reveal Interaction & Dynamic Entrance Slide-In ──
+      const isUnrevealed = !isRevealedPropRef.current && revealActive;
+      if (isUnrevealed) {
+        // While user is pulling on the black web screen:
+        // Hold head staged off-screen to the right, nudging slightly as tension builds
+        const stagedX = OFFSCREEN_X - revealProgress * 1.8;
+        headGroup.position.x += (stagedX - headGroup.position.x) * 0.15;
 
-      // Inertia Damping
-      if (!isDragging) {
-        velX *= 0.92; velY *= 0.92;
-        targetRotY += velX;
-        targetRotX = Math.max(-0.65, Math.min(0.65, targetRotX + velY));
+        // Dark initial exposure scaling up as pullProgress increases
+        const targetExposure = revealSnapping ? 1.35 : 0.30 + Math.pow(revealProgress, 1.2) * 1.05;
+        renderer.toneMappingExposure = targetExposure;
+
+        // Subtle twitch/turn toward the interaction point during drag
+        if (revealDragging) {
+          const normX = (revealPointerX / window.innerWidth - 0.5) * 2.0;
+          const normY = (revealPointerY / window.innerHeight - 0.5) * 2.0;
+          targetRotY = BASE_ROT_Y - 0.35 + normX * 0.16 + revealProgress * 0.20;
+          targetRotX = BASE_ROT_X - normY * 0.12;
+        } else {
+          targetRotY = BASE_ROT_Y - 0.40;
+          targetRotX = BASE_ROT_X;
+        }
+
+        // Energy activation flash around ~60% (0.56 - 0.66)
+        if (revealProgress >= 0.56 && revealProgress <= 0.66) {
+          const flashPhase = (revealProgress - 0.56) / 0.10;
+          const flash = Math.sin(flashPhase * Math.PI);
+          keyLight.intensity = 3.6 + flash * 2.4;
+          cyanRimLight.intensity = 4.2 + flash * 3.5;
+        } else {
+          keyLight.intensity = 1.0 + revealProgress * 2.6;
+          cyanRimLight.intensity = (1.5 + Math.sin(t * 2.0) * 0.6) * (0.4 + revealProgress * 0.6);
+        }
+
+        // Snapping surge
+        if (revealSnapping) {
+          headGroup.position.z += (0.6 - headGroup.position.z) * 0.15;
+        } else {
+          headGroup.position.z += (0 - headGroup.position.z) * 0.08;
+        }
+
+        // Eye glow intensity sync with reveal progress
+        const eyeIntensity = revealSnapping
+          ? 6.8
+          : (revealProgress > 0.05 ? Math.pow(revealProgress, 0.70) * 5.8 : 0.6 + Math.sin(t * 2.5) * 0.3);
+        eyeLight.intensity = eyeIntensity;
+        eyeSprite.material.opacity = Math.min(1.0, eyeIntensity * 0.22);
+      } else {
+        // ── AFTER DRAGGING IS OVER & REVEAL OCCURS: ──
+        // Smooth, cinematic Right-to-Left Entrance Slide-In!
+        headGroup.position.x += (RESTING_POS_X - headGroup.position.x) * 0.052;
+
+        // Inertia Damping & Gentle Return to Default Pose
+        if (!isDragging) {
+          velX *= 0.90; velY *= 0.90;
+          targetRotY += (BASE_ROT_Y - targetRotY) * 0.045 + velX;
+          targetRotX += (BASE_ROT_X - targetRotX) * 0.045 + velY;
+        }
+
+        renderer.toneMappingExposure = 1.35;
+        keyLight.intensity = 3.6;
+        cyanRimLight.intensity = 3.8 + Math.sin(t * 2.0) * 0.6;
+        headGroup.position.z += (0 - headGroup.position.z) * 0.08;
+
+        // Settled eye glow
+        const eyeIntensity = 2.4 + Math.sin(t * 2.0) * 0.5;
+        eyeLight.intensity = eyeIntensity;
+        eyeSprite.material.opacity = Math.min(1.0, eyeIntensity * 0.20);
       }
 
-      // Gentle floating physics & scroll parallax
+      // ── Gentle Floating Physics & Scroll Parallax (matching 2nd-tag) ──
       const scrollFrac = Math.min(scrollY / 750, 1.0);
       headGroup.position.y = RESTING_POS_Y + Math.sin(t * 1.3) * 0.06 - scrollFrac * 0.45;
 
@@ -770,37 +528,42 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       headGroup.rotation.y += (targetRotY - headGroup.rotation.y) * 0.075;
       headGroup.rotation.x += (targetRotX - headGroup.rotation.x) * 0.075;
 
-      // Cyber dot grid breathing pulse
-      gridMat.opacity = 0.28 + Math.sin(t * 1.2) * 0.06;
+      // Animate Disintegration Particles
+      if (disintGeoRef) {
+        const pCount = (disintGeoRef as any)._pCount as number;
+        const pos = disintGeoRef.attributes.position.array as Float32Array;
+        const base = (disintGeoRef as any)._dBase as Float32Array;
+        const drift = (disintGeoRef as any)._dDrift as Float32Array;
+        const spd = (disintGeoRef as any)._dSpeed as Float32Array;
+        const ph = (disintGeoRef as any)._dPhase as Float32Array;
 
-      // 4-pointed diamond star sparkle breathing twinkle
-      if (starMat) {
-        starMat.opacity = 0.82 + Math.sin(t * 2.6) * 0.16;
+        for (let i = 0; i < pCount; i++) {
+          const cycle = (t * spd[i] + ph[i]) % 3.5;
+          const prog = cycle / 3.5;
+          const dEase = Math.pow(prog, 0.7);
+
+          pos[i * 3] = base[i * 3] + drift[i * 3] * dEase + Math.sin(t * 1.8 + ph[i]) * 0.04;
+          pos[i * 3 + 1] = base[i * 3 + 1] + drift[i * 3 + 1] * dEase;
+          pos[i * 3 + 2] = base[i * 3 + 2] + drift[i * 3 + 2] * dEase;
+        }
+        disintGeoRef.attributes.position.needsUpdate = true;
       }
 
-      // Background square particles drift
-      const pArr = pGeo.attributes.position.array as Float32Array;
-      for (let i = 0; i < PC_MAIN; i++) {
-        pArr[i * 3 + 1] += pVelY[i];
-        pArr[i * 3] += Math.sin(t * 0.85 + pPhase[i]) * 0.0025;
-        if (pArr[i * 3 + 1] > 6.5) {
-          pArr[i * 3 + 1] = -6.5;
-          pArr[i * 3] = -7.8 + Math.random() * 11.5;
+      if (disintMatRef) {
+        disintMatRef.opacity = 0.82 + Math.sin(t * 2.2) * 0.14;
+      }
+
+      // Animate Embers
+      const eArr = emberGeo.attributes.position.array as Float32Array;
+      for (let i = 0; i < EMBER_COUNT; i++) {
+        eArr[i * 3 + 1] += emberVelY[i];
+        eArr[i * 3] += Math.sin(t * 0.9 + emberPhase[i]) * 0.002;
+        if (eArr[i * 3 + 1] > 6.5) {
+          eArr[i * 3 + 1] = -6.5;
+          eArr[i * 3] = -5.0 + Math.random() * 10.0;
         }
       }
-      pGeo.attributes.position.needsUpdate = true;
-
-      // Micro cyber data bits drift
-      const mArr = microGeo.attributes.position.array as Float32Array;
-      for (let i = 0; i < PC_MICRO; i++) {
-        mArr[i * 3 + 1] += microVelY[i];
-        mArr[i * 3] += Math.cos(t * 0.75 + microPhase[i]) * 0.0018;
-        if (mArr[i * 3 + 1] > 6.5) {
-          mArr[i * 3 + 1] = -6.5;
-          mArr[i * 3] = -7.5 + Math.random() * 11.0;
-        }
-      }
-      microGeo.attributes.position.needsUpdate = true;
+      emberGeo.attributes.position.needsUpdate = true;
 
       renderer.render(scene, camera);
     };
@@ -812,24 +575,18 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     };
     startAnimation();
 
-    // IntersectionObserver to pause loop when scrolled away
     const observer = new IntersectionObserver(
       ([entry]) => {
         isVisibleInViewport = entry.isIntersecting;
-        if (isVisibleInViewport) {
-          startAnimation();
-        }
+        if (isVisibleInViewport) startAnimation();
       },
       { threshold: 0.05 }
     );
     observer.observe(mount);
 
-    // Tab Visibility change listener
     const handleVisibilityChange = () => {
       isTabActive = !document.hidden;
-      if (isTabActive) {
-        startAnimation();
-      }
+      if (isTabActive) startAnimation();
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
@@ -849,11 +606,11 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       observer.disconnect();
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       mount.removeEventListener('pointerdown', onPointerDown);
-      mount.removeEventListener('pointermove', onPointerMove);
-      mount.removeEventListener('pointerup', onPointerUp);
-      mount.removeEventListener('pointercancel', onPointerUp);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
+      window.removeEventListener('radianza:reveal-progress', onRevealProgress);
       renderer.domElement.removeEventListener('webglcontextlost', handleContextLost);
       renderer.domElement.removeEventListener('webglcontextrestored', handleContextRestored);
       cancelAnimationFrame(rafId);
