@@ -32,11 +32,6 @@ import { MockDatabaseService } from '../../data/mockDatabase';
 import { CollegeEmblem, SpiherStarburstLogo } from '../common/CollegeLogo';
 import { CustomDatePicker } from '../common/CustomDatePicker';
 import { ThreeDCyberHeadCanvas } from './ThreeDCyberHeadCanvas';
-import {
-  EthnicBorderRibbon,
-  TopRangoliMotif,
-  BottomRangoliMotif,
-} from '../common/CulturalRangoliMotifs';
 
 export type LandingPageId = 'home' | 'events' | 'about' | 'contact';
 
@@ -686,21 +681,14 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               exit="exit"
               className="w-full flex flex-col space-y-0"
             >
-              {/* ── 1. HERO SECTION (DARK CULTURAL-FUTURISTIC & RANGOLI MOTIFS) ── */}
+              {/* ── 1. HERO SECTION ── */}
               <section id="hero" className="relative w-full overflow-hidden bg-[#020B1C] text-[#FFF2D5]">
-                {/* Authentic Left Cultural Geometric Border Ribbon */}
-                <EthnicBorderRibbon />
-
-                {/* Cultural Rangoli / Mandala Background Ornaments */}
-                <TopRangoliMotif className="-top-12 right-2 sm:right-10 lg:right-1/4 lg:translate-x-16" />
-                <BottomRangoliMotif className="-bottom-8 right-0 sm:right-6 lg:right-10" />
-
                 {/* Ambient Glows */}
                 <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-[#0878D1]/15 blur-3xl pointer-events-none" />
                 <div className="absolute bottom-1/4 right-10 w-80 h-80 rounded-full bg-[#F5B942]/10 blur-3xl pointer-events-none" />
                 
                 {/* ─── MOBILE VIEW: EXACT REFERENCE MATCH (< lg) ─── */}
-                <div className="lg:hidden relative w-full min-h-[calc(100dvh-4.25rem)] min-h-[720px] flex flex-col justify-start p-5 sm:p-6 pl-9 sm:pl-12 pb-8 select-none overflow-hidden">
+                <div className="lg:hidden relative w-full min-h-[calc(100dvh-4.25rem)] min-h-[720px] flex flex-col justify-start p-5 sm:p-6 pb-8 select-none overflow-hidden">
                   {/* Background 3D Cyber Scene */}
                   {!isDesktop && (
                     <div className="absolute inset-0 z-0 pointer-events-auto">
@@ -710,7 +698,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
 
                   {/* Foreground Content: Starting directly from chin level */}
                   <div className="relative z-10 pt-[50vh] sm:pt-[48vh] pb-2 space-y-3 sm:space-y-3.5 max-w-[92%] sm:max-w-[78%] pointer-events-none">
-                    {/* Line 1: SPIHER PRESENTS Badge */}
+                    {/* Line 1: Department of IT Badge */}
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -718,8 +706,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#061A35]/90 backdrop-blur-md shadow-md border border-[#F5B942]/40 text-[#FFF2D5] pointer-events-auto"
                     >
                       <CollegeEmblem size={24} />
-                      <span className="tracking-widest uppercase font-mono text-[10px] sm:text-[11px] font-bold text-[#FFF2D5]">
-                        SPIHER PRESENTS
+                      <span className="tracking-wider uppercase font-mono text-[10px] sm:text-[11px] font-bold text-[#FFF2D5]">
+                        DEPARTMENT OF INFORMATION TECHNOLOGY
                       </span>
                     </motion.div>
                     
@@ -802,7 +790,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                 </div>
 
                 {/* ─── DESKTOP VIEW: EXACT REFERENCE IMAGE LAYOUT (>= lg) ─── */}
-                <div className="hidden lg:flex min-h-[calc(100vh-6rem)] items-center justify-center py-16 pl-12 sm:pl-16 lg:pl-20 relative z-10">
+                <div className="hidden lg:flex min-h-[calc(100vh-6rem)] items-center justify-center py-16 relative z-10">
                   <div className="max-w-7xl mx-auto px-8 w-full grid grid-cols-12 gap-8 items-center overflow-visible">
                     {/* Wording: Left Column */}
                     <div className="col-span-6 space-y-7 text-left flex flex-col items-start z-20">
@@ -811,11 +799,11 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         initial={{ opacity: 0, y: -12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#061A35]/90 border border-[#F5B942]/40 text-[#FFF2D5] text-xs font-mono tracking-widest uppercase shadow-md backdrop-blur-md"
+                        className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#061A35]/90 border border-[#F5B942]/40 text-[#FFF2D5] text-xs font-mono tracking-wider uppercase shadow-md backdrop-blur-md"
                       >
                         <CollegeEmblem size={24} />
                         <span className="font-bold text-[#FFF2D5]">
-                          SPIHER PRESENTS
+                          DEPARTMENT OF INFORMATION TECHNOLOGY
                         </span>
                       </motion.div>
 
