@@ -1138,8 +1138,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       onMouseLeave={handleSpeakersMouseLeave}
                       onMouseUp={handleSpeakersMouseUp}
                       onMouseMove={handleSpeakersMouseMove}
-                      className="flex gap-6 overflow-x-auto pb-6 pt-2 scroll-smooth snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none focus:outline-hidden no-scrollbar"
-                      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                      className="flex gap-6 overflow-x-auto pb-6 pt-2 scroll-smooth snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none focus:outline-hidden no-scrollbar overscroll-x-contain"
+                      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
                     >
                       {SPEAKERS_DATA.map((speaker, idx) => (
                         <div
@@ -1298,8 +1298,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       onMouseLeave={handleGalleryMouseLeave}
                       onMouseUp={handleGalleryMouseUp}
                       onMouseMove={handleGalleryMouseMove}
-                      className="flex gap-6 overflow-x-auto pb-6 pt-2 scroll-smooth snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none focus:outline-hidden no-scrollbar"
-                      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                      className="flex gap-6 overflow-x-auto pb-6 pt-2 scroll-smooth snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none focus:outline-hidden no-scrollbar overscroll-x-contain"
+                      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
                     >
                       {GALLERY_DATA.map((item, idx) => (
                         <div

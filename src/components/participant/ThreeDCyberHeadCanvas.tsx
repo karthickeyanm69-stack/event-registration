@@ -349,6 +349,8 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({
     let velX = 0, velY = 0;
 
     const onPointerDown = (e: PointerEvent) => {
+      // Allow touch to smoothly and natively scroll the page without interference
+      if (e.pointerType === 'touch') return;
       isDragging = true;
       prevX = e.clientX;
       prevY = e.clientY;
