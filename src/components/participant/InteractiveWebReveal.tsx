@@ -324,6 +324,7 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
   const targetNodeRef = useRef({ x: 0, y: 0 });
   const nodeVelocityRef = useRef({ x: 0, y: 0 });
   const mountTimeRef = useRef<number>(performance.now());
+  const typographyRef = useRef<HTMLDivElement>(null);
 
   // Pointer & Tracking
   const pointerPosRef = useRef({ x: 0, y: 0 });
@@ -332,7 +333,6 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
   const isNearNodeRef = useRef(false);
 
   // Component React State
-  const [pullProgress, setPullProgress] = useState(0);
   const [isRevealed, setIsRevealed] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isIntroReady, setIsIntroReady] = useState(false);
@@ -498,7 +498,6 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
         const pulledDist = Math.max(0, currentNodeRef.current.y - originNodeRef.current.y);
         const progress = Math.min(1.0, pulledDist / maxPullDist);
         pullProgressRef.current = progress;
-        setPullProgress(progress);
 
         // Snap threshold reached: pulling is completed!
         if (progress >= 0.82) {
@@ -507,7 +506,6 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
       } else if (isSnappingRef.current) {
         currentNodeRef.current.y += (height * 1.6 - currentNodeRef.current.y) * 0.22;
         pullProgressRef.current = Math.min(1.0, pullProgressRef.current + dt * 2.8);
-        setPullProgress(pullProgressRef.current);
       } else if (isIntroActive) {
         // Smooth initial slide down from ceiling on silk thread with zero jerk
         currentNodeRef.current.x = originNodeRef.current.x;
@@ -546,13 +544,20 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
         currentNodeRef.current.y += nodeVelocityRef.current.y;
 
         pullProgressRef.current = Math.max(0, pullProgressRef.current - dt * 2.6);
-        setPullProgress(pullProgressRef.current);
       }
 
       const progress = pullProgressRef.current;
       const nodeX = currentNodeRef.current.x;
       const nodeY = currentNodeRef.current.y;
       const anchor = anchorRef.current;
+
+      // Pure 120fps hardware-accelerated transform for instruction typography
+      if (typographyRef.current) {
+        const textOpacity = isIntroReady ? Math.max(0, 1.0 - progress * 3.2) : 0;
+        const textY = isIntroReady ? progress * 26 : 14;
+        typographyRef.current.style.opacity = textOpacity.toFixed(3);
+        typographyRef.current.style.transform = `translate3d(0, ${textY.toFixed(1)}px, 0)`;
+      }
 
       // Dispatch event to synchronize 3D Head eye glow and pose
       if (!isCompletedRef.current) {
@@ -930,12 +935,13 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
 
       {/* ── 3. Minimal Cinematic Instruction Typography ── */}
       <div
+        ref={typographyRef}
         className="absolute inset-x-0 pointer-events-none z-20 flex flex-col items-center justify-center text-center select-none"
         style={{
           top: 'calc(38vh + 65px)',
-          opacity: isIntroReady ? Math.max(0, 1.0 - pullProgress * 3.2) : 0,
-          transform: `translateY(${isIntroReady ? pullProgress * 26 : 14}px)`,
-          transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+          opacity: 0,
+          transform: 'translate3d(0, 14px, 0)',
+          willChange: 'transform, opacity',
         }}
       >
         <span className="font-serif font-black text-xs sm:text-sm tracking-[0.28em] text-[#FFFFFF]/90 uppercase drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]">

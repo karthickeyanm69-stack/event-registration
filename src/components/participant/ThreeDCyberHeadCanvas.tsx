@@ -77,31 +77,36 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({
 
     const disposables: Array<{ dispose: () => void }> = [];
 
-    // ── 3. High-Fidelity Studio Lighting (Exact 2nd-Tag Reference) ──
-    const ambientLight = new THREE.AmbientLight(0x6A1520, 2.4);
+    // ── 3. High-Fidelity Studio Lighting (Cyber Heroic Aesthetic) ──
+    const ambientLight = new THREE.AmbientLight(0x24080D, isMobile ? 2.2 : 1.8);
     scene.add(ambientLight);
 
-    // Main Key Light illuminating the face, eye, nose, cheek
-    const keyLight = new THREE.DirectionalLight(0xFFFFFF, 3.6);
-    keyLight.position.set(6, 7, 9);
+    // Main Key Light illuminating the face, eye, nose, cheek with crisp definition
+    const keyLight = new THREE.DirectionalLight(0xFFFFFF, isMobile ? 4.4 : 3.8);
+    keyLight.position.set(5, 7, 8);
     scene.add(keyLight);
 
-    // Soft Fill Light
-    const fillLight = new THREE.DirectionalLight(0xFFD5D5, 1.8);
-    fillLight.position.set(-3, 6, 8);
+    // Soft Warm Fill Light
+    const fillLight = new THREE.DirectionalLight(0xFFD8E0, isMobile ? 2.2 : 1.8);
+    fillLight.position.set(-3, 5, 8);
     scene.add(fillLight);
 
-    // Cyan Rim Light outlining the rear contour
-    const cyanRimLight = new THREE.DirectionalLight(0x40E0D0, 4.2);
-    cyanRimLight.position.set(-7, 2, -6);
+    // Cyan Rim Light outlining the rear contour with vivid laser radiance
+    const cyanRimLight = new THREE.DirectionalLight(0x00F0FF, isMobile ? 5.8 : 4.6);
+    cyanRimLight.position.set(-7, 3, -5);
     scene.add(cyanRimLight);
 
+    // Crimson Accent Rim Light for intense scarlet edge highlights
+    const crimsonRimLight = new THREE.DirectionalLight(0xFF0038, isMobile ? 4.2 : 3.2);
+    crimsonRimLight.position.set(6, -2, -4);
+    scene.add(crimsonRimLight);
+
     // Crimson Under-Glow for chin & throat
-    const bottomLight = new THREE.DirectionalLight(0xC1121F, 1.8);
-    bottomLight.position.set(0, -7, 4);
+    const bottomLight = new THREE.DirectionalLight(0xC1121F, 2.2);
+    bottomLight.position.set(0, -6, 5);
     scene.add(bottomLight);
 
-    // ── 4. Master Head Group & Calibrated 2nd-Tag Positioning ──
+    // ── 4. Master Head Group & Calibrated Positioning ──
     const headGroup = new THREE.Group();
     scene.add(headGroup);
 
@@ -140,13 +145,13 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({
     disposables.push(glowDotTex);
 
     // ── Eye Glowing Laser Light & Flare (Matching Video Reference) ──
-    const eyeLight = new THREE.PointLight(0x70FFFF, 0, 7.0);
+    const eyeLight = new THREE.PointLight(0x00FFFF, 0, 7.5);
     eyeLight.position.set(0.60, 1.25, 2.75);
     headGroup.add(eyeLight);
 
     const eyeGlowMat = new THREE.SpriteMaterial({
       map: glowDotTex,
-      color: new THREE.Color(0x90FFFF),
+      color: new THREE.Color(0x80FFFF),
       transparent: true,
       opacity: 0,
       blending: THREE.AdditiveBlending,
@@ -155,7 +160,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({
     disposables.push(eyeGlowMat);
     const eyeSprite = new THREE.Sprite(eyeGlowMat);
     eyeSprite.position.set(0.60, 1.25, 2.70);
-    eyeSprite.scale.set(1.35, 1.35, 1.35);
+    eyeSprite.scale.set(isMobile ? 1.5 : 1.35, isMobile ? 1.5 : 1.35, 1);
     headGroup.add(eyeSprite);
 
     // ── 6. Load GLB Model with Native PBR Materials ──
@@ -188,9 +193,13 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({
               const oldMat = mesh.material as THREE.MeshStandardMaterial;
               const newMat = new THREE.MeshStandardMaterial({
                 map: oldMat.map || null,
+                normalMap: oldMat.normalMap || null,
                 roughnessMap: oldMat.roughnessMap || null,
-                roughness: 0.40,
-                metalness: 0.12,
+                color: oldMat.color ? oldMat.color.clone() : new THREE.Color(0xFFFFFF),
+                roughness: isMobile ? 0.32 : 0.38,
+                metalness: isMobile ? 0.22 : 0.16,
+                emissive: new THREE.Color(0x280408),
+                emissiveIntensity: isMobile ? 0.35 : 0.25,
                 side: THREE.FrontSide,
               });
 
@@ -450,10 +459,14 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({
       isAnimating = true;
       rafId = requestAnimationFrame(animate);
 
-      const t = (performance.now() - t0) * 0.001;
-
       // ── Reactive Reveal Interaction & Dynamic Entrance Slide-In ──
       const isUnrevealed = !isRevealedPropRef.current && revealActive;
+      if (isUnrevealed && !revealDragging && !revealSnapping && revealProgress < 0.02) {
+        // Dormant sleep behind 100% solid black veil: saves 100% GPU/CPU for instant reveal responsiveness
+        return;
+      }
+
+      const t = (performance.now() - t0) * 0.001;
       if (isUnrevealed) {
         // While user is pulling on the black web screen:
         // Hold head staged off-screen to the right, nudging slightly as tension builds
@@ -511,15 +524,15 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({
           targetRotX += (BASE_ROT_X - targetRotX) * 0.045 + velY;
         }
 
-        renderer.toneMappingExposure = 1.35;
-        keyLight.intensity = 3.6;
-        cyanRimLight.intensity = 3.8 + Math.sin(t * 2.0) * 0.6;
+        renderer.toneMappingExposure = isMobile ? 1.45 : 1.35;
+        keyLight.intensity = isMobile ? 4.4 : 3.6;
+        cyanRimLight.intensity = (isMobile ? 5.2 : 3.8) + Math.sin(t * 2.0) * 0.6;
         headGroup.position.z += (0 - headGroup.position.z) * 0.08;
 
         // Settled eye glow
-        const eyeIntensity = 2.4 + Math.sin(t * 2.0) * 0.5;
+        const eyeIntensity = (isMobile ? 3.2 : 2.4) + Math.sin(t * 2.0) * 0.5;
         eyeLight.intensity = eyeIntensity;
-        eyeSprite.material.opacity = Math.min(1.0, eyeIntensity * 0.20);
+        eyeSprite.material.opacity = Math.min(1.0, eyeIntensity * 0.22);
       }
 
       // ── Gentle Floating Physics & Scroll Parallax (matching 2nd-tag) ──
