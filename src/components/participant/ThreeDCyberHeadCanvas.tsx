@@ -85,9 +85,9 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
 
     const gridMat = new THREE.PointsMaterial({
       size: isMobile ? 0.052 : 0.056,
-      color: 0x0878D1,
+      color: 0xC1121F, // Deep Crimson web grid
       transparent: true,
-      opacity: 0.35,
+      opacity: 0.30,
       depthWrite: false,
     });
     disposables.push(gridMat);
@@ -131,12 +131,12 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       c.width = 64; c.height = 64;
       const ctx = c.getContext('2d');
       if (ctx) {
-        // Luminous warm golden aura gradient
+        // Luminous red aura gradient for laser sparkles
         const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 30);
         g.addColorStop(0, 'rgba(255,255,255,1.0)');
-        g.addColorStop(0.25, 'rgba(255,235,170,0.90)');
-        g.addColorStop(0.55, 'rgba(245,185,66,0.45)');
-        g.addColorStop(1, 'rgba(245,185,66,0.0)');
+        g.addColorStop(0.25, 'rgba(255,180,195,0.90)');
+        g.addColorStop(0.55, 'rgba(255,23,56,0.50)');
+        g.addColorStop(1, 'rgba(193,18,31,0.0)');
         ctx.fillStyle = g;
         ctx.fillRect(0, 0, 64, 64);
 
@@ -167,7 +167,7 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const starTex = makeStarTex();
     disposables.push(starTex);
 
-    // ── 6. Background Digital Particle Field (Golden Embers & Cyber Bits) ──
+    // ── 6. Background Digital Particle Field (Crimson Embers & Red Cyber Sparks) ──
     const PC_MAIN = isMobile ? 85 : 120;
     const pGeo = new THREE.BufferGeometry();
     const pPos = new Float32Array(PC_MAIN * 3);
@@ -175,12 +175,11 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
     const pVelY = new Float32Array(PC_MAIN);
     const pPhase = new Float32Array(PC_MAIN);
 
-    const cGold = new THREE.Color('#F5B942');
-    const cAmber = new THREE.Color('#FF9E1B');
-    const cEmber = new THREE.Color('#FF6B20');
-    const cCyan = new THREE.Color('#00F2FE');
-    const cSky = new THREE.Color('#38BDF8');
-    const cBlue = new THREE.Color('#0878D1');
+    const cRedGlow = new THREE.Color('#FF1738');
+    const cCrimson = new THREE.Color('#C1121F');
+    const cDeepRed = new THREE.Color('#780016');
+    const cWhite = new THREE.Color('#FFFFFF');
+    const cSilver = new THREE.Color('#E5E7EB');
 
     for (let i = 0; i < PC_MAIN; i++) {
       // Distributed across the hero negative space and depth
@@ -190,14 +189,17 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       pVelY[i] = 0.005 + Math.random() * 0.008;
       pPhase[i] = Math.random() * Math.PI * 2;
 
-      // Golden embers towards center/right, cyan/blue towards left face
-      const isRightSide = pPos[i * 3] > -1.2;
+      // Glowing crimson and red sparks with occasional white cyber nodes
       const r = Math.random();
       let col: THREE.Color;
-      if (isRightSide) {
-        col = r > 0.55 ? cGold : r > 0.2 ? cAmber : cEmber;
+      if (r > 0.65) {
+        col = cRedGlow;
+      } else if (r > 0.25) {
+        col = cCrimson;
+      } else if (r > 0.08) {
+        col = cDeepRed;
       } else {
-        col = r > 0.55 ? cCyan : r > 0.2 ? cSky : cBlue;
+        col = cWhite;
       }
       pCol[i * 3] = col.r; pCol[i * 3 + 1] = col.g; pCol[i * 3 + 2] = col.b;
     }
@@ -232,11 +234,8 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
       microVelY[i] = 0.0035 + Math.random() * 0.006;
       microPhase[i] = Math.random() * Math.PI * 2;
 
-      const isRightSide = microPos[i * 3] > -1.2;
       const r = Math.random();
-      const col = isRightSide
-        ? (r > 0.5 ? cGold : cAmber)
-        : (r > 0.5 ? cCyan : cBlue);
+      const col = r > 0.6 ? cRedGlow : r > 0.2 ? cCrimson : cSilver;
       microCol[i * 3] = col.r; microCol[i * 3 + 1] = col.g; microCol[i * 3 + 2] = col.b;
     }
     microGeo.setAttribute('position', new THREE.BufferAttribute(microPos, 3));
@@ -311,15 +310,14 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
             return Math.sqrt(dx * dx + dy * dy + dz * dz);
           };
 
-          // Curated Dual-Tone Cultural-Futuristic Palette:
-          const colFaceCyan = new THREE.Color('#00F2FE');   // Crisp electric cyan node / highlight
-          const colFaceBlue = new THREE.Color('#0878D1');   // Vibrant sapphire tech blue wire
-          const colGoldLight = new THREE.Color('#FFE899');  // Radiant Ivory Gold highlights
-          const colGold = new THREE.Color('#F5B942');       // Signature Radianza Gold
-          const colAmber = new THREE.Color('#FF9514');      // Luminous warm Amber
-          const colDeepAmber = new THREE.Color('#D6580B');  // Rich ear concha / shadow gold
-          const colCrimson = new THREE.Color('#B51F35');    // Cultural Crimson accent for ear depth
-          const colNeckVoid = new THREE.Color('#020B1C');   // Midnight background dissolve
+          // Curated Spider-Man Inspired Dark Futuristic Palette:
+          // 70% Near-Black (#050505), 20% Deep Crimson (#C1121F), 5% Bright Red Glow (#FF1738), 5% White/Light Gray
+          const colRedGlow = new THREE.Color('#FF1738');   // Bright red laser glow & active nodes
+          const colCrimson = new THREE.Color('#C1121F');   // Signature Deep Crimson wireframe
+          const colDarkCrimson = new THREE.Color('#780016'); // Shaded jaw & cranial depth
+          const colWhite = new THREE.Color('#FFFFFF');     // High-tech white node sparks & edge highlights
+          const colSilver = new THREE.Color('#E5E7EB');    // Sleek metallic silver wire
+          const colVoid = new THREE.Color('#050505');      // 70% Near-black dissolve
 
           const vColors = new Float32Array(N * 3);
           const pColors = new Float32Array(N * 3);
@@ -423,23 +421,24 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
 
             // ── Wireframe Color Assignment ──
             if (goldWeight > 0.05) {
-              // Blend base gold & amber with ivory highlights
-              const baseGold = tmpC.copy(colGold).lerp(colAmber, 0.25);
-              if (crownFactor > 0.6 || eyeFactor > 0.4 || neckFactor > 0.6) {
-                baseGold.lerp(colGoldLight, 0.35);
+              // Accent areas (crown, eye, ear, jaw) glow with bright red & crimson
+              const baseAccent = tmpC.copy(colRedGlow).lerp(colCrimson, 0.35);
+              if (crownFactor > 0.6 || eyeFactor > 0.4) {
+                baseAccent.lerp(colWhite, 0.30);
               }
-              tmpC.copy(colFaceBlue).lerp(baseGold, goldWeight);
+              tmpC.copy(colCrimson).lerp(baseAccent, goldWeight);
             } else {
-              tmpC.copy(colFaceBlue);
+              // Base wireframe is deep crimson with silver/white profile edge
+              tmpC.copy(colCrimson);
               if (dNose < 0.65 || dLips < 0.50 || dChin < 0.55) {
-                tmpC.lerp(colFaceCyan, 0.45);
+                tmpC.lerp(colSilver, 0.45);
               }
             }
 
-            // Lower torso / clavicle dissolve into midnight page background
+            // Lower torso / clavicle dissolve into near-black page background
             if (relY < 0.20) {
               const dissolve = Math.pow(1.0 - relY / 0.20, 1.4);
-              tmpC.lerp(colNeckVoid, dissolve * 0.95);
+              tmpC.lerp(colVoid, dissolve * 0.95);
             }
 
             vColors[i * 3] = tmpC.r;
@@ -448,14 +447,13 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
 
             // ── Vertex Node Color Assignment (Points Mesh) ──
             if (goldWeight > 0.35) {
-              let pC = (vy > 1.8 || neckFactor > 0.5) ? colGoldLight : colGold;
-              if (dEar < 0.70) pC = colAmber;
-              if (eyeFactor > 0.40) pC = colGoldLight;
+              let pC = (vy > 1.8 || neckFactor > 0.5) ? colRedGlow : colCrimson;
+              if (eyeFactor > 0.40) pC = colWhite;
               pColors[i * 3] = pC.r;
               pColors[i * 3 + 1] = pC.g;
               pColors[i * 3 + 2] = pC.b;
             } else {
-              const pC = (dNose < 0.80 || dLips < 0.60 || dChin < 0.60) ? colFaceCyan : colFaceBlue;
+              const pC = (dNose < 0.80 || dLips < 0.60 || dChin < 0.60) ? colWhite : colRedGlow;
               pColors[i * 3] = pC.r;
               pColors[i * 3 + 1] = pC.g;
               pColors[i * 3 + 2] = pC.b;
@@ -501,14 +499,14 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({ on
           // ── Layer A: Opaque Frontside Dual-Tone Sculptural Core Shader ──
           const coreShaderMat = new THREE.ShaderMaterial({
             uniforms: {
-              uCoreColor: { value: new THREE.Color('#020B1C') },
-              uBlueRim: { value: new THREE.Color('#0878D1') },
-              uGoldRim: { value: new THREE.Color('#F5B942') },
-              uAmberRim: { value: new THREE.Color('#FF9514') },
-              uEarColor: { value: new THREE.Color('#D6580B') },
-              uCrimsonColor: { value: new THREE.Color('#B51F35') },
-              uEyeColor: { value: new THREE.Color('#F5B942') },
-              uBgColor: { value: new THREE.Color('#020B1C') },
+              uCoreColor: { value: new THREE.Color('#050505') },
+              uBlueRim: { value: new THREE.Color('#C1121F') },
+              uGoldRim: { value: new THREE.Color('#FF1738') },
+              uAmberRim: { value: new THREE.Color('#C1121F') },
+              uEarColor: { value: new THREE.Color('#780016') },
+              uCrimsonColor: { value: new THREE.Color('#C1121F') },
+              uEyeColor: { value: new THREE.Color('#FF1738') },
+              uBgColor: { value: new THREE.Color('#050505') },
               uRightEar: { value: dynRightEar },
               uRightEye: { value: dynRightEye },
               uMinY: { value: minY },

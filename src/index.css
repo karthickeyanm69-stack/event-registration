@@ -2,41 +2,60 @@
 
 @layer base {
   :root {
-    /* ─── RADIANZA ’26 Dark Cultural-Futuristic Color Palette ─── */
-    --midnight:      #020B1C;
-    --navy:          #061A35;
-    --navy-surface:  #0a2245;
-    --ivory:         #FFF2D5;
-    --gold:          #F5B942;
-    --gold-hover:    #e5a730;
-    --gold-glow:     rgba(245, 185, 66, 0.45);
-    --blue:          #0878D1;
-    --blue-hover:    #0664b0;
-    --blue-glow:     rgba(8, 120, 209, 0.45);
-    --cyan:          #00f2fe;
-    --crimson:       #B51F35;
-    --crimson-hover: #9c172b;
+    /* ─── RADIANZA ’26 Spider-Man Inspired Dark Futuristic Color Palette ─── */
+    /* 70% Near-Black */
+    --near-black:    #050505;
+    --dark-surface:  #0a0a0e;
+    --dark-card:     #111116;
+    --dark-card-hover:#181820;
+
+    /* 20% Deep Red / Crimson */
+    --crimson:       #C1121F;
+    --crimson-hover: #9e0d19;
+    --crimson-dark:  #780016;
+    --crimson-glow:  rgba(193, 18, 31, 0.45);
+
+    /* 5% Bright Red Glow */
+    --red-glow:      #FF1738;
+    --red-neon:      #FF2D4D;
+    --red-spark:     rgba(255, 23, 56, 0.55);
+
+    /* 5% White / Light Gray Typography */
+    --text-primary:  #FFFFFF;
+    --text-secondary:#9CA3AF;
+    --text-muted:    #6B7280;
 
     /* Semantic Mappings */
-    --bg-dark:       #020B1C;
-    --bg-card:       #061A35;
-    --text-primary:  #FFF2D5;
-    --text-secondary:#cbd5e1;
-    --border-gold:   rgba(245, 185, 66, 0.35);
-    --border-blue:   rgba(8, 120, 209, 0.4);
+    --bg-dark:       #050505;
+    --bg-card:       #0d0d12;
+    --border-red:    rgba(193, 18, 31, 0.35);
+    --border-glow:   rgba(255, 23, 56, 0.6);
 
-    /* Legacy compatibility tokens */
-    --navy-mid:      #061A35;
-    --navy-deep:     #020B1C;
-    --teal:          #00a887;
-    --purple:        #7c3aed;
-    --spiher-navy:   #061A35;
-    --spiher-blue:   #0878D1;
+    /* Legacy compatibility tokens mapped to Spider-Man dark red palette */
+    --midnight:      #050505;
+    --navy:          #0a0a0e;
+    --navy-surface:  #111116;
+    --ivory:         #FFFFFF;
+    --gold:          #C1121F;
+    --gold-hover:    #9e0d19;
+    --gold-glow:     rgba(255, 23, 56, 0.45);
+    --blue:          #C1121F;
+    --blue-hover:    #9e0d19;
+    --blue-glow:     rgba(255, 23, 56, 0.45);
+    --cyan:          #FF1738;
+    --border-gold:   rgba(193, 18, 31, 0.35);
+    --border-blue:   rgba(255, 23, 56, 0.3);
+    --navy-mid:      #0d0d12;
+    --navy-deep:     #050505;
+    --teal:          #C1121F;
+    --purple:        #780016;
+    --spiher-navy:   #050505;
+    --spiher-blue:   #C1121F;
   }
 
   html, body {
-    background-color: #020B1C;
-    color: #FFF2D5;
+    background-color: #050505;
+    color: #FFFFFF;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -77,12 +96,12 @@
 /* Halo pulse — "Register Now" button */
 @keyframes halo-pulse {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.45),
-                0 0 25px 2px rgba(0, 119, 200, 0.35);
+    box-shadow: 0 0 0 0 rgba(255, 23, 56, 0.45),
+                0 0 25px 2px rgba(193, 18, 31, 0.35);
   }
   50% {
-    box-shadow: 0 0 0 14px rgba(0, 242, 254, 0),
-                0 0 45px 8px rgba(0, 119, 200, 0.55);
+    box-shadow: 0 0 0 14px rgba(255, 23, 56, 0),
+                0 0 45px 8px rgba(193, 18, 31, 0.55);
   }
 }
 .animate-halo-pulse {
@@ -189,22 +208,22 @@
 }
 
 .glass-dark {
-  background: rgba(10, 20, 40, 0.8);
+  background: rgba(10, 10, 14, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(193, 18, 31, 0.25);
 }
 
 .glass-navy {
-  background: rgba(0, 31, 77, 0.75);
+  background: rgba(13, 13, 18, 0.8);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(0, 242, 254, 0.15);
+  border: 1px solid rgba(255, 23, 56, 0.2);
 }
 
-/* Radiant gradient text */
+/* Radiant red gradient text */
 .text-radianza {
-  background: linear-gradient(135deg, #0077c8, #00f2fe, #a78bfa);
+  background: linear-gradient(135deg, #FFFFFF 0%, #FF1738 50%, #C1121F 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -212,24 +231,32 @@
 
 /* Brand background patterns */
 .bg-radianza-hero {
-  background: linear-gradient(160deg, #ffffff 0%, #f0f8fc 40%, #e8f5fb 100%);
+  background: linear-gradient(160deg, #050505 0%, #120306 40%, #050505 100%);
 }
 
 .bg-radianza-dark {
-  background: linear-gradient(160deg, #001020 0%, #002b66 50%, #030914 100%);
+  background: linear-gradient(160deg, #050505 0%, #150608 50%, #050505 100%);
 }
 
 .bg-radianza-cta {
-  background: linear-gradient(135deg, #001f4d 0%, #002b66 50%, #001838 100%);
+  background: linear-gradient(135deg, #180306 0%, #0d0204 50%, #050505 100%);
 }
 
 /* Glow effects */
 .glow-blue {
-  box-shadow: 0 0 30px rgba(0, 119, 200, 0.4), 0 0 60px rgba(0, 119, 200, 0.15);
+  box-shadow: 0 0 30px rgba(193, 18, 31, 0.4), 0 0 60px rgba(255, 23, 56, 0.2);
 }
 
 .glow-cyan {
-  box-shadow: 0 0 30px rgba(0, 242, 254, 0.4), 0 0 60px rgba(0, 242, 254, 0.15);
+  box-shadow: 0 0 30px rgba(255, 23, 56, 0.45), 0 0 60px rgba(193, 18, 31, 0.2);
+}
+
+.glow-red {
+  box-shadow: 0 0 25px rgba(255, 23, 56, 0.45), 0 0 50px rgba(193, 18, 31, 0.2);
+}
+
+.glow-crimson {
+  box-shadow: 0 0 20px rgba(193, 18, 31, 0.4);
 }
 
 /* Official SPIHER colour utilities — legacy compatibility */

@@ -32,6 +32,7 @@ import { MockDatabaseService } from '../../data/mockDatabase';
 import { CollegeEmblem, SpiherStarburstLogo } from '../common/CollegeLogo';
 import { CustomDatePicker } from '../common/CustomDatePicker';
 import { ThreeDCyberHeadCanvas } from './ThreeDCyberHeadCanvas';
+import { CyberWebBackground } from '../common/CyberWebBackground';
 
 export type LandingPageId = 'home' | 'events' | 'about' | 'contact';
 
@@ -484,11 +485,11 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#020B1C] text-[#FFF2D5] font-sans selection:bg-[#F5B942] selection:text-[#020B1C] flex flex-col justify-between overflow-x-hidden">
+    <div className="min-h-screen w-full bg-[#050505] text-[#FFFFFF] font-sans selection:bg-[#C1121F] selection:text-white flex flex-col justify-between overflow-x-hidden">
       {/* ========================================================================= */}
       {/* 1. STICKY GLASSMORPHIC HEADER & NAVIGATION BAR                            */}
       {/* ========================================================================= */}
-      <header className="sticky top-0 z-40 w-full bg-[#020B1C]/95 backdrop-blur-xl border-b border-[#F5B942]/20 shadow-md">
+      <header className="sticky top-0 z-40 w-full bg-[#050505]/95 backdrop-blur-xl border-b border-[#C1121F]/20 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
           {/* Brand Logo Lockup */}
           <div
@@ -497,14 +498,14 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
           >
             <CollegeEmblem size={34} className="group-hover:scale-105 transition-transform duration-200" />
             <div className="flex items-center gap-1.5">
-              <span className="font-serif font-black text-xl sm:text-2xl tracking-tight text-[#FFF2D5]">
-                RADIANZA <span className="text-[#F5B942]">'26</span>
+              <span className="font-serif font-black text-xl sm:text-2xl tracking-tight text-[#FFFFFF]">
+                RADIANZA <span className="text-[#FF1738]">'26</span>
               </span>
             </div>
           </div>
 
           {/* Desktop Multi-Page Navigation Tabs */}
-          <nav className="hidden lg:flex items-center gap-1.5 p-1 bg-[#061A35] rounded-2xl border border-[#F5B942]/20 shadow-inner">
+          <nav className="hidden lg:flex items-center gap-1.5 p-1 bg-[#0D0D12] rounded-2xl border border-[#C1121F]/20 shadow-inner">
             {PAGES.map((page) => {
               const isActive = activePage === page.id;
               return (
@@ -512,13 +513,13 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   key={page.id}
                   onClick={() => navigateToPage(page.id)}
                   className={`relative px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
-                    isActive ? 'text-[#020B1C]' : 'text-[#FFF2D5]/80 hover:text-white'
+                    isActive ? 'text-white' : 'text-[#9CA3AF] hover:text-white'
                   }`}
                 >
                   {isActive && (
                     <motion.div
                       layoutId="activePagePill"
-                      className="absolute inset-0 bg-[#F5B942] rounded-xl shadow-md"
+                      className="absolute inset-0 bg-gradient-to-r from-[#C1121F] to-[#9e0d19] rounded-xl shadow-md shadow-[#C1121F]/35"
                       transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                     />
                   )}
@@ -534,9 +535,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
             <button
               type="button"
               onClick={() => setIsPassModalOpen(true)}
-              className="hidden lg:flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#061A35] hover:bg-[#09254c] text-[#FFF2D5] border border-[#0878D1]/60 hover:border-[#0878D1] text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95"
+              className="hidden lg:flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0D0D12] hover:bg-[#15151c] text-[#FFFFFF] border border-[#C1121F]/40 hover:border-[#FF1738] text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95"
             >
-              <QrCode className="w-3.5 h-3.5 text-[#0878D1]" />
+              <QrCode className="w-3.5 h-3.5 text-[#FF1738]" />
               <span>Access Pass</span>
             </button>
 
@@ -544,22 +545,22 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
             <button
               type="button"
               onClick={onStartNewRegistration}
-              className="hidden lg:flex relative px-5 py-2 rounded-xl bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] text-xs font-bold shadow-md shadow-[#F5B942]/30 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98] items-center gap-1.5"
+              className="hidden lg:flex relative px-5 py-2 rounded-xl bg-gradient-to-r from-[#C1121F] to-[#a80f1b] hover:from-[#d91423] hover:to-[#C1121F] text-white text-xs font-bold shadow-md shadow-[#C1121F]/40 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98] items-center gap-1.5"
             >
               <span>Register Now</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#020B1C]" />
+              <ArrowRight className="w-3.5 h-3.5 text-white" />
             </button>
 
             {/* Mobile Clean Hamburger Button */}
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden w-10 h-10 rounded-lg border-2 border-[#F5B942] hover:border-[#e5a730] flex flex-col items-center justify-center gap-[5px] p-2 bg-[#061A35] transition-all cursor-pointer active:scale-95 shadow-xs"
+              className="lg:hidden w-10 h-10 rounded-lg border-2 border-[#C1121F] hover:border-[#FF1738] flex flex-col items-center justify-center gap-[5px] p-2 bg-[#0D0D12] transition-all cursor-pointer active:scale-95 shadow-xs"
               aria-label="Open Navigation Menu"
             >
-              <span className="w-5 h-[2px] bg-[#FFF2D5] rounded-full block"></span>
-              <span className="w-5 h-[2px] bg-[#F5B942] rounded-full block"></span>
-              <span className="w-5 h-[2px] bg-[#FFF2D5] rounded-full block"></span>
+              <span className="w-5 h-[2px] bg-[#FFFFFF] rounded-full block"></span>
+              <span className="w-5 h-[2px] bg-[#FF1738] rounded-full block"></span>
+              <span className="w-5 h-[2px] bg-[#FFFFFF] rounded-full block"></span>
             </button>
           </div>
         </div>
@@ -585,31 +586,31 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 26, stiffness: 260 }}
-              className="relative z-10 w-[85%] max-w-[340px] h-[100dvh] h-screen bg-[#061A35] border-l border-[#F5B942]/30 shadow-2xl flex flex-col justify-between p-6 overflow-y-auto text-[#FFF2D5]"
+              className="relative z-10 w-[85%] max-w-[340px] h-[100dvh] h-screen bg-[#0a0a0e] border-l border-[#C1121F]/30 shadow-2xl flex flex-col justify-between p-6 overflow-y-auto text-[#FFFFFF]"
             >
               <div>
-                {/* Top Header Row with Logo & Gold Close Button */}
-                <div className="flex items-center justify-between pb-5 border-b border-[#F5B942]/20">
+                {/* Top Header Row with Logo & Close Button */}
+                <div className="flex items-center justify-between pb-5 border-b border-[#C1121F]/20">
                   <div className="flex items-center gap-2.5">
                     <CollegeEmblem size={28} />
-                    <span className="font-serif font-black text-lg tracking-tight text-[#FFF2D5]">
-                      RADIANZA <span className="text-[#F5B942]">'26</span>
+                    <span className="font-serif font-black text-lg tracking-tight text-[#FFFFFF]">
+                      RADIANZA <span className="text-[#FF1738]">'26</span>
                     </span>
                   </div>
 
-                  {/* Gold Bordered Close Button */}
+                  {/* Red Bordered Close Button */}
                   <button
                     type="button"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="w-9 h-9 rounded-lg border-2 border-[#F5B942] hover:border-[#e5a730] flex items-center justify-center text-[#FFF2D5] bg-[#020B1C] transition-all active:scale-95 cursor-pointer shadow-xs"
+                    className="w-9 h-9 rounded-lg border-2 border-[#C1121F] hover:border-[#FF1738] flex items-center justify-center text-[#FFFFFF] bg-[#050505] transition-all active:scale-95 cursor-pointer shadow-xs"
                     aria-label="Close Navigation Menu"
                   >
-                    <X className="w-5 h-5 text-[#FFF2D5] stroke-[2.2]" />
+                    <X className="w-5 h-5 text-[#FFFFFF] stroke-[2.2]" />
                   </button>
                 </div>
 
                 {/* Clean Nav Links List with Divider Lines */}
-                <nav className="flex flex-col mt-4 divide-y divide-[#F5B942]/10">
+                <nav className="flex flex-col mt-4 divide-y divide-[#C1121F]/15">
                   {PAGES.map((page) => {
                     const isActive = activePage === page.id;
                     return (
@@ -620,11 +621,11 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                           navigateToPage(page.id);
                         }}
                         className={`py-4 text-left text-base transition-colors flex items-center justify-between cursor-pointer ${
-                          isActive ? 'text-[#F5B942] font-bold' : 'text-[#FFF2D5]/80 font-medium hover:text-white'
+                          isActive ? 'text-[#FF1738] font-bold' : 'text-[#9CA3AF] font-medium hover:text-white'
                         }`}
                       >
                         <span>{page.navLabel}</span>
-                        {isActive && <div className="w-2.5 h-2.5 rounded-full bg-[#F5B942] shadow-[0_0_8px_#F5B942]" />}
+                        {isActive && <div className="w-2.5 h-2.5 rounded-full bg-[#FF1738] shadow-[0_0_8px_#FF1738]" />}
                       </button>
                     );
                   })}
@@ -632,17 +633,17 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               </div>
 
               {/* Bottom Big CTA Button */}
-              <div className="pt-6 pb-2 space-y-3 border-t border-[#F5B942]/20">
+              <div className="pt-6 pb-2 space-y-3 border-t border-[#C1121F]/20">
                 <button
                   type="button"
                   onClick={() => {
                     setIsMobileMenuOpen(false);
                     onStartNewRegistration();
                   }}
-                  className="w-full py-3.5 px-6 rounded-full bg-[#F5B942] hover:bg-[#e5a730] active:scale-95 text-[#020B1C] font-black text-xs tracking-widest uppercase shadow-lg shadow-[#F5B942]/30 flex items-center justify-center gap-2 cursor-pointer transition-transform"
+                  className="w-full py-3.5 px-6 rounded-full bg-gradient-to-r from-[#C1121F] to-[#a80f1b] hover:from-[#d91423] hover:to-[#C1121F] active:scale-95 text-white font-black text-xs tracking-widest uppercase shadow-lg shadow-[#C1121F]/40 flex items-center justify-center gap-2 cursor-pointer transition-transform"
                 >
                   <span>Register Now</span>
-                  <ArrowRight className="w-4 h-4 text-[#020B1C]" />
+                  <ArrowRight className="w-4 h-4 text-white" />
                 </button>
 
                 <button
@@ -651,7 +652,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     setIsMobileMenuOpen(false);
                     setIsPassModalOpen(true);
                   }}
-                  className="w-full py-2 text-center text-xs font-bold text-[#FFF2D5]/70 hover:text-[#F5B942] transition-colors cursor-pointer"
+                  className="w-full py-2 text-center text-xs font-bold text-[#9CA3AF] hover:text-[#FF1738] transition-colors cursor-pointer"
                 >
                   Access Existing Pass →
                 </button>
@@ -681,11 +682,10 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               exit="exit"
               className="w-full flex flex-col space-y-0"
             >
-              {/* ── 1. HERO SECTION ── */}
-              <section id="hero" className="relative w-full overflow-hidden bg-[#020B1C] text-[#FFF2D5]">
-                {/* Ambient Glows */}
-                <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-[#0878D1]/15 blur-3xl pointer-events-none" />
-                <div className="absolute bottom-1/4 right-10 w-80 h-80 rounded-full bg-[#F5B942]/10 blur-3xl pointer-events-none" />
+              {/* ── 1. HERO SECTION (SPIDER-MAN DARK RED CYBER AESTHETIC) ── */}
+              <section id="hero" className="relative w-full overflow-hidden bg-[#050505] text-[#FFFFFF]">
+                {/* Cyber Web and Geometric Laser Grid Background */}
+                <CyberWebBackground />
                 
                 {/* ─── MOBILE VIEW: EXACT REFERENCE MATCH (< lg) ─── */}
                 <div className="lg:hidden relative w-full min-h-[calc(100dvh-4.25rem)] min-h-[720px] flex flex-col justify-start p-5 sm:p-6 pb-8 select-none overflow-hidden">
@@ -703,10 +703,10 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#061A35]/90 backdrop-blur-md shadow-md border border-[#F5B942]/40 text-[#FFF2D5] pointer-events-auto"
+                      className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0D0D12]/90 backdrop-blur-md shadow-md border border-[#C1121F]/40 text-[#FFFFFF] shadow-[0_0_15px_rgba(193,18,31,0.2)] pointer-events-auto"
                     >
                       <CollegeEmblem size={24} />
-                      <span className="tracking-wider uppercase font-mono text-[10px] sm:text-[11px] font-bold text-[#FFF2D5]">
+                      <span className="tracking-wider uppercase font-mono text-[10px] sm:text-[11px] font-bold text-[#FFFFFF]">
                         DEPARTMENT OF INFORMATION TECHNOLOGY
                       </span>
                     </motion.div>
@@ -716,22 +716,22 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       initial={{ opacity: 0, x: -18 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: 0.1 }}
-                      className="text-4xl sm:text-5xl font-serif font-black tracking-tight text-[#FFF2D5] leading-[1.02] pointer-events-none"
+                      className="text-4xl sm:text-5xl font-serif font-black tracking-tight text-[#FFFFFF] leading-[1.02] pointer-events-none"
                     >
-                      RADIANZA <span className="text-[#F5B942]">'26</span>
+                      RADIANZA <span className="text-[#FF1738]">'26</span>
                     </motion.h1>
 
-                    {/* Line 3: National-Level Technical Symposium with Gold Accent */}
+                    {/* Line 3: National-Level Technical Symposium with Red Gradient Accent */}
                     <motion.div
                       initial={{ opacity: 0, x: -14 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: 0.15 }}
                       className="flex items-center gap-2 pointer-events-none"
                     >
-                      <span className="text-[10px] sm:text-xs font-mono font-bold tracking-[0.2em] text-[#FFF2D5]/90 uppercase">
+                      <span className="text-[10px] sm:text-xs font-mono font-bold tracking-[0.2em] text-[#FFFFFF]/90 uppercase">
                         NATIONAL-LEVEL TECHNICAL SYMPOSIUM
                       </span>
-                      <span className="w-8 h-[2px] bg-[#F5B942] block shrink-0" />
+                      <span className="w-8 h-[2px] bg-gradient-to-r from-[#FF1738] to-[#C1121F] block shrink-0" />
                     </motion.div>
 
                     {/* Line 4: Tagline */}
@@ -739,7 +739,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: 0.2 }}
-                      className="text-xs sm:text-sm text-[#FFF2D5]/70 font-medium italic pointer-events-none"
+                      className="text-xs sm:text-sm text-[#9CA3AF] font-medium italic pointer-events-none"
                     >
                       "Igniting Ideas, Innovating Tomorrow"
                     </motion.p>
@@ -751,12 +751,12 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       transition={{ duration: 0.6, delay: 0.25 }}
                       className="flex flex-col sm:flex-row flex-wrap gap-2 pt-1 pointer-events-auto"
                     >
-                      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#061A35]/90 backdrop-blur-md border border-[#F5B942]/50 shadow-xs text-xs font-bold text-[#FFF2D5] w-fit">
-                        <Calendar className="w-3.5 h-3.5 text-[#F5B942]" />
+                      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0D0D12]/90 backdrop-blur-md border border-[#C1121F]/50 shadow-xs text-xs font-bold text-[#FFFFFF] w-fit">
+                        <Calendar className="w-3.5 h-3.5 text-[#FF1738]" />
                         <span>15 - 16 OCT 2026</span>
                       </div>
-                      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#061A35]/90 backdrop-blur-md border border-[#0878D1]/60 shadow-xs text-xs font-medium text-[#FFF2D5] w-fit">
-                        <MapPin className="w-3.5 h-3.5 text-[#0878D1]" />
+                      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0D0D12]/90 backdrop-blur-md border border-[#C1121F]/35 shadow-xs text-xs font-medium text-[#FFFFFF] w-fit">
+                        <MapPin className="w-3.5 h-3.5 text-[#FF1738]" />
                         <span>SPIHER Campus, Coimbatore</span>
                       </div>
                     </motion.div>
@@ -771,19 +771,19 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       <button
                         type="button"
                         onClick={onStartNewRegistration}
-                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] font-black text-xs sm:text-sm shadow-[0_0_18px_rgba(245,185,66,0.45)] active:scale-95 transition-all cursor-pointer"
+                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-[#C1121F] to-[#a80f1b] hover:from-[#d91423] hover:to-[#C1121F] text-white font-black text-xs sm:text-sm shadow-[0_0_20px_rgba(255,23,56,0.45)] active:scale-95 transition-all cursor-pointer"
                       >
                         <span>Register Now</span>
-                        <ArrowRight className="w-4 h-4 text-[#020B1C]" />
+                        <ArrowRight className="w-4 h-4 text-white" />
                       </button>
 
                       <button
                         type="button"
                         onClick={() => navigateToPage('events')}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#061A35] hover:bg-[#0a2245] border border-[#0878D1] text-[#FFF2D5] font-bold text-xs sm:text-sm shadow-[0_0_12px_rgba(8,120,209,0.3)] active:scale-95 transition-all cursor-pointer"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0D0D12] hover:bg-[#15151c] border border-[#C1121F]/60 text-white font-bold text-xs sm:text-sm shadow-[0_0_12px_rgba(193,18,31,0.25)] active:scale-95 transition-all cursor-pointer"
                       >
                         <span>View Matrix</span>
-                        <ChevronRight className="w-4 h-4 text-[#0878D1]" />
+                        <ChevronRight className="w-4 h-4 text-[#FF1738]" />
                       </button>
                     </motion.div>
                   </div>
@@ -799,10 +799,10 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         initial={{ opacity: 0, y: -12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#061A35]/90 border border-[#F5B942]/40 text-[#FFF2D5] text-xs font-mono tracking-wider uppercase shadow-md backdrop-blur-md"
+                        className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#0D0D12]/90 border border-[#C1121F]/40 text-[#FFFFFF] text-xs font-mono tracking-wider uppercase shadow-md shadow-[#C1121F]/15 backdrop-blur-md"
                       >
                         <CollegeEmblem size={24} />
-                        <span className="font-bold text-[#FFF2D5]">
+                        <span className="font-bold text-[#FFFFFF]">
                           DEPARTMENT OF INFORMATION TECHNOLOGY
                         </span>
                       </motion.div>
@@ -813,30 +813,30 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                           initial={{ opacity: 0, y: 18 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.6, delay: 0.1 }}
-                          className="text-6xl sm:text-7xl xl:text-8xl font-serif font-black tracking-tight text-[#FFF2D5] leading-[0.95]"
+                          className="text-6xl sm:text-7xl xl:text-8xl font-serif font-black tracking-tight text-[#FFFFFF] leading-[0.95]"
                         >
                           RADIANZA
-                          <span className="block text-[#F5B942] mt-2 font-serif font-black">'26</span>
+                          <span className="block text-[#FF1738] mt-2 font-serif font-black">'26</span>
                         </motion.h1>
 
-                        {/* Subtitle with Gold Horizontal Bar */}
+                        {/* Subtitle with Red Horizontal Bar */}
                         <motion.div
                           initial={{ opacity: 0, y: 12 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.6, delay: 0.2 }}
                           className="flex items-center gap-3 pt-1"
                         >
-                          <span className="text-xs sm:text-sm font-mono font-bold tracking-[0.22em] text-[#FFF2D5]/90 uppercase">
+                          <span className="text-xs sm:text-sm font-mono font-bold tracking-[0.22em] text-[#FFFFFF]/90 uppercase">
                             NATIONAL-LEVEL TECHNICAL SYMPOSIUM
                           </span>
-                          <span className="w-12 h-[2px] bg-[#F5B942] block" />
+                          <span className="w-12 h-[2px] bg-gradient-to-r from-[#FF1738] to-[#C1121F] block" />
                         </motion.div>
 
                         <motion.p
                           initial={{ opacity: 0, y: 12 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.6, delay: 0.25 }}
-                          className="text-base sm:text-lg text-[#FFF2D5]/70 font-medium italic"
+                          className="text-base sm:text-lg text-[#9CA3AF] font-medium italic"
                         >
                           "Igniting Ideas, Innovating Tomorrow"
                         </motion.p>
@@ -847,15 +847,15 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.3 }}
-                        className="flex flex-wrap justify-start items-center gap-3 pt-1 text-xs font-semibold text-[#FFF2D5]"
+                        className="flex flex-wrap justify-start items-center gap-3 pt-1 text-xs font-semibold text-[#FFFFFF]"
                       >
-                        <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#061A35]/90 backdrop-blur-md border border-[#F5B942]/50 shadow-md">
-                          <Calendar className="w-4 h-4 text-[#F5B942]" />
-                          <span className="font-bold text-[#FFF2D5]">15 - 16 OCT 2026</span>
+                        <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#0D0D12]/90 backdrop-blur-md border border-[#C1121F]/50 shadow-md shadow-[#C1121F]/15">
+                          <Calendar className="w-4 h-4 text-[#FF1738]" />
+                          <span className="font-bold text-[#FFFFFF]">15 - 16 OCT 2026</span>
                         </div>
-                        <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#061A35]/90 backdrop-blur-md border border-[#0878D1]/60 shadow-md">
-                          <MapPin className="w-4 h-4 text-[#0878D1]" />
-                          <span className="text-[#FFF2D5]">SPIHER Campus, Coimbatore</span>
+                        <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#0D0D12]/90 backdrop-blur-md border border-[#C1121F]/35 shadow-md">
+                          <MapPin className="w-4 h-4 text-[#FF1738]" />
+                          <span className="text-[#FFFFFF]">SPIHER Campus, Coimbatore</span>
                         </div>
                       </motion.div>
 
@@ -866,34 +866,34 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         transition={{ duration: 0.6, delay: 0.4 }}
                         className="flex flex-row items-center gap-4 pt-3 w-auto"
                       >
-                        {/* Primary Gold Glowing CTA */}
+                        {/* Primary Crimson Glowing CTA */}
                         <button
                           type="button"
                           onClick={onStartNewRegistration}
-                          className="relative w-auto px-8 py-3.5 rounded-full bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] font-black text-sm tracking-wide shadow-[0_0_24px_rgba(245,185,66,0.45)] hover:shadow-[0_0_32px_rgba(245,185,66,0.65)] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+                          className="relative w-auto px-8 py-3.5 rounded-full bg-gradient-to-r from-[#C1121F] to-[#a80f1b] hover:from-[#d91423] hover:to-[#C1121F] text-white font-black text-sm tracking-wide shadow-[0_0_24px_rgba(255,23,56,0.45)] hover:shadow-[0_0_36px_rgba(255,23,56,0.7)] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
                         >
                           <span className="font-bold">Register Now</span>
-                          <ArrowRight className="w-4 h-4 text-[#020B1C]" />
+                          <ArrowRight className="w-4 h-4 text-white" />
                         </button>
 
-                        {/* Secondary Navy/Blue CTA */}
+                        {/* Secondary Dark/Red CTA */}
                         <button
                           type="button"
                           onClick={() => navigateToPage('events')}
-                          className="w-auto px-7 py-3.5 rounded-full bg-[#061A35] hover:bg-[#0a2245] border border-[#0878D1] hover:border-[#0878D1]/80 text-[#FFF2D5] font-bold text-sm tracking-wide shadow-[0_0_16px_rgba(8,120,209,0.3)] flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95"
+                          className="w-auto px-7 py-3.5 rounded-full bg-[#0D0D12] hover:bg-[#15151c] border border-[#C1121F]/60 hover:border-[#FF1738] text-white font-bold text-sm tracking-wide shadow-[0_0_16px_rgba(193,18,31,0.25)] flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95"
                         >
                           <span>View Competition Matrix</span>
-                          <ChevronRight className="w-4 h-4 text-[#0878D1]" />
+                          <ChevronRight className="w-4 h-4 text-[#FF1738]" />
                         </button>
                       </motion.div>
 
                       {/* Digital Pass Quick Access */}
-                      <div className="pt-1 text-xs text-[#FFF2D5]/70 flex items-center justify-start gap-2">
+                      <div className="pt-1 text-xs text-[#9CA3AF] flex items-center justify-start gap-2">
                         <span>Already registered?</span>
                         <button
                           type="button"
                           onClick={() => setIsPassModalOpen(true)}
-                          className="text-[#F5B942] font-bold underline hover:text-[#e5a730] cursor-pointer"
+                          className="text-[#FF1738] font-bold underline hover:text-[#ff455e] cursor-pointer"
                         >
                           Access your digital pass →
                         </button>
@@ -909,7 +909,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               </section>
 
               {/* ── 2. HIGHLIGHTS SECTION ── */}
-              <section id="highlights" className="w-full py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#020B1C] border-t border-[#F5B942]/20">
+              <section id="highlights" className="w-full py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#050505] border-t border-[#C1121F]/20">
                 <div className="max-w-7xl mx-auto space-y-8 sm:space-y-12">
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -918,13 +918,13 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     transition={{ duration: 0.6 }}
                     className="max-w-2xl text-left space-y-2 sm:space-y-3"
                   >
-                    <span className="text-[10px] sm:text-xs font-mono font-extrabold uppercase tracking-widest text-[#F5B942] bg-[#061A35] px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-[#F5B942]/30">
+                    <span className="text-[10px] sm:text-xs font-mono font-extrabold uppercase tracking-widest text-[#FF1738] bg-[#0D0D12] px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-[#C1121F]/30 shadow-[0_0_10px_rgba(255,23,56,0.15)]">
                       WHY
                     </span>
-                    <h2 className="text-2xl sm:text-5xl font-serif font-extrabold text-[#FFF2D5] tracking-tight">
-                      RADIANZA <span className="text-[#F5B942]">'26?</span>
+                    <h2 className="text-2xl sm:text-5xl font-serif font-extrabold text-[#FFFFFF] tracking-tight">
+                      RADIANZA <span className="text-[#FF1738]">'26?</span>
                     </h2>
-                    <p className="text-xs sm:text-base text-[#FFF2D5]/70 leading-relaxed font-medium">
+                    <p className="text-xs sm:text-base text-[#9CA3AF] leading-relaxed font-medium">
                       A platform to learn, build, compete and connect. Join the next generation of innovators, creators and problem solvers at SPIHER's flagship technical symposium.
                     </p>
                   </motion.div>
@@ -941,22 +941,22 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   >
                     <motion.div
                       variants={{ hidden: { opacity: 0, y: 25 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
-                      className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#061A35] border border-[#0878D1]/40 hover:border-[#0878D1] hover:shadow-[0_0_24px_rgba(8,120,209,0.3)] hover:-translate-y-1.5 transition-all duration-300 space-y-2.5 sm:space-y-4 flex flex-col justify-between group cursor-pointer"
+                      className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#0D0D12] border border-[#C1121F]/30 hover:border-[#FF1738] hover:shadow-[0_0_24px_rgba(255,23,56,0.3)] hover:-translate-y-1.5 transition-all duration-300 space-y-2.5 sm:space-y-4 flex flex-col justify-between group cursor-pointer"
                       onClick={() => {
                         setActiveCategory('Technical');
                         navigateToPage('events');
                       }}
                     >
                       <div className="space-y-2 sm:space-y-3">
-                        <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#0878D1]/20 text-[#0878D1] flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Code2 className="w-4.5 h-4.5 sm:w-6 sm:h-6 text-[#0878D1]" />
+                        <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#C1121F]/20 text-[#FF1738] flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <Code2 className="w-4.5 h-4.5 sm:w-6 sm:h-6 text-[#FF1738]" />
                         </div>
-                        <h3 className="text-sm sm:text-lg font-bold text-[#FFF2D5] leading-tight">Technical Events</h3>
-                        <p className="text-[11px] sm:text-xs text-[#FFF2D5]/70 leading-snug sm:leading-relaxed line-clamp-3 sm:line-clamp-none">
+                        <h3 className="text-sm sm:text-lg font-bold text-[#FFFFFF] leading-tight">Technical Events</h3>
+                        <p className="text-[11px] sm:text-xs text-[#9CA3AF] leading-snug sm:leading-relaxed line-clamp-3 sm:line-clamp-none">
                           Code. Build. Solve. Intense algorithmic sprints, robotics combat, and full-stack challenges.
                         </p>
                       </div>
-                      <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-bold text-[#0878D1] pt-1 sm:pt-2">
+                      <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-bold text-[#FF1738] pt-1 sm:pt-2">
                         <span>View Tracks</span>
                         <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 group-hover:translate-x-1 transition-transform" />
                       </div>
@@ -964,22 +964,22 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
 
                     <motion.div
                       variants={{ hidden: { opacity: 0, y: 25 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
-                      className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#061A35] border border-[#F5B942]/30 hover:border-[#F5B942] hover:shadow-[0_0_24px_rgba(245,185,66,0.3)] hover:-translate-y-1.5 transition-all duration-300 space-y-2.5 sm:space-y-4 flex flex-col justify-between group cursor-pointer"
+                      className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#0D0D12] border border-[#C1121F]/30 hover:border-[#FF1738] hover:shadow-[0_0_24px_rgba(255,23,56,0.3)] hover:-translate-y-1.5 transition-all duration-300 space-y-2.5 sm:space-y-4 flex flex-col justify-between group cursor-pointer"
                       onClick={() => {
                         setActiveCategory('Non-Technical');
                         navigateToPage('events');
                       }}
                     >
                       <div className="space-y-2 sm:space-y-3">
-                        <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#F5B942]/20 text-[#F5B942] flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Gamepad2 className="w-4.5 h-4.5 sm:w-6 sm:h-6 text-[#F5B942]" />
+                        <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#C1121F]/20 text-[#FF1738] flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <Gamepad2 className="w-4.5 h-4.5 sm:w-6 sm:h-6 text-[#FF1738]" />
                         </div>
-                        <h3 className="text-sm sm:text-lg font-bold text-[#FFF2D5] leading-tight">Non-Technical Events</h3>
-                        <p className="text-[11px] sm:text-xs text-[#FFF2D5]/70 leading-snug sm:leading-relaxed line-clamp-3 sm:line-clamp-none">
+                        <h3 className="text-sm sm:text-lg font-bold text-[#FFFFFF] leading-tight">Non-Technical Events</h3>
+                        <p className="text-[11px] sm:text-xs text-[#9CA3AF] leading-snug sm:leading-relaxed line-clamp-3 sm:line-clamp-none">
                           Showcase. Express. Create. e-Sports, technical quizzes, design marathons, and creative arenas.
                         </p>
                       </div>
-                      <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-bold text-[#F5B942] pt-1 sm:pt-2">
+                      <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-bold text-[#FF1738] pt-1 sm:pt-2">
                         <span>View Tracks</span>
                         <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 group-hover:translate-x-1 transition-transform" />
                       </div>
@@ -987,34 +987,34 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
 
                     <motion.div
                       variants={{ hidden: { opacity: 0, y: 25 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
-                      className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#061A35] border border-[#0878D1]/30 hover:border-[#0878D1] hover:shadow-[0_0_24px_rgba(8,120,209,0.25)] hover:-translate-y-1.5 transition-all duration-300 space-y-2.5 sm:space-y-4 flex flex-col justify-between group"
+                      className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#0D0D12] border border-[#C1121F]/30 hover:border-[#FF1738] hover:shadow-[0_0_24px_rgba(255,23,56,0.25)] hover:-translate-y-1.5 transition-all duration-300 space-y-2.5 sm:space-y-4 flex flex-col justify-between group"
                     >
                       <div className="space-y-2 sm:space-y-3">
-                        <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#0878D1]/20 text-[#0878D1] flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Users className="w-4.5 h-4.5 sm:w-6 sm:h-6 text-[#0878D1]" />
+                        <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#C1121F]/20 text-[#FF1738] flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <Users className="w-4.5 h-4.5 sm:w-6 sm:h-6 text-[#FF1738]" />
                         </div>
-                        <h3 className="text-sm sm:text-lg font-bold text-[#FFF2D5] leading-tight">Networking</h3>
-                        <p className="text-[11px] sm:text-xs text-[#FFF2D5]/70 leading-snug sm:leading-relaxed line-clamp-3 sm:line-clamp-none">
+                        <h3 className="text-sm sm:text-lg font-bold text-[#FFFFFF] leading-tight">Networking</h3>
+                        <p className="text-[11px] sm:text-xs text-[#9CA3AF] leading-snug sm:leading-relaxed line-clamp-3 sm:line-clamp-none">
                           Meet industry experts, professors, and over 500+ ambitious delegates from all across India.
                         </p>
                       </div>
-                      <span className="text-[10px] sm:text-[11px] font-bold text-[#0878D1] font-mono pt-1 sm:pt-2">500+ DELEGATES</span>
+                      <span className="text-[10px] sm:text-[11px] font-bold text-[#FF1738] font-mono pt-1 sm:pt-2">500+ DELEGATES</span>
                     </motion.div>
 
                     <motion.div
                       variants={{ hidden: { opacity: 0, y: 25 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
-                      className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#061A35] border border-[#F5B942]/40 hover:border-[#F5B942] hover:shadow-[0_0_24px_rgba(245,185,66,0.35)] hover:-translate-y-1.5 transition-all duration-300 space-y-2.5 sm:space-y-4 flex flex-col justify-between group"
+                      className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#0D0D12] border border-[#C1121F]/30 hover:border-[#FF1738] hover:shadow-[0_0_24px_rgba(255,23,56,0.35)] hover:-translate-y-1.5 transition-all duration-300 space-y-2.5 sm:space-y-4 flex flex-col justify-between group"
                     >
                       <div className="space-y-2 sm:space-y-3">
-                        <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#F5B942]/20 text-[#F5B942] flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Trophy className="w-4.5 h-4.5 sm:w-6 sm:h-6 text-[#F5B942]" />
+                        <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#C1121F]/20 text-[#FF1738] flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <Trophy className="w-4.5 h-4.5 sm:w-6 sm:h-6 text-[#FF1738]" />
                         </div>
-                        <h3 className="text-sm sm:text-lg font-bold text-[#FFF2D5] leading-tight">Exciting Prizes</h3>
-                        <p className="text-[11px] sm:text-xs text-[#FFF2D5]/70 leading-snug sm:leading-relaxed line-clamp-3 sm:line-clamp-none">
+                        <h3 className="text-sm sm:text-lg font-bold text-[#FFFFFF] leading-tight">Exciting Prizes</h3>
+                        <p className="text-[11px] sm:text-xs text-[#9CA3AF] leading-snug sm:leading-relaxed line-clamp-3 sm:line-clamp-none">
                           Recognize talent & celebrate innovation with cash prizes, official trophies, and certificates.
                         </p>
                       </div>
-                      <span className="text-[10px] sm:text-[11px] font-bold text-[#F5B942] font-mono pt-1 sm:pt-2">₹50,000+ POOL</span>
+                      <span className="text-[10px] sm:text-[11px] font-bold text-[#FF1738] font-mono pt-1 sm:pt-2">₹50,000+ POOL</span>
                     </motion.div>
                   </motion.div>
 
@@ -1024,7 +1024,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.7 }}
-                    className="group relative rounded-3xl overflow-hidden shadow-xl border border-[#F5B942]/30 min-h-[220px] sm:min-h-[280px] flex items-end"
+                    className="group relative rounded-3xl overflow-hidden shadow-xl border border-[#C1121F]/30 min-h-[220px] sm:min-h-[280px] flex items-end"
                   >
                     <img
                       src="/spiher-hero-building.png"
@@ -1033,23 +1033,23 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       loading="lazy"
                       decoding="async"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#020B1C]/95 via-[#020B1C]/60 to-transparent" />
-                    <div className="relative z-10 p-6 sm:p-8 text-[#FFF2D5] flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/95 via-[#050505]/60 to-transparent" />
+                    <div className="relative z-10 p-6 sm:p-8 text-[#FFFFFF] flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
                       <div>
-                        <span className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded bg-[#0878D1] text-white">
+                        <span className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded bg-[#C1121F] text-white">
                           HOST CAMPUS
                         </span>
-                        <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#FFF2D5] mt-2">
+                        <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#FFFFFF] mt-2">
                           St. Peter's Institute of Higher Education &amp; Research
                         </h3>
-                        <p className="text-xs text-[#FFF2D5]/80 mt-0.5">
+                        <p className="text-xs text-[#9CA3AF] mt-0.5">
                           Deemed to be University • NAAC 'A' Grade Accredited Campus
                         </p>
                       </div>
                       <button
                         type="button"
                         onClick={onStartNewRegistration}
-                        className="px-6 py-2.5 rounded-xl bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] text-xs font-bold shadow-md shadow-[#F5B942]/30 transition-all cursor-pointer whitespace-nowrap"
+                        className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#C1121F] to-[#a80f1b] hover:from-[#d91423] hover:to-[#C1121F] text-white text-xs font-bold shadow-md shadow-[#C1121F]/40 transition-all cursor-pointer whitespace-nowrap"
                       >
                         Join RADIANZA '26
                       </button>
@@ -1059,7 +1059,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               </section>
 
               {/* ── 3. SPEAKERS SECTION (HORIZONTAL SCROLLING) ── */}
-              <section id="speakers" className="w-full py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#020B1C] border-t border-[#F5B942]/20 overflow-hidden">
+              <section id="speakers" className="w-full py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#050505] border-t border-[#C1121F]/20 overflow-hidden">
                 <div className="max-w-7xl mx-auto space-y-5 sm:space-y-6">
                   <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <motion.div
@@ -1069,32 +1069,32 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       transition={{ duration: 0.6 }}
                       className="max-w-2xl text-left space-y-3"
                     >
-                      <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#F5B942] bg-[#061A35] px-3 py-1 rounded-full border border-[#F5B942]/30">
+                      <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#FF1738] bg-[#0D0D12] px-3 py-1 rounded-full border border-[#C1121F]/30 shadow-[0_0_10px_rgba(255,23,56,0.15)]">
                         THOUGHT LEADERS &amp; JURY
                       </span>
-                      <h2 className="text-3xl sm:text-5xl font-serif font-extrabold text-[#FFF2D5] tracking-tight">
+                      <h2 className="text-3xl sm:text-5xl font-serif font-extrabold text-[#FFFFFF] tracking-tight">
                         Eminent Speakers
                       </h2>
-                      <p className="text-sm sm:text-base text-[#FFF2D5]/70 leading-relaxed font-medium">
+                      <p className="text-sm sm:text-base text-[#9CA3AF] leading-relaxed font-medium">
                         Learn directly from researchers, tech executives, and venture founders shaping the forefront of modern engineering and digital transformation.
                       </p>
                     </motion.div>
 
                     {/* Navigation Controls & Helper */}
                     <div className="flex items-center gap-3 shrink-0">
-                      <span className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[#FFF2D5]/60 bg-[#061A35] px-3 py-2 rounded-full border border-[#F5B942]/20 select-none">
+                      <span className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[#9CA3AF] bg-[#0D0D12] px-3 py-2 rounded-full border border-[#C1121F]/20 select-none">
                         <span>← Swipe / Scroll →</span>
                       </span>
 
-                      <div className="flex items-center gap-2 bg-[#061A35] p-1.5 rounded-full border border-[#F5B942]/20">
+                      <div className="flex items-center gap-2 bg-[#0D0D12] p-1.5 rounded-full border border-[#C1121F]/20">
                         <button
                           type="button"
                           onClick={() => handleSpeakersScroll('left')}
                           disabled={!canScrollSpeakersLeft}
                           className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
                             canScrollSpeakersLeft
-                              ? 'bg-[#020B1C] text-[#FFF2D5] hover:bg-[#F5B942] hover:text-[#020B1C] shadow-xs active:scale-95 border border-[#F5B942]/30'
-                              : 'bg-transparent text-[#FFF2D5]/20 cursor-not-allowed border border-transparent'
+                              ? 'bg-[#050505] text-white hover:bg-[#C1121F] shadow-xs active:scale-95 border border-[#C1121F]/30'
+                              : 'bg-transparent text-[#9CA3AF]/30 cursor-not-allowed border border-transparent'
                           }`}
                           aria-label="Scroll speakers left"
                         >
@@ -1106,8 +1106,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                           disabled={!canScrollSpeakersRight}
                           className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
                             canScrollSpeakersRight
-                              ? 'bg-[#020B1C] text-[#FFF2D5] hover:bg-[#F5B942] hover:text-[#020B1C] shadow-xs active:scale-95 border border-[#F5B942]/30'
-                              : 'bg-transparent text-[#FFF2D5]/20 cursor-not-allowed border border-transparent'
+                              ? 'bg-[#050505] text-white hover:bg-[#C1121F] shadow-xs active:scale-95 border border-[#C1121F]/30'
+                              : 'bg-transparent text-[#9CA3AF]/30 cursor-not-allowed border border-transparent'
                           }`}
                           aria-label="Scroll speakers right"
                         >
@@ -1132,9 +1132,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       {SPEAKERS_DATA.map((speaker, idx) => (
                         <div
                           key={speaker.id}
-                          className="w-[300px] sm:w-[340px] md:w-[360px] shrink-0 snap-start bg-[#061A35] rounded-3xl border border-[#0878D1]/30 overflow-hidden shadow-xs hover:shadow-[0_0_24px_rgba(8,120,209,0.3)] hover:border-[#0878D1] transition-all duration-300 flex flex-col justify-between group select-none"
+                          className="w-[300px] sm:w-[340px] md:w-[360px] shrink-0 snap-start bg-[#0D0D12] rounded-3xl border border-[#C1121F]/30 overflow-hidden shadow-xs hover:shadow-[0_0_24px_rgba(255,23,56,0.25)] hover:border-[#FF1738] transition-all duration-300 flex flex-col justify-between group select-none"
                         >
-                          <div className="relative h-60 w-full overflow-hidden bg-[#020B1C]">
+                          <div className="relative h-60 w-full overflow-hidden bg-[#050505]">
                             <img
                               src={speaker.imageUrl}
                               alt={speaker.name}
@@ -1142,39 +1142,39 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                               loading="lazy"
                               decoding="async"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#061A35] via-[#061A35]/30 to-transparent pointer-events-none" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D12] via-[#0D0D12]/30 to-transparent pointer-events-none" />
 
                             <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-                              <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#020B1C]/90 text-[#F5B942] border border-[#F5B942]/40 shadow-xs backdrop-blur-xs">
+                              <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#050505]/90 text-[#FF1738] border border-[#C1121F]/40 shadow-xs backdrop-blur-xs">
                                 {speaker.tag}
                               </span>
-                              <span className="text-[10px] font-mono font-bold text-[#FFF2D5]/90 bg-black/50 backdrop-blur-xs px-2 py-0.5 rounded-full border border-white/20">
+                              <span className="text-[10px] font-mono font-bold text-white bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded-full border border-[#C1121F]/30">
                                 0{idx + 1}
                               </span>
                             </div>
 
                             <div className="absolute bottom-3 left-4 right-4 text-white pointer-events-none">
-                              <h3 className="text-lg font-bold leading-tight text-[#FFF2D5] drop-shadow-xs">{speaker.name}</h3>
-                              <p className="text-xs text-[#0878D1] font-medium mt-0.5">{speaker.role}</p>
+                              <h3 className="text-lg font-bold leading-tight text-[#FFFFFF] drop-shadow-xs">{speaker.name}</h3>
+                              <p className="text-xs text-[#FF1738] font-medium mt-0.5">{speaker.role}</p>
                             </div>
                           </div>
 
                           <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                             <div className="space-y-2">
-                              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#F5B942] block">
+                              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#FF1738] block">
                                 {speaker.organization}
                               </span>
-                              <h4 className="text-sm font-bold text-[#FFF2D5] leading-snug">
+                              <h4 className="text-sm font-bold text-[#FFFFFF] leading-snug">
                                 "{speaker.topic}"
                               </h4>
-                              <p className="text-xs text-[#FFF2D5]/70 line-clamp-3 leading-relaxed">
+                              <p className="text-xs text-[#9CA3AF] line-clamp-3 leading-relaxed">
                                 {speaker.bio}
                               </p>
                             </div>
 
-                            <div className="pt-3 border-t border-[#F5B942]/15 flex items-center justify-between text-xs text-[#FFF2D5]/50">
-                              <span className="flex items-center gap-1.5 text-[11px] text-[#0878D1] font-semibold">
-                                <span className="w-2 h-2 rounded-full bg-[#0878D1] animate-pulse" />
+                            <div className="pt-3 border-t border-[#C1121F]/15 flex items-center justify-between text-xs text-[#9CA3AF]/60">
+                              <span className="flex items-center gap-1.5 text-[11px] text-[#FF1738] font-semibold">
+                                <span className="w-2 h-2 rounded-full bg-[#FF1738] animate-pulse" />
                                 <span>Live Keynote &amp; Q&amp;A</span>
                               </span>
                               <div className="flex items-center gap-2">
@@ -1186,7 +1186,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                                       window.open(speaker.socials.linkedin, '_blank');
                                     }
                                   }}
-                                  className="hover:text-[#F5B942] transition-colors p-1 cursor-pointer text-[#FFF2D5]/60"
+                                  className="hover:text-[#FF1738] transition-colors p-1 cursor-pointer text-[#9CA3AF]"
                                   aria-label={`${speaker.name} LinkedIn`}
                                 >
                                   <Linkedin className="w-4 h-4" />
@@ -1199,7 +1199,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                                       window.open(speaker.socials.web, '_blank');
                                     }
                                   }}
-                                  className="hover:text-[#F5B942] transition-colors p-1 cursor-pointer text-[#FFF2D5]/60"
+                                  className="hover:text-[#FF1738] transition-colors p-1 cursor-pointer text-[#9CA3AF]"
                                   aria-label={`${speaker.name} Website`}
                                 >
                                   <Globe className="w-4 h-4" />
@@ -1215,7 +1215,10 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               </section>
 
               {/* ── 4. GALLERY SECTION (HORIZONTAL SCROLLING) ── */}
-              <section id="gallery" className="w-full py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#020B1C] border-t border-[#F5B942]/20 overflow-hidden">
+              <section id="gallery" className="w-full py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#050505] border-t border-[#C1121F]/30 overflow-hidden relative">
+                {/* Subtle web lattice accent line */}
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FF1738]/50 to-transparent" />
+
                 <div className="max-w-7xl mx-auto space-y-5 sm:space-y-6">
                   <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <motion.div
@@ -1225,33 +1228,33 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       transition={{ duration: 0.6 }}
                       className="space-y-3 text-left max-w-2xl"
                     >
-                      <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#0878D1] bg-[#061A35] px-3 py-1 rounded-full border border-[#0878D1]/30">
+                      <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#FF1738] bg-[#0D0D12] px-3 py-1 rounded-full border border-[#C1121F]/40 shadow-[0_0_12px_rgba(255,23,56,0.15)]">
                         CAMPUS PULSE
                       </span>
-                      <h2 className="text-3xl sm:text-5xl font-serif font-extrabold text-[#FFF2D5] tracking-tight">
+                      <h2 className="text-3xl sm:text-5xl font-serif font-extrabold text-white tracking-tight">
                         Moments of RADIANZA
                       </h2>
-                      <p className="text-sm sm:text-base text-[#FFF2D5]/70 leading-relaxed font-medium">
+                      <p className="text-sm sm:text-base text-[#9CA3AF] leading-relaxed font-medium">
                         Relive the electric energy, intense hacking sprints, robotics warfare, and grand valedictory celebrations from our symposium legacy.
                       </p>
                     </motion.div>
 
                     {/* Navigation Controls & Helper */}
                     <div className="flex items-center gap-3 shrink-0">
-                      <div className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-[#FFF2D5]/60 bg-[#061A35] px-3 py-2 rounded-full border border-[#F5B942]/20 select-none">
-                        <Camera className="w-3.5 h-3.5 text-[#F5B942]" />
+                      <div className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-[#9CA3AF] bg-[#0D0D12] px-3 py-2 rounded-full border border-[#C1121F]/30 select-none">
+                        <Camera className="w-3.5 h-3.5 text-[#FF1738]" />
                         <span>Click card to enlarge</span>
                       </div>
 
-                      <div className="flex items-center gap-2 bg-[#061A35] p-1.5 rounded-full border border-[#F5B942]/20 shadow-xs">
+                      <div className="flex items-center gap-2 bg-[#0D0D12] p-1.5 rounded-full border border-[#C1121F]/30 shadow-xs">
                         <button
                           type="button"
                           onClick={() => handleGalleryScroll('left')}
                           disabled={!canScrollGalleryLeft}
                           className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
                             canScrollGalleryLeft
-                              ? 'bg-[#020B1C] text-[#FFF2D5] hover:bg-[#F5B942] hover:text-[#020B1C] border border-[#F5B942]/30 shadow-xs active:scale-95'
-                              : 'bg-transparent text-[#FFF2D5]/20 cursor-not-allowed border border-transparent'
+                              ? 'bg-[#050505] text-white hover:bg-[#C1121F] hover:text-white border border-[#C1121F]/40 shadow-xs active:scale-95'
+                              : 'bg-transparent text-[#9CA3AF]/20 cursor-not-allowed border border-transparent'
                           }`}
                           aria-label="Scroll gallery left"
                         >
@@ -1263,8 +1266,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                           disabled={!canScrollGalleryRight}
                           className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
                             canScrollGalleryRight
-                              ? 'bg-[#020B1C] text-[#FFF2D5] hover:bg-[#F5B942] hover:text-[#020B1C] border border-[#F5B942]/30 shadow-xs active:scale-95'
-                              : 'bg-transparent text-[#FFF2D5]/20 cursor-not-allowed border border-transparent'
+                              ? 'bg-[#050505] text-white hover:bg-[#C1121F] hover:text-white border border-[#C1121F]/40 shadow-xs active:scale-95'
+                              : 'bg-transparent text-[#9CA3AF]/20 cursor-not-allowed border border-transparent'
                           }`}
                           aria-label="Scroll gallery right"
                         >
@@ -1290,7 +1293,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         <div
                           key={item.id}
                           onClick={() => setSelectedGalleryModal(item)}
-                          className="w-[300px] sm:w-[360px] md:w-[400px] shrink-0 snap-start aspect-[4/3] group relative rounded-3xl overflow-hidden bg-[#061A35] shadow-md hover:shadow-2xl border border-[#F5B942]/20 hover:border-[#F5B942]/60 transition-all duration-300 cursor-pointer select-none"
+                          className="w-[300px] sm:w-[360px] md:w-[400px] shrink-0 snap-start aspect-[4/3] group relative rounded-3xl overflow-hidden bg-[#0D0D12] shadow-md hover:shadow-[0_0_30px_rgba(255,23,56,0.25)] border border-[#C1121F]/30 hover:border-[#FF1738]/70 transition-all duration-300 cursor-pointer select-none"
                         >
                           <img
                             src={item.imageUrl}
@@ -1299,25 +1302,25 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                             loading="lazy"
                             decoding="async"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#020B1C]/95 via-[#020B1C]/40 to-transparent opacity-85 group-hover:opacity-95 transition-opacity pointer-events-none" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/95 via-[#050505]/40 to-transparent opacity-85 group-hover:opacity-95 transition-opacity pointer-events-none" />
 
                           <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#020B1C]/90 border border-[#F5B942]/40 backdrop-blur-md text-[#F5B942] shadow-xs">
+                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#050505]/90 border border-[#C1121F]/50 backdrop-blur-md text-[#FF1738] shadow-xs">
                               {item.category}
                             </span>
                             <div className="flex items-center gap-2">
-                              <span className="text-[10px] font-mono font-bold text-[#FFF2D5]/90 bg-black/50 backdrop-blur-xs px-2 py-0.5 rounded-full border border-white/20">
+                              <span className="text-[10px] font-mono font-bold text-white/90 bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded-full border border-[#C1121F]/30">
                                 0{idx + 1}
                               </span>
-                              <div className="w-8 h-8 rounded-full bg-[#F5B942]/20 border border-[#F5B942]/40 backdrop-blur-md flex items-center justify-center text-[#F5B942] opacity-0 group-hover:opacity-100 transition-opacity">
+                              <div className="w-8 h-8 rounded-full bg-[#FF1738]/20 border border-[#FF1738]/40 backdrop-blur-md flex items-center justify-center text-[#FF1738] opacity-0 group-hover:opacity-100 transition-opacity">
                                 <Maximize2 className="w-4 h-4" />
                               </div>
                             </div>
                           </div>
 
-                          <div className="absolute bottom-4 left-4 right-4 text-[#FFF2D5] space-y-1 transform group-hover:-translate-y-1 transition-transform pointer-events-none">
+                          <div className="absolute bottom-4 left-4 right-4 text-white space-y-1 transform group-hover:-translate-y-1 transition-transform pointer-events-none">
                             <h3 className="text-base font-bold leading-tight drop-shadow-xs">{item.title}</h3>
-                            <p className="text-xs text-[#FFF2D5]/80 line-clamp-2 leading-relaxed">{item.caption}</p>
+                            <p className="text-xs text-[#9CA3AF] line-clamp-2 leading-relaxed">{item.caption}</p>
                           </div>
                         </div>
                       ))}
@@ -1327,16 +1330,16 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               </section>
 
               {/* ── 5. QUICK BOTTOM GATEWAY TO COMPETITION MATRIX ── */}
-              <section className="w-full py-8 sm:py-10 px-4 sm:px-6 lg:px-8 bg-[#061A35] border-t border-b border-[#F5B942]/25 text-[#FFF2D5]">
+              <section className="w-full py-8 sm:py-10 px-4 sm:px-6 lg:px-8 bg-[#0D0D12] border-t border-b border-[#C1121F]/30 text-white relative">
                 <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                   <div className="space-y-1 text-left">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#F5B942]">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#FF1738]">
                       READY TO COMPETE?
                     </span>
-                    <h3 className="text-2xl font-serif font-bold text-[#FFF2D5]">
+                    <h3 className="text-2xl font-serif font-bold text-white">
                       Explore the Competition Matrix &amp; Register
                     </h3>
-                    <p className="text-xs text-[#FFF2D5]/70">
+                    <p className="text-xs text-[#9CA3AF]">
                       Pick your track, build your squad, and secure your verifiable entry pass.
                     </p>
                   </div>
@@ -1344,14 +1347,14 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     <button
                       type="button"
                       onClick={() => navigateToPage('events')}
-                      className="px-6 py-3 rounded-xl bg-[#020B1C] hover:bg-[#020B1C]/80 text-[#FFF2D5] border border-[#0878D1] text-xs font-bold shadow-md transition-all cursor-pointer whitespace-nowrap"
+                      className="px-6 py-3 rounded-xl bg-[#050505] hover:bg-[#15151D] text-white border border-[#C1121F]/50 text-xs font-bold shadow-md transition-all cursor-pointer whitespace-nowrap active:scale-95"
                     >
                       Open Events Matrix →
                     </button>
                     <button
                       type="button"
                       onClick={onStartNewRegistration}
-                      className="px-6 py-3 rounded-xl bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] text-xs font-black shadow-md shadow-[#F5B942]/30 transition-all cursor-pointer whitespace-nowrap"
+                      className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#C1121F] to-[#FF1738] hover:brightness-110 text-white text-xs font-black shadow-lg shadow-[#FF1738]/25 transition-all cursor-pointer whitespace-nowrap active:scale-95"
                     >
                       Register Now
                     </button>
@@ -1360,33 +1363,33 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               </section>
 
               {/* ── 7. EDITORIAL FOOTER ON HOME PAGE ── */}
-              <footer id="footer" className="w-full bg-[#020B1C] text-[#FFF2D5]/70 py-16 px-4 sm:px-6 lg:px-8 border-t border-[#F5B942]/20">
+              <footer id="footer" className="w-full bg-[#050505] text-[#9CA3AF] py-16 px-4 sm:px-6 lg:px-8 border-t border-[#C1121F]/25 relative">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10">
                   <div className="md:col-span-5 space-y-4 text-left">
-                    <div className="flex items-center gap-2.5 text-[#FFF2D5]">
+                    <div className="flex items-center gap-2.5 text-white">
                       <CollegeEmblem size={32} />
                       <span className="font-serif text-xl font-bold tracking-tight">
-                        RADIANZA <span className="text-[#F5B942]">'26</span>
+                        RADIANZA <span className="text-[#FF1738]">'26</span>
                       </span>
                     </div>
-                    <p className="text-xs text-[#FFF2D5]/70 max-w-sm leading-relaxed">
+                    <p className="text-xs text-[#9CA3AF] max-w-sm leading-relaxed">
                       Igniting Ideas, Innovating Tomorrow. National-Level Technical &amp; Non-Technical Symposium hosted by St. Peter's Institute of Higher Education &amp; Research.
                     </p>
-                    <div className="pt-2 text-xs text-[#FFF2D5]/60 space-y-1">
+                    <div className="pt-2 text-xs text-[#9CA3AF]/80 space-y-1">
                       <p>📍 SPIHER Campus, Avadi, Chennai - 600054, Tamil Nadu</p>
                       <p>📞 +91 422 259 0123 • ignite2026@spiher.edu.in</p>
                     </div>
                   </div>
 
                   <div className="md:col-span-3 space-y-3 text-left">
-                    <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#FFF2D5]">Directory</h4>
+                    <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">Directory</h4>
                     <div className="flex flex-col space-y-2 text-xs">
                       {PAGES.map((p) => (
                         <button
                           key={p.id}
                           onClick={() => navigateToPage(p.id)}
                           className={`text-left transition-colors cursor-pointer ${
-                            activePage === p.id ? 'text-[#F5B942] font-bold' : 'hover:text-white'
+                            activePage === p.id ? 'text-[#FF1738] font-bold' : 'hover:text-white'
                           }`}
                         >
                           {p.title}
@@ -1396,15 +1399,15 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   </div>
 
                   <div className="md:col-span-4 space-y-3 text-left">
-                    <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#FFF2D5]">Staff &amp; Administration</h4>
-                    <p className="text-xs text-[#FFF2D5]/70">
+                    <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">Staff &amp; Administration</h4>
+                    <p className="text-xs text-[#9CA3AF]">
                       Coordinators, evaluators, and jury can access the mobile scanner and evaluator portal below.
                     </p>
                     <div className="pt-2">
                       <button
                         type="button"
                         onClick={onOpenConsole}
-                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#061A35] hover:bg-[#09254c] border border-[#0878D1]/40 text-xs text-[#0878D1] transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0D0D12] hover:bg-[#15151D] border border-[#C1121F]/40 text-xs text-[#FF1738] transition-colors cursor-pointer"
                       >
                         <Lock className="w-3.5 h-3.5" />
                         <span>Staff &amp; Evaluator Console →</span>
@@ -1413,7 +1416,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   </div>
                 </div>
 
-                <div className="max-w-7xl mx-auto pt-10 mt-10 border-t border-[#F5B942]/10 text-center text-xs text-[#FFF2D5]/40">
+                <div className="max-w-7xl mx-auto pt-10 mt-10 border-t border-[#C1121F]/15 text-center text-xs text-[#9CA3AF]/50">
                   <p>© 2026 RADIANZA • St. Peter's Institute of Higher Education &amp; Research. All Rights Reserved.</p>
                 </div>
               </footer>
@@ -1434,22 +1437,22 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-10"
             >
               {/* Header Lockup */}
-              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2 border-b border-[#F5B942]/20">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2 border-b border-[#C1121F]/30">
                 <div className="space-y-2.5">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#061A35] border border-[#F5B942]/40 text-[#F5B942] font-mono text-xs font-bold uppercase tracking-wider">
-                    <Trophy className="w-3.5 h-3.5 text-[#F5B942]" />
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0D0D12] border border-[#C1121F]/40 text-[#FF1738] font-mono text-xs font-bold uppercase tracking-wider shadow-[0_0_12px_rgba(255,23,56,0.15)]">
+                    <Trophy className="w-3.5 h-3.5 text-[#FF1738]" />
                     <span>ARENA // COMPETITION MATRIX</span>
                   </div>
-                  <h2 className="text-3xl sm:text-5xl font-serif font-black tracking-tight text-[#FFF2D5]">
-                    Featured <span className="text-[#F5B942]">Events</span>
+                  <h2 className="text-3xl sm:text-5xl font-serif font-black tracking-tight text-white">
+                    Featured <span className="text-[#FF1738]">Events</span>
                   </h2>
-                  <p className="text-xs sm:text-sm text-[#FFF2D5]/70 max-w-xl leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#9CA3AF] max-w-xl leading-relaxed">
                     Choose your battleground. Select your preferred event to compete, innovate, and showcase your expertise at RADIANZA ’26.
                   </p>
                 </div>
 
                 {/* Category Filter Switcher */}
-                <div className="w-full sm:w-auto overflow-x-auto no-scrollbar flex items-center gap-1.5 p-1.5 bg-[#061A35] rounded-2xl border border-[#F5B942]/20 shadow-xs shrink-0 self-start md:self-auto">
+                <div className="w-full sm:w-auto overflow-x-auto no-scrollbar flex items-center gap-1.5 p-1.5 bg-[#0D0D12] rounded-2xl border border-[#C1121F]/30 shadow-xs shrink-0 self-start md:self-auto">
                   {(['All', 'Technical', 'Non-Technical'] as const).map((cat) => {
                     const count = cat === 'All' ? events.length : events.filter(e => e.category === cat).length;
                     const isActive = activeCategory === cat;
@@ -1460,8 +1463,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         onClick={() => setActiveCategory(cat)}
                         className={`relative px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-xs font-bold transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 whitespace-nowrap shrink-0 ${
                           isActive
-                            ? 'bg-[#F5B942] text-[#020B1C] shadow-md'
-                            : 'text-[#FFF2D5]/70 hover:text-[#FFF2D5] hover:bg-white/5'
+                            ? 'bg-[#C1121F] text-white shadow-md shadow-[#C1121F]/40'
+                            : 'text-[#9CA3AF] hover:text-white hover:bg-white/5'
                         }`}
                       >
                         <span className="whitespace-nowrap">
@@ -1475,8 +1478,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         <span
                           className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold leading-none shrink-0 transition-colors ${
                             isActive
-                              ? 'bg-[#020B1C] text-[#F5B942]'
-                              : 'bg-[#020B1C]/80 text-[#FFF2D5]/60 border border-[#F5B942]/20'
+                              ? 'bg-[#050505] text-[#FF1738]'
+                              : 'bg-[#050505]/80 text-[#9CA3AF] border border-[#C1121F]/30'
                           }`}
                         >
                           {count}
@@ -1487,7 +1490,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                 </div>
               </div>
 
-              {/* Events Grid with Premium Cards */}
+              {/* Events Grid with Premium Dark Red Superhero Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
                 {filteredEvents.map((event) => (
                   <motion.div
@@ -1495,10 +1498,10 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
-                    className="bg-[#061A35] rounded-3xl border border-[#F5B942]/20 hover:border-[#F5B942]/60 overflow-hidden shadow-xs hover:shadow-[0_0_24px_rgba(245,185,66,0.2)] transition-all duration-300 flex flex-col justify-between group relative"
+                    className="bg-[#0D0D12] rounded-3xl border border-[#C1121F]/25 hover:border-[#FF1738]/60 overflow-hidden shadow-xs hover:shadow-[0_0_30px_rgba(255,23,56,0.25)] transition-all duration-300 flex flex-col justify-between group relative"
                   >
                     {/* Top Image Banner */}
-                    <div className="relative h-48 w-full overflow-hidden bg-[#020B1C]">
+                    <div className="relative h-48 w-full overflow-hidden bg-[#050505]">
                       <img
                         src={event.imageUrl}
                         alt={event.title}
@@ -1508,19 +1511,21 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 opacity-90 group-hover:opacity-100"
                         loading="lazy"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#061A35] via-[#061A35]/30 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D12] via-[#0D0D12]/30 to-transparent" />
 
                       {/* Top Floating Badges */}
                       <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between pointer-events-none">
                         <span
-                          className={`text-[10.5px] font-mono font-bold uppercase tracking-wider px-3 py-1 rounded-full text-white shadow-md backdrop-blur-md ${
-                            event.category === 'Technical' ? 'bg-[#0878D1]/90' : 'bg-[#B51F35]/90'
+                          className={`text-[10.5px] font-mono font-bold uppercase tracking-wider px-3 py-1 rounded-full text-white shadow-md backdrop-blur-md border ${
+                            event.category === 'Technical'
+                              ? 'bg-[#C1121F]/90 border-[#FF1738]/40'
+                              : 'bg-[#0A0A0E]/90 text-[#FF1738] border-[#C1121F]/60'
                           }`}
                         >
                           {event.category}
                         </span>
 
-                        <span className="text-[10.5px] font-mono font-bold px-2.5 py-1 rounded-full bg-[#020B1C]/90 backdrop-blur-md text-[#FFF2D5] border border-[#F5B942]/30 shadow-md">
+                        <span className="text-[10.5px] font-mono font-bold px-2.5 py-1 rounded-full bg-[#050505]/90 backdrop-blur-md text-white border border-[#C1121F]/40 shadow-md">
                           {event.isTeamEvent
                             ? `${event.minTeamSize}-${event.maxTeamSize} Members`
                             : 'Solo Event'}
@@ -1529,7 +1534,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
 
                       {/* Title on Banner Overlay */}
                       <div className="absolute bottom-3.5 left-4 right-4 text-white">
-                        <h3 className="text-lg sm:text-xl font-serif font-bold leading-tight group-hover:text-[#F5B942] transition-colors">
+                        <h3 className="text-lg sm:text-xl font-serif font-bold leading-tight group-hover:text-[#FF1738] transition-colors">
                           {event.title}
                         </h3>
                       </div>
@@ -1538,23 +1543,23 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     {/* Card Body */}
                     <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-5">
                       <div className="space-y-2">
-                        <p className="text-xs font-bold text-[#F5B942] line-clamp-1">
+                        <p className="text-xs font-bold text-[#FF1738] line-clamp-1">
                           {event.tagline || 'National Level Symposium Arena'}
                         </p>
-                        <p className="text-xs text-[#FFF2D5]/70 line-clamp-2 leading-relaxed font-normal">
+                        <p className="text-xs text-[#9CA3AF] line-clamp-2 leading-relaxed font-normal">
                           {event.description}
                         </p>
                       </div>
 
                       {/* Meta Details: Time & Venue */}
-                      <div className="space-y-2 pt-3 border-t border-[#F5B942]/15 text-xs text-[#FFF2D5]/60">
+                      <div className="space-y-2 pt-3 border-t border-[#C1121F]/20 text-xs text-[#9CA3AF]">
                         <div className="flex items-center gap-2">
-                          <Clock className="w-3.5 h-3.5 text-[#0878D1] shrink-0" />
-                          <span className="font-medium">{event.time}</span>
+                          <Clock className="w-3.5 h-3.5 text-[#FF1738] shrink-0" />
+                          <span className="font-medium text-white/90">{event.time}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <MapPin className="w-3.5 h-3.5 text-[#F5B942] shrink-0" />
-                          <span className="truncate font-medium">{event.venue}</span>
+                          <MapPin className="w-3.5 h-3.5 text-[#C1121F] shrink-0" />
+                          <span className="truncate font-medium text-white/90">{event.venue}</span>
                         </div>
                       </div>
 
@@ -1563,17 +1568,17 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                         <button
                           type="button"
                           onClick={() => setSelectedEventModal(event)}
-                          className="w-full py-2.5 px-3 rounded-xl bg-[#020B1C] hover:bg-[#020B1C]/80 text-[#FFF2D5] text-xs font-bold border border-[#F5B942]/30 transition-colors cursor-pointer text-center"
+                          className="w-full py-2.5 px-3 rounded-xl bg-[#050505] hover:bg-[#15151D] text-white text-xs font-bold border border-[#C1121F]/40 transition-colors cursor-pointer text-center"
                         >
                           Details
                         </button>
                         <button
                           type="button"
                           onClick={() => onSelectEvent(event)}
-                          className="w-full py-2.5 px-3 rounded-xl bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] text-xs font-black shadow-md shadow-[#F5B942]/30 transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 active:scale-95"
+                          className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-[#C1121F] to-[#FF1738] hover:brightness-110 text-white text-xs font-black shadow-md shadow-[#FF1738]/25 transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 active:scale-95"
                         >
                           <span>Register</span>
-                          <ArrowRight className="w-3.5 h-3.5 text-[#020B1C]" />
+                          <ArrowRight className="w-3.5 h-3.5 text-white" />
                         </button>
                       </div>
                     </div>
@@ -1598,49 +1603,49 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
             >
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
                 <div className="lg:col-span-6 space-y-5 text-left">
-                  <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#F5B942] bg-[#061A35] px-3 py-1 rounded-full border border-[#F5B942]/30">
+                  <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#FF1738] bg-[#0D0D12] px-3 py-1 rounded-full border border-[#C1121F]/30 shadow-[0_0_12px_rgba(255,23,56,0.15)]">
                     ABOUT RADIANZA '26 &amp; SPIHER
                   </span>
-                  <h2 className="text-3xl sm:text-4xl font-serif font-extrabold text-[#FFF2D5]">
+                  <h2 className="text-3xl sm:text-4xl font-serif font-extrabold text-white">
                     More Than Just a Symposium
                   </h2>
-                  <p className="text-xs sm:text-sm text-[#FFF2D5]/70 leading-relaxed font-medium">
+                  <p className="text-xs sm:text-sm text-[#9CA3AF] leading-relaxed font-medium">
                     RADIANZA '26 is an institution-wide celebration of curiosity, engineering excellence, and interdisciplinary innovation. Bringing together over 500 delegates from engineering universities across India, faculty mentors, and technical visionaries.
                   </p>
 
-                  <div className="space-y-2 pt-1 text-xs text-[#FFF2D5]/80">
+                  <div className="space-y-2 pt-1 text-xs text-[#E5E7EB]">
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-[#0878D1] shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-[#FF1738] shrink-0" />
                       <span>NAAC 'A' Grade Accredited Deemed to be University</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-[#0878D1] shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-[#FF1738] shrink-0" />
                       <span>UGC &amp; AICTE Approved Premier Technical Institution</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-[#0878D1] shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-[#FF1738] shrink-0" />
                       <span>Cryptographically secured digital entry pass &amp; QR verification engine</span>
                     </div>
                   </div>
 
                   <div className="pt-3 grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    <div className="p-4 rounded-2xl bg-[#061A35] border border-[#F5B942]/20 shadow-xs">
-                      <span className="text-2xl font-serif font-bold text-[#F5B942]">500+</span>
-                      <p className="text-xs text-[#FFF2D5]/70 font-medium">Delegates Competing</p>
+                    <div className="p-4 rounded-2xl bg-[#0D0D12] border border-[#C1121F]/25 shadow-xs">
+                      <span className="text-2xl font-serif font-bold text-[#FF1738]">500+</span>
+                      <p className="text-xs text-[#9CA3AF] font-medium">Delegates Competing</p>
                     </div>
-                    <div className="p-4 rounded-2xl bg-[#061A35] border border-[#F5B942]/20 shadow-xs">
-                      <span className="text-2xl font-serif font-bold text-[#0878D1]">12+</span>
-                      <p className="text-xs text-[#FFF2D5]/70 font-medium">Technical Tracks</p>
+                    <div className="p-4 rounded-2xl bg-[#0D0D12] border border-[#C1121F]/25 shadow-xs">
+                      <span className="text-2xl font-serif font-bold text-white">12+</span>
+                      <p className="text-xs text-[#9CA3AF] font-medium">Technical Tracks</p>
                     </div>
-                    <div className="p-4 rounded-2xl bg-[#061A35] border border-[#F5B942]/20 shadow-xs col-span-2 sm:col-span-1">
-                      <span className="text-2xl font-serif font-bold text-[#F5B942]">₹50K+</span>
-                      <p className="text-xs text-[#FFF2D5]/70 font-medium">Prize Pool</p>
+                    <div className="p-4 rounded-2xl bg-[#0D0D12] border border-[#C1121F]/25 shadow-xs col-span-2 sm:col-span-1">
+                      <span className="text-2xl font-serif font-bold text-[#FF1738]">₹50K+</span>
+                      <p className="text-xs text-[#9CA3AF] font-medium">Prize Pool</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="lg:col-span-6 relative">
-                  <div className="relative rounded-3xl overflow-hidden shadow-2xl border-2 border-[#F5B942]/30 aspect-[4/3]">
+                  <div className="relative rounded-3xl overflow-hidden shadow-2xl border-2 border-[#C1121F]/40 aspect-[4/3]">
                     <img
                       src="/spiher-hero-building.png"
                       alt="St. Peter's Institute Main Campus Building"
@@ -1648,9 +1653,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       loading="lazy"
                       decoding="async"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#020B1C]/90 via-transparent to-transparent" />
-                    <div className="absolute bottom-4 left-4 right-4 text-[#FFF2D5]">
-                      <p className="text-xs font-mono font-bold uppercase text-[#F5B942]">Host Institution</p>
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/90 via-transparent to-transparent" />
+                    <div className="absolute bottom-4 left-4 right-4 text-white">
+                      <p className="text-xs font-mono font-bold uppercase text-[#FF1738]">Host Institution</p>
                       <h4 className="text-base font-bold">St. Peter's Institute of Higher Education and Research</h4>
                     </div>
                   </div>
@@ -1672,105 +1677,106 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               exit="exit"
               className="w-full flex-1 flex flex-col justify-between"
             >
-              <section className="w-full py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#020B1C] via-[#061A35] to-[#020B1C] text-[#FFF2D5] relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#0878D1]/15 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-[#F5B942]/10 rounded-full blur-3xl pointer-events-none" />
+              <section className="w-full py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#050505] via-[#100508] to-[#050505] text-white relative overflow-hidden">
+                {/* Red ambient glows */}
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#C1121F]/15 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-[#FF1738]/10 rounded-full blur-3xl pointer-events-none" />
 
                 <div className="max-w-4xl mx-auto text-center relative z-10 space-y-8">
-                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#061A35] border border-[#F5B942]/40 backdrop-blur-md">
-                    <Flame className="w-4 h-4 text-[#F5B942]" />
-                    <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#F5B942]">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0D0D12] border border-[#C1121F]/40 backdrop-blur-md shadow-[0_0_15px_rgba(255,23,56,0.15)]">
+                    <Flame className="w-4 h-4 text-[#FF1738]" />
+                    <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#FF1738]">
                       REGISTRATIONS ARE LIVE
                     </span>
                   </div>
 
-                  <h2 className="text-3xl sm:text-6xl font-serif font-extrabold text-[#FFF2D5] tracking-tight leading-tight">
-                    Be a Part of RADIANZA <span className="text-[#F5B942]">'26</span>
+                  <h2 className="text-3xl sm:text-6xl font-serif font-extrabold text-white tracking-tight leading-tight">
+                    Be a Part of RADIANZA <span className="text-[#FF1738]">'26</span>
                   </h2>
 
-                  <p className="text-xs sm:text-base text-[#FFF2D5]/70 max-w-xl mx-auto leading-relaxed">
+                  <p className="text-xs sm:text-base text-[#9CA3AF] max-w-xl mx-auto leading-relaxed">
                     Secure your registration today. Pick your competition track, build your team, and download your cryptographically verified entry pass.
                   </p>
 
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto pt-2">
-                    <div className="p-4 rounded-2xl bg-[#061A35]/80 border border-[#F5B942]/20 backdrop-blur-md">
-                      <span className="text-2xl sm:text-3xl font-serif font-bold text-[#F5B942]">
+                    <div className="p-4 rounded-2xl bg-[#0D0D12]/80 border border-[#C1121F]/30 backdrop-blur-md">
+                      <span className="text-2xl sm:text-3xl font-serif font-bold text-[#FF1738]">
                         {totalRegisteredCount}+
                       </span>
-                      <p className="text-[11px] text-[#FFF2D5]/60 mt-1 uppercase font-mono">Delegates</p>
+                      <p className="text-[11px] text-[#9CA3AF] mt-1 uppercase font-mono">Delegates</p>
                     </div>
-                    <div className="p-4 rounded-2xl bg-[#061A35]/80 border border-[#0878D1]/30 backdrop-blur-md">
-                      <span className="text-2xl sm:text-3xl font-serif font-bold text-[#0878D1]">
+                    <div className="p-4 rounded-2xl bg-[#0D0D12]/80 border border-[#C1121F]/30 backdrop-blur-md">
+                      <span className="text-2xl sm:text-3xl font-serif font-bold text-white">
                         {totalSlotsLeft}
                       </span>
-                      <p className="text-[11px] text-[#FFF2D5]/60 mt-1 uppercase font-mono">Slots Left</p>
+                      <p className="text-[11px] text-[#9CA3AF] mt-1 uppercase font-mono">Slots Left</p>
                     </div>
-                    <div className="p-4 rounded-2xl bg-[#061A35]/80 border border-[#F5B942]/20 backdrop-blur-md">
-                      <span className="text-2xl sm:text-3xl font-serif font-bold text-[#FFF2D5]">
+                    <div className="p-4 rounded-2xl bg-[#0D0D12]/80 border border-[#C1121F]/30 backdrop-blur-md">
+                      <span className="text-2xl sm:text-3xl font-serif font-bold text-white">
                         45+
                       </span>
-                      <p className="text-[11px] text-[#FFF2D5]/60 mt-1 uppercase font-mono">Institutions</p>
+                      <p className="text-[11px] text-[#9CA3AF] mt-1 uppercase font-mono">Institutions</p>
                     </div>
-                    <div className="p-4 rounded-2xl bg-[#061A35]/80 border border-[#F5B942]/30 backdrop-blur-md">
-                      <span className="text-2xl sm:text-3xl font-serif font-bold text-[#F5B942]">
+                    <div className="p-4 rounded-2xl bg-[#0D0D12]/80 border border-[#C1121F]/30 backdrop-blur-md">
+                      <span className="text-2xl sm:text-3xl font-serif font-bold text-[#FF1738]">
                         ₹50,000+
                       </span>
-                      <p className="text-[11px] text-[#FFF2D5]/60 mt-1 uppercase font-mono">Cash Awards</p>
+                      <p className="text-[11px] text-[#9CA3AF] mt-1 uppercase font-mono">Cash Awards</p>
                     </div>
                   </div>
 
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                     <div className="relative group w-full sm:w-auto">
-                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#F5B942] to-[#0878D1] opacity-70 blur-md animate-halo-pulse" />
+                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#C1121F] to-[#FF1738] opacity-75 blur-md animate-halo-pulse" />
                       <button
                         type="button"
                         onClick={onStartNewRegistration}
-                        className="relative w-full sm:w-auto px-10 py-4 rounded-2xl bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] font-black text-sm tracking-wide shadow-2xl flex items-center justify-center gap-2 cursor-pointer active:scale-95 transition-transform"
+                        className="relative w-full sm:w-auto px-10 py-4 rounded-2xl bg-gradient-to-r from-[#C1121F] via-[#E61430] to-[#FF1738] hover:brightness-110 text-white font-black text-sm tracking-wide shadow-2xl flex items-center justify-center gap-2 cursor-pointer active:scale-95 transition-transform"
                       >
                         <span>Register Now</span>
-                        <ArrowRight className="w-4 h-4 text-[#020B1C]" />
+                        <ArrowRight className="w-4 h-4 text-white" />
                       </button>
                     </div>
 
                     <button
                       type="button"
                       onClick={() => setIsPassModalOpen(true)}
-                      className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#061A35] hover:bg-[#0a264a] border border-[#0878D1] text-[#FFF2D5] font-bold text-sm transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-95"
+                      className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#0D0D12] hover:bg-[#15151D] border border-[#C1121F]/50 text-white font-bold text-sm transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-95"
                     >
-                      <QrCode className="w-4 h-4 text-[#0878D1]" />
+                      <QrCode className="w-4 h-4 text-[#FF1738]" />
                       <span>Already Registered? View Pass</span>
                     </button>
                   </div>
                 </div>
               </section>
 
-              <footer className="w-full bg-[#020B1C] text-[#FFF2D5]/70 py-16 px-4 sm:px-6 lg:px-8 border-t border-[#F5B942]/20">
+              <footer className="w-full bg-[#050505] text-[#9CA3AF] py-16 px-4 sm:px-6 lg:px-8 border-t border-[#C1121F]/25">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10">
                   <div className="md:col-span-5 space-y-4">
-                    <div className="flex items-center gap-2.5 text-[#FFF2D5]">
+                    <div className="flex items-center gap-2.5 text-white">
                       <CollegeEmblem size={32} />
                       <span className="font-serif text-xl font-bold tracking-tight">
-                        RADIANZA <span className="text-[#F5B942]">'26</span>
+                        RADIANZA <span className="text-[#FF1738]">'26</span>
                       </span>
                     </div>
-                    <p className="text-xs text-[#FFF2D5]/70 max-w-sm leading-relaxed">
+                    <p className="text-xs text-[#9CA3AF] max-w-sm leading-relaxed">
                       Igniting Ideas, Innovating Tomorrow. National-Level Technical &amp; Non-Technical Symposium hosted by St. Peter's Institute of Higher Education &amp; Research.
                     </p>
-                    <div className="pt-2 text-xs text-[#FFF2D5]/60 space-y-1">
+                    <div className="pt-2 text-xs text-[#9CA3AF]/80 space-y-1">
                       <p>📍 SPIHER Campus, Avadi, Chennai - 600054, Tamil Nadu</p>
                       <p>📞 +91 422 259 0123 • ignite2026@spiher.edu.in</p>
                     </div>
                   </div>
 
                   <div className="md:col-span-3 space-y-3">
-                    <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#FFF2D5]">Directory</h4>
+                    <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">Directory</h4>
                     <div className="flex flex-col space-y-2 text-xs">
                       {PAGES.map((p) => (
                         <button
                           key={p.id}
                           onClick={() => navigateToPage(p.id)}
                           className={`text-left transition-colors cursor-pointer ${
-                            activePage === p.id ? 'text-[#F5B942] font-bold' : 'hover:text-white'
+                            activePage === p.id ? 'text-[#FF1738] font-bold' : 'hover:text-white'
                           }`}
                         >
                           {p.title}
@@ -1780,15 +1786,15 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   </div>
 
                   <div className="md:col-span-4 space-y-3">
-                    <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#FFF2D5]">Staff &amp; Administration</h4>
-                    <p className="text-xs text-[#FFF2D5]/70">
+                    <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">Staff &amp; Administration</h4>
+                    <p className="text-xs text-[#9CA3AF]">
                       Coordinators, evaluators, and jury can access the mobile scanner and evaluator portal below.
                     </p>
                     <div className="pt-2">
                       <button
                         type="button"
                         onClick={onOpenConsole}
-                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#061A35] hover:bg-[#09254c] border border-[#0878D1]/40 text-xs text-[#0878D1] transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0D0D12] hover:bg-[#15151D] border border-[#C1121F]/40 text-xs text-[#FF1738] transition-colors cursor-pointer"
                       >
                         <Lock className="w-3.5 h-3.5" />
                         <span>Staff &amp; Evaluator Console →</span>
@@ -1797,7 +1803,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   </div>
                 </div>
 
-                <div className="max-w-7xl mx-auto pt-10 mt-10 border-t border-[#F5B942]/10 text-center text-xs text-[#FFF2D5]/40">
+                <div className="max-w-7xl mx-auto pt-10 mt-10 border-t border-[#C1121F]/15 text-center text-xs text-[#9CA3AF]/50">
                   <p>© 2026 RADIANZA • St. Peter's Institute of Higher Education &amp; Research. All Rights Reserved.</p>
                 </div>
               </footer>
@@ -1809,16 +1815,16 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
       {/* ========================================================================= */}
       {/* 4. PERSISTENT BOTTOM PAGE CONTROLLER & STEPPER                            */}
       {/* ========================================================================= */}
-      <nav className="w-full bg-[#020B1C]/95 backdrop-blur-lg border-t border-[#F5B942]/20 px-4 sm:px-8 py-3 z-30 shadow-lg">
+      <nav className="w-full bg-[#050505]/95 backdrop-blur-lg border-t border-[#C1121F]/30 px-4 sm:px-8 py-3 z-30 shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           {/* Previous Page Button */}
           {prevPage ? (
             <button
               type="button"
               onClick={() => navigateToPage(prevPage.id)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#061A35] hover:bg-[#0a2245] text-[#FFF2D5] border border-[#F5B942]/30 text-xs font-bold transition-all cursor-pointer active:scale-95"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0D0D12] hover:bg-[#15151D] text-white border border-[#C1121F]/30 text-xs font-bold transition-all cursor-pointer active:scale-95"
             >
-              <ArrowLeft className="w-4 h-4 text-[#F5B942]" />
+              <ArrowLeft className="w-4 h-4 text-[#FF1738]" />
               <span className="hidden sm:inline">Previous:</span>
               <span>{prevPage.navLabel}</span>
             </button>
@@ -1837,8 +1843,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   aria-label={`Go to ${page.navLabel}`}
                   className={`transition-all duration-300 rounded-full cursor-pointer ${
                     isActive
-                      ? 'w-7 sm:w-8 h-2.5 bg-[#F5B942]'
-                      : 'w-2.5 h-2.5 bg-[#061A35] border border-[#F5B942]/30 hover:bg-[#0878D1]/50'
+                      ? 'w-7 sm:w-8 h-2.5 bg-[#FF1738] shadow-[0_0_12px_rgba(255,23,56,0.6)]'
+                      : 'w-2.5 h-2.5 bg-[#0D0D12] border border-[#C1121F]/40 hover:bg-[#C1121F]/50'
                   }`}
                 />
               );
@@ -1850,19 +1856,19 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
             <button
               type="button"
               onClick={() => navigateToPage(nextPage.id)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] text-xs font-black shadow-sm transition-all cursor-pointer active:scale-95"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#C1121F] to-[#FF1738] hover:brightness-110 text-white text-xs font-black shadow-sm transition-all cursor-pointer active:scale-95"
             >
               <span className="hidden sm:inline">Next:</span>
               <span>{nextPage.navLabel}</span>
-              <ArrowRight className="w-4 h-4 text-[#020B1C]" />
+              <ArrowRight className="w-4 h-4 text-white" />
             </button>
           ) : (
             <button
               type="button"
               onClick={() => navigateToPage('home')}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#061A35] border border-[#0878D1] text-[#FFF2D5] text-xs font-bold transition-all cursor-pointer active:scale-95"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0D0D12] border border-[#C1121F]/40 text-white text-xs font-bold transition-all cursor-pointer active:scale-95"
             >
-              <Compass className="w-4 h-4 text-[#0878D1]" />
+              <Compass className="w-4 h-4 text-[#FF1738]" />
               <span>Back to Home</span>
             </button>
           )}
@@ -1875,63 +1881,63 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
       {/* Event Details Modal */}
       <AnimatePresence>
         {selectedEventModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full max-w-xl bg-[#061A35] rounded-3xl shadow-2xl border border-[#F5B942]/30 overflow-hidden flex flex-col max-h-[90vh] text-[#FFF2D5]"
+              className="w-full max-w-xl bg-[#0D0D12] rounded-3xl shadow-[0_25px_60px_-15px_rgba(5,5,5,0.95),0_0_30px_rgba(255,23,56,0.2)] border border-[#C1121F]/40 overflow-hidden flex flex-col max-h-[90vh] text-white"
             >
-              <div className="relative h-40 w-full overflow-hidden bg-[#020B1C]">
+              <div className="relative h-40 w-full overflow-hidden bg-[#050505]">
                 <img
                   src={selectedEventModal.imageUrl}
                   alt={selectedEventModal.title}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#061A35] via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D12] via-transparent to-transparent" />
                 <button
                   type="button"
                   onClick={() => setSelectedEventModal(null)}
-                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#020B1C]/80 text-[#FFF2D5] flex items-center justify-center hover:text-[#F5B942] transition-colors cursor-pointer border border-[#F5B942]/30"
+                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#050505]/80 text-white flex items-center justify-center hover:text-[#FF1738] transition-colors cursor-pointer border border-[#C1121F]/40"
                 >
                   ✕
                 </button>
                 <div className="absolute bottom-3 left-4 right-4 text-white">
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#0878D1] text-white mr-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#C1121F] text-white mr-2 border border-[#FF1738]/40">
                     {selectedEventModal.category}
                   </span>
-                  <h3 className="text-xl font-bold mt-1 text-[#FFF2D5]">{selectedEventModal.title}</h3>
+                  <h3 className="text-xl font-bold mt-1 text-white">{selectedEventModal.title}</h3>
                 </div>
               </div>
 
               <div className="p-6 space-y-4 overflow-y-auto flex-1 text-xs">
                 <div>
-                  <h4 className="font-bold text-[#F5B942] uppercase tracking-wider text-[11px] mb-1 font-mono">
+                  <h4 className="font-bold text-[#FF1738] uppercase tracking-wider text-[11px] mb-1 font-mono">
                     About the Event
                   </h4>
-                  <p className="text-[#FFF2D5]/80 leading-relaxed">{selectedEventModal.description}</p>
+                  <p className="text-[#9CA3AF] leading-relaxed">{selectedEventModal.description}</p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 p-3 rounded-2xl bg-[#020B1C] border border-[#F5B942]/20">
+                <div className="grid grid-cols-2 gap-3 p-3 rounded-2xl bg-[#050505] border border-[#C1121F]/30">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-[#FFF2D5]/50 block font-mono">Venue</span>
-                    <span className="font-bold text-[#FFF2D5]">{selectedEventModal.venue}</span>
+                    <span className="text-[10px] uppercase font-bold text-[#9CA3AF]/60 block font-mono">Venue</span>
+                    <span className="font-bold text-white">{selectedEventModal.venue}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-[#FFF2D5]/50 block font-mono">Time</span>
-                    <span className="font-bold text-[#F5B942]">{selectedEventModal.time}</span>
+                    <span className="text-[10px] uppercase font-bold text-[#9CA3AF]/60 block font-mono">Time</span>
+                    <span className="font-bold text-[#FF1738]">{selectedEventModal.time}</span>
                   </div>
                 </div>
 
                 {selectedEventModal.rules && (
                   <div>
-                    <h4 className="font-bold text-[#F5B942] uppercase tracking-wider text-[11px] mb-2 font-mono">
+                    <h4 className="font-bold text-[#FF1738] uppercase tracking-wider text-[11px] mb-2 font-mono">
                       Rules &amp; Guidelines
                     </h4>
-                    <ul className="space-y-1.5 text-[#FFF2D5]/80">
+                    <ul className="space-y-1.5 text-[#9CA3AF]">
                       {selectedEventModal.rules.map((rule, idx) => (
                         <li key={idx} className="flex items-start gap-2">
-                          <span className="text-[#F5B942] font-bold">•</span>
+                          <span className="text-[#FF1738] font-bold">•</span>
                           <span>{rule}</span>
                         </li>
                       ))}
@@ -1940,8 +1946,8 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                 )}
               </div>
 
-              <div className="p-4 bg-[#020B1C] border-t border-[#F5B942]/20 flex items-center justify-between">
-                <span className="text-xs font-bold text-[#FFF2D5]/60">
+              <div className="p-4 bg-[#050505] border-t border-[#C1121F]/30 flex items-center justify-between">
+                <span className="text-xs font-bold text-[#9CA3AF]">
                   {selectedEventModal.isTeamEvent ? 'Team Participation' : 'Solo Registration'}
                 </span>
                 <button
@@ -1951,7 +1957,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     setSelectedEventModal(null);
                     onSelectEvent(evt);
                   }}
-                  className="px-6 py-2.5 rounded-xl bg-[#F5B942] hover:bg-[#e5a730] text-[#020B1C] font-black text-xs shadow-md shadow-[#F5B942]/30 cursor-pointer hover:scale-105 transition-all"
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#C1121F] to-[#FF1738] hover:brightness-110 text-white font-black text-xs shadow-md shadow-[#FF1738]/30 cursor-pointer hover:scale-105 transition-all"
                 >
                   Register for this Event →
                 </button>
@@ -1969,7 +1975,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.92 }}
-              className="w-full max-w-3xl bg-[#061A35] rounded-3xl shadow-2xl border border-[#F5B942]/30 overflow-hidden flex flex-col"
+              className="w-full max-w-3xl bg-[#0D0D12] rounded-3xl shadow-[0_25px_60px_-15px_rgba(5,5,5,0.95),0_0_30px_rgba(255,23,56,0.25)] border border-[#C1121F]/40 overflow-hidden flex flex-col"
             >
               <div className="relative aspect-video w-full overflow-hidden bg-black flex items-center justify-center">
                 <img
@@ -1980,24 +1986,24 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedGalleryModal(null)}
-                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#020B1C]/80 border border-[#F5B942]/40 text-[#FFF2D5] hover:text-[#F5B942] flex items-center justify-center transition-colors cursor-pointer"
+                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#050505]/80 border border-[#C1121F]/40 text-white hover:text-[#FF1738] flex items-center justify-center transition-colors cursor-pointer"
                 >
                   ✕
                 </button>
-                <span className="absolute top-4 left-4 text-[11px] font-mono font-bold uppercase px-3 py-1 rounded-full bg-[#020B1C]/90 text-[#F5B942] border border-[#F5B942]/40">
+                <span className="absolute top-4 left-4 text-[11px] font-mono font-bold uppercase px-3 py-1 rounded-full bg-[#050505]/90 text-[#FF1738] border border-[#C1121F]/50">
                   {selectedGalleryModal.category}
                 </span>
               </div>
-              <div className="p-6 text-[#FFF2D5] space-y-2">
+              <div className="p-6 text-white space-y-2">
                 <h3 className="text-xl font-bold font-serif">{selectedGalleryModal.title}</h3>
-                <p className="text-xs text-[#FFF2D5]/80 leading-relaxed">{selectedGalleryModal.caption}</p>
+                <p className="text-xs text-[#9CA3AF] leading-relaxed">{selectedGalleryModal.caption}</p>
               </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
 
-      {/* Quick Pass Access Modal (Redesigned Responsive Glassmorphic Dialog) */}
+      {/* Quick Pass Access Modal (Spider-Man Dark Theme) */}
       <AnimatePresence>
         {isPassModalOpen && (
           <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
@@ -2008,32 +2014,32 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setIsPassModalOpen(false)}
-              className="fixed inset-0 bg-black/80 backdrop-blur-md"
+              className="fixed inset-0 bg-black/85 backdrop-blur-md"
             />
 
-            {/* Radiant Dark Cultural-Futuristic Modal Card */}
+            {/* Radiant Dark Superhero Modal Card */}
             <motion.div
               initial={{ opacity: 0, scale: 0.94, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.94, y: 15 }}
               transition={{ type: 'spring', damping: 25, stiffness: 320 }}
-              className="relative z-10 w-full max-w-md bg-[#061A35] rounded-3xl shadow-[0_25px_60px_-15px_rgba(2,11,28,0.9),0_0_30px_rgba(245,185,66,0.15)] border border-[#F5B942]/35 overflow-hidden text-[#FFF2D5]"
+              className="relative z-10 w-full max-w-md bg-[#0D0D12] rounded-3xl shadow-[0_25px_60px_-15px_rgba(5,5,5,0.95),0_0_30px_rgba(255,23,56,0.25)] border border-[#C1121F]/40 overflow-hidden text-white"
             >
-              {/* Top Cultural Gradient Accent Line */}
-              <div className="h-1 w-full bg-gradient-to-r from-[#0878D1] via-[#F5B942] to-[#B51F35]" />
+              {/* Top Laser Crimson Gradient Accent Line */}
+              <div className="h-1 w-full bg-gradient-to-r from-[#050505] via-[#FF1738] to-[#C1121F]" />
 
               <div className="p-6 sm:p-7 space-y-5">
                 {/* Header Lockup */}
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-2xl bg-[#020B1C] border border-[#F5B942]/40 text-[#F5B942] flex items-center justify-center shadow-[0_0_15px_rgba(245,185,66,0.2)] shrink-0">
-                      <QrCode className="w-5 h-5 text-[#F5B942]" />
+                    <div className="w-11 h-11 rounded-2xl bg-[#050505] border border-[#C1121F]/50 text-[#FF1738] flex items-center justify-center shadow-[0_0_15px_rgba(255,23,56,0.3)] shrink-0">
+                      <QrCode className="w-5 h-5 text-[#FF1738]" />
                     </div>
                     <div>
-                      <h3 className="font-serif font-black text-lg sm:text-xl text-[#FFF2D5] tracking-tight">
+                      <h3 className="font-serif font-black text-lg sm:text-xl text-white tracking-tight">
                         Access Event Pass
                       </h3>
-                      <p className="text-xs text-[#FFF2D5]/70 mt-0.5">
+                      <p className="text-xs text-[#9CA3AF] mt-0.5">
                         Enter your credentials to view your QR pass.
                       </p>
                     </div>
@@ -2042,7 +2048,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   <button
                     type="button"
                     onClick={() => setIsPassModalOpen(false)}
-                    className="w-8 h-8 rounded-xl bg-[#020B1C] border border-[#F5B942]/30 text-[#FFF2D5]/70 hover:text-[#F5B942] hover:border-[#F5B942] flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-95"
+                    className="w-8 h-8 rounded-xl bg-[#050505] border border-[#C1121F]/40 text-[#9CA3AF] hover:text-[#FF1738] hover:border-[#FF1738] flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-95"
                     aria-label="Close modal"
                   >
                     <X className="w-4 h-4" />
@@ -2066,11 +2072,11 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   <div className="space-y-1.5">
                     <label
                       htmlFor="access-roll-number"
-                      className="block text-[11px] font-bold text-[#FFF2D5]/80 uppercase font-mono tracking-wider flex items-center gap-1.5"
+                      className="block text-[11px] font-bold text-[#E5E7EB] uppercase font-mono tracking-wider flex items-center gap-1.5"
                     >
-                      <Lock className="w-3.5 h-3.5 text-[#F5B942]" />
+                      <Lock className="w-3.5 h-3.5 text-[#FF1738]" />
                       <span>Roll Number / Register Number</span>
-                      <span className="text-[#F5B942]">*</span>
+                      <span className="text-[#FF1738]">*</span>
                     </label>
                     <input
                       id="access-roll-number"
@@ -2081,7 +2087,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       value={accessRollNumber}
                       onChange={(e) => setAccessRollNumber(e.target.value.toUpperCase())}
                       placeholder="e.g. 2021CS042"
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#020B1C] border border-[#F5B942]/30 text-xs sm:text-sm font-mono font-bold text-[#FFF2D5] placeholder:text-[#FFF2D5]/30 focus:outline-none focus:border-[#F5B942] focus:ring-2 focus:ring-[#F5B942]/20 transition-all shadow-inner uppercase"
+                      className="w-full px-4 py-2.5 rounded-xl bg-[#050505] border border-[#C1121F]/40 text-xs sm:text-sm font-mono font-bold text-white placeholder:text-[#9CA3AF]/40 focus:outline-none focus:border-[#FF1738] focus:ring-2 focus:ring-[#FF1738]/20 transition-all shadow-inner uppercase"
                     />
                   </div>
 
@@ -2101,11 +2107,11 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   <button
                     type="submit"
                     disabled={isVerifyingPass}
-                    className="w-full py-3.5 mt-2 rounded-2xl bg-gradient-to-r from-[#F5B942] via-[#f7c55e] to-[#e5a730] hover:brightness-105 active:scale-[0.98] text-[#020B1C] font-black text-xs sm:text-sm tracking-wider uppercase shadow-lg shadow-[#F5B942]/25 flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-50"
+                    className="w-full py-3.5 mt-2 rounded-2xl bg-gradient-to-r from-[#C1121F] via-[#E61430] to-[#FF1738] hover:brightness-110 active:scale-[0.98] text-white font-black text-xs sm:text-sm tracking-wider uppercase shadow-lg shadow-[#FF1738]/25 flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-50"
                   >
                     {isVerifyingPass ? (
                       <>
-                        <div className="w-4 h-4 border-2 border-[#020B1C] border-t-transparent rounded-full animate-spin" />
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                         <span>Verifying Credentials...</span>
                       </>
                     ) : (
@@ -2118,12 +2124,12 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                 </form>
 
                 {/* Demo Autofill Helper Chip */}
-                <div className="pt-3 border-t border-[#F5B942]/15 flex items-center justify-between gap-2 text-xs">
-                  <span className="text-[11px] text-[#FFF2D5]/60 font-medium">Demo user:</span>
+                <div className="pt-3 border-t border-[#C1121F]/20 flex items-center justify-between gap-2 text-xs">
+                  <span className="text-[11px] text-[#9CA3AF] font-medium">Demo user:</span>
                   <button
                     type="button"
                     onClick={() => handleDemoFill('2021CS042', '2003-05-14')}
-                    className="px-3 py-1.5 rounded-xl bg-[#020B1C] border border-[#F5B942]/30 hover:border-[#F5B942] hover:bg-[#F5B942]/10 text-[#F5B942] font-mono text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 active:scale-95"
+                    className="px-3 py-1.5 rounded-xl bg-[#050505] border border-[#C1121F]/40 hover:border-[#FF1738] hover:bg-[#FF1738]/10 text-[#FF1738] font-mono text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 active:scale-95"
                   >
                     <span>⚡ Autofill 2021CS042</span>
                   </button>

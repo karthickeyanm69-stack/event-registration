@@ -250,14 +250,14 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     <div className="space-y-3.5">
       {/* Header Controls (Month & Year Selectors + Close Button) */}
       <div className={`flex items-center justify-between pb-2.5 border-b ${
-        isDark ? 'border-[#F5B942]/20' : 'border-[#e8f5fb]'
+        isDark ? 'border-[#C1121F]/30' : 'border-[#e8f5fb]'
       }`}>
         <button
           type="button"
           onClick={handlePrevMonth}
           className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             isDark 
-              ? 'bg-[#020B1C] hover:bg-[#09254c] text-[#F5B942] border border-[#F5B942]/30 active:scale-95' 
+              ? 'bg-[#050505] hover:bg-[#15151D] text-[#FF1738] border border-[#C1121F]/40 active:scale-95' 
               : 'bg-[#f0f8fc] hover:bg-[#e8f5fb] text-[#0077c8] active:scale-95'
           }`}
           aria-label="Previous month"
@@ -274,7 +274,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             onChange={(e) => setViewMonth(parseInt(e.target.value, 10))}
             className={`text-xs font-bold py-1.5 px-2.5 rounded-xl border focus:outline-none cursor-pointer ${
               isDark
-                ? 'bg-[#020B1C] text-[#FFF2D5] border-[#F5B942]/30 focus:border-[#F5B942]'
+                ? 'bg-[#050505] text-white border-[#C1121F]/40 focus:border-[#FF1738]'
                 : 'bg-[#f0f8fc] text-[#002b66] border-[#d4e8f5] focus:border-[#0077c8]'
             }`}
           >
@@ -293,7 +293,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             onChange={(e) => setViewYear(parseInt(e.target.value, 10))}
             className={`text-xs font-bold py-1.5 px-2.5 rounded-xl border focus:outline-none cursor-pointer ${
               isDark
-                ? 'bg-[#020B1C] text-[#FFF2D5] border-[#F5B942]/30 focus:border-[#F5B942]'
+                ? 'bg-[#050505] text-white border-[#C1121F]/40 focus:border-[#FF1738]'
                 : 'bg-[#f0f8fc] text-[#002b66] border-[#d4e8f5] focus:border-[#0077c8]'
             }`}
           >
@@ -311,7 +311,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             onClick={handleNextMonth}
             className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
               isDark 
-                ? 'bg-[#020B1C] hover:bg-[#09254c] text-[#F5B942] border border-[#F5B942]/30 active:scale-95' 
+                ? 'bg-[#050505] hover:bg-[#15151D] text-[#FF1738] border border-[#C1121F]/40 active:scale-95' 
                 : 'bg-[#f0f8fc] hover:bg-[#e8f5fb] text-[#0077c8] active:scale-95'
             }`}
             aria-label="Next month"
@@ -325,7 +325,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
               onClick={() => setIsOpen(false)}
               className={`w-8 h-8 ml-1 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
                 isDark
-                  ? 'bg-[#020B1C] text-[#FFF2D5]/70 hover:text-[#F5B942] border border-[#F5B942]/30'
+                  ? 'bg-[#050505] text-[#9CA3AF] hover:text-[#FF1738] border border-[#C1121F]/40'
                   : 'bg-slate-100 text-slate-500 hover:text-slate-800'
               }`}
               aria-label="Close calendar"
@@ -340,7 +340,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
       <div className="grid grid-cols-7 gap-1 text-center">
         {DAYS_OF_WEEK.map((d) => (
           <span key={d} className={`text-[10px] font-bold ${
-            isDark ? 'text-[#FFF2D5]/50 font-mono' : 'text-slate-400'
+            isDark ? 'text-[#9CA3AF]/70 font-mono' : 'text-slate-400'
           }`}>
             {d}
           </span>
@@ -365,8 +365,8 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
               onClick={() => handleSelectDay(day)}
               className={`w-8 h-8 mx-auto rounded-xl text-xs font-semibold flex items-center justify-center transition-all cursor-pointer active:scale-90 ${
                 isSelected
-                  ? (isDark ? 'bg-[#F5B942] text-[#020B1C] font-bold shadow-md shadow-[#F5B942]/30' : 'bg-[#0077c8] text-white font-bold shadow-md')
-                  : (isDark ? 'text-[#FFF2D5] hover:bg-[#020B1C] hover:text-[#F5B942]' : 'text-slate-700 hover:bg-[#e8f5fb] hover:text-[#002b66]')
+                  ? (isDark ? 'bg-gradient-to-r from-[#C1121F] to-[#FF1738] text-white font-bold shadow-md shadow-[#FF1738]/30' : 'bg-[#0077c8] text-white font-bold shadow-md')
+                  : (isDark ? 'text-white hover:bg-[#15151D] hover:text-[#FF1738]' : 'text-slate-700 hover:bg-[#e8f5fb] hover:text-[#002b66]')
               }`}
             >
               {day}
@@ -377,10 +377,10 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
 
       {/* Quick Year Shortcuts (Clean wrap with no overflow) */}
       <div className={`pt-2.5 border-t flex items-center justify-between text-[11px] gap-1.5 ${
-        isDark ? 'border-[#F5B942]/20' : 'border-[#e8f5fb]'
+        isDark ? 'border-[#C1121F]/30' : 'border-[#e8f5fb]'
       }`}>
         <span className={`font-medium shrink-0 text-[10px] ${
-          isDark ? 'text-[#FFF2D5]/60' : 'text-slate-400'
+          isDark ? 'text-[#9CA3AF]' : 'text-slate-400'
         }`}>Quick:</span>
         <div className="flex flex-wrap gap-1 justify-end">
           {[2001, 2002, 2003, 2004, 2005].map((y) => (
@@ -390,8 +390,8 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
               onClick={() => setViewYear(y)}
               className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-all cursor-pointer active:scale-95 ${
                 viewYear === y
-                  ? (isDark ? 'bg-[#F5B942] text-[#020B1C] shadow-xs' : 'bg-[#0077c8] text-white shadow-xs')
-                  : (isDark ? 'bg-[#020B1C] text-[#FFF2D5]/80 border border-[#F5B942]/20 hover:border-[#F5B942]' : 'bg-[#f0f8fc] text-slate-600 hover:bg-[#e8f5fb]')
+                  ? (isDark ? 'bg-[#C1121F] text-white shadow-xs' : 'bg-[#0077c8] text-white shadow-xs')
+                  : (isDark ? 'bg-[#050505] text-[#9CA3AF] border border-[#C1121F]/30 hover:border-[#FF1738] hover:text-white' : 'bg-[#f0f8fc] text-slate-600 hover:bg-[#e8f5fb]')
               }`}
             >
               {y}
@@ -406,13 +406,13 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     <div className={`relative w-full space-y-1.5 ${className}`} ref={containerRef}>
       {label && (
         <div className={`text-[11px] font-bold flex items-center gap-1.5 ${
-          isDark ? 'text-[#FFF2D5]/80 font-mono uppercase tracking-wider' : 'text-[#002b66]'
+          isDark ? 'text-[#E5E7EB] font-mono uppercase tracking-wider' : 'text-[#002b66]'
         }`}>
           {icon || (
-            <CalendarIcon className={`w-3.5 h-3.5 ${isDark ? 'text-[#F5B942]' : 'text-[#0077c8]'}`} />
+            <CalendarIcon className={`w-3.5 h-3.5 ${isDark ? 'text-[#FF1738]' : 'text-[#0077c8]'}`} />
           )}
           <span>{label}</span>
-          {required && <span className={isDark ? 'text-[#F5B942]' : 'text-rose-500'}>*</span>}
+          {required && <span className={isDark ? 'text-[#FF1738]' : 'text-rose-500'}>*</span>}
         </div>
       )}
 
@@ -435,10 +435,10 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
         onClick={handleToggle}
         className={`w-full px-3.5 py-2.5 rounded-xl border text-left text-xs sm:text-sm flex items-center justify-between transition-all duration-200 cursor-pointer ${
           isDark
-            ? `bg-[#020B1C] text-[#FFF2D5] font-mono ${
+            ? `bg-[#050505] text-white font-mono ${
                 isOpen
-                  ? 'border-[#F5B942] ring-2 ring-[#F5B942]/25 shadow-md'
-                  : 'border-[#F5B942]/30 hover:border-[#F5B942]/70 shadow-xs'
+                  ? 'border-[#FF1738] ring-2 ring-[#FF1738]/25 shadow-md'
+                  : 'border-[#C1121F]/40 hover:border-[#FF1738]/70 shadow-xs'
               }`
             : `bg-white text-[#002b66] ${
                 isOpen
@@ -448,11 +448,11 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
         }`}
       >
         <div className="flex items-center gap-2.5 truncate">
-          <CalendarIcon className={`w-4 h-4 shrink-0 ${isDark ? 'text-[#F5B942]' : 'text-[#0077c8]'}`} />
+          <CalendarIcon className={`w-4 h-4 shrink-0 ${isDark ? 'text-[#FF1738]' : 'text-[#0077c8]'}`} />
           <span className={`font-medium ${
             value 
-              ? (isDark ? 'text-[#FFF2D5] font-bold' : 'text-[#002b66]') 
-              : (isDark ? 'text-[#FFF2D5]/40' : 'text-slate-400')
+              ? (isDark ? 'text-white font-bold' : 'text-[#002b66]') 
+              : (isDark ? 'text-[#9CA3AF]/50' : 'text-slate-400')
           }`}>
             {value ? formatDisplay(value) : placeholder}
           </span>
@@ -460,7 +460,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
 
         <ChevronDown
           className={`w-4 h-4 transition-transform duration-200 shrink-0 ${
-            isDark ? 'text-[#F5B942]' : 'text-[#0077c8]'
+            isDark ? 'text-[#FF1738]' : 'text-[#0077c8]'
           } ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
@@ -469,12 +469,12 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
       {isOpen && typeof document !== 'undefined' && createPortal(
         isMobile ? (
           // Mobile Viewport: Centered Modal Dialog with backdrop
-          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs">
             <div
               ref={popoverRef}
               className={`w-[320px] max-w-[calc(100vw-24px)] rounded-3xl border p-4 space-y-3.5 shadow-2xl ${
                 isDark
-                  ? 'bg-[#061A35] border-[#F5B942]/40 shadow-[0_20px_60px_rgba(2,11,28,0.95)] text-[#FFF2D5]'
+                  ? 'bg-[#0D0D12] border-[#C1121F]/40 shadow-[0_20px_60px_rgba(5,5,5,0.95),0_0_20px_rgba(255,23,56,0.15)] text-white'
                   : 'bg-white border-[#d4e8f5] shadow-[0_20px_50px_rgba(0,43,102,0.25)] text-slate-800'
               }`}
             >
@@ -492,7 +492,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             }}
             className={`z-[99999] w-[310px] rounded-2xl border p-3.5 space-y-3 shadow-2xl ${
               isDark
-                ? 'bg-[#061A35] border-[#F5B942]/40 shadow-[0_25px_60px_rgba(2,11,28,0.95),0_0_20px_rgba(245,185,66,0.15)] text-[#FFF2D5]'
+                ? 'bg-[#0D0D12] border-[#C1121F]/40 shadow-[0_25px_60px_rgba(5,5,5,0.95),0_0_20px_rgba(255,23,56,0.2)] text-white'
                 : 'bg-white border-[#d4e8f5] shadow-[0_20px_45px_rgba(0,43,102,0.22)] text-slate-800'
             }`}
           >

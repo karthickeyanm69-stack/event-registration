@@ -98,7 +98,7 @@ export const BrandedLoadingScreen: React.FC<BrandedLoadingScreenProps> = ({
                   exit={{ opacity: 0, y: -6 }}
                   type="button"
                   onClick={finish}
-                  className="px-4 py-2 rounded-full bg-[#002b66]/90 hover:bg-[#002b66] backdrop-blur-md text-white font-mono font-bold text-xs tracking-wider shadow-md active:scale-95 transition-all cursor-pointer border border-[#0077c8]/30"
+                  className="px-4 py-2 rounded-full bg-[#050505]/90 hover:bg-[#0D0D12] backdrop-blur-md text-[#FF1738] font-mono font-bold text-xs tracking-wider shadow-md active:scale-95 transition-all cursor-pointer border border-[#C1121F]/50 shadow-[0_0_12px_rgba(255,23,56,0.2)]"
                 >
                   SKIP INTRO ✕
                 </motion.button>
