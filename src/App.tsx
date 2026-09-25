@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { InteractiveWebReveal } from './components/participant/InteractiveWebReveal';
 import { ParticipantAccess } from './components/participant/ParticipantAccess';
 import { RadianzaLandingPage } from './components/participant/RadianzaLandingPage';
@@ -35,6 +35,10 @@ export default function App() {
   const [currentRole, setCurrentRole] = useState<PortalRole>('participant');
   const [isRevealed, setIsRevealed] = useState<boolean>(false);
   const [authRedirectNotice, setAuthRedirectNotice] = useState<string | null>(null);
+
+  const handleRevealComplete = useCallback(() => {
+    setIsRevealed(true);
+  }, []);
 
   // 2. Database Reactive State
   const [events, setEvents] = useState<CollegeEvent[]>([]);
@@ -487,7 +491,7 @@ export default function App() {
           {/* Interactive Web Pull Reveal Experience */}
           {!isRevealed && (
             <InteractiveWebReveal
-              onComplete={() => setIsRevealed(true)}
+              onComplete={handleRevealComplete}
             />
           )}
 

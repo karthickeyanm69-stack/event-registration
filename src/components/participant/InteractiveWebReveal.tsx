@@ -306,6 +306,11 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
   // Interaction State
   const isDraggingRef = useRef(false);
   const pullProgressRef = useRef(0);
@@ -318,6 +323,7 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
   const currentNodeRef = useRef({ x: 0, y: 0 });
   const targetNodeRef = useRef({ x: 0, y: 0 });
   const nodeVelocityRef = useRef({ x: 0, y: 0 });
+  const mountTimeRef = useRef<number>(performance.now());
 
   // Pointer & Tracking
   const pointerPosRef = useRef({ x: 0, y: 0 });
@@ -329,6 +335,12 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
   const [pullProgress, setPullProgress] = useState(0);
   const [isRevealed, setIsRevealed] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isIntroReady, setIsIntroReady] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsIntroReady(true), 750);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Particles & Animations
   const particlesRef = useRef<Particle[]>([]);
@@ -356,6 +368,8 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
     let animId: number;
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
+    const mountTime = mountTimeRef.current;
+    let lastTime = performance.now();
 
     const handleResize = () => {
       if (!canvas) return;
@@ -364,21 +378,23 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
       anchorRef.current = { x: width * 0.5, y: 0 };
       originNodeRef.current = { x: width * 0.5, y: height * 0.38 };
       if (!isDraggingRef.current && !isSnappingRef.current) {
-        currentNodeRef.current = { ...originNodeRef.current };
-        targetNodeRef.current = { ...originNodeRef.current };
+        if (performance.now() - mountTime > 1200) {
+          currentNodeRef.current = { ...originNodeRef.current };
+          targetNodeRef.current = { ...originNodeRef.current };
+        }
       }
     };
     handleResize();
     window.addEventListener('resize', handleResize);
 
-    // Initial positioning
+    // Initial positioning: Start spider from above ceiling for smooth descent!
     anchorRef.current = { x: width * 0.5, y: 0 };
     originNodeRef.current = { x: width * 0.5, y: height * 0.38 };
-    currentNodeRef.current = { ...originNodeRef.current };
+    if (performance.now() - mountTime < 80) {
+      currentNodeRef.current = { x: width * 0.5, y: -60 };
+    }
     targetNodeRef.current = { ...originNodeRef.current };
     pointerPosRef.current = { x: width * 0.5, y: height * 0.38 };
-
-    let lastTime = performance.now();
 
     // Trigger explosive snap release after pulling is over
     const triggerSnap = () => {
@@ -443,7 +459,7 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
         setTimeout(() => {
           if (!isCompletedRef.current) {
             isCompletedRef.current = true;
-            onComplete();
+            onCompleteRef.current();
           }
         }, 350);
       }, 450);
@@ -459,9 +475,19 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
 
       ctx.clearRect(0, 0, width, height);
 
+      // ── 0. Initial Smooth Spider Descent & Web Blossom (First 1.2s) ──
+      const introElapsed = Math.max(0, time - mountTime);
+      const introDuration = 1200;
+      const isIntroActive = introElapsed < introDuration && !isDraggingRef.current && !isSnappingRef.current;
+      const introRatio = Math.min(1.0, introElapsed / introDuration);
+      // Buttery smooth quintic ease out
+      const introEase = 1 - Math.pow(1 - introRatio, 4.0);
+      const webIntroAlpha = Math.min(1.0, Math.max(0, (introElapsed - 200) / 750));
+      const spokeScale = Math.min(1.0, Math.max(0, (introElapsed - 300) / 700));
+
       // ── 1. Node Physics Simulation (Spring + Damping) ──
       const k = 0.20;
-      const damping = 0.76;
+      const damping = 0.78;
 
       if (isDraggingRef.current) {
         currentNodeRef.current.x += (targetNodeRef.current.x - currentNodeRef.current.x) * 0.35;
@@ -482,36 +508,42 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
         currentNodeRef.current.y += (height * 1.6 - currentNodeRef.current.y) * 0.22;
         pullProgressRef.current = Math.min(1.0, pullProgressRef.current + dt * 2.8);
         setPullProgress(pullProgressRef.current);
+      } else if (isIntroActive) {
+        // Smooth initial slide down from ceiling on silk thread with zero jerk
+        currentNodeRef.current.x = originNodeRef.current.x;
+        currentNodeRef.current.y = -60 + (originNodeRef.current.y + 60) * introEase;
+        pullProgressRef.current = 0;
       } else {
-        const fx = (originNodeRef.current.x - currentNodeRef.current.x) * k;
-        const fy = (originNodeRef.current.y - currentNodeRef.current.y) * k;
-
-        nodeVelocityRef.current.x = (nodeVelocityRef.current.x + fx) * damping;
-        nodeVelocityRef.current.y = (nodeVelocityRef.current.y + fy) * damping;
-
-        currentNodeRef.current.x += nodeVelocityRef.current.x;
-        currentNodeRef.current.y += nodeVelocityRef.current.y;
-
-        // Idle spider breathing
-        const idleSway = Math.sin(time * 0.0018) * 3.0;
-        const idleBob = Math.cos(time * 0.0022) * 4.5;
+        // Idle swaying gently eased in
+        const swayBlend = Math.min(1.0, (introElapsed - introDuration) / 400);
+        const idleSway = Math.sin(time * 0.0018) * 3.0 * swayBlend;
+        const idleBob = Math.cos(time * 0.0022) * 4.0 * swayBlend;
 
         // Magnetic cursor attraction
         const distToPointer = Math.hypot(
           pointerPosRef.current.x - originNodeRef.current.x,
           pointerPosRef.current.y - originNodeRef.current.y
         );
-        isNearNodeRef.current = distToPointer < 150;
+        isNearNodeRef.current = distToPointer < 140;
 
         let magnetX = 0, magnetY = 0;
         if (isNearNodeRef.current) {
-          const pullFactor = (1 - distToPointer / 150) * 18;
-          magnetX = (pointerPosRef.current.x - originNodeRef.current.x) * (pullFactor / 150);
-          magnetY = (pointerPosRef.current.y - originNodeRef.current.y) * (pullFactor / 150);
+          const pullFactor = (1 - distToPointer / 140) * 16;
+          magnetX = (pointerPosRef.current.x - originNodeRef.current.x) * (pullFactor / 140);
+          magnetY = (pointerPosRef.current.y - originNodeRef.current.y) * (pullFactor / 140);
         }
 
-        currentNodeRef.current.x = originNodeRef.current.x + idleSway + magnetX + nodeVelocityRef.current.x;
-        currentNodeRef.current.y = originNodeRef.current.y + idleBob + magnetY + nodeVelocityRef.current.y;
+        const targetX = originNodeRef.current.x + idleSway + magnetX;
+        const targetY = originNodeRef.current.y + idleBob + magnetY;
+
+        const fx = (targetX - currentNodeRef.current.x) * k;
+        const fy = (targetY - currentNodeRef.current.y) * k;
+
+        nodeVelocityRef.current.x = (nodeVelocityRef.current.x + fx) * damping;
+        nodeVelocityRef.current.y = (nodeVelocityRef.current.y + fy) * damping;
+
+        currentNodeRef.current.x += nodeVelocityRef.current.x;
+        currentNodeRef.current.y += nodeVelocityRef.current.y;
 
         pullProgressRef.current = Math.max(0, pullProgressRef.current - dt * 2.6);
         setPullProgress(pullProgressRef.current);
@@ -543,7 +575,7 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
       const tlHubY = height * 0.12;
       const tlRadius = Math.min(width * 0.38, 320);
       const webBreathing = 0.45 + Math.sin(time * 0.002) * 0.08 + progress * 0.50;
-      const webAlpha = Math.min(1.0, webBreathing) * (isSnappingRef.current ? 1 - progress : 1.0);
+      const webAlpha = Math.min(1.0, webBreathing * webIntroAlpha) * (isSnappingRef.current ? 1 - progress : 1.0);
 
       drawDenseOrbWeb(ctx, tlHubX, tlHubY, tlRadius, 14, 8, webAlpha);
 
@@ -643,7 +675,7 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
       // ── 6. Secondary Web Strands Radiating from Central Spider ──
       const spokeCount = 8;
       const maxSpokeDist = Math.max(width, height) * 0.85;
-      const spokeRadius = 180 + (maxSpokeDist - 180) * Math.min(1.0, progress * 1.5);
+      const spokeRadius = (180 + (maxSpokeDist - 180) * Math.min(1.0, progress * 1.5)) * spokeScale;
 
       for (let i = 0; i < spokeCount; i++) {
         const angle = -Math.PI / 2 + (i * Math.PI * 2) / spokeCount;
@@ -712,24 +744,26 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
         const mainSpiderRot = Math.sin(time * 0.002) * 0.08 + (isDraggingRef.current ? 0.05 : 0);
 
         // Circular spider web hub backing under the spider
-        const hubRadius = 32 + progress * 8 + (isHoverOrDrag ? 4 : 0);
-        ctx.beginPath();
-        ctx.arc(nodeX, nodeY, hubRadius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(78, 226, 236, ${(isHoverOrDrag ? 0.14 : 0.06) * (1 - progress * 0.8)})`;
-        ctx.strokeStyle = `rgba(78, 226, 236, ${(isHoverOrDrag ? 0.65 : 0.35) * (1 - progress * 0.8)})`;
-        ctx.lineWidth = 1.2;
-        ctx.fill();
-        ctx.stroke();
-
-        // Radiating silk rays in hub
-        for (let h = 0; h < 8; h++) {
-          const a = (h * Math.PI * 2) / 8 + time * 0.001;
+        const hubRadius = (32 + progress * 8 + (isHoverOrDrag ? 4 : 0)) * Math.min(1.0, webIntroAlpha * 1.2);
+        if (hubRadius > 2) {
           ctx.beginPath();
-          ctx.moveTo(nodeX + Math.cos(a) * 6, nodeY + Math.sin(a) * 6);
-          ctx.lineTo(nodeX + Math.cos(a) * hubRadius, nodeY + Math.sin(a) * hubRadius);
-          ctx.strokeStyle = 'rgba(78, 226, 236, 0.40)';
-          ctx.lineWidth = 0.8;
+          ctx.arc(nodeX, nodeY, hubRadius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(78, 226, 236, ${(isHoverOrDrag ? 0.14 : 0.06) * (1 - progress * 0.8)})`;
+          ctx.strokeStyle = `rgba(78, 226, 236, ${(isHoverOrDrag ? 0.65 : 0.35) * (1 - progress * 0.8)})`;
+          ctx.lineWidth = 1.2;
+          ctx.fill();
           ctx.stroke();
+
+          // Radiating silk rays in hub
+          for (let h = 0; h < 8; h++) {
+            const a = (h * Math.PI * 2) / 8 + time * 0.001;
+            ctx.beginPath();
+            ctx.moveTo(nodeX + Math.cos(a) * 6, nodeY + Math.sin(a) * 6);
+            ctx.lineTo(nodeX + Math.cos(a) * hubRadius, nodeY + Math.sin(a) * hubRadius);
+            ctx.strokeStyle = 'rgba(78, 226, 236, 0.40)';
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
         }
 
         // Draw the Large Realistic Spider with eye glow scaling with pull length!
@@ -773,7 +807,7 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', handleResize);
     };
-  }, [onComplete]);
+  }, []);
 
   // ── Unified Pointer Events (Mouse & Touch Drag) ──
   const handlePointerDown = (e: React.PointerEvent) => {
@@ -896,11 +930,12 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
 
       {/* ── 3. Minimal Cinematic Instruction Typography ── */}
       <div
-        className="absolute inset-x-0 pointer-events-none z-20 flex flex-col items-center justify-center text-center transition-all duration-300"
+        className="absolute inset-x-0 pointer-events-none z-20 flex flex-col items-center justify-center text-center select-none"
         style={{
-          top: `${Math.min(currentNodeRef.current.y + 60, window.innerHeight * 0.74)}px`,
-          opacity: Math.max(0, 1.0 - pullProgress * 3.2),
-          transform: `translateY(${pullProgress * 26}px)`,
+          top: 'calc(38vh + 65px)',
+          opacity: isIntroReady ? Math.max(0, 1.0 - pullProgress * 3.2) : 0,
+          transform: `translateY(${isIntroReady ? pullProgress * 26 : 14}px)`,
+          transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
         <span className="font-serif font-black text-xs sm:text-sm tracking-[0.28em] text-[#FFFFFF]/90 uppercase drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]">
