@@ -46,7 +46,6 @@ export const mapParticipantFromSupabase = (row: any): Participant => ({
   department: row.department,
   email: row.email,
   phone: row.phone,
-  avatarUrl: row.avatar_url,
   accessSecret: row.access_secret,
   createdAt: row.created_at,
 });
@@ -68,6 +67,11 @@ export const mapRegistrationFromSupabase = (row: any): Registration => ({
   teamName: row.team_name,
   members: row.members || [],
   status: row.status || 'ACTIVE',
+  paymentStatus: row.payment_status || 'FREE',
+  paymentId: row.payment_id,
+  paymentOrderId: row.payment_order_id,
+  amountPaid: row.amount_paid,
+  paidAt: row.paid_at,
   qrToken: row.qr_token,
   registeredAt: row.registered_at,
 });
@@ -122,10 +126,10 @@ export const mapSettingsFromSupabase = (row: any): SystemSettings => ({
   allowEventChange: row.allow_event_change ?? true,
   collegeName: row.college_name || "St. Peter's Institute of Higher Education & Research",
   collegeShortName: row.college_short_name || 'SPIHER',
-  symposiumName: row.symposium_name || 'IGNITE 2026 — National Level Symposium',
+  symposiumName: row.symposium_name || "RADIANZA '26 — National Level Symposium",
   symposiumYear: row.symposium_year || '2026',
-  themeBannerText: row.theme_banner_text || 'Welcome to IGNITE 2026! Carry your digital QR pass.',
-  supportEmail: row.support_email || 'ignite2026@spiher.edu.in',
+  themeBannerText: row.theme_banner_text || "Welcome to RADIANZA '26! Carry your digital QR pass.",
+  supportEmail: row.support_email || 'radianza2026@spiher.edu.in',
   supportPhone: row.support_phone || '+91 94440 12345',
   venueAddress: row.venue_address || 'SPIHER Campus, Avadi, Chennai, Tamil Nadu 600054',
   emergencyNotice: row.emergency_notice,
@@ -481,8 +485,12 @@ export class SupabaseService {
         department: registration.department,
         is_team_event: registration.isTeamEvent,
         team_name: registration.teamName,
-        members: registration.members,
         status: 'ACTIVE',
+        payment_status: registration.paymentStatus || 'FREE',
+        payment_id: registration.paymentId,
+        payment_order_id: registration.paymentOrderId,
+        amount_paid: registration.amountPaid,
+        paid_at: registration.paidAt,
         qr_token: registration.qrToken,
         registered_at: registration.registeredAt || new Date().toISOString(),
       };
@@ -509,6 +517,43 @@ export class SupabaseService {
     } catch (e: any) {
       console.error('Supabase createRegistration exception:', e);
       return { success: false, error: e.message || 'Database registration failure.' };
+    }
+  }
+
+  /**
+   * Update Registration Payment Status in Supabase
+   */
+  static async updateRegistrationPayment(
+    registrationId: string,
+    paymentStatus: string,
+    paymentDetails?: {
+      paymentId?: string;
+      paymentOrderId?: string;
+      amountPaid?: number;
+      paidAt?: string;
+    }
+  ): Promise<{ success: boolean; error?: string }> {
+    if (!supabase) return { success: false, error: 'Supabase not configured' };
+
+    try {
+      const updateData: Record<string, any> = {
+        payment_status: paymentStatus,
+        updated_at: new Date().toISOString(),
+      };
+      if (paymentDetails?.paymentId) updateData.payment_id = paymentDetails.paymentId;
+      if (paymentDetails?.paymentOrderId) updateData.payment_order_id = paymentDetails.paymentOrderId;
+      if (paymentDetails?.amountPaid !== undefined) updateData.amount_paid = paymentDetails.amountPaid;
+      if (paymentDetails?.paidAt) updateData.paid_at = paymentDetails.paidAt;
+
+      const { error } = await supabase
+        .from('registrations')
+        .update(updateData)
+        .eq('id', registrationId);
+
+      if (error) return { success: false, error: error.message };
+      return { success: true };
+    } catch (e: any) {
+      return { success: false, error: e.message };
     }
   }
 
@@ -679,7 +724,7 @@ export class SupabaseService {
     let cleanToken = tokenOrId.trim();
     if (cleanToken.includes('verify=')) {
       try {
-        const urlObj = new URL(cleanToken, 'https://ignite.spiher.edu.in');
+        const urlObj = new URL(cleanToken, 'https://radianza.spiher.edu.in');
         cleanToken = urlObj.searchParams.get('verify') || urlObj.searchParams.get('token') || cleanToken;
       } catch {
         const match = cleanToken.match(/verify=([^&]+)/);
@@ -723,6 +768,24 @@ export class SupabaseService {
           valid: false,
           errorType: 'REGISTRATION_CANCELLED',
           errorMessage: `This pass (${registration.registrationNumber}) has been cancelled or transferred to another event.`,
+        };
+      }
+
+      // 3.1. Check Payment Status — Block entry if payment is pending or failed
+      if (registration.paymentStatus === 'PENDING') {
+        return {
+          success: false,
+          valid: false,
+          errorType: 'INVALID_QR',
+          errorMessage: `Payment is PENDING for this pass (${registration.registrationNumber}). Admission is blocked until payment is verified.`,
+        };
+      }
+      if (registration.paymentStatus === 'FAILED') {
+        return {
+          success: false,
+          valid: false,
+          errorType: 'INVALID_QR',
+          errorMessage: `Payment verification failed for this pass (${registration.registrationNumber}). Pass is locked.`,
         };
       }
 

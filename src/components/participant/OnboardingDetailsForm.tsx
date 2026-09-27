@@ -145,7 +145,7 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
                   Institute of Higher Education &amp; Research
                 </p>
                 <p className="text-[9px] text-white/60 uppercase tracking-wider">
-                  IGNITE 2026 Registration
+                  RADIANZA '26 Registration
                 </p>
               </div>
             </div>

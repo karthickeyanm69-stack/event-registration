@@ -122,7 +122,7 @@ export const CollegeEmblem: React.FC<{ size?: number | string; className?: strin
         letterSpacing="0.2"
         fontFamily="sans-serif"
       >
-        IGNITE • INSPIRE • INNOVATE
+        RADIANZA • INSPIRE • INNOVATE
       </text>
     </svg>
   );

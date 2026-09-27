@@ -126,7 +126,7 @@ export const ParticipantStateShowcase: React.FC = () => {
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">Registrations Closed</h3>
             <p className="text-xs text-slate-500 max-w-xs">
-              The official registration window for IGNITE 2024 has concluded. On-spot inquiries can be made at the Registration Desk.
+              The official registration window for RADIANZA '26 has concluded. On-spot inquiries can be made at the Registration Desk.
             </p>
           </div>
         )}

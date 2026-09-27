@@ -5,6 +5,7 @@ import { RadianzaLandingPage } from './components/participant/RadianzaLandingPag
 import { OnboardingDetailsForm } from './components/participant/OnboardingDetailsForm';
 import { EventSelectionView } from './components/participant/EventSelectionView';
 import { TeamBuilderFlow } from './components/participant/TeamBuilderFlow';
+import { PaymentGateway } from './components/participant/PaymentGateway';
 import { RegistrationSuccessPass } from './components/participant/RegistrationSuccessPass';
 import { ParticipantDashboard } from './components/participant/ParticipantDashboard';
 import { StaffConsoleLogin } from './components/console/StaffConsoleLogin';
@@ -29,15 +30,59 @@ import {
 } from './types';
 
 const STAFF_AUTH_SESSION_KEY = 'SPIHER_STAFF_AUTH_SESSION';
+const WEB_REVEALED_SESSION_KEY = 'SPIHER_WEB_REVEALED';
+const PARTICIPANT_SESSION_KEY = 'SPIHER_PARTICIPANT_SESSION';
+
+interface StoredParticipantSession {
+  participant?: Participant | null;
+  registration?: Registration | null;
+  onboardingDraft?: Partial<Participant>;
+  selectedEventId?: string | null;
+}
+
+const getStoredParticipantSession = (): StoredParticipantSession => {
+  try {
+    const raw = sessionStorage.getItem(PARTICIPANT_SESSION_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+};
+
+const saveParticipantSession = (data: Partial<StoredParticipantSession>) => {
+  try {
+    const current = getStoredParticipantSession();
+    const updated = { ...current, ...data };
+    sessionStorage.setItem(PARTICIPANT_SESSION_KEY, JSON.stringify(updated));
+  } catch {
+    // ignore
+  }
+};
 
 export default function App() {
   // 1. URL Route Detection (Separate routes for /participant, /console, /employee, /admin, /superadmin)
   const [currentRole, setCurrentRole] = useState<PortalRole>('participant');
-  const [isRevealed, setIsRevealed] = useState<boolean>(false);
+  const [isRevealed, setIsRevealed] = useState<boolean>(() => {
+    try {
+      const path = window.location.pathname.toLowerCase();
+      // If user is on any subpage (like /register, /dashboard, /console), immediately mark revealed
+      if (path !== '/' && path !== '') {
+        return true;
+      }
+      return sessionStorage.getItem(WEB_REVEALED_SESSION_KEY) === 'true';
+    } catch {
+      return false;
+    }
+  });
   const [authRedirectNotice, setAuthRedirectNotice] = useState<string | null>(null);
 
   const handleRevealComplete = useCallback(() => {
     setIsRevealed(true);
+    try {
+      sessionStorage.setItem(WEB_REVEALED_SESSION_KEY, 'true');
+    } catch {
+      // ignore
+    }
   }, []);
 
   // 2. Database Reactive State
@@ -53,14 +98,35 @@ export default function App() {
 
   // 3. Strict Participant Flow Steps:
   // 'access' -> 'onboarding' -> 'events' -> 'team' -> 'success' -> 'dashboard'
-  type ParticipantFlowStep = 'access' | 'onboarding' | 'events' | 'team' | 'success' | 'dashboard';
+  type ParticipantFlowStep = 'access' | 'onboarding' | 'events' | 'team' | 'payment' | 'success' | 'dashboard';
   type LandingPageId = 'home' | 'events' | 'about' | 'contact';
+
+  const isPaymentValidOrPending = (reg: Registration | null | undefined): boolean => {
+    if (!reg) return false;
+    const pStatus = (reg.paymentStatus || '').toLowerCase();
+    return pStatus === 'completed' || pStatus === 'pending';
+  };
+
+  const initialSession = getStoredParticipantSession();
+  const initialEvents = MockDatabaseService.getEvents();
+  const hasValidPaymentOrPending = isPaymentValidOrPending(initialSession.registration);
+
   const [participantStep, setParticipantStep] = useState<ParticipantFlowStep>('access');
   const [landingPageId, setLandingPageId] = useState<LandingPageId>('home');
-  const [currentParticipant, setCurrentParticipant] = useState<Participant | null>(null);
-  const [currentRegistration, setCurrentRegistration] = useState<Registration | null>(null);
+  const [currentParticipant, setCurrentParticipant] = useState<Participant | null>(
+    () => (hasValidPaymentOrPending ? initialSession.participant || null : null)
+  );
+  const [currentRegistration, setCurrentRegistration] = useState<Registration | null>(
+    () => (hasValidPaymentOrPending ? initialSession.registration || null : null)
+  );
   const [onboardingDraft, setOnboardingDraft] = useState<Partial<Participant>>({});
-  const [selectedEventForReg, setSelectedEventForReg] = useState<CollegeEvent | null>(null);
+  const [selectedEventForReg, setSelectedEventForReg] = useState<CollegeEvent | null>(() => {
+    if (hasValidPaymentOrPending && initialSession.registration?.eventId) {
+      return initialEvents.find((e) => e.id === initialSession.registration?.eventId) || null;
+    }
+    return null;
+  });
+  const [pendingTeamData, setPendingTeamData] = useState<{ teamName: string; members: TeamMember[] } | null>(null);
 
   // 3.1. Public QR Pass Scan Verification Modal (Opens when scanned with any smartphone camera)
   const [verifiedPassModal, setVerifiedPassModal] = useState<{
@@ -200,10 +266,51 @@ export default function App() {
       hash.includes('pass') ||
       hash.includes('success')
     ) {
-      setCurrentRole('participant');
-      setParticipantStep('success');
-      if (window.location.hash || pathname !== '/pass') {
-        window.history.replaceState({}, '', '/pass');
+      const stored = getStoredParticipantSession();
+      if (stored.registration && isPaymentValidOrPending(stored.registration)) {
+        setCurrentRegistration(stored.registration);
+        setCurrentRole('participant');
+        setParticipantStep('success');
+        if (window.location.hash || pathname !== '/pass') {
+          window.history.replaceState({}, '', '/pass');
+        }
+      } else {
+        // No paid or pending registration -> do the flow from first
+        setCurrentRole('participant');
+        setParticipantStep('access');
+        setLandingPageId('home');
+        window.history.replaceState({}, '', '/');
+      }
+    } else if (
+      pathname.startsWith('/register/payment') ||
+      pathname.startsWith('/payment') ||
+      hash.includes('payment')
+    ) {
+      const stored = getStoredParticipantSession();
+      if (stored.registration && isPaymentValidOrPending(stored.registration)) {
+        setCurrentRegistration(stored.registration);
+        if (stored.selectedEventId) {
+          const found = MockDatabaseService.getEvents().find((e) => e.id === stored.selectedEventId);
+          if (found) setSelectedEventForReg(found);
+        }
+        setCurrentRole('participant');
+        if ((stored.registration.paymentStatus || '').toLowerCase() === 'completed') {
+          setParticipantStep('success');
+          window.history.replaceState({}, '', '/pass');
+        } else {
+          setParticipantStep('payment');
+          if (window.location.hash || pathname !== '/register/payment') {
+            window.history.replaceState({}, '', '/register/payment');
+          }
+        }
+      } else {
+        // No paid or pending registration -> must do flow from first
+        setCurrentRole('participant');
+        setParticipantStep('access');
+        setLandingPageId('home');
+        setSelectedEventForReg(null);
+        setOnboardingDraft({});
+        window.history.replaceState({}, '', '/');
       }
     } else if (
       pathname.startsWith('/register/confirm') ||
@@ -212,10 +319,30 @@ export default function App() {
       hash.includes('confirm') ||
       hash.includes('team')
     ) {
-      setCurrentRole('participant');
-      setParticipantStep('team');
-      if (window.location.hash || pathname !== '/register/confirm') {
-        window.history.replaceState({}, '', '/register/confirm');
+      const stored = getStoredParticipantSession();
+      if (stored.registration && isPaymentValidOrPending(stored.registration)) {
+        setCurrentRegistration(stored.registration);
+        setCurrentRole('participant');
+        if ((stored.registration.paymentStatus || '').toLowerCase() === 'completed') {
+          setParticipantStep('success');
+          window.history.replaceState({}, '', '/pass');
+        } else {
+          setParticipantStep('payment');
+          window.history.replaceState({}, '', '/register/payment');
+        }
+      } else {
+        // Unpaid / interrupted process: do the flow from first
+        setCurrentRole('participant');
+        setParticipantStep('access');
+        setLandingPageId('home');
+        setSelectedEventForReg(null);
+        setOnboardingDraft({});
+        try {
+          sessionStorage.removeItem(PARTICIPANT_SESSION_KEY);
+        } catch {
+          // ignore
+        }
+        window.history.replaceState({}, '', '/');
       }
     } else if (
       pathname.startsWith('/register/events') ||
@@ -319,6 +446,35 @@ export default function App() {
     return () => window.removeEventListener('popstate', syncRouteFromLocation);
   }, []);
 
+  // Guard against navigating out, tab-switching, or reloading into an incomplete flow
+  useEffect(() => {
+    const handleTabRevisit = () => {
+      if (document.visibilityState === 'visible') {
+        const stored = getStoredParticipantSession();
+        const hasValid =
+          stored.registration &&
+          ['completed', 'pending'].includes((stored.registration.paymentStatus || '').toLowerCase());
+
+        // If user is at team confirmation but missing event or onboarding data, reset to first
+        if (participantStep === 'team') {
+          if (!selectedEventForReg || !onboardingDraft?.name || !onboardingDraft?.rollNumber) {
+            navigateTo('/', 'participant', 'access', 'home');
+          }
+        } else if (participantStep === 'payment' && !hasValid && !currentRegistration) {
+          // If at payment step without a registered order, reset to first
+          navigateTo('/', 'participant', 'access', 'home');
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleTabRevisit);
+    window.addEventListener('focus', handleTabRevisit);
+    return () => {
+      document.removeEventListener('visibilitychange', handleTabRevisit);
+      window.removeEventListener('focus', handleTabRevisit);
+    };
+  }, [participantStep, selectedEventForReg, onboardingDraft, currentRegistration]);
+
   // 5. Scoped PWA Installation Manager (Exclusively for Employee, Admin, and Super Admin)
   useEffect(() => {
     const isStaffPortal = ['employee', 'admin', 'superadmin', 'console'].includes(currentRole);
@@ -387,6 +543,7 @@ export default function App() {
   // Participant Flow Transitions
   const handleParticipantAccessSuccess = (participant: Participant, registration?: Registration) => {
     setCurrentParticipant(participant);
+    saveParticipantSession({ participant, registration });
     if (registration) {
       // Existing active registration found -> open participant dashboard directly
       setCurrentRegistration(registration);
@@ -401,27 +558,32 @@ export default function App() {
   const handleStartNewRegistration = () => {
     setOnboardingDraft({});
     setSelectedEventForReg(null);
+    setCurrentRegistration(null);
+    saveParticipantSession({ onboardingDraft: {}, selectedEventId: null, registration: null });
     navigateTo('/register', 'participant', 'onboarding');
   };
 
   const handleOnboardingContinue = (draft: Partial<Participant>) => {
     setOnboardingDraft(draft);
+    saveParticipantSession({ onboardingDraft: draft });
     navigateTo('/register/events', 'participant', 'events');
   };
 
   const handleSelectEvent = (event: CollegeEvent) => {
     setSelectedEventForReg(event);
+    saveParticipantSession({ selectedEventId: event.id });
     navigateTo('/register/confirm', 'participant', 'team');
   };
 
   const handleSubmitTeamAndRegister = (teamName: string, members: TeamMember[]) => {
     if (!selectedEventForReg) return;
-
+    const currentEvent = events.find((e) => e.id === selectedEventForReg.id) || selectedEventForReg;
     const leaderMember = members.find((m) => m.isLeader) || members[0];
+
     const res = MockDatabaseService.createRegistration({
-      eventId: selectedEventForReg.id,
-      eventTitle: selectedEventForReg.title,
-      category: selectedEventForReg.category,
+      eventId: currentEvent.id,
+      eventTitle: currentEvent.title,
+      category: currentEvent.category,
       leaderId: `part-${Date.now()}`,
       leaderName: leaderMember.name,
       leaderRollNumber: leaderMember.rollNumber,
@@ -429,9 +591,11 @@ export default function App() {
       leaderPhone: onboardingDraft.phone,
       collegeName: leaderMember.collegeName,
       department: leaderMember.department,
-      isTeamEvent: selectedEventForReg.isTeamEvent,
-      teamName: selectedEventForReg.isTeamEvent ? teamName : undefined,
+      isTeamEvent: currentEvent.isTeamEvent,
+      teamName: currentEvent.isTeamEvent ? teamName : undefined,
       members,
+      paymentStatus: 'PENDING',
+      amountPaid: currentEvent.price,
     });
 
     if (res.success && res.registration) {
@@ -444,10 +608,25 @@ export default function App() {
       );
       if (leaderPart) setCurrentParticipant(leaderPart);
       setCurrentRegistration(res.registration);
-      navigateTo('/pass', 'participant', 'success');
+      saveParticipantSession({
+        registration: res.registration,
+        participant: leaderPart,
+        selectedEventId: currentEvent.id,
+      });
+
+      // All events require payment — route to payment step (PENDING until verified)
+      setPendingTeamData({ teamName, members });
+      navigateTo('/register/payment', 'participant', 'payment');
     } else {
       alert(res.error || 'Registration failed.');
     }
+  };
+
+  const handlePaymentVerified = (updatedRegistration: Registration) => {
+    setCurrentRegistration(updatedRegistration);
+    saveParticipantSession({ registration: updatedRegistration });
+    loadDatabaseData();
+    navigateTo('/pass', 'participant', 'success');
   };
 
   // Staff Console Transitions
@@ -477,19 +656,27 @@ export default function App() {
     setCurrentRegistration(null);
     setOnboardingDraft({});
     setSelectedEventForReg(null);
-    sessionStorage.removeItem('spiher_participant_session');
+    sessionStorage.removeItem(PARTICIPANT_SESSION_KEY);
     navigateTo('/', 'participant', 'access', 'home');
   };
 
+  const isDarkLanding = currentRole === 'participant' && participantStep === 'access';
+
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex flex-col font-sans selection:bg-[#C1121F] selection:text-white">
+    <div
+      className={`min-h-screen flex flex-col font-sans transition-colors duration-200 ${
+        isDarkLanding
+          ? 'bg-[#050505] text-white selection:bg-[#C1121F] selection:text-white'
+          : 'bg-slate-50 text-slate-900 selection:bg-[#0077c8] selection:text-white'
+      }`}
+    >
       {/* ========================================================================= */}
       {/* 1. PARTICIPANT PORTAL (PUBLIC FACING ONLY - NO STAFF SWITCHER)            */}
       {/* ========================================================================= */}
       {currentRole === 'participant' && (
         <div className="flex-1 flex flex-col items-center justify-start w-full relative">
-          {/* Interactive Web Pull Reveal Experience */}
-          {!isRevealed && (
+          {/* Interactive Web Pull Reveal Experience - ONLY on initial landing page entrance */}
+          {!isRevealed && participantStep === 'access' && landingPageId === 'home' && (
             <InteractiveWebReveal
               onComplete={handleRevealComplete}
             />
@@ -523,6 +710,7 @@ export default function App() {
               onRedirectToExistingDashboard={(part, reg) => {
                 setCurrentParticipant(part);
                 setCurrentRegistration(reg);
+                saveParticipantSession({ participant: part, registration: reg });
                 navigateTo('/dashboard', 'participant', 'dashboard');
               }}
             />
@@ -539,22 +727,96 @@ export default function App() {
           )}
 
           {/* Team Builder (Team Leader default + Teammates + Same College/Dept + 1-Event Check) */}
-          {participantStep === 'team' && selectedEventForReg && (
-            <TeamBuilderFlow
-              event={selectedEventForReg}
-              participantData={onboardingDraft}
-              onBackToEventSelection={() => navigateTo('/register/events', 'participant', 'events')}
-              onSubmitTeamAndRegister={handleSubmitTeamAndRegister}
-            />
+          {participantStep === 'team' && (
+            (() => {
+              const activeEvent =
+                events.find((e) => e.id === selectedEventForReg?.id) || selectedEventForReg;
+
+              // If event or participant onboarding details are missing, return null
+              if (!activeEvent || !onboardingDraft?.name || !onboardingDraft?.rollNumber) {
+                return null;
+              }
+
+              return (
+                <TeamBuilderFlow
+                  event={activeEvent}
+                  participantData={onboardingDraft}
+                  onBackToEventSelection={() => navigateTo('/register/events', 'participant', 'events')}
+                  onSubmitTeamAndRegister={handleSubmitTeamAndRegister}
+                />
+              );
+            })()
+          )}
+
+          {/* Payment Gateway Step for Paid Events */}
+          {participantStep === 'payment' && (
+            (() => {
+              const activeReg =
+                currentRegistration ||
+                getStoredParticipantSession().registration ||
+                null;
+
+              if (!activeReg || !isPaymentValidOrPending(activeReg)) {
+                return (
+                  <div className="w-full min-h-[60vh] flex flex-col items-center justify-center p-6 text-center space-y-4">
+                    <p className="text-slate-600 font-medium text-sm">No active registration found to pay for.</p>
+                    <button
+                      type="button"
+                      onClick={() => navigateTo('/', 'participant', 'access', 'home')}
+                      className="px-5 py-2.5 bg-[#002b66] text-white rounded-xl text-xs font-bold shadow-md hover:bg-[#001f4d] transition-colors cursor-pointer"
+                    >
+                      Return to Home
+                    </button>
+                  </div>
+                );
+              }
+
+              const activeEvent =
+                events.find((e) => e.id === selectedEventForReg?.id) ||
+                selectedEventForReg ||
+                events.find((e) => e.id === activeReg.eventId) ||
+                null;
+
+              if (!activeEvent) return null;
+
+              return (
+                <PaymentGateway
+                  event={activeEvent}
+                  registration={activeReg}
+                  participantData={{
+                    name: activeReg.leaderName,
+                    rollNumber: activeReg.leaderRollNumber,
+                    collegeName: activeReg.collegeName,
+                    department: activeReg.department,
+                    email: activeReg.leaderEmail,
+                    phone: activeReg.leaderPhone,
+                  }}
+                  onPaymentVerified={handlePaymentVerified}
+                  onBackToEvents={() => navigateTo('/', 'participant', 'access', 'home')}
+                />
+              );
+            })()
           )}
 
           {/* Registration Success & Vector QR Pass Display with Download */}
-          {participantStep === 'success' && currentRegistration && (
-            <RegistrationSuccessPass
-              registration={currentRegistration}
-              event={events.find((e) => e.id === currentRegistration.eventId)}
-              onProceedToDashboard={() => navigateTo('/dashboard', 'participant', 'dashboard')}
-            />
+          {participantStep === 'success' && (
+            (() => {
+              const activeReg = currentRegistration || MockDatabaseService.getRegistrations()[0];
+              const activeEvent =
+                events.find((e) => e.id === activeReg?.eventId) ||
+                selectedEventForReg ||
+                events[0];
+
+              if (!activeReg) return null;
+
+              return (
+                <RegistrationSuccessPass
+                  registration={activeReg}
+                  event={activeEvent}
+                  onProceedToDashboard={() => navigateTo('/dashboard', 'participant', 'dashboard')}
+                />
+              );
+            })()
           )}
 
           {/* Participant Dashboard / Public Landing (Home, Rules, Campus, Support, Entry Pass) */}

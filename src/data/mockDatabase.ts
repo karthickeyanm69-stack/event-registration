@@ -40,7 +40,7 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     isTeamEvent: true,
     minTeamSize: 1,
     maxTeamSize: 2,
-    price: 0,
+    price: 150,
     date: 'Oct 24, 2026',
     time: '10:00 AM - 12:00 PM',
     startTime: '10:00 AM',
@@ -60,8 +60,8 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     ],
     coordinators: [
       {
-        id: 'coord-dhanush',
-        name: 'Dhanush',
+        id: 'coord-dhanush-santhosh',
+        name: 'Dhanush & Santhosh',
         role: 'Organizer (4th Year)',
         phone: '+91 98401 23456',
         email: 'dhanush.4th@spiher.edu.in',
@@ -78,8 +78,8 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
         department: 'Dept. of Information Technology',
       },
       {
-        id: 'coord-devipriya',
-        name: 'Devi Priya',
+        id: 'coord-devipriya-yamini',
+        name: 'Devi Priya & Yamini',
         role: 'Asst-Coordinator (2nd Year)',
         phone: '+91 98403 45678',
         email: 'devipriya.2nd@spiher.edu.in',
@@ -98,7 +98,7 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     isTeamEvent: true,
     minTeamSize: 1,
     maxTeamSize: 2,
-    price: 0,
+    price: 150,
     date: 'Oct 24, 2026',
     time: '10:00 AM - 12:00 PM',
     startTime: '10:00 AM',
@@ -118,8 +118,8 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     ],
     coordinators: [
       {
-        id: 'coord-ragavan',
-        name: 'Ragavan',
+        id: 'coord-ragavan-ramkumar',
+        name: 'Ragavan & Ramkumar',
         role: 'Organizer (4th Year)',
         phone: '+91 98404 56789',
         email: 'ragavan.4th@spiher.edu.in',
@@ -138,7 +138,7 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
       {
         id: 'coord-harishini-santhiya',
         name: 'Harishini & Santhiya',
-        role: 'Asst-Coordinators (2nd Year)',
+        role: 'Asst-Coordinator (2nd Year)',
         phone: '+91 98406 78901',
         email: 'design.2nd@spiher.edu.in',
         photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
@@ -156,7 +156,7 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     isTeamEvent: false,
     minTeamSize: 1,
     maxTeamSize: 1,
-    price: 0,
+    price: 100,
     date: 'Oct 24, 2026',
     time: '10:00 AM - 12:00 PM',
     startTime: '10:00 AM',
@@ -176,8 +176,8 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     ],
     coordinators: [
       {
-        id: 'coord-kesav-logo',
-        name: 'Kesav',
+        id: 'coord-kesav-bharath',
+        name: 'Kesav Karthick & Bharath',
         role: 'Organizer (4th Year)',
         phone: '+91 98407 88990',
         email: 'kesav.4th@spiher.edu.in',
@@ -185,8 +185,8 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
         department: 'Dept. of Information Technology',
       },
       {
-        id: 'coord-logo-coord',
-        name: 'Logo Creation Coordinator',
+        id: 'coord-rohit-harish',
+        name: 'Rohit & Harish',
         role: 'Coordinator (3rd Year)',
         phone: '+91 98408 99001',
         email: 'logocreat.3rd@spiher.edu.in',
@@ -205,11 +205,11 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     isTeamEvent: true,
     minTeamSize: 2,
     maxTeamSize: 2,
-    price: 0,
+    price: 100,
     date: 'Oct 24, 2026',
-    time: '12:00 PM - 01:00 PM',
-    startTime: '12:00 PM',
-    endTime: '01:00 PM',
+    time: '10:00 AM - 12:00 PM',
+    startTime: '10:00 AM',
+    endTime: '12:00 PM',
     venue: 'Room 251',
     totalSlots: 50,
     slotsLeft: 20,
@@ -224,8 +224,8 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     ],
     coordinators: [
       {
-        id: 'coord-thirumalai',
-        name: 'Thirumalai',
+        id: 'coord-thirumalai-ashwin',
+        name: 'Thirumalai & Ashwin',
         role: 'Organizer (4th Year)',
         phone: '+91 98409 11223',
         email: 'thirumalai.4th@spiher.edu.in',
@@ -233,10 +233,19 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
         department: 'Dept. of Information Technology',
       },
       {
+        id: 'coord-kamaleshwaran',
+        name: 'Kamaleshwaran',
+        role: 'Coordinator (3rd Year)',
+        phone: '+91 98410 22334',
+        email: 'kamaleshwaran.3rd@spiher.edu.in',
+        photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+        department: 'Dept. of Information Technology',
+      },
+      {
         id: 'coord-partiv',
         name: 'Parthiv',
         role: 'Asst-Coordinator (2nd Year)',
-        phone: '+91 98410 22334',
+        phone: '+91 98410 33445',
         email: 'parthiv.2nd@spiher.edu.in',
         photoUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80',
         department: 'Dept. of Information Technology',
@@ -253,7 +262,7 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     isTeamEvent: true,
     minTeamSize: 1,
     maxTeamSize: 2,
-    price: 0,
+    price: 150,
     date: 'Oct 24, 2026',
     time: '10:00 AM - 12:00 PM',
     startTime: '10:00 AM',
@@ -272,8 +281,8 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     ],
     coordinators: [
       {
-        id: 'coord-gopinath',
-        name: 'Gopinath',
+        id: 'coord-gopinath-amar',
+        name: 'Gopinath & Amar',
         role: 'Organizer (4th Year)',
         phone: '+91 98411 33445',
         email: 'gopinath.4th@spiher.edu.in',
@@ -303,7 +312,7 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
   },
 
   // -------------------------------------------------------------
-  // NON-TECHNICAL EVENTS (10)
+  // NON-TECHNICAL EVENTS (7)
   // -------------------------------------------------------------
   {
     id: 'evt-poster-making',
@@ -314,12 +323,12 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     isTeamEvent: true,
     minTeamSize: 1,
     maxTeamSize: 2,
-    price: 0,
+    price: 100,
     date: 'Oct 24, 2026',
     time: '10:00 AM - 11:00 AM',
     startTime: '10:00 AM',
     endTime: '11:00 AM',
-    venue: 'Room 248, 247',
+    venue: 'Room 251',
     totalSlots: 40,
     slotsLeft: 15,
     imageUrl: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=800&q=80',
@@ -333,13 +342,13 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     ],
     coordinators: [
       {
-        id: 'coord-kesav-n',
-        name: 'Kesav N',
+        id: 'coord-kesav-yuvaraj',
+        name: 'Kesav.N & Yuvaraj',
         role: 'Organizer (4th Year)',
         phone: '+91 98414 66778',
         email: 'kesavn.4th@spiher.edu.in',
         photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of Mechanical',
+        department: 'Dept. of Mechanical / IT',
       },
       {
         id: 'coord-blessy',
@@ -371,12 +380,12 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     isTeamEvent: false,
     minTeamSize: 1,
     maxTeamSize: 1,
-    price: 0,
+    price: 50,
     date: 'Oct 24, 2026',
-    time: '10:00 AM - 11:00 AM',
+    time: '10:00 AM - 10:30 AM',
     startTime: '10:00 AM',
-    endTime: '11:00 AM',
-    venue: 'Main Hall',
+    endTime: '10:30 AM',
+    venue: 'Room 252',
     totalSlots: 50,
     slotsLeft: 25,
     imageUrl: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=800&q=80',
@@ -390,8 +399,8 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     ],
     coordinators: [
       {
-        id: 'coord-aakash',
-        name: 'Aakash',
+        id: 'coord-aakash-prasanna',
+        name: 'Aakash & Prasanna',
         role: 'Organizer (4th Year)',
         phone: '+91 98417 99001',
         email: 'aakash.4th@spiher.edu.in',
@@ -420,168 +429,6 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     status: 'OPEN',
   },
   {
-    id: 'evt-memory-game',
-    title: 'Memory Game',
-    category: 'Non-Technical',
-    tagline: 'Cognitive Recall, Focus & Rapid Mental Agility',
-    description: 'Exercise sharp visual memory and mental recall in rapid-fire observation tests with increasing complexity.',
-    isTeamEvent: false,
-    minTeamSize: 1,
-    maxTeamSize: 1,
-    price: 0,
-    date: 'Oct 24, 2026',
-    time: '10:00 AM - 11:00 AM',
-    startTime: '10:00 AM',
-    endTime: '11:00 AM',
-    venue: 'Room 248',
-    totalSlots: 35,
-    slotsLeft: 12,
-    imageUrl: 'https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?auto=format&fit=crop&w=800&q=80',
-    prizePool: '₹5,000',
-    firstPrize: '₹3,000',
-    secondPrize: '₹2,000',
-    rules: [
-      'Solo participation.',
-      '30 seconds observation followed by recall challenge.',
-      'No writing materials allowed during observation stage.',
-    ],
-    coordinators: [
-      {
-        id: 'coord-yuvaraj',
-        name: 'Yuvaraj',
-        role: 'Organizer (4th Year)',
-        phone: '+91 98420 22334',
-        email: 'yuvaraj.4th@spiher.edu.in',
-        photoUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of Information Technology',
-      },
-      {
-        id: 'coord-baraths',
-        name: 'Barath S',
-        role: 'Asst-Coordinator (2nd Year)',
-        phone: '+91 98421 33445',
-        email: 'baraths.2nd@spiher.edu.in',
-        photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of Information Technology',
-      },
-    ],
-    status: 'OPEN',
-  },
-  {
-    id: 'evt-face-painting',
-    title: 'Face Painting',
-    category: 'Non-Technical',
-    tagline: 'Living Canvas, Thematic Body Art & Aesthetics',
-    description: 'Express imagination and intricate artistic mastery using faces as dynamic storytelling canvases.',
-    isTeamEvent: true,
-    minTeamSize: 2,
-    maxTeamSize: 2,
-    price: 0,
-    date: 'Oct 24, 2026',
-    time: '10:00 AM - 11:00 AM',
-    startTime: '10:00 AM',
-    endTime: '11:00 AM',
-    venue: 'Main Hall / Room 247',
-    totalSlots: 30,
-    slotsLeft: 10,
-    imageUrl: 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=800&q=80',
-    prizePool: '₹6,000',
-    firstPrize: '₹4,000',
-    secondPrize: '₹2,000',
-    rules: [
-      'Team of 2 (1 painter + 1 model).',
-      'Participants must bring skin-safe paints and brushes.',
-      'Theme will be provided on the spot. Time limit: 45 mins.',
-    ],
-    coordinators: [
-      {
-        id: 'coord-aswin',
-        name: 'Aswin',
-        role: 'Organizer (4th Year)',
-        phone: '+91 98422 44556',
-        email: 'aswin.4th@spiher.edu.in',
-        photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of ECE',
-      },
-      {
-        id: 'coord-kamalesh',
-        name: 'Kamalesh',
-        role: 'Coordinator (3rd Year)',
-        phone: '+91 98423 55667',
-        email: 'kamalesh.3rd@spiher.edu.in',
-        photoUrl: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of Information Technology',
-      },
-      {
-        id: 'coord-mukesh',
-        name: 'Mukesh',
-        role: 'Asst-Coordinator (2nd Year)',
-        phone: '+91 98424 66778',
-        email: 'mukesh.2nd@spiher.edu.in',
-        photoUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of Information Technology',
-      },
-    ],
-    status: 'OPEN',
-  },
-  {
-    id: 'evt-connections',
-    title: 'Connections',
-    category: 'Non-Technical',
-    tagline: 'Image Decryption, Lateral Thinking & Word Link Trivia',
-    description: 'Connect clues, images, cryptic associations, and pop culture references to crack the hidden word links fastest.',
-    isTeamEvent: true,
-    minTeamSize: 2,
-    maxTeamSize: 3,
-    price: 0,
-    date: 'Oct 24, 2026',
-    time: '11:00 AM - 12:00 PM',
-    startTime: '11:00 AM',
-    endTime: '12:00 PM',
-    venue: 'Main Hall',
-    totalSlots: 50,
-    slotsLeft: 20,
-    imageUrl: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=800&q=80',
-    prizePool: '₹7,000',
-    firstPrize: '₹4,500',
-    secondPrize: '₹2,500',
-    rules: [
-      'Teams of 2-3 participants.',
-      'Image clue puzzles across Cinema, Tech, and General Knowledge.',
-      'Buzzer round for ties.',
-    ],
-    coordinators: [
-      {
-        id: 'coord-jayasri',
-        name: 'Jaya Sri',
-        role: 'Organizer (4th Year)',
-        phone: '+91 98425 77889',
-        email: 'jayasri.4th@spiher.edu.in',
-        photoUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of Information Technology',
-      },
-      {
-        id: 'coord-naveens',
-        name: 'Naveen S',
-        role: 'Coordinator (3rd Year)',
-        phone: '+91 98426 88990',
-        email: 'naveens.3rd@spiher.edu.in',
-        photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of Information Technology',
-      },
-      {
-        id: 'coord-sivamkumar',
-        name: 'Sivam Kumar',
-        role: 'Asst-Coordinator (2nd Year)',
-        phone: '+91 98427 99001',
-        email: 'sivamkumar.2nd@spiher.edu.in',
-        photoUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of Mech',
-      },
-    ],
-    status: 'OPEN',
-  },
-  {
     id: 'evt-treasure-hunt',
     title: 'Treasure Hunt',
     category: 'Non-Technical',
@@ -590,7 +437,7 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     isTeamEvent: true,
     minTeamSize: 3,
     maxTeamSize: 4,
-    price: 0,
+    price: 150,
     date: 'Oct 24, 2026',
     time: '11:00 AM - 12:30 PM',
     startTime: '11:00 AM',
@@ -609,8 +456,8 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     ],
     coordinators: [
       {
-        id: 'coord-lilly',
-        name: 'Lilly Vinoth',
+        id: 'coord-lilly-govardhini',
+        name: 'Lilly Vinoth & Govardhini',
         role: 'Organizer (4th Year)',
         phone: '+91 98428 00112',
         email: 'lillyvinoth.4th@spiher.edu.in',
@@ -618,8 +465,8 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
         department: 'Dept. of Information Technology',
       },
       {
-        id: 'coord-mohankumar',
-        name: 'Mohan Kumar',
+        id: 'coord-mohankumar-praveen',
+        name: 'Mohan Kumar & S. Praveen',
         role: 'Coordinator (3rd Year)',
         phone: '+91 98429 11223',
         email: 'mohankumar.3rd@spiher.edu.in',
@@ -639,6 +486,63 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     status: 'OPEN',
   },
   {
+    id: 'evt-freefire',
+    title: 'E-Sports BGMI & Free Fire',
+    category: 'Non-Technical',
+    tagline: 'Squad Tactics, Fast Reflexes & Tactical Battle Royale (BGMI & Free Fire)',
+    description: 'Drop into the battlefield with your squad across BGMI & Free Fire custom rooms. Strategy, team coordination, and sharp marksmanship determine who secures the Booyah!',
+    isTeamEvent: true,
+    minTeamSize: 4,
+    maxTeamSize: 4,
+    price: 200,
+    date: 'Oct 24, 2026',
+    time: '01:30 PM - 03:00 PM',
+    startTime: '01:30 PM',
+    endTime: '03:00 PM',
+    venue: 'Room 252',
+    totalSlots: 48,
+    slotsLeft: 12,
+    imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80',
+    prizePool: '₹12,000',
+    firstPrize: '₹7,000',
+    secondPrize: '₹5,000',
+    rules: [
+      'Squad mode (4 players per team).',
+      'Mobile devices only (no emulators / triggers / hacks allowed).',
+      'Points based on placement and kill counts across custom rooms.',
+    ],
+    coordinators: [
+      {
+        id: 'coord-kumaravel-thilipan',
+        name: 'Kumaravel & Thilipan',
+        role: 'Organizer (4th Year)',
+        phone: '+91 98436 88990',
+        email: 'kumaravel.4th@spiher.edu.in',
+        photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+        department: 'Dept. of Information Technology',
+      },
+      {
+        id: 'coord-monesh-karthik',
+        name: 'Monesh Tej & Karthikeyan',
+        role: 'Coordinator (3rd Year)',
+        phone: '+91 98437 99001',
+        email: 'ff.3rd@spiher.edu.in',
+        photoUrl: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=300&q=80',
+        department: 'Dept. of Information Technology',
+      },
+      {
+        id: 'coord-ganesh',
+        name: 'Ganesh',
+        role: 'Asst-Coordinator (2nd Year)',
+        phone: '+91 98438 00112',
+        email: 'ganesh.2nd@spiher.edu.in',
+        photoUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80',
+        department: 'Dept. of Mech',
+      },
+    ],
+    status: 'OPEN',
+  },
+  {
     id: 'evt-rampwalk',
     title: 'Rampwalk',
     category: 'Non-Technical',
@@ -647,11 +551,11 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     isTeamEvent: false,
     minTeamSize: 1,
     maxTeamSize: 1,
-    price: 0,
+    price: 100,
     date: 'Oct 24, 2026',
-    time: '12:00 PM - 12:30 PM',
-    startTime: '12:00 PM',
-    endTime: '12:30 PM',
+    time: '01:30 PM - 03:00 PM',
+    startTime: '01:30 PM',
+    endTime: '03:00 PM',
     venue: 'Main Hall',
     totalSlots: 30,
     slotsLeft: 10,
@@ -666,13 +570,13 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     ],
     coordinators: [
       {
-        id: 'coord-jeevadharshni',
-        name: 'Jeeva Dharshni',
+        id: 'coord-jeevadharshni-jayasri',
+        name: 'Jeeva Dharshni & Jayasri',
         role: 'Organizer (4th Year)',
         phone: '+91 98431 33445',
         email: 'jeevadharshni.4th@spiher.edu.in',
         photoUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of Viscom',
+        department: 'Dept. of Viscom / IT',
       },
       {
         id: 'coord-tanya',
@@ -696,111 +600,6 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     status: 'OPEN',
   },
   {
-    id: 'evt-singing',
-    title: 'Singing Competition',
-    category: 'Non-Technical',
-    tagline: 'Vocal Melody, Pitch Precision & Musical Soul',
-    description: 'Showcase vocal talent across classical, contemporary, cinematic, and western genres.',
-    isTeamEvent: false,
-    minTeamSize: 1,
-    maxTeamSize: 1,
-    price: 0,
-    date: 'Oct 24, 2026',
-    time: '12:30 PM - 01:00 PM',
-    startTime: '12:30 PM',
-    endTime: '01:00 PM',
-    venue: 'Main Hall',
-    totalSlots: 30,
-    slotsLeft: 11,
-    imageUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80',
-    prizePool: '₹8,000',
-    firstPrize: '₹5,000',
-    secondPrize: '₹3,000',
-    rules: [
-      'Solo singing.',
-      'Time limit: 3-4 minutes per participant.',
-      'Karaoke track must be submitted in advance on USB drive.',
-    ],
-    coordinators: [
-      {
-        id: 'coord-kaviya',
-        name: 'Kaviya',
-        role: 'Organizer (4th Year)',
-        phone: '+91 98434 66778',
-        email: 'kaviya.4th@spiher.edu.in',
-        photoUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of Information Technology',
-      },
-      {
-        id: 'coord-sathivel',
-        name: 'Sathivel',
-        role: 'Coordinator (3rd Year)',
-        phone: '+91 98435 77889',
-        email: 'sathivel.3rd@spiher.edu.in',
-        photoUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of ECE',
-      },
-    ],
-    status: 'OPEN',
-  },
-  {
-    id: 'evt-freefire',
-    title: 'Free Fire Battle Royale',
-    category: 'Non-Technical',
-    tagline: 'Squad Tactics, Fast Reflexes & Tactical Battle Royale',
-    description: 'Drop into the battlefield with your squad. Strategy, team coordination, and sharp marksmanship determine who secures the Booyah!',
-    isTeamEvent: true,
-    minTeamSize: 4,
-    maxTeamSize: 4,
-    price: 0,
-    date: 'Oct 24, 2026',
-    time: '01:30 PM - 03:00 PM',
-    startTime: '01:30 PM',
-    endTime: '03:00 PM',
-    venue: 'Room 251',
-    totalSlots: 48,
-    slotsLeft: 12,
-    imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80',
-    prizePool: '₹12,000',
-    firstPrize: '₹7,000',
-    secondPrize: '₹5,000',
-    rules: [
-      'Squad mode (4 players per team).',
-      'Mobile devices only (no emulators / triggers / hacks allowed).',
-      'Points based on placement and kill counts across 2 custom rooms.',
-    ],
-    coordinators: [
-      {
-        id: 'coord-kumaravel-ff',
-        name: 'Kumaravel',
-        role: 'Organizer (4th Year)',
-        phone: '+91 98436 88990',
-        email: 'kumaravel.4th@spiher.edu.in',
-        photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of Information Technology',
-      },
-      {
-        id: 'coord-monesh-karthik',
-        name: 'Monesh Tej & Karthikeyan',
-        role: 'Coordinators (3rd Year)',
-        phone: '+91 98437 99001',
-        email: 'ff.3rd@spiher.edu.in',
-        photoUrl: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of Information Technology',
-      },
-      {
-        id: 'coord-ganesh',
-        name: 'Ganesh',
-        role: 'Asst-Coordinator (2nd Year)',
-        phone: '+91 98438 00112',
-        email: 'ganesh.2nd@spiher.edu.in',
-        photoUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80',
-        department: 'Dept. of Mech',
-      },
-    ],
-    status: 'OPEN',
-  },
-  {
     id: 'evt-dance',
     title: 'Dance Competition',
     category: 'Non-Technical',
@@ -809,10 +608,10 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     isTeamEvent: true,
     minTeamSize: 1,
     maxTeamSize: 6,
-    price: 0,
+    price: 150,
     date: 'Oct 24, 2026',
-    time: '02:00 PM - 03:00 PM',
-    startTime: '02:00 PM',
+    time: '01:30 PM - 03:00 PM',
+    startTime: '01:30 PM',
     endTime: '03:00 PM',
     venue: 'Main Hall',
     totalSlots: 25,
@@ -828,8 +627,8 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
     ],
     coordinators: [
       {
-        id: 'coord-jayalakshmi',
-        name: 'Jaya Lakshmi',
+        id: 'coord-jayalakshmi-santhiya',
+        name: 'Jaya Lakshmi & Santhiya',
         role: 'Organizer (4th Year)',
         phone: '+91 98439 11223',
         email: 'jayalakshmi.4th@spiher.edu.in',
@@ -848,10 +647,67 @@ export const INITIAL_EVENTS: CollegeEvent[] = [
       {
         id: 'coord-logesh-navitha',
         name: 'Logesh & Navitha',
-        role: 'Asst-Coordinators (2nd Year)',
+        role: 'Asst-Coordinator (2nd Year)',
         phone: '+91 98441 33445',
         email: 'dance.2nd@spiher.edu.in',
         photoUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80',
+        department: 'Dept. of Information Technology',
+      },
+    ],
+    status: 'OPEN',
+  },
+  {
+    id: 'evt-singing',
+    title: 'Singing Competition',
+    category: 'Non-Technical',
+    tagline: 'Vocal Melody, Pitch Precision & Musical Soul',
+    description: 'Showcase vocal talent across classical, contemporary, cinematic, and western genres.',
+    isTeamEvent: false,
+    minTeamSize: 1,
+    maxTeamSize: 1,
+    price: 100,
+    date: 'Oct 24, 2026',
+    time: '01:30 PM - 03:00 PM',
+    startTime: '01:30 PM',
+    endTime: '03:00 PM',
+    venue: 'Main Hall',
+    totalSlots: 30,
+    slotsLeft: 11,
+    imageUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80',
+    prizePool: '₹8,000',
+    firstPrize: '₹5,000',
+    secondPrize: '₹3,000',
+    rules: [
+      'Solo singing.',
+      'Time limit: 3-4 minutes per participant.',
+      'Karaoke track must be submitted in advance on USB drive.',
+    ],
+    coordinators: [
+      {
+        id: 'coord-kaviya-priya',
+        name: 'Kaviya & Priya',
+        role: 'Organizer (4th Year)',
+        phone: '+91 98434 66778',
+        email: 'kaviya.4th@spiher.edu.in',
+        photoUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80',
+        department: 'Dept. of Information Technology',
+      },
+      {
+        id: 'coord-sathivel',
+        name: 'Sathivel',
+        role: 'Coordinator (3rd Year)',
+        phone: '+91 98435 77889',
+        email: 'sathivel.3rd@spiher.edu.in',
+        photoUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80',
+        department: 'Dept. of ECE',
+      },
+      {
+        id: 'coord-harini-srimathi',
+        name: 'Harini & Srimathi',
+        role: 'Asst-Coordinator (2nd Year)',
+        phone: '+91 98435 88990',
+        email: 'singing.2nd@spiher.edu.in',
+        photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
         department: 'Dept. of Information Technology',
       },
     ],
@@ -913,7 +769,7 @@ export const INITIAL_PARTICIPANTS: Participant[] = [
 export const INITIAL_REGISTRATIONS: Registration[] = [
   {
     id: 'reg-88421',
-    registrationNumber: 'IGNITE-2024-88421',
+    registrationNumber: 'RAD-2026-88421',
     eventId: 'evt-ai-prompt',
     eventTitle: 'AI Prompt',
     category: 'Technical',
@@ -947,12 +803,13 @@ export const INITIAL_REGISTRATIONS: Registration[] = [
       },
     ],
     status: 'ACTIVE',
-    qrToken: 'SPIHER_IGNITE_TOKEN_V1_88421_SEC',
-    registeredAt: '2024-10-01T10:15:00Z',
+    paymentStatus: 'PAID',
+    qrToken: 'SPIHER_RADIANZA_TOKEN_V1_88421_SEC',
+    registeredAt: '2026-09-20T10:15:00Z',
   },
   {
     id: 'reg-99120',
-    registrationNumber: 'IGNITE-2024-99120',
+    registrationNumber: 'RAD-2026-99120',
     eventId: 'evt-ui-ux',
     eventTitle: 'UI/UX Design',
     category: 'Technical',
@@ -976,12 +833,13 @@ export const INITIAL_REGISTRATIONS: Registration[] = [
       },
     ],
     status: 'ACTIVE',
-    qrToken: 'SPIHER_IGNITE_TOKEN_V1_99120_SEC',
-    registeredAt: '2024-10-02T11:30:00Z',
+    paymentStatus: 'PAID',
+    qrToken: 'SPIHER_RADIANZA_TOKEN_V1_99120_SEC',
+    registeredAt: '2026-09-21T11:30:00Z',
   },
   {
     id: 'reg-88957',
-    registrationNumber: 'IGNITE-2024-88957',
+    registrationNumber: 'RAD-2026-88957',
     eventId: 'evt-freefire',
     eventTitle: 'Free Fire Battle Royale',
     category: 'Technical',
@@ -1006,8 +864,9 @@ export const INITIAL_REGISTRATIONS: Registration[] = [
       },
     ],
     status: 'ACTIVE',
-    qrToken: 'SPIHER_IGNITE_TOKEN_V1_88957_SEC',
-    registeredAt: '2024-10-03T12:00:00Z',
+    paymentStatus: 'PAID',
+    qrToken: 'SPIHER_RADIANZA_TOKEN_V1_88957_SEC',
+    registeredAt: '2026-09-22T12:00:00Z',
   },
 ];
 
@@ -1121,15 +980,15 @@ export const INITIAL_AUDIT_LOGS: AuditLog[] = [
 
 // Local Storage Keys
 const STORAGE_KEYS = {
-  SETTINGS: 'spiher_settings_v5',
-  EVENTS: 'spiher_events_v5',
-  PARTICIPANTS: 'spiher_participants_v5',
-  REGISTRATIONS: 'spiher_registrations_v5',
-  ATTENDANCE: 'spiher_attendance_v5',
-  SCORES: 'spiher_scores_v5',
-  STAFF: 'spiher_staff_v5',
-  EVENT_CHANGES: 'spiher_event_changes_v5',
-  AUDIT_LOGS: 'spiher_audit_logs_v5',
+  SETTINGS: 'spiher_settings_radianza_26',
+  EVENTS: 'spiher_events_radianza_26',
+  PARTICIPANTS: 'spiher_participants_radianza_26',
+  REGISTRATIONS: 'spiher_registrations_radianza_26',
+  ATTENDANCE: 'spiher_attendance_radianza_26',
+  SCORES: 'spiher_scores_radianza_26',
+  STAFF: 'spiher_staff_radianza_26',
+  EVENT_CHANGES: 'spiher_event_changes_radianza_26',
+  AUDIT_LOGS: 'spiher_audit_logs_radianza_26',
 };
 
 export class MockDatabaseService {
@@ -1293,7 +1152,12 @@ export class MockDatabaseService {
   }
 
   static getRegistrations(): Registration[] {
-    return this.getItem<Registration[]>(STORAGE_KEYS.REGISTRATIONS, INITIAL_REGISTRATIONS);
+    const raw = this.getItem<Registration[]>(STORAGE_KEYS.REGISTRATIONS, INITIAL_REGISTRATIONS);
+    return raw.map((r) => ({
+      ...r,
+      registrationNumber: (r.registrationNumber || '').replace(/^IGNITE-2024-/, 'RAD-2026-'),
+      qrToken: (r.qrToken || '').replace(/SPIHER_IGNITE_TOKEN_/, 'SPIHER_RADIANZA_TOKEN_'),
+    }));
   }
 
   static isParticipantAlreadyRegistered(rollNumber: string): {
@@ -1337,6 +1201,8 @@ export class MockDatabaseService {
     department: string;
     isTeamEvent: boolean;
     teamName?: string;
+    paymentStatus?: 'FREE' | 'PENDING' | 'PAID' | 'FAILED' | 'REFUNDED';
+    amountPaid?: number;
     members: {
       participantId?: string;
       name: string;
@@ -1368,8 +1234,8 @@ export class MockDatabaseService {
     }
 
     const regId = `reg-${Date.now().toString().slice(-5)}`;
-    const regNumber = `IGNITE-2024-${Math.floor(10000 + Math.random() * 90000)}`;
-    const qrToken = `SPIHER_IGNITE_TOKEN_V1_${regNumber}_${Date.now()}`;
+    const regNumber = `RAD-2026-${Math.floor(10000 + Math.random() * 90000)}`;
+    const qrToken = `SPIHER_RADIANZA_TOKEN_V1_${regNumber}_${Date.now()}`;
 
     const newReg: Registration = {
       id: regId,
@@ -1388,6 +1254,8 @@ export class MockDatabaseService {
       teamName: params.teamName,
       members: params.members,
       status: 'ACTIVE',
+      paymentStatus: params.paymentStatus || 'PENDING',
+      amountPaid: params.amountPaid,
       qrToken,
       registeredAt: new Date().toISOString(),
     };
@@ -1427,7 +1295,7 @@ export class MockDatabaseService {
       'REGISTRATION_CREATED',
       'PARTICIPANT',
       params.leaderName,
-      `Registered for "${params.eventTitle}" with Pass ID ${regNumber}`
+      `Registered for "${params.eventTitle}" with Pass ID ${regNumber} | Payment: ${params.paymentStatus || 'FREE'}`
     );
 
     // Live Supabase Backend Synchronization
@@ -1439,6 +1307,72 @@ export class MockDatabaseService {
     }).catch((err) => console.warn('Supabase createRegistration background sync error:', err));
 
     return { success: true, registration: newReg };
+  }
+
+  /**
+   * Updates the payment status of a registration.
+   * In production, this should ONLY be called after backend (Edge Function) verification.
+   * Performs idempotent state transitions.
+   */
+  static updatePaymentStatus(
+    registrationId: string,
+    paymentStatus: 'FREE' | 'PENDING' | 'PAID' | 'FAILED' | 'REFUNDED',
+    paymentDetails?: {
+      paymentId?: string;
+      paymentOrderId?: string;
+      amountPaid?: number;
+      paidAt?: string;
+    }
+  ): { success: boolean; registration?: Registration; error?: string } {
+    const regs = this.getRegistrations();
+    const idx = regs.findIndex((r) => r.id === registrationId);
+    if (idx === -1) {
+      return { success: false, error: 'Registration not found.' };
+    }
+
+    // Idempotent: if already PAID, skip (webhook + browser path may both fire)
+    if (regs[idx].paymentStatus === 'PAID' && paymentStatus === 'PAID') {
+      return { success: true, registration: regs[idx] };
+    }
+
+    // Allow PENDING -> PAID, FAILED -> PAID (manual admin/cash override), and PAID -> REFUNDED
+    if (paymentStatus === 'PAID') {
+      if (regs[idx].paymentStatus !== 'PENDING' && regs[idx].paymentStatus !== 'FAILED') {
+        return { success: false, error: `Cannot transition from ${regs[idx].paymentStatus} to ${paymentStatus}.` };
+      }
+    } else if (paymentStatus === 'FAILED') {
+      if (regs[idx].paymentStatus !== 'PENDING') {
+        return { success: false, error: `Cannot transition from ${regs[idx].paymentStatus} to ${paymentStatus}.` };
+      }
+    }
+
+    regs[idx].paymentStatus = paymentStatus;
+    if (paymentDetails) {
+      if (paymentDetails.paymentId) regs[idx].paymentId = paymentDetails.paymentId;
+      if (paymentDetails.paymentOrderId) regs[idx].paymentOrderId = paymentDetails.paymentOrderId;
+      if (paymentDetails.amountPaid !== undefined) regs[idx].amountPaid = paymentDetails.amountPaid;
+      if (paymentDetails.paidAt) regs[idx].paidAt = paymentDetails.paidAt;
+    }
+
+    this.setItem(STORAGE_KEYS.REGISTRATIONS, regs);
+
+    this.logAction(
+      paymentStatus === 'PAID' ? 'PAYMENT_VERIFIED' : `PAYMENT_${paymentStatus}`,
+      'SYSTEM',
+      regs[idx].leaderName,
+      `Payment ${paymentStatus} for "${regs[idx].eventTitle}" | Reg: ${regs[idx].registrationNumber}${paymentDetails?.paymentId ? ` | RzpID: ${paymentDetails.paymentId}` : ''}`
+    );
+
+    // Asynchronously synchronize with live Supabase database
+    try {
+      SupabaseService.updateRegistrationPayment(registrationId, paymentStatus, paymentDetails).catch((e) => {
+        console.warn('Supabase payment sync warning (non-fatal):', e);
+      });
+    } catch {
+      // Ignore if Supabase offline
+    }
+
+    return { success: true, registration: regs[idx] };
   }
 
   static checkIsParticipantRegistered(rollNumber: string): {
@@ -1524,8 +1458,8 @@ export class MockDatabaseService {
     }
 
     const newRegId = `reg-${Date.now().toString().slice(-5)}`;
-    const newRegNumber = `IGNITE-2024-${Math.floor(10000 + Math.random() * 90000)}`;
-    const newQrToken = `SPIHER_IGNITE_TOKEN_V1_${newRegNumber}_${Date.now()}`;
+    const newRegNumber = `RAD-2026-${Math.floor(10000 + Math.random() * 90000)}`;
+    const newQrToken = `SPIHER_RADIANZA_TOKEN_V1_${newRegNumber}_${Date.now()}`;
 
     const newMembers =
       params.newTeamMembers && params.newTeamMembers.length > 0
@@ -1557,6 +1491,7 @@ export class MockDatabaseService {
       teamName: targetEvent.isTeamEvent ? oldReg.teamName : undefined,
       members: newMembers,
       status: 'ACTIVE',
+      paymentStatus: 'FREE',
       qrToken: newQrToken,
       registeredAt: new Date().toISOString(),
     };

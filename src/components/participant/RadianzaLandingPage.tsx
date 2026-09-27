@@ -1389,7 +1389,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     </p>
                     <div className="pt-2 text-xs text-[#9CA3AF]/80 space-y-1">
                       <p>📍 SPIHER Campus, Avadi, Chennai - 600054, Tamil Nadu</p>
-                      <p>📞 +91 422 259 0123 • ignite2026@spiher.edu.in</p>
+                      <p>📞 +91 422 259 0123 • radianza2026@spiher.edu.in</p>
                     </div>
                   </div>
 
@@ -1776,7 +1776,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                     </p>
                     <div className="pt-2 text-xs text-[#9CA3AF]/80 space-y-1">
                       <p>📍 SPIHER Campus, Avadi, Chennai - 600054, Tamil Nadu</p>
-                      <p>📞 +91 422 259 0123 • ignite2026@spiher.edu.in</p>
+                      <p>📞 +91 422 259 0123 • radianza2026@spiher.edu.in</p>
                     </div>
                   </div>
 

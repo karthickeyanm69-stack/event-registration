@@ -68,6 +68,8 @@ export interface CollegeEvent {
 
 export type RegistrationStatus = 'ACTIVE' | 'CANCELLED' | 'COMPLETED';
 
+export type PaymentStatus = 'FREE' | 'PENDING' | 'PAID' | 'FAILED' | 'REFUNDED';
+
 export interface TeamMember {
   participantId?: string;
   name: string;
@@ -95,6 +97,11 @@ export interface Registration {
   teamName?: string;
   members: TeamMember[];
   status: RegistrationStatus;
+  paymentStatus: PaymentStatus;
+  paymentId?: string;         // Razorpay payment_id (set by backend only after verification)
+  paymentOrderId?: string;    // Razorpay order_id
+  amountPaid?: number;        // Amount in INR
+  paidAt?: string;            // ISO timestamp (set by backend only after verification)
   qrToken: string; // Secure opaque cryptographic reference
   registeredAt: string;
   cancelledAt?: string;

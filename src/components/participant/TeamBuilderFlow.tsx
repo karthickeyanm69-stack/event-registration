@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Users,
   User,
@@ -30,6 +30,13 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
   onBackToEventSelection,
   onSubmitTeamAndRegister,
 }) => {
+  // Safeguard: If participant data is missing (e.g. refreshed or opened in new tab), return to start
+  useEffect(() => {
+    if (!participantData?.name || !participantData?.rollNumber) {
+      onBackToEventSelection();
+    }
+  }, [participantData, onBackToEventSelection]);
+
   const [teamName, setTeamName] = useState(
     event.isTeamEvent ? `Team ${participantData.name?.split(' ')[0] || 'Alpha'}` : ''
   );
@@ -165,17 +172,18 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-4 py-8 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <button
-          type="button"
-          onClick={onBackToEventSelection}
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-teal-700 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Change Event</span>
-        </button>
+    <div className="w-full min-h-screen bg-slate-50 text-slate-900 flex flex-col items-center justify-start py-8 px-4">
+      <div className="w-full max-w-2xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={onBackToEventSelection}
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-teal-700 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Change Event</span>
+          </button>
 
         <div className="flex items-center gap-1 text-xs font-bold text-teal-800 bg-teal-50 px-3 py-1 rounded-full border border-teal-200 shadow-sm">
           <Sparkles className="w-3.5 h-3.5 text-teal-600" />
@@ -406,11 +414,22 @@ export const TeamBuilderFlow: React.FC<TeamBuilderFlowProps> = ({
           type="submit"
           className="w-full py-4 px-6 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm shadow-md shadow-teal-600/20 flex items-center justify-center gap-2 transition-all cursor-pointer"
         >
-          <ShieldCheck className="w-5 h-5 text-teal-200" />
-          <span>Confirm &amp; Generate Official QR Pass</span>
-          <ArrowRight className="w-4 h-4" />
+          {event.price > 0 ? (
+            <>
+              <ShieldCheck className="w-5 h-5 text-teal-200" />
+              <span>Proceed to Payment (₹{event.price})</span>
+              <ArrowRight className="w-4 h-4" />
+            </>
+          ) : (
+            <>
+              <ShieldCheck className="w-5 h-5 text-teal-200" />
+              <span>Confirm &amp; Generate Official QR Pass</span>
+              <ArrowRight className="w-4 h-4" />
+            </>
+          )}
         </button>
       </form>
+      </div>
     </div>
   );
 };

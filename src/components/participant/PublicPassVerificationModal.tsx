@@ -70,7 +70,7 @@ export const PublicPassVerificationModal: React.FC<PublicPassVerificationModalPr
                 <span className="text-[10px] uppercase font-bold tracking-widest text-[#7af1fc] block font-mono">
                   Official Verification Seal
                 </span>
-                <h3 className="text-sm font-bold text-white">SPIHER IGNITE 2026</h3>
+                <h3 className="text-sm font-bold text-white">SPIHER RADIANZA '26</h3>
               </div>
             </div>
 

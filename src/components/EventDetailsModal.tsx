@@ -86,9 +86,15 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
               <p className="text-xs text-slate-500 mt-0.5">{event.tagline}</p>
             </div>
             <div className="text-right">
-              <span className="text-[10px] uppercase font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 block">
-                Free Registration
-              </span>
+              {event.price > 0 ? (
+                <span className="text-[11px] font-extrabold text-[#002b66] bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200 block">
+                  ₹{event.price} / Entry
+                </span>
+              ) : (
+                <span className="text-[10px] uppercase font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 block">
+                  Free Registration
+                </span>
+              )}
             </div>
           </div>
 
@@ -131,7 +137,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
             </h3>
             <p className="text-xs text-slate-600 leading-relaxed">
               {event.description ||
-                'Join this competitive and insightful campus challenge designed to test your domain expertise, critical thinking, and technical capability at SPIHER IGNITE 2024.'}
+                "Join this competitive and insightful campus challenge designed to test your domain expertise, critical thinking, and technical capability at SPIHER RADIANZA '26."}
             </p>
           </div>
 
@@ -201,7 +207,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
             ) : (
               <>
                 <UserCheck className="w-4 h-4" />
-                <span>Select &amp; Proceed to Pass</span>
+                <span>{event.price > 0 ? `Select & Proceed (₹${event.price})` : 'Select & Proceed to Pass'}</span>
               </>
             )}
           </button>

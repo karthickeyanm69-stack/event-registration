@@ -36,7 +36,7 @@ function assert(condition: boolean, testName: string, details?: string) {
 
 async function runDataFlowVerification() {
   console.log('\n=============================================================');
-  console.log('🚀 SPIHER IGNITE 2024 — COMPREHENSIVE DATA FLOW VERIFICATION');
+  console.log('🚀 SPIHER RADIANZA 2026 — COMPREHENSIVE DATA FLOW VERIFICATION');
   console.log('=============================================================\n');
 
   // -----------------------------------------------------------------
@@ -60,7 +60,7 @@ async function runDataFlowVerification() {
   console.log('\n🔐 STEP 2: Verifying Participant Access (Roll No + DOB)');
   const authValid = MockDatabaseService.verifyParticipantAccess('2021CS042', '2003-05-14');
   assert(authValid.success === true, 'Existing participant Alex Mercer authenticated successfully');
-  assert(authValid.registration !== undefined, 'Alex Mercer active registration IGNITE-2024-88421 retrieved');
+  assert(authValid.registration !== undefined, 'Alex Mercer active registration RAD-2026-88421 retrieved');
 
   const authInvalid = MockDatabaseService.verifyParticipantAccess('2021CS042', '1999-01-01');
   assert(authInvalid.success === false, 'Invalid DOB rejected with error message');
@@ -106,8 +106,8 @@ async function runDataFlowVerification() {
   });
 
   assert(regResult.success === true, 'Registration for Web Craft UI/UX created successfully');
-  assert(regResult.registration?.registrationNumber.startsWith('IGNITE-2024-'), 'Generated valid IGNITE-2024 registration ID');
-  assert(regResult.registration?.qrToken.startsWith('SPIHER_IGNITE_TOKEN_'), 'Generated cryptographic QR token');
+  assert(regResult.registration?.registrationNumber.startsWith('RAD-2026-'), 'Generated valid RAD-2026 registration ID');
+  assert(regResult.registration?.qrToken.startsWith('SPIHER_RADIANZA_TOKEN_'), 'Generated cryptographic QR token');
 
   // Try registering the SAME candidate for another event (Strict 1-Event Rule)
   const duplicateReg = MockDatabaseService.createRegistration({

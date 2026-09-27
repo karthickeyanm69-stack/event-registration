@@ -35,10 +35,10 @@ import {
   Filter,
   ChevronRight,
   TrendingUp,
-  Award,
-  Bell,
   RefreshCw,
   Upload,
+  IndianRupee,
+  CreditCard,
 } from 'lucide-react';
 import {
   AttendanceRecord,
@@ -128,6 +128,7 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
   const [newEventVenue, setNewEventVenue] = useState('Computing Annex Lab 1');
   const [newEventTime, setNewEventTime] = useState('10:00 AM - 01:00 PM');
   const [newEventPrize, setNewEventPrize] = useState('₹25,000');
+  const [newEventPrice, setNewEventPrice] = useState<number>(100);
   const [newEventSlots, setNewEventSlots] = useState(40);
   const [newEventIsTeam, setNewEventIsTeam] = useState(true);
   const [newEventMinTeam, setNewEventMinTeam] = useState(2);
@@ -150,6 +151,7 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
     setNewEventVenue('Computing Annex Lab 1');
     setNewEventTime('10:00 AM - 01:00 PM');
     setNewEventSlots(40);
+    setNewEventPrice(100);
     setNewEventIsTeam(true);
     setNewEventMinTeam(2);
     setNewEventMaxTeam(3);
@@ -171,6 +173,7 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
     setNewEventVenue(evt.venue);
     setNewEventTime(evt.time || '10:00 AM - 01:00 PM');
     setNewEventSlots(evt.totalSlots);
+    setNewEventPrice(evt.price || 100);
     setNewEventIsTeam(evt.isTeamEvent);
     setNewEventMinTeam(evt.minTeamSize);
     setNewEventMaxTeam(evt.maxTeamSize);
@@ -220,12 +223,12 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
       id: eventId,
       title: newEventTitle.trim(),
       category: newEventCategory,
-      tagline: newEventTagline.trim() || 'Exciting National Level Competition at IGNITE 2026',
+      tagline: newEventTagline.trim() || "Exciting National Level Competition at RADIANZA '26",
       description: newEventDescription.trim() || 'Official tournament competition hosted by the Department.',
       isTeamEvent: newEventIsTeam,
       minTeamSize: newEventIsTeam ? newEventMinTeam : 1,
       maxTeamSize: newEventIsTeam ? newEventMaxTeam : 1,
-      price: 0,
+      price: Math.max(1, Number(newEventPrice) || 100),
       date: 'Oct 24, 2026',
       time: newEventTime,
       startTime: newEventTime.split('-')[0]?.trim() || '10:00 AM',
@@ -471,7 +474,25 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
           {activeTab === 'dashboard' && (
             <div className="space-y-6 max-w-7xl mx-auto">
               {/* Executive Stat Cards Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3.5">
+                {/* Stat: Total Payment Collection */}
+                <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Gross Collection</span>
+                    <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700">
+                      <IndianRupee className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <span className="text-3xl font-bold font-mono text-emerald-700">
+                      ₹{registrations.filter((r) => r.paymentStatus === 'PAID').reduce((sum, r) => sum + (r.amountPaid || 0), 0).toLocaleString()}
+                    </span>
+                    <p className="text-[11px] text-emerald-700 mt-1 font-semibold">
+                      {registrations.filter((r) => r.paymentStatus === 'PAID').length} Paid / {registrations.filter((r) => (r.paymentStatus || 'PENDING') === 'PENDING').length} Pending
+                    </p>
+                  </div>
+                </div>
+
                 {/* Stat 1 */}
                 <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
                   <div className="flex items-center justify-between">
@@ -737,8 +758,8 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                     </div>
                   </div>
 
-                  {/* Row 2: Venue, Time, Slots, Participation */}
-                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
+                  {/* Row 2: Venue, Time, Slots, Registration Fee, Participation */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 text-xs">
                     <div className="space-y-1.5">
                       <label htmlFor="new-event-venue" className="font-semibold text-slate-700">Venue Location *</label>
                       <input
@@ -779,6 +800,23 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                         value={newEventSlots}
                         onChange={(e) => setNewEventSlots(parseInt(e.target.value) || 40)}
                         className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-[#0077c8] focus:outline-none"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label htmlFor="new-event-price" className="font-bold text-amber-800 flex items-center justify-between">
+                        <span>Registration Fee (₹) *</span>
+                      </label>
+                      <input
+                        id="new-event-price"
+                        name="eventPrice"
+                        type="number"
+                        min={1}
+                        max={10000}
+                        required
+                        value={newEventPrice}
+                        onChange={(e) => setNewEventPrice(Math.max(1, parseInt(e.target.value) || 0))}
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-amber-50/70 border border-amber-300 text-slate-900 font-bold focus:border-amber-600 focus:outline-none"
                       />
                     </div>
 
@@ -1009,6 +1047,9 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                         <span className="text-[10px] uppercase font-bold px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#002b66] shadow">
                           {evt.category}
                         </span>
+                        <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-amber-500 text-white shadow">
+                          ₹{evt.price}
+                        </span>
                       </div>
 
                       <div className="absolute bottom-3 left-3 right-3 text-white">
@@ -1059,11 +1100,47 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
 
                       {/* Card Action Footer with Edit & Delete */}
                       <div className="flex items-center justify-between pt-3 border-t border-slate-100">
-                        <span className="text-[11px] text-slate-500 font-semibold">
-                          {evt.isTeamEvent ? `Team (${evt.minTeamSize}-${evt.maxTeamSize})` : 'Individual (Solo)'}
-                        </span>
+                        <div className="space-y-0.5">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] text-slate-500 font-semibold">
+                              {evt.isTeamEvent ? `Team (${evt.minTeamSize}-${evt.maxTeamSize})` : 'Individual'}
+                            </span>
+                            <span className="text-xs font-mono font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                              ₹{evt.price}
+                            </span>
+                          </div>
+                          {(() => {
+                            const paidForEvt = registrations.filter((r) => r.eventId === evt.id && r.paymentStatus === 'PAID');
+                            const revForEvt = paidForEvt.reduce((sum, r) => sum + (r.amountPaid || evt.price), 0);
+                            return (
+                              <div className="text-[10px] font-mono text-emerald-700 font-bold">
+                                Collected: ₹{revForEvt.toLocaleString()} ({paidForEvt.length} paid)
+                              </div>
+                            );
+                          })()}
+                        </div>
 
                         <div className="flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const input = window.prompt(`Update registration fee for "${evt.title}" (in ₹):`, evt.price?.toString() || '100');
+                              if (input !== null) {
+                                const parsed = parseInt(input.trim());
+                                if (!isNaN(parsed) && parsed > 0) {
+                                  MockDatabaseService.saveEvent({ ...evt, price: parsed });
+                                  onRefreshData();
+                                } else {
+                                  alert('Please enter a valid amount greater than 0.');
+                                }
+                              }
+                            }}
+                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold text-[11px] border border-amber-200 transition-colors cursor-pointer"
+                            title="Quick Edit Fee"
+                          >
+                            <span>₹ Fee</span>
+                          </button>
+
                           <button
                             type="button"
                             onClick={() => handleOpenEditEvent(evt)}

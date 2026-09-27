@@ -13,6 +13,8 @@ import {
   Building,
   QrCode as QrIcon,
   Crown,
+  Receipt,
+  Printer,
 } from 'lucide-react';
 import QRCode from 'qrcode';
 import confetti from 'canvas-confetti';
@@ -73,7 +75,8 @@ export const RegistrationSuccessPass: React.FC<RegistrationSuccessPassProps> = (
   };
 
   return (
-    <div className="w-full max-w-md mx-auto px-4 py-8 space-y-6 animate-in fade-in duration-300">
+    <div className="w-full min-h-screen bg-slate-50 text-slate-900 flex flex-col items-center justify-start py-8 px-4">
+      <div className="w-full max-w-md mx-auto space-y-6 animate-in fade-in duration-300">
       {/* Success Badge */}
       <div className="text-center space-y-2">
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 mb-1 shadow-lg ring-4 ring-emerald-500/20">
@@ -102,7 +105,7 @@ export const RegistrationSuccessPass: React.FC<RegistrationSuccessPassProps> = (
             <CollegeEmblem size={34} />
             <div>
               <span className="font-serif font-bold text-sm tracking-tight text-white block">
-                SPIHER IGNITE 2026
+                RADIANZA '26
               </span>
               <p className="text-[10px] text-[#7af1fc] font-medium">Official Digital Pass</p>
             </div>
@@ -198,22 +201,90 @@ export const RegistrationSuccessPass: React.FC<RegistrationSuccessPassProps> = (
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>Cryptographically Verified Pass</span>
           </div>
-          <span className="px-2 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300 font-bold border border-emerald-400/30">
-            Confirmed Active
+          <div className="flex items-center gap-1.5">
+            {registration.paymentStatus === 'PAID' && (
+              <span className="px-2 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300 font-bold border border-emerald-400/30 text-[9px]">
+                Paid (₹{registration.amountPaid || event?.price || 0})
+              </span>
+            )}
+            <span className="px-2 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300 font-bold border border-emerald-400/30">
+              Confirmed Active
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Official Payment Transaction Receipt Card */}
+      <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm space-y-3.5 text-xs">
+        <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
+          <div className="flex items-center gap-2 font-bold text-slate-900">
+            <Receipt className="w-4 h-4 text-emerald-600" />
+            <span>Official Payment Receipt</span>
+          </div>
+          <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+            PAID &amp; VERIFIED
           </span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 text-[11px]">
+          <div>
+            <span className="text-slate-400 block text-[10px] uppercase font-semibold">Amount Paid</span>
+            <span className="font-bold text-slate-900 text-sm font-mono">
+              ₹{registration.amountPaid || event?.price || 200}.00
+            </span>
+          </div>
+          <div>
+            <span className="text-slate-400 block text-[10px] uppercase font-semibold">Payment Status</span>
+            <span className="font-semibold text-emerald-700">Verified via Gateway</span>
+          </div>
+          {registration.paymentId && (
+            <div className="col-span-2">
+              <span className="text-slate-400 block text-[10px] uppercase font-semibold">Razorpay Transaction ID</span>
+              <span className="font-mono text-[10px] text-slate-700 bg-slate-50 px-2.5 py-1.5 rounded-lg block border border-slate-200 select-all font-semibold">
+                {registration.paymentId}
+              </span>
+            </div>
+          )}
+          {registration.paymentOrderId && (
+            <div className="col-span-2">
+              <span className="text-slate-400 block text-[10px] uppercase font-semibold">Order Reference ID</span>
+              <span className="font-mono text-[10px] text-slate-500 bg-slate-50 px-2.5 py-1 rounded block border border-slate-200">
+                {registration.paymentOrderId}
+              </span>
+            </div>
+          )}
+          <div className="col-span-2 text-[10px] text-slate-400 pt-1 border-t border-slate-100 flex items-center justify-between">
+            <span>Payment Method: UPI / Cards / NetBanking</span>
+            <span>
+              {registration.paidAt
+                ? new Date(registration.paidAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })
+                : new Date().toLocaleDateString('en-IN')}
+            </span>
+          </div>
         </div>
       </div>
 
       {/* Action Buttons */}
-      <div className="space-y-3 pt-2">
-        <button
-          type="button"
-          onClick={handleDownloadPass}
-          className="w-full py-3.5 px-4 rounded-2xl bg-white hover:bg-slate-50 text-[#002b66] font-bold text-xs flex items-center justify-center gap-2 border border-[#d4e8f5] shadow-sm transition-all cursor-pointer"
-        >
-          <Download className="w-4 h-4 text-[#0077c8]" />
-          <span>Save Pass to Photos / Files</span>
-        </button>
+      <div className="space-y-2.5 pt-1">
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={handleDownloadPass}
+            className="py-3 px-3 rounded-2xl bg-white hover:bg-slate-50 text-[#002b66] font-bold text-xs flex items-center justify-center gap-1.5 border border-[#d4e8f5] shadow-sm transition-all cursor-pointer"
+          >
+            <Download className="w-3.5 h-3.5 text-[#0077c8]" />
+            <span>Download Pass</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="py-3 px-3 rounded-2xl bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-200 shadow-sm transition-all cursor-pointer"
+          >
+            <Printer className="w-3.5 h-3.5 text-slate-600" />
+            <span>Print Receipt</span>
+          </button>
+        </div>
 
         <button
           type="button"
@@ -223,6 +294,7 @@ export const RegistrationSuccessPass: React.FC<RegistrationSuccessPassProps> = (
           <span>Enter Participant Dashboard</span>
           <ArrowRight className="w-4 h-4 text-[#7af1fc]" />
         </button>
+      </div>
       </div>
     </div>
   );

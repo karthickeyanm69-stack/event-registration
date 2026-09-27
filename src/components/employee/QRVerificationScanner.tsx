@@ -517,7 +517,7 @@ export const QRVerificationScanner: React.FC<QRVerificationScannerProps> = ({
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') handleProcessScannedIdentifier(manualToken);
                 }}
-                placeholder="e.g. IGNITE-2024-88421 or 2021CS042"
+                placeholder="e.g. RAD-2026-88421 or 2021CS042"
                 className="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-50 border border-[#d4e8f5] text-[#002b66] text-xs font-mono font-bold focus:ring-2 focus:ring-[#0077c8]/20 focus:border-[#0077c8] focus:bg-white focus:outline-none uppercase"
               />
               <button

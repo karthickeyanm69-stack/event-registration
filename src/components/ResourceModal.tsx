@@ -98,7 +98,7 @@ export const ResourceModal: React.FC<ResourceModalProps> = ({ resource, isOpen, 
               <div className="p-4 bg-[#f8fbfe] rounded-2xl border border-[#d4e8f5] flex items-center gap-3">
                 <FileText className="w-8 h-8 text-[#0077c8] shrink-0" />
                 <div>
-                  <h4 className="font-bold text-[#002b66] text-sm">SPIHER_IGNITE_2024_Rulebook.pdf</h4>
+                  <h4 className="font-bold text-[#002b66] text-sm">SPIHER_RADIANZA_2026_Rulebook.pdf</h4>
                   <p className="text-[11px] text-slate-500">Official Guidelines &amp; Code of Conduct • 2.4 MB</p>
                 </div>
               </div>
@@ -114,7 +114,7 @@ export const ResourceModal: React.FC<ResourceModalProps> = ({ resource, isOpen, 
 
               <button
                 onClick={() => {
-                  alert('Downloading official SPIHER IGNITE 2024 rulebook PDF...');
+                  alert("Downloading official SPIHER RADIANZA '26 rulebook PDF...");
                 }}
                 className="w-full bg-[#0077c8] hover:bg-[#0066ad] text-white py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-[#0077c8]/20 transition-all cursor-pointer"
               >

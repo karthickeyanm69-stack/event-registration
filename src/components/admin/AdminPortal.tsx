@@ -27,6 +27,8 @@ import {
   Activity,
   Award,
   Key,
+  CreditCard,
+  IndianRupee,
 } from 'lucide-react';
 import {
   AttendanceRecord,
@@ -100,17 +102,48 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
   // Search & Filters for Registrations Table
   const [regSearch, setRegSearch] = useState('');
   const [regFilterEvent, setRegFilterEvent] = useState<string>('ALL');
+  const [regFilterPayment, setRegFilterPayment] = useState<string>('ALL');
 
   const filteredRegistrations = assignedRegistrations.filter((r) => {
     if (regFilterEvent !== 'ALL' && r.eventId !== regFilterEvent) return false;
+    if (regFilterPayment !== 'ALL' && (r.paymentStatus || 'PENDING') !== regFilterPayment) return false;
     const term = regSearch.toLowerCase();
     return (
       r.leaderName.toLowerCase().includes(term) ||
       r.leaderRollNumber.toLowerCase().includes(term) ||
       (r.teamName && r.teamName.toLowerCase().includes(term)) ||
-      r.registrationNumber.toLowerCase().includes(term)
+      r.registrationNumber.toLowerCase().includes(term) ||
+      (r.paymentId && r.paymentId.toLowerCase().includes(term))
     );
   });
+
+  const totalAssignedRevenue = assignedRegistrations
+    .filter((r) => r.paymentStatus === 'PAID')
+    .reduce((sum, r) => sum + (r.amountPaid || 0), 0);
+  const paidCount = assignedRegistrations.filter((r) => r.paymentStatus === 'PAID').length;
+  const pendingCount = assignedRegistrations.filter((r) => (r.paymentStatus || 'PENDING') === 'PENDING').length;
+  const failedCount = assignedRegistrations.filter((r) => r.paymentStatus === 'FAILED').length;
+
+  const handleManualMarkPaid = (reg: Registration) => {
+    const fee = reg.amountPaid || 200;
+    if (
+      window.confirm(
+        `Confirm manual cash collection of ₹${fee} for ${reg.leaderName} (${reg.registrationNumber})?\n\nThis will instantly mark their registration as PAID and authorize their QR entry pass.`
+      )
+    ) {
+      const res = MockDatabaseService.updatePaymentStatus(reg.id, 'PAID', {
+        paymentId: `cash_${Date.now()}`,
+        paymentOrderId: `desk_${Date.now()}`,
+        amountPaid: fee,
+        paidAt: new Date().toISOString(),
+      });
+      if (res.success) {
+        onRefreshData();
+      } else {
+        alert(res.error || 'Failed to update payment status.');
+      }
+    }
+  };
 
   const presentCount = attendanceList.filter((a) =>
     assignedRegistrations.some((r) => r.id === a.registrationId && a.status === 'PRESENT')
@@ -149,12 +182,12 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
     let rows = '';
 
     if (type === 'registrations') {
-      headers = 'Reg_ID,Event,Category,Leader_Name,Roll_No,Email,College,Dept,Team_Name,Status\n';
+      headers = 'Reg_ID,Event,Category,Leader_Name,Roll_No,Email,College,Dept,Team_Name,Payment_Status,Amount_Paid,Payment_ID,Gate_Status\n';
       rows = assignedRegistrations
-        .map(
-          (r) =>
-            `"${r.registrationNumber}","${r.eventTitle}","${r.category}","${r.leaderName}","${r.leaderRollNumber}","${r.leaderEmail}","${r.collegeName}","${r.department}","${r.teamName || 'Solo'}","${r.status}"`
-        )
+        .map((r) => {
+          const isPresent = attendanceList.some((a) => a.registrationId === r.id && a.status === 'PRESENT');
+          return `"${r.registrationNumber}","${r.eventTitle}","${r.category}","${r.leaderName}","${r.leaderRollNumber}","${r.leaderEmail}","${r.collegeName}","${r.department}","${r.teamName || 'Solo'}","${r.paymentStatus || 'PENDING'}","${r.amountPaid || 0}","${r.paymentId || 'N/A'}","${isPresent ? 'PRESENT' : 'NOT_CHECKED_IN'}"`;
+        })
         .join('\n');
     } else if (type === 'attendance') {
       headers = 'Reg_ID,Event,Participant,Roll_No,Team,Status,Scanned_At,Scanned_By\n';
@@ -421,7 +454,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                         <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-white text-slate-700 border border-slate-200">
                           {evt.category}
                         </span>
-                        <span className="text-xs font-bold font-mono text-cyan-700">{evt.slotsLeft} slots free</span>
+                        <div className="flex items-center gap-1.5 font-mono text-xs">
+                          <span className="font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">₹{evt.price}</span>
+                          <span className="text-slate-500 font-semibold">{evt.slotsLeft} slots</span>
+                        </div>
                       </div>
                       <h4 className="text-sm font-bold text-slate-900 mt-1.5">{evt.title}</h4>
                       <p className="text-xs text-slate-500 mt-0.5">{evt.venue}</p>
@@ -451,12 +487,37 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   </div>
 
                   {/* Metadata Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
                     <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-0.5">
                       <span className="text-[10px] text-slate-500 uppercase">Format</span>
                       <p className="font-bold text-slate-900">
                         {selectedEvent.isTeamEvent ? `Team (${selectedEvent.minTeamSize}-${selectedEvent.maxTeamSize})` : 'Individual'}
                       </p>
+                    </div>
+
+                    <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 space-y-0.5 flex flex-col justify-between">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] text-amber-800 uppercase font-bold">Registration Fee</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const input = window.prompt(`Update registration fee for "${selectedEvent.title}" (in ₹):`, selectedEvent.price?.toString() || '100');
+                            if (input !== null) {
+                              const parsed = parseInt(input.trim());
+                              if (!isNaN(parsed) && parsed > 0) {
+                                MockDatabaseService.saveEvent({ ...selectedEvent, price: parsed });
+                                onRefreshData();
+                              } else {
+                                alert('Please enter a valid amount greater than 0.');
+                              }
+                            }
+                          }}
+                          className="text-[10px] font-bold text-amber-700 hover:text-amber-900 underline cursor-pointer"
+                        >
+                          Edit
+                        </button>
+                      </div>
+                      <p className="font-mono font-bold text-amber-900 text-sm">₹{selectedEvent.price}</p>
                     </div>
 
                     <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-0.5">
@@ -510,101 +571,252 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
             </div>
           )}
 
-          {/* TAB 2: PARTICIPANT ROSTERS */}
+          {/* TAB 2: PARTICIPANT ROSTERS & PAYMENT GOVERNANCE */}
           {activeTab === 'registrations' && (
-            <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-4 max-w-7xl mx-auto">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="relative flex-1 max-w-md">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  <input
-                    id="admin-reg-search"
-                    name="regSearch"
-                    type="text"
-                    value={regSearch}
-                    onChange={(e) => setRegSearch(e.target.value)}
-                    placeholder="Search candidate, roll no, team..."
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs text-slate-900 focus:border-cyan-600 focus:outline-none"
-                  />
+            <div className="space-y-5 max-w-7xl mx-auto">
+              {/* Top Financial & Registration Telemetry KPI Cards */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+                <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Collected</span>
+                    <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-700">
+                      <IndianRupee className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <p className="text-2xl font-bold font-mono text-emerald-700">₹{totalAssignedRevenue.toLocaleString()}</p>
+                  <p className="text-[11px] text-slate-500 font-medium">Verified fees received</p>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <select
-                    id="admin-reg-filter-event"
-                    name="regFilterEvent"
-                    aria-label="Filter registrations by competition"
-                    value={regFilterEvent}
-                    onChange={(e) => setRegFilterEvent(e.target.value)}
-                    className="px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs text-slate-900 font-semibold"
-                  >
-                    <option value="ALL">All Assigned Competitions</option>
-                    {assignedEvents.map((e) => (
-                      <option key={e.id} value={e.id}>
-                        {e.title}
-                      </option>
-                    ))}
-                  </select>
+                <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-teal-600">Paid Participants</span>
+                    <div className="p-1.5 rounded-lg bg-teal-50 text-teal-700">
+                      <CheckCircle2 className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <p className="text-2xl font-bold font-mono text-teal-700">{paidCount}</p>
+                  <p className="text-[11px] text-teal-600 font-medium">
+                    {assignedRegistrations.length > 0 ? Math.round((paidCount / assignedRegistrations.length) * 100) : 0}% of registered
+                  </p>
+                </div>
 
-                  <button
-                    type="button"
-                    onClick={() => handleExportCSV('registrations')}
-                    className="py-2.5 px-4 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs flex items-center gap-2 shadow"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>Export CSV</span>
-                  </button>
+                <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-amber-600">Pending Payment</span>
+                    <div className="p-1.5 rounded-lg bg-amber-50 text-amber-700">
+                      <Clock className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <p className="text-2xl font-bold font-mono text-amber-700">{pendingCount}</p>
+                  <p className="text-[11px] text-amber-600 font-medium">Awaiting checkout / cash</p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-cyan-600">Gate Checked-In</span>
+                    <div className="p-1.5 rounded-lg bg-cyan-50 text-cyan-700">
+                      <CheckCircle2 className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <p className="text-2xl font-bold font-mono text-cyan-700">{presentCount}</p>
+                  <p className="text-[11px] text-cyan-600 font-medium">
+                    {paidCount > 0 ? Math.round((presentCount / paidCount) * 100) : 0}% of paid present
+                  </p>
                 </div>
               </div>
 
-              {/* Data Grid */}
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[10px]">
-                    <tr>
-                      <th className="py-3.5 px-4">Pass ID</th>
-                      <th className="py-3.5 px-4">Event</th>
-                      <th className="py-3.5 px-4">Candidate / Team</th>
-                      <th className="py-3.5 px-4">College & Dept</th>
-                      <th className="py-3.5 px-4">Status</th>
-                      <th className="py-3.5 px-4">Gate Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {filteredRegistrations.map((r) => {
-                      const isPresent = attendanceList.some((a) => a.registrationId === r.id && a.status === 'PRESENT');
-                      return (
-                        <tr key={r.id} className="hover:bg-slate-50/70 transition-colors">
-                          <td className="py-3.5 px-4 font-mono font-bold text-cyan-700">{r.registrationNumber}</td>
-                          <td className="py-3.5 px-4 font-semibold text-slate-900">{r.eventTitle}</td>
-                          <td className="py-3.5 px-4">
-                            <div className="font-bold text-slate-900">{r.leaderName}</div>
-                            <div className="font-mono text-[10px] text-slate-500">
-                              {r.leaderRollNumber} {r.teamName ? `(${r.teamName})` : ''}
-                            </div>
-                          </td>
-                          <td className="py-3.5 px-4">
-                            <div className="text-slate-700 truncate max-w-[200px]">{r.collegeName}</div>
-                            <div className="text-[10px] text-slate-500">{r.department}</div>
-                          </td>
-                          <td className="py-3.5 px-4">
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
-                              {r.status}
+              {/* Data Management Box */}
+              <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-4">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div className="relative flex-1 max-w-md">
+                    <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      id="admin-reg-search"
+                      name="regSearch"
+                      type="text"
+                      value={regSearch}
+                      onChange={(e) => setRegSearch(e.target.value)}
+                      placeholder="Search name, roll no, team, pass ID, Razorpay pay_id..."
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs text-slate-900 focus:border-cyan-600 focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    {/* Payment Status Segmented Filter */}
+                    <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs">
+                      {(['ALL', 'PAID', 'PENDING', 'FAILED'] as const).map((pStatus) => {
+                        const count =
+                          pStatus === 'ALL'
+                            ? assignedRegistrations.length
+                            : pStatus === 'PAID'
+                            ? paidCount
+                            : pStatus === 'PENDING'
+                            ? pendingCount
+                            : failedCount;
+                        const isSelected = regFilterPayment === pStatus;
+                        return (
+                          <button
+                            key={pStatus}
+                            type="button"
+                            onClick={() => setRegFilterPayment(pStatus)}
+                            className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-colors cursor-pointer flex items-center gap-1.5 ${
+                              isSelected
+                                ? 'bg-cyan-600 text-white shadow-xs'
+                                : 'text-slate-600 hover:text-slate-900'
+                            }`}
+                          >
+                            <span>{pStatus === 'ALL' ? 'All' : pStatus}</span>
+                            <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'}`}>
+                              {count}
                             </span>
-                          </td>
-                          <td className="py-3.5 px-4">
-                            {isPresent ? (
-                              <span className="text-emerald-700 font-bold flex items-center gap-1">
-                                <CheckCircle2 className="w-3.5 h-3.5" />
-                                <span>Present</span>
-                              </span>
-                            ) : (
-                              <span className="text-slate-400">Not Checked-in</span>
-                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <select
+                      id="admin-reg-filter-event"
+                      name="regFilterEvent"
+                      aria-label="Filter registrations by competition"
+                      value={regFilterEvent}
+                      onChange={(e) => setRegFilterEvent(e.target.value)}
+                      className="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 text-xs text-slate-900 font-semibold"
+                    >
+                      <option value="ALL">All Competitions</option>
+                      {assignedEvents.map((e) => (
+                        <option key={e.id} value={e.id}>
+                          {e.title}
+                        </option>
+                      ))}
+                    </select>
+
+                    <button
+                      type="button"
+                      onClick={() => handleExportCSV('registrations')}
+                      className="py-2 px-3.5 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs flex items-center gap-2 shadow cursor-pointer transition-colors"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Export CSV</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Data Grid */}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[10px]">
+                      <tr>
+                        <th className="py-3.5 px-4">Pass ID</th>
+                        <th className="py-3.5 px-4">Event</th>
+                        <th className="py-3.5 px-4">Candidate / Team</th>
+                        <th className="py-3.5 px-4">Payment &amp; Gateway ID</th>
+                        <th className="py-3.5 px-4">Gate Status</th>
+                        <th className="py-3.5 px-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {filteredRegistrations.length === 0 ? (
+                        <tr>
+                          <td colSpan={6} className="py-8 text-center text-slate-400">
+                            No registrations match your search and filter criteria.
                           </td>
                         </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                      ) : (
+                        filteredRegistrations.map((r) => {
+                          const isPresent = attendanceList.some(
+                            (a) => a.registrationId === r.id && a.status === 'PRESENT'
+                          );
+                          const isPaid = r.paymentStatus === 'PAID';
+                          const isPending = (r.paymentStatus || 'PENDING') === 'PENDING';
+                          const isFailed = r.paymentStatus === 'FAILED';
+
+                          return (
+                            <tr key={r.id} className="hover:bg-slate-50/70 transition-colors">
+                              <td className="py-3.5 px-4 font-mono font-bold text-cyan-700">
+                                {r.registrationNumber}
+                              </td>
+                              <td className="py-3.5 px-4">
+                                <div className="font-semibold text-slate-900">{r.eventTitle}</div>
+                                <span className={`text-[9px] uppercase font-bold px-1.5 py-0.5 rounded ${
+                                  r.category === 'Technical' ? 'bg-cyan-50 text-cyan-700' : 'bg-teal-50 text-teal-700'
+                                }`}>
+                                  {r.category}
+                                </span>
+                              </td>
+                              <td className="py-3.5 px-4">
+                                <div className="font-bold text-slate-900">{r.leaderName}</div>
+                                <div className="font-mono text-[10px] text-slate-500">
+                                  {r.leaderRollNumber} {r.teamName ? `(${r.teamName})` : ''}
+                                </div>
+                                <div className="text-[10px] text-slate-400 truncate max-w-[180px]">
+                                  {r.collegeName}
+                                </div>
+                              </td>
+                              <td className="py-3.5 px-4">
+                                {isPaid && (
+                                  <div>
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                      <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                                      <span>₹{r.amountPaid || 200} PAID</span>
+                                    </span>
+                                    {r.paymentId && (
+                                      <div className="font-mono text-[9px] text-slate-400 mt-0.5 truncate max-w-[130px]" title={r.paymentId}>
+                                        {r.paymentId}
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                                {isPending && (
+                                  <div>
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300">
+                                      <Clock className="w-3 h-3 text-amber-600" />
+                                      <span>₹{r.amountPaid || 200} PENDING</span>
+                                    </span>
+                                    <p className="text-[9px] text-amber-600 mt-0.5">Unpaid registration</p>
+                                  </div>
+                                )}
+                                {isFailed && (
+                                  <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 border border-rose-300">
+                                    <AlertTriangle className="w-3 h-3 text-rose-600" />
+                                    <span>FAILED / REVIEW</span>
+                                  </span>
+                                )}
+                              </td>
+                              <td className="py-3.5 px-4">
+                                {isPresent ? (
+                                  <span className="text-emerald-700 font-bold flex items-center gap-1 text-xs">
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                                    <span>Present</span>
+                                  </span>
+                                ) : (
+                                  <span className="text-slate-400 text-xs">Not Checked-in</span>
+                                )}
+                              </td>
+                              <td className="py-3.5 px-4 text-right">
+                                {isPending ? (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleManualMarkPaid(r)}
+                                    title="Mark Paid via On-Spot Cash collection"
+                                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 font-bold text-[10px] transition-colors cursor-pointer shadow-2xs"
+                                  >
+                                    <CreditCard className="w-3 h-3" />
+                                    <span>Approve Cash</span>
+                                  </button>
+                                ) : (
+                                  <span className="text-[10px] font-mono text-emerald-600 font-semibold flex items-center justify-end gap-1">
+                                    <ShieldCheck className="w-3.5 h-3.5" />
+                                    <span>Pass Ready</span>
+                                  </span>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           )}

@@ -54,7 +54,7 @@ export const GlobalHeader: React.FC<GlobalHeaderProps> = ({
               <div className="flex items-center gap-2">
                 <span className="font-serif text-lg font-bold tracking-tight text-white">SPIHER</span>
                 <span className="text-[10px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded bg-secondary/20 text-secondary-fixed border border-secondary/40">
-                  IGNITE 2024
+                  RADIANZA '26
                 </span>
               </div>
               <p className="text-[11px] text-slate-300 font-medium hidden sm:block">

@@ -17,6 +17,7 @@ import {
   X,
   Zap,
   Ticket,
+  Sparkles,
 } from 'lucide-react';
 import { CollegeEvent, EventCategory, Participant } from '../../types';
 
@@ -100,17 +101,18 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-4 sm:py-6 select-none flex flex-col items-center">
-      {/* ── Top Header Navigation Bar ── */}
-      <div className="w-full flex items-center justify-between gap-4 mb-4">
-        <button
-          type="button"
-          onClick={onBackToOnboarding}
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-[#0077c8] transition-colors cursor-pointer bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-[#d4e8f5] shadow-xs"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back</span>
-        </button>
+    <div className="w-full min-h-screen bg-slate-50 text-slate-900 select-none flex flex-col items-center py-4 sm:py-6 px-4">
+      <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
+        {/* ── Top Header Navigation Bar ── */}
+        <div className="w-full flex items-center justify-between gap-4 mb-4">
+          <button
+            type="button"
+            onClick={onBackToOnboarding}
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-[#0077c8] transition-colors cursor-pointer bg-white px-3.5 py-1.5 rounded-xl border border-slate-200 shadow-xs hover:border-[#0077c8]/40"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back</span>
+          </button>
 
         {/* Top Right Event Pass Badge */}
         <div className="flex items-center gap-2">
@@ -130,15 +132,15 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
           {isReadyToRelease ? (
             <motion.div
               key="release-banner"
-              initial={{ opacity: 0, scale: 0.9, y: -6 }}
+              initial={{ opacity: 0, scale: 0.95, y: -4 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: -6 }}
+              exit={{ opacity: 0, scale: 0.95, y: -4 }}
               transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-              className="inline-flex items-center gap-2 px-6 py-2 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-500 text-white font-black text-xs sm:text-sm tracking-wide shadow-lg shadow-emerald-500/30 border-2 border-emerald-300 animate-pulse"
+              className="inline-flex items-center gap-2.5 px-6 py-2 rounded-full bg-gradient-to-r from-[#001f4d] via-[#003366] to-[#0077c8] text-white font-bold text-xs sm:text-sm tracking-wide shadow-xl shadow-[#0077c8]/25 border border-sky-400/40"
             >
-              <Zap className="w-4 h-4 fill-white" />
-              <span>⚡ RELEASE TO ACTIVATE EVENT! ⚡</span>
-              <Zap className="w-4 h-4 fill-white" />
+              <CheckCircle2 className="w-4 h-4 text-[#7af1fc] animate-pulse" />
+              <span className="tracking-wide">Release to select event</span>
+              <Sparkles className="w-3.5 h-3.5 text-[#f59e0b]" />
             </motion.div>
           ) : (
             <motion.div
@@ -334,6 +336,11 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
                       {evt.category}
                     </span>
 
+                    {/* Price Tag */}
+                    <span className="absolute top-3 left-24 bg-black/60 text-[#7af1fc] font-mono font-bold text-[10px] px-2.5 py-1 rounded-full backdrop-blur-md shadow-xs border border-white/20">
+                      ₹{evt.price || 100}
+                    </span>
+
                     {/* Team Size Tag */}
                     <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[10px] font-mono font-bold flex items-center gap-1 border border-white/20 shadow-xs">
                       {evt.isTeamEvent ? (
@@ -382,19 +389,19 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
                     <div className="pt-1">
                       {isCenter ? (
                         <div
-                          className={`w-full py-2.5 px-3 rounded-2xl flex items-center justify-center gap-1.5 text-xs font-black transition-all ${
+                          className={`w-full py-2.5 px-3 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold transition-all ${
                             isReadyToRelease
-                              ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/40 scale-102 animate-pulse'
+                              ? 'bg-gradient-to-r from-[#001f4d] via-[#003366] to-[#0077c8] text-white shadow-lg shadow-[#0077c8]/30 scale-[1.02] border border-sky-400/40'
                               : 'bg-slate-100 text-[#002b66] border border-[#d4e8f5]'
                           }`}
                         >
-                          <ChevronDown
-                            className={`w-4 h-4 transition-transform ${
-                              isReadyToRelease ? 'rotate-180 text-white' : 'animate-bounce text-[#0077c8]'
-                            }`}
-                          />
+                          {isReadyToRelease ? (
+                            <CheckCircle2 className="w-4 h-4 text-[#7af1fc] animate-pulse" />
+                          ) : (
+                            <ChevronDown className="w-4 h-4 transition-transform animate-bounce text-[#0077c8]" />
+                          )}
                           <span>
-                            {isReadyToRelease ? '⚡ Release to activate!' : 'Drag down to activate event'}
+                            {isReadyToRelease ? 'Release to select event' : 'Drag down to select event'}
                           </span>
                         </div>
                       ) : (
@@ -467,7 +474,7 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
               className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
             >
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Choose Event (1-Click)</span>
+              <span>{currentEvent && currentEvent.price > 0 ? `Register (₹${currentEvent.price})` : 'Choose Event (1-Click)'}</span>
             </button>
           </div>
         </div>
@@ -491,9 +498,14 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent" />
-                <span className="absolute top-2.5 left-2.5 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full text-white bg-black/60 backdrop-blur-md">
-                  {evt.isTeamEvent ? `Team (${evt.minTeamSize}-${evt.maxTeamSize})` : 'Solo'}
-                </span>
+                <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full text-white bg-black/60 backdrop-blur-md">
+                    {evt.isTeamEvent ? `Team (${evt.minTeamSize}-${evt.maxTeamSize})` : 'Solo'}
+                  </span>
+                  <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-full text-[#7af1fc] bg-black/60 backdrop-blur-md border border-white/20">
+                    ₹{evt.price || 100}
+                  </span>
+                </div>
                 <div className="absolute bottom-2.5 left-3 right-3 text-white">
                   <h4 className="font-serif font-bold text-base line-clamp-1">{evt.title}</h4>
                   <p className="text-[11px] text-slate-300 line-clamp-1">{evt.tagline}</p>
@@ -515,7 +527,7 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
                     onClick={() => onSelectEvent(evt)}
                     className="px-3 py-1.5 rounded-xl bg-[#002b66] hover:bg-[#001f4d] text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
                   >
-                    Select Event
+                    Select (₹{evt.price || 100})
                   </button>
                 </div>
               </div>
@@ -602,13 +614,14 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
                   className="px-5 py-2 rounded-xl bg-[#002b66] hover:bg-[#001f4d] text-white text-xs font-bold shadow-md transition-colors cursor-pointer flex items-center gap-1.5"
                 >
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span>Select & Proceed</span>
+                  <span>{inspectingEvent.price > 0 ? `Select & Proceed (₹${inspectingEvent.price})` : 'Select & Proceed'}</span>
                 </button>
               </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
+      </div>
     </div>
   );
 };

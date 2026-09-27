@@ -26,6 +26,8 @@ import {
   ArrowRight,
   Menu,
   X,
+  Printer,
+  Receipt,
 } from 'lucide-react';
 import QRCode from 'qrcode';
 import { CollegeEvent, Coordinator, Participant, Registration } from '../../types';
@@ -61,6 +63,7 @@ const defaultFallbackRegistration: Registration = {
   teamName: 'PromptMasters',
   members: [],
   status: 'ACTIVE',
+  paymentStatus: 'FREE',
   qrToken: 'SPIHER_RAD_TOKEN_V1_SEC',
   registeredAt: new Date().toISOString(),
 };
@@ -784,17 +787,43 @@ export const ParticipantDashboard: React.FC<ParticipantDashboardProps> = ({
                     <span className="font-medium text-slate-900">{currentEvent?.venue || 'Campus Venue'}</span>
                   </div>
                 </div>
+
+                {/* Payment Receipt Info */}
+                <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                    <span className="text-[11px] font-bold text-slate-800">
+                      Paid ₹{registration?.amountPaid || currentEvent?.price || 200}.00
+                    </span>
+                  </div>
+                  {registration?.paymentId && (
+                    <span className="font-mono text-[9px] text-slate-400 truncate max-w-[130px]" title={registration.paymentId}>
+                      {registration.paymentId}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={handleDownloadPass}
-              className="w-full py-3.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-teal-600/20 cursor-pointer"
-            >
-              <Download className="w-4 h-4" />
-              <span>Download Digital Pass</span>
-            </button>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={handleDownloadPass}
+                className="w-full py-3.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-teal-600/20 cursor-pointer transition-colors"
+              >
+                <Download className="w-4 h-4" />
+                <span>Download Pass</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="w-full py-3.5 px-4 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold text-xs flex items-center justify-center gap-2 shadow-xs cursor-pointer transition-colors"
+              >
+                <Printer className="w-4 h-4 text-slate-600" />
+                <span>Print Pass / Receipt</span>
+              </button>
+            </div>
           </div>
         )}
 
