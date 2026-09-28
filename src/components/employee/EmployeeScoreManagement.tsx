@@ -104,7 +104,7 @@ export const EmployeeScoreManagement: React.FC<EmployeeScoreManagementProps> = (
       isLocked: true,
     };
 
-    MockDatabaseService.saveScore(scoreRecord, staffUser);
+    MockDatabaseService.saveScore(scoreRecord);
     setSuccessNotice(`Score of ${totalScore}/${maxPossible} recorded successfully for ${scoreRecord.teamOrParticipantName}!`);
     onScoresUpdated();
   };

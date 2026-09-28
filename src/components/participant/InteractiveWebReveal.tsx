@@ -402,9 +402,9 @@ export const InteractiveWebReveal: React.FC<InteractiveWebRevealProps> = ({ onCo
       isSnappingRef.current = true;
       isDraggingRef.current = false;
 
-      // Haptic feedback
+      // Haptic feedback (only if user has interacted with the document to avoid browser intervention)
       try {
-        if ('vibrate' in navigator) {
+        if ('vibrate' in navigator && (navigator as any).userActivation?.hasBeenActive) {
           navigator.vibrate([35, 60, 25]);
         }
       } catch {}

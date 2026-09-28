@@ -57,14 +57,14 @@ export const ThreeDCyberHeadCanvas: React.FC<ThreeDCyberHeadCanvasProps> = ({
         alpha: true,
         antialias: true,
         powerPreference: 'high-performance',
-        precision: 'highp',
+        precision: 'mediump',
       });
     } catch {
       setWebglSupported(false);
       return;
     }
     renderer.setSize(initialW, initialH);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 1.75));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.0 : 1.25));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.35;
     renderer.outputColorSpace = THREE.SRGBColorSpace;

@@ -287,19 +287,16 @@ export const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
                 staffUser={staffUser}
                 registrations={assignedRegistrations}
                 attendanceList={attendanceList}
-                events={events}
-                onRefresh={onRefreshData}
+                onAttendanceChanged={onRefreshData}
               />
             )}
 
             {activeTab === 'scoring' && (
               <EmployeeScoreManagement
                 staffUser={staffUser}
-                events={events}
                 registrations={assignedRegistrations}
-                attendanceList={attendanceList}
                 scores={scores}
-                onRefresh={onRefreshData}
+                onScoresUpdated={onRefreshData}
               />
             )}
           </div>

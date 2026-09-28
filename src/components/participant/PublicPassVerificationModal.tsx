@@ -76,10 +76,22 @@ export const PublicPassVerificationModal: React.FC<PublicPassVerificationModalPr
 
             {registration && !errorState && (
               <div className="pt-2">
-                <span className="text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-bold inline-flex items-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Verified &amp; Active Pass</span>
-                </span>
+                {registration.paymentStatus === 'PENDING' ? (
+                  <span className="text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 font-bold inline-flex items-center gap-1">
+                    <AlertTriangle className="w-3.5 h-3.5" />
+                    <span>Payment Pending — Admission Prohibited</span>
+                  </span>
+                ) : registration.paymentStatus === 'FAILED' ? (
+                  <span className="text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-400/30 font-bold inline-flex items-center gap-1">
+                    <AlertTriangle className="w-3.5 h-3.5" />
+                    <span>Payment Verification Failed</span>
+                  </span>
+                ) : (
+                  <span className="text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-bold inline-flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Verified &amp; Active Pass</span>
+                  </span>
+                )}
                 <h2 className="text-xl font-bold text-white mt-1.5">{registration.eventTitle}</h2>
               </div>
             )}
@@ -170,6 +182,31 @@ export const PublicPassVerificationModal: React.FC<PublicPassVerificationModalPr
                   <MapPin className="w-3.5 h-3.5 text-[#0077c8] shrink-0" />
                   <span className="truncate">{event?.venue || 'Main Campus Auditorium'}</span>
                 </div>
+              </div>
+
+              {/* Payment Verification Status */}
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
+                <span className="font-medium text-slate-600">Payment Status:</span>
+                {registration.paymentStatus === 'PAID' ? (
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[11px] flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                    <span>Paid ₹{registration.amountPaid || event?.price || 0}</span>
+                  </span>
+                ) : registration.paymentStatus === 'PENDING' ? (
+                  <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold text-[11px] flex items-center gap-1">
+                    <AlertTriangle className="w-3 h-3 text-amber-600" />
+                    <span>Pending (Entry Blocked)</span>
+                  </span>
+                ) : registration.paymentStatus === 'FAILED' ? (
+                  <span className="px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold text-[11px] flex items-center gap-1">
+                    <AlertTriangle className="w-3 h-3 text-rose-600" />
+                    <span>Failed (Invalid Signature)</span>
+                  </span>
+                ) : (
+                  <span className="px-2.5 py-0.5 rounded-full bg-blue-100 text-[#002b66] font-bold text-[11px]">
+                    Free Event
+                  </span>
+                )}
               </div>
 
               {/* Attendance Verification Status */}

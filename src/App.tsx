@@ -666,7 +666,7 @@ export default function App() {
     <div
       className={`min-h-screen flex flex-col font-sans transition-colors duration-200 ${
         isDarkLanding
-          ? 'bg-[#050505] text-white selection:bg-[#C1121F] selection:text-white'
+          ? 'bg-[#faf6f8] text-[#111827] selection:bg-[#c1121f] selection:text-white'
           : 'bg-slate-50 text-slate-900 selection:bg-[#0077c8] selection:text-white'
       }`}
     >

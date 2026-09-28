@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Spider-Man Experience</title>
+<!-- Tailwind CSS CDN with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration for Custom Theme Palettes -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            crimson: {
+              DEFAULT: '#c81d25',
+              dark: '#8b151b',
+              deep: '#5a0a0f',
+              glow: 'rgba(200, 29, 37, 0.45)',
+            },
+            cyber: {
+              cyan: '#00e5ff',
+              blue: '#0284c7',
+            },
+            surface: {
+              light: '#f5f3f2',
+              card: 'rgba(255, 255, 255, 0.65)',
+              border: 'rgba(200, 29, 37, 0.18)',
+            },
+            noir: '#120d10'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            display: ['Impact', 'Arial Black', 'Trebuchet MS', 'sans-serif'],
+          },
+          letterSpacing: {
+            widest2: '0.25em',
+            mega: '0.35em',
+          }
+        }
+      }
+    };
+  </script>
+<!-- Custom Styles: Atmospheric Overlays & Background Grid -->
+<style data-purpose="ambient-layers">
+    /* Subtle Cyber Grid reflecting reference backdrop */
+    .bg-cyber-grid {
+      background-size: 38px 38px;
+      background-image: 
+        linear-gradient(to right, rgba(139, 21, 27, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(139, 21, 27, 0.07) 1px, transparent 1px);
+    }
+
+    /* Ambient scanlines across entire hero */
+    .scanlines-overlay {
+      background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0),
+        rgba(255, 255, 255, 0) 50%,
+        rgba(139, 21, 27, 0.025) 50%,
+        rgba(139, 21, 27, 0.025)
+      );
+      background-size: 100% 4px;
+      pointer-events: none;
+    }
+
+    /* Radial crimson vignette */
+    .crimson-ambient-glow {
+      background: radial-gradient(
+        circle at 50% 42%,
+        rgba(200, 29, 37, 0.15) 0%,
+        rgba(237, 232, 232, 0.5) 45%,
+        rgba(245, 243, 242, 0.95) 85%
+      );
+    }
+  </style>
+<!-- Custom Styles: Hero Typography & Pillar Architecture -->
+<style data-purpose="hero-typography">
+    /* Massive Poster Typography matching reference */
+    .spiderman-title-stroke {
+      -webkit-text-stroke: 1.5px rgba(139, 21, 27, 0.35);
+      color: rgba(255, 255, 255, 0.55);
+      text-shadow: 
+        0 0 20px rgba(200, 29, 37, 0.2),
+        -1.5px 0 0 rgba(0, 229, 255, 0.2),
+        1.5px 0 0 rgba(200, 29, 37, 0.25);
+    }
+
+    /* Architectural Roman/Modernist Columns in backdrop */
+    .pillar-column {
+      background: linear-gradient(
+        90deg,
+        rgba(240, 235, 235, 0.2) 0%,
+        rgba(255, 255, 255, 0.8) 25%,
+        rgba(230, 224, 224, 0.4) 50%,
+        rgba(255, 255, 255, 0.85) 75%,
+        rgba(220, 215, 215, 0.2) 100%
+      );
+      box-shadow: 
+        inset 1px 0 3px rgba(255, 255, 255, 0.9),
+        0 10px 25px rgba(139, 21, 27, 0.06);
+    }
+  </style>
+</head>
+<body class="bg-[#f5f3f2] text-noir overflow-x-hidden antialiased select-none min-h-screen flex flex-col">
+<!-- BEGIN: HeroSection -->
+<main class="relative w-full min-h-screen flex flex-col justify-between bg-cyber-grid crimson-ambient-glow px-4 py-5 overflow-hidden" data-purpose="spiderman-hero-section">
+<!-- Ambient Scanline Overlay Layer -->
+<div aria-hidden="true" class="absolute inset-0 scanlines-overlay z-10 pointer-events-none"></div>
+<!-- Architectural Background: Neo-Classical Columns (Referencing art background) -->
+<div aria-hidden="true" class="absolute inset-0 z-0 flex justify-between px-4 pointer-events-none opacity-50"><div class="flex space-x-2 h-full items-end pb-6"><div class="w-8 h-[75%] rounded-t-lg pillar-column border-x border-surface-border"></div><div class="w-10 h-[84%] rounded-t-lg pillar-column border-x border-surface-border"></div></div><div class="flex space-x-2 h-full items-end pb-6"><div class="w-10 h-[84%] rounded-t-lg pillar-column border-x border-surface-border"></div><div class="w-8 h-[75%] rounded-t-lg pillar-column border-x border-surface-border"></div></div></div>
+<!-- Soft Atmospheric Center Glow behind Character -->
+<div aria-hidden="true" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] bg-crimson/10 rounded-full blur-3xl pointer-events-none z-0"></div>
+<!-- Giant Poster Title Placed In Backdrop Layer -->
+<div aria-hidden="true" class="absolute top-[14%] left-1/2 -translate-x-1/2 z-0 pointer-events-none text-center w-full px-2"><h1 class="font-display font-black text-6xl leading-none uppercase tracking-tighter spiderman-title-stroke select-none">SPIDER-MAN</h1></div>
+<!-- Core Interactive Hero Stage Container -->
+<div class="relative z-20 w-full max-w-md mx-auto flex-1 flex flex-col justify-between pt-2 pb-4"><!-- Top Header: Compact Sector ID & Signature Quote Badge --><section aria-label="Hero Header Information" class="w-full flex flex-col items-center space-y-2.5 px-2" data-purpose="hero-meta-header"><div class="inline-flex items-center space-x-2 bg-white/70 backdrop-blur-sm px-3 py-1 rounded-full border border-crimson/15 shadow-sm"><span class="inline-block w-2 h-2 rounded-full bg-crimson shadow-[0_0_10px_#c81d25] animate-pulse"></span><span class="text-[10px] font-mono tracking-widest text-[#7a484c] uppercase font-semibold">SEC_ID: // 00-616 <span class="text-crimson mx-1">|</span> NYC SECTOR ZERO</span></div><aside class="w-full text-center relative group px-1" data-purpose="iconic-quote-badge"><div class="absolute -inset-0.5 bg-gradient-to-r from-crimson/40 to-cyber-cyan/30 rounded-lg blur-xs opacity-70"></div><div class="relative px-3.5 py-1.5 bg-white/75 backdrop-blur-md border border-crimson/20 rounded-lg shadow-sm"><p class="text-xs font-medium tracking-wide text-stone-800 italic font-serif leading-snug">“The great power will come with great responsibility”</p></div></aside></section><!-- Mobile Interactive 3D Canvas Stage --><div class="relative w-full flex-1 min-h-[420px] flex items-center justify-center my-2" data-purpose="canvas-hero-wrapper"><!-- Holographic Framing Lines --><div class="absolute pointer-events-none w-full h-[380px] border-y border-crimson/15 flex justify-between items-center px-1 z-10"><div class="h-8 w-2 border-l-2 border-crimson/50"></div><div class="h-8 w-2 border-r-2 border-crimson/50"></div></div><!-- Three.js Interactive Mobile Scene Component --><!-- STITCH_THREEJS_START:ANIMATION_16 class="absolute inset-0 w-full h-full bg-transparent pointer-events-auto" -->
+<div class="absolute inset-0 w-full h-full bg-transparent pointer-events-auto" style="display:block;">
+<script src="https://ajax.googleapis.com/ajax/libs/threejs/r125/three.min.js"></script>
+<div id="threejs-container-ANIMATION_16" style="width:100%;height:100%"></div>
+<script>
+(function() {
+  const container = document.getElementById('threejs-container-ANIMATION_16');
+  const devicePixelRatio = window.devicePixelRatio || 1;
+  const containerElem = container;
+const w = containerElem.clientWidth || window.innerWidth;
+const h = containerElem.clientHeight || window.innerHeight;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
+camera.position.z = 7;
+
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+renderer.setSize(w, h);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+containerElem.appendChild(renderer.domElement);
+
+// Lighting
+const ambientLight = new THREE.AmbientLight(0xffffff, 1.1);
+scene.add(ambientLight);
+
+const redLight = new THREE.PointLight(0xe62429, 3.2, 25);
+redLight.position.set(-4, 3, 4);
+scene.add(redLight);
+
+const cyanLight = new THREE.PointLight(0x00e5ff, 2.8, 25);
+cyanLight.position.set(4, -2, 3.5);
+scene.add(cyanLight);
+
+// Interactive 3D tilt group
+const spideyGroup = new THREE.Group();
+scene.add(spideyGroup);
+
+// Load the user's transparent cutout PNG directly: IMAGE_1
+const textureLoader = new THREE.TextureLoader();
+textureLoader.load('{{DATA:IMAGE:IMAGE_1}}', (texture) => {
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+
+  // Custom shader for dynamic depth, breathing, chromatic aberration and cybernetic rim glow
+  const customMaterial = new THREE.ShaderMaterial({
+    transparent: true,
+    uniforms: {
+      uTexture: { value: texture },
+      uTime: { value: 0 },
+      uPointer: { value: new THREE.Vector2(0, 0) }
+    },
+    vertexShader: `
+      varying vec2 vUv;
+      varying vec3 vNormal;
+      varying vec3 vPos;
+      uniform vec2 uPointer;
+      uniform float uTime;
+      
+      void main() {
+        vUv = uv;
+        vNormal = normal;
+        vec3 pos = position;
+        
+        // Gentle organic breathing rhythm
+        float breath = sin(uTime * 1.8 + pos.y * 1.5) * 0.045;
+        pos.z += breath;
+        
+        // Parallax depth deformation toward pointer/touch
+        float dist = distance(vUv, vec2(0.5, 0.5));
+        pos.z += sin(dist * 3.14159) * (uPointer.x * 0.16 - uPointer.y * 0.12);
+
+        vPos = pos;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+      }
+    `,
+    fragmentShader: `
+      precision highp float;
+      varying vec2 vUv;
+      varying vec3 vNormal;
+      varying vec3 vPos;
+      uniform sampler2D uTexture;
+      uniform float uTime;
+      uniform vec2 uPointer;
+      
+      void main() {
+        // Dynamic chromatic aberration responsive to movement
+        vec2 offsetR = vec2(0.0035 * uPointer.x, 0.0025 * uPointer.y);
+        vec2 offsetB = vec2(-0.0035 * uPointer.x, -0.0025 * uPointer.y);
+        
+        vec4 colOriginal = texture2D(uTexture, vUv);
+        float r = texture2D(uTexture, vUv + offsetR).r;
+        float g = colOriginal.g;
+        float b = texture2D(uTexture, vUv + offsetB).b;
+        
+        // Keep the natural alpha from the transparent cutout PNG
+        float alpha = colOriginal.a;
+        if (alpha < 0.02) {
+          discard;
+        }
+        
+        vec3 finalColor = vec3(r, g, b);
+
+        // Cyber edge rim lighting along the silhouette (crimson to electric cyan pulse)
+        float rim = 1.0 - max(dot(normalize(-vPos), vec3(0.0, 0.0, 1.0)), 0.0);
+        vec3 rimCol = mix(vec3(0.92, 0.12, 0.16), vec3(0.0, 0.88, 1.0), sin(uTime * 1.8 + vUv.y * 3.5) * 0.5 + 0.5);
+        finalColor += rimCol * pow(rim, 2.5) * 0.5 * alpha;
+
+        // Subtle holographic pulse
+        float holo = sin(vUv.y * 180.0 + uTime * 4.0) * 0.03;
+        finalColor += vec3(holo) * alpha;
+
+        gl_FragColor = vec4(finalColor, alpha);
+      }
+    `,
+    side: THREE.DoubleSide
+  });
+
+  // Cutout aspect ratio is 821x1024 -> ~0.801
+  const planeGeo = new THREE.PlaneGeometry(3.6, 4.49, 48, 48);
+  const mesh = new THREE.Mesh(planeGeo, customMaterial);
+  mesh.position.set(0, -0.05, 0.2);
+  spideyGroup.add(mesh);
+
+  // Floating glowing web particles & embers
+  const particleCount = 120;
+  const pGeometry = new THREE.BufferGeometry();
+  const pPositions = new Float32Array(particleCount * 3);
+
+  for(let i = 0; i < particleCount; i++) {
+    pPositions[i * 3 + 0] = (Math.random() - 0.5) * 8;
+    pPositions[i * 3 + 1] = (Math.random() - 0.5) * 7;
+    pPositions[i * 3 + 2] = (Math.random() - 0.5) * 4;
+  }
+
+  pGeometry.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+
+  const pMaterial = new THREE.PointsMaterial({
+    color: 0xff3240,
+    size: 0.055,
+    transparent: true,
+    opacity: 0.75,
+    blending: THREE.AdditiveBlending
+  });
+
+  const particles = new THREE.Points(pGeometry, pMaterial);
+  scene.add(particles);
+
+  // Pointer & Touch tracking
+  let targetRotX = 0, targetRotY = 0;
+
+  function updatePointer(normX, normY) {
+    targetRotY = normX * 0.32;
+    targetRotX = -normY * 0.24;
+    if (customMaterial.uniforms) {
+      customMaterial.uniforms.uPointer.value.set(normX, normY);
+    }
+  }
+
+  window.addEventListener('mousemove', (e) => {
+    const curW = window.innerWidth;
+    const curH = window.innerHeight;
+    const normX = (e.clientX / curW) * 2 - 1;
+    const normY = -(e.clientY / curH) * 2 + 1;
+    updatePointer(normX, normY);
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (e.touches.length > 0) {
+      const curW = window.innerWidth;
+      const curH = window.innerHeight;
+      const normX = (e.touches[0].clientX / curW) * 2 - 1;
+      const normY = -(e.touches[0].clientY / curH) * 2 + 1;
+      updatePointer(normX, normY);
+    }
+  }, { passive: true });
+
+  if (window.DeviceOrientationEvent) {
+    window.addEventListener('deviceorientation', (e) => {
+      if (e.gamma !== null && e.beta !== null) {
+        targetRotY = (e.gamma / 45) * 0.32;
+        targetRotX = ((e.beta - 45) / 45) * 0.24;
+      }
+    }, { passive: true });
+  }
+
+  // Animation Loop
+  let clock = new THREE.Clock();
+  function animate() {
+    requestAnimationFrame(animate);
+    const elapsedTime = clock.getElapsedTime();
+
+    customMaterial.uniforms.uTime.value = elapsedTime;
+
+    // Smooth inertia damping
+    spideyGroup.rotation.y += (targetRotY - spideyGroup.rotation.y) * 0.07;
+    spideyGroup.rotation.x += (targetRotX - spideyGroup.rotation.x) * 0.07;
+
+    // Subtle idle floating motion
+    spideyGroup.position.y = Math.sin(elapsedTime * 1.5) * 0.06;
+    spideyGroup.position.x = Math.cos(elapsedTime * 1.0) * 0.03;
+
+    // Floating particles drift
+    const pos = pGeometry.attributes.position.array;
+    for(let i = 0; i < particleCount; i++) {
+      pos[i * 3 + 1] += 0.0035;
+      if(pos[i * 3 + 1] > 4) pos[i * 3 + 1] = -3.5;
+    }
+    pGeometry.attributes.position.needsUpdate = true;
+    particles.rotation.y = elapsedTime * 0.016;
+
+    renderer.render(scene, camera);
+  }
+  animate();
+});
+
+// Resize handler
+window.addEventListener('resize', () => {
+  const newW = containerElem.clientWidth || window.innerWidth;
+  const newH = containerElem.clientHeight || window.innerHeight;
+  camera.aspect = newW / newH;
+  camera.updateProjectionMatrix();
+  renderer.setSize(newW, newH);
+});
+})();
+</script>
+</div>
+<!-- STITCH_THREEJS_END:ANIMATION_16 --></div><!-- Bottom Specs & Action Footer --><section class="w-full flex flex-col space-y-4 px-2 z-30" data-purpose="hero-action-footer"><div class="text-center space-y-1.5"><div class="flex items-center justify-center flex-wrap gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider"><span class="px-2 py-0.5 rounded bg-crimson/10 text-crimson border border-crimson/20">EARTH-616</span><span class="px-2 py-0.5 rounded bg-white/80 text-stone-700 border border-stone-300">PETER PARKER</span><span class="px-2 py-0.5 rounded bg-white/80 text-cyber-blue border border-cyber-blue/30 font-semibold">STARK NANOTECH V2</span></div><h2 class="text-lg font-bold tracking-tight text-stone-900">ADVANCED INTEGRATED SUIT</h2><p class="text-[11px] text-stone-600 leading-relaxed px-4">Multi-mesh cyber weave with neural web-shooters, tactile surface adhesion, and kinetic plates.</p></div><!-- Touch-Friendly CTA Button Cluster --><nav aria-label="Hero Call to Actions" class="flex flex-col sm:flex-row gap-2.5 w-full"><button class="w-full relative inline-flex items-center justify-center px-5 py-3 text-xs font-bold tracking-wider text-white uppercase bg-crimson hover:bg-crimson-dark active:scale-95 transition-all duration-200 rounded-lg shadow-lg shadow-crimson/30 border border-crimson/80 focus:outline-none focus:ring-2 focus:ring-crimson" type="button"><span class="relative z-10 flex items-center justify-center space-x-2"><span>EXPLORE SUIT SPECS</span><svg aria-hidden="true" class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></span></button><button class="w-full inline-flex items-center justify-center px-5 py-2.5 text-xs font-medium tracking-wider text-stone-700 uppercase bg-white/80 hover:bg-white active:scale-95 border border-stone-300 transition-all duration-200 rounded-lg shadow-sm backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-stone-400" type="button"><span>VIEW ARCHIVES</span></button></nav></section></div>
+</main>
+<!-- END: HeroSection -->
+</body></html>
