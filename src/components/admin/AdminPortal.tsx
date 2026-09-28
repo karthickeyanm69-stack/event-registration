@@ -225,67 +225,70 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
   );
 
   const navItems: { id: AdminTab; label: string; icon: React.ComponentType<{ className?: string }>; count?: number }[] = [
-    { id: 'events', label: 'Assigned Competitions', icon: Layers, count: assignedEvents.length },
-    { id: 'registrations', label: 'Participant Rosters', icon: Users, count: assignedRegistrations.length },
-    { id: 'attendance', label: 'Gate Attendance', icon: CheckCircle2, count: presentCount },
-    { id: 'leaderboard', label: 'Score Leaderboards', icon: Trophy },
-    { id: 'employees', label: 'Staff Appointment', icon: UserPlus, count: appointedEmployees.length },
-    { id: 'exports', label: 'Data Exports', icon: Download },
+    { id: 'events', label: 'Events', icon: Layers, count: assignedEvents.length },
+    { id: 'registrations', label: 'Participants', icon: Users, count: assignedRegistrations.length },
+    { id: 'attendance', label: 'Attendance', icon: CheckCircle2, count: presentCount },
+    { id: 'leaderboard', label: 'Leaderboards', icon: Trophy },
+    { id: 'employees', label: 'Staff', icon: UserPlus, count: appointedEmployees.length },
+    { id: 'exports', label: 'Exports', icon: Download },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
-      {/* Top Header with Official College Logo */}
-      <header className="h-16 bg-white border-b border-[#d4e8f5] px-6 flex items-center justify-between sticky top-0 z-40 shadow-sm">
-        <div className="flex items-center gap-4">
+    <div className="h-screen w-full bg-[#f8fafc] text-slate-900 flex flex-col overflow-hidden font-sans">
+      {/* Top Header */}
+      <header className="h-14 shrink-0 bg-white border-b border-slate-200/80 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-40 shadow-xs">
+        <div className="flex items-center gap-3">
           <CollegeLogo variant="compact" size="sm" showSubtitle={false} />
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#e8f5fb] text-[#0077c8] border border-[#d4e8f5] uppercase tracking-wider hidden sm:inline-block">
-            Event Admin Portal
+          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-[#e8f5fb] text-[#0077c8] border border-[#d4e8f5] uppercase tracking-wider hidden sm:inline-block">
+            Admin Console
           </span>
         </div>
 
         {/* Center Telemetry Pill */}
-        <div className="hidden lg:flex items-center gap-4 bg-slate-100/90 px-4 py-1.5 rounded-full border border-slate-200 text-xs">
-          <span className="text-slate-700 font-semibold">{assignedEvents.length} Assigned Events</span>
+        <div className="hidden lg:flex items-center gap-3 bg-slate-50 px-3.5 py-1 rounded-full border border-slate-200 text-xs shadow-2xs">
+          <div className="flex items-center gap-1.5 font-medium text-slate-600">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>{assignedEvents.length} Active Events</span>
+          </div>
           <span className="text-slate-300">|</span>
-          <span className="text-cyan-700 font-mono font-bold">{assignedRegistrations.length} Registrations</span>
+          <span className="text-[#0077c8] font-mono font-bold">{assignedRegistrations.length} Registrations</span>
           <span className="text-slate-300">|</span>
-          <span className="text-emerald-700 font-bold">{presentCount} Checked In</span>
+          <span className="text-emerald-700 font-bold">{presentCount} Present</span>
         </div>
 
         {/* Right User Bar */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-3 bg-slate-100/80 py-1 px-3 rounded-xl border border-slate-200">
-            <div className="w-7 h-7 rounded-lg bg-cyan-100 text-cyan-800 font-bold flex items-center justify-center text-xs">
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 bg-slate-50 py-1 px-2.5 rounded-xl border border-slate-200/80">
+            <div className="w-6 h-6 rounded-lg bg-[#0077c8]/10 text-[#0077c8] font-bold flex items-center justify-center text-xs">
               {adminUser.name.charAt(0)}
             </div>
-            <div className="hidden sm:block text-left text-xs">
-              <p className="font-bold text-slate-900 leading-tight">{adminUser.name}</p>
-              <p className="text-[10px] text-slate-500">Event Administrator</p>
+            <div className="hidden sm:block text-left text-xs leading-tight">
+              <p className="font-bold text-slate-900 text-[11px] truncate max-w-[140px]">{adminUser.name}</p>
+              <p className="text-[9px] text-slate-400">Admin</p>
             </div>
           </div>
 
           <button
             onClick={onStaffLogout}
             title="Sign Out"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-semibold transition-colors"
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs font-semibold transition-colors cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Sign Out</span>
+            <span className="hidden sm:inline text-[11px]">Sign Out</span>
           </button>
         </div>
       </header>
 
       {/* Main Container with Left Sidebar on Desktop & Top Segmented Bar on Mobile */}
-      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-        {/* Left Sidebar Navigation (Desktop) */}
-        <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between p-4 shrink-0 hidden md:flex shadow-sm">
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden min-h-0">
+        {/* Left Sidebar Navigation (Desktop - Stationary & Fixed) */}
+        <aside className="w-56 bg-white border-r border-slate-200/80 flex flex-col justify-between p-3 shrink-0 hidden md:flex h-full overflow-y-auto">
           <div className="space-y-1">
-            <div className="px-3 py-2 text-[10px] uppercase font-bold tracking-widest text-slate-400">
-              Admin Operations
+            <div className="px-2.5 py-1.5 text-[9px] uppercase font-mono font-bold tracking-wider text-slate-400">
+              Operations
             </div>
 
-            <nav className="space-y-1">
+            <nav className="space-y-0.5">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeTab === item.id;
@@ -293,20 +296,20 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id)}
-                    className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer ${
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer ${
                       isActive
-                        ? 'bg-gradient-to-r from-[#002b66] to-[#0077c8] text-white font-bold shadow-md shadow-[#0077c8]/25'
-                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                        ? 'bg-gradient-to-r from-[#002b66] to-[#0077c8] text-white font-bold shadow-xs'
+                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <Icon className={`w-4 h-4 ${isActive ? 'text-[#7af1fc]' : 'text-slate-500'}`} />
+                    <div className="flex items-center gap-2.5">
+                      <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#7af1fc]' : 'text-slate-400'}`} />
                       <span>{item.label}</span>
                     </div>
                     {item.count !== undefined && (
                       <span
-                        className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
-                          isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                        className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
+                          isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'
                         }`}
                       >
                         {item.count}
@@ -318,19 +321,19 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
             </nav>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-1">
-            <div className="flex items-center gap-1.5 text-[#0077c8] font-bold">
-              <ShieldCheck className="w-4 h-4 text-emerald-500" />
-              <span>Event-Scoped Access</span>
+          <div className="p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/70 text-xs space-y-0.5">
+            <div className="flex items-center gap-1.5 text-[#0077c8] font-bold text-[11px]">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+              <span>Event-Scoped</span>
             </div>
-            <p className="text-[11px] text-slate-500">
-              You are authorized to manage only your assigned competitions.
+            <p className="text-[10px] text-slate-400 leading-tight">
+              Assigned events only
             </p>
           </div>
         </aside>
 
         {/* Mobile Horizontal Bar */}
-        <div className="md:hidden w-full overflow-x-auto bg-white border-b border-[#d4e8f5] p-2 flex gap-2 shrink-0 scrollbar-none sticky top-16 z-30 shadow-xs">
+        <div className="md:hidden w-full overflow-x-auto bg-white border-b border-slate-200 p-1.5 flex gap-1.5 shrink-0 scrollbar-none sticky top-14 z-30">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -338,17 +341,17 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
                   isActive
-                    ? 'bg-gradient-to-r from-[#002b66] to-[#0077c8] text-white shadow-md shadow-[#0077c8]/25'
-                    : 'text-slate-600 bg-slate-50 border border-slate-200 hover:bg-slate-100'
+                    ? 'bg-gradient-to-r from-[#002b66] to-[#0077c8] text-white shadow-xs'
+                    : 'text-slate-600 bg-slate-50 border border-slate-200/70 hover:bg-slate-100'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#7af1fc]' : 'text-slate-500'}`} />
+                <Icon className={`w-3 h-3 ${isActive ? 'text-[#7af1fc]' : 'text-slate-400'}`} />
                 <span>{item.label}</span>
                 {item.count !== undefined && (
                   <span
-                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
+                    className={`text-[9px] px-1 py-0.2 rounded-full font-mono ${
                       isActive ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
                     }`}
                   >
@@ -360,69 +363,73 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           })}
         </div>
 
-        {/* Main Content Area */}
-        <main className="flex-1 bg-slate-50 overflow-y-auto p-6 lg:p-8 space-y-6">
-          {/* Executive Stat Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+        {/* Main Content Area (Independently Scrollable) */}
+        <main className="flex-1 h-full bg-[#f8fafc] overflow-y-auto p-4 sm:p-5 lg:p-6 space-y-4 min-w-0">
+          {/* Executive Stat Cards - Sleek & Compact */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 max-w-7xl mx-auto">
+            {/* 1. Events */}
+            <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 shadow-2xs hover:shadow-xs transition-shadow flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Assigned Events</span>
-                <div className="p-2 rounded-xl bg-cyan-50 text-cyan-700">
-                  <Layers className="w-4 h-4" />
+                <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Events</span>
+                <div className="w-6 h-6 rounded-md bg-cyan-50 text-cyan-600 flex items-center justify-center">
+                  <Layers className="w-3.5 h-3.5" />
                 </div>
               </div>
-              <div className="mt-4">
-                <span className="text-3xl font-bold font-mono text-slate-900">{assignedEvents.length}</span>
-                <p className="text-[11px] text-slate-500 mt-1">Under your governance</p>
+              <div className="mt-2 flex items-baseline justify-between">
+                <span className="text-xl font-bold font-mono text-slate-900">{assignedEvents.length}</span>
+                <span className="text-[10px] text-slate-400 font-medium">Under governance</span>
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+            {/* 2. Registrations */}
+            <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 shadow-2xs hover:shadow-xs transition-shadow flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Registrations</span>
-                <div className="p-2 rounded-xl bg-blue-50 text-blue-700">
-                  <Users className="w-4 h-4" />
+                <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Registrations</span>
+                <div className="w-6 h-6 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center">
+                  <Users className="w-3.5 h-3.5" />
                 </div>
               </div>
-              <div className="mt-4">
-                <span className="text-3xl font-bold font-mono text-cyan-700">{assignedRegistrations.length}</span>
-                <p className="text-[11px] text-slate-500 mt-1">Total registered candidates</p>
+              <div className="mt-2 flex items-baseline justify-between">
+                <span className="text-xl font-bold font-mono text-cyan-700">{assignedRegistrations.length}</span>
+                <span className="text-[10px] text-slate-400 font-medium">Registered candidates</span>
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+            {/* 3. Attendance */}
+            <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 shadow-2xs hover:shadow-xs transition-shadow flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Attendance Rate</span>
-                <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700">
-                  <CheckCircle2 className="w-4 h-4" />
+                <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Attendance</span>
+                <div className="w-6 h-6 rounded-md bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
                 </div>
               </div>
-              <div className="mt-4">
-                <span className="text-3xl font-bold font-mono text-emerald-700">
+              <div className="mt-2 flex items-baseline justify-between">
+                <span className="text-xl font-bold font-mono text-emerald-700">
                   {assignedRegistrations.length > 0
                     ? `${Math.round((presentCount / assignedRegistrations.length) * 100)}%`
                     : '0%'}
                 </span>
-                <p className="text-[11px] text-slate-500 mt-1">{presentCount} checked-in at gates</p>
+                <span className="text-[10px] text-emerald-600 font-medium">{presentCount} present</span>
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+            {/* 4. Staff Appointed */}
+            <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 shadow-2xs hover:shadow-xs transition-shadow flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Staff Appointed</span>
-                <div className="p-2 rounded-xl bg-amber-50 text-amber-700">
-                  <UserPlus className="w-4 h-4" />
+                <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Staff</span>
+                <div className="w-6 h-6 rounded-md bg-amber-50 text-amber-600 flex items-center justify-center">
+                  <UserPlus className="w-3.5 h-3.5" />
                 </div>
               </div>
-              <div className="mt-4">
-                <span className="text-3xl font-bold font-mono text-amber-700">{appointedEmployees.length}</span>
-                <p className="text-[11px] text-slate-500 mt-1">Evaluators & Judges</p>
+              <div className="mt-2 flex items-baseline justify-between">
+                <span className="text-xl font-bold font-mono text-amber-700">{appointedEmployees.length}</span>
+                <span className="text-[10px] text-slate-400 font-medium">Judges & Evaluators</span>
               </div>
             </div>
           </div>
 
           {appointSuccess && (
-            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2 max-w-7xl mx-auto">
+            <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2 max-w-7xl mx-auto">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
               <span>{appointSuccess}</span>
             </div>
@@ -575,53 +582,61 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           {activeTab === 'registrations' && (
             <div className="space-y-5 max-w-7xl mx-auto">
               {/* Top Financial & Registration Telemetry KPI Cards */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-                <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-1">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Collected</span>
-                    <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-700">
-                      <IndianRupee className="w-4 h-4" />
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Revenue</span>
+                    <div className="w-6 h-6 rounded-md bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                      <IndianRupee className="w-3.5 h-3.5" />
                     </div>
                   </div>
-                  <p className="text-2xl font-bold font-mono text-emerald-700">₹{totalAssignedRevenue.toLocaleString()}</p>
-                  <p className="text-[11px] text-slate-500 font-medium">Verified fees received</p>
+                  <div className="mt-1 flex items-baseline justify-between">
+                    <span className="text-xl font-bold font-mono text-emerald-700">₹{totalAssignedRevenue.toLocaleString()}</span>
+                    <span className="text-[10px] text-slate-400 font-medium">Verified fees</span>
+                  </div>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-1">
+                <div className="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-teal-600">Paid Participants</span>
-                    <div className="p-1.5 rounded-lg bg-teal-50 text-teal-700">
-                      <CheckCircle2 className="w-4 h-4" />
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Paid</span>
+                    <div className="w-6 h-6 rounded-md bg-teal-50 text-teal-600 flex items-center justify-center">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
                     </div>
                   </div>
-                  <p className="text-2xl font-bold font-mono text-teal-700">{paidCount}</p>
-                  <p className="text-[11px] text-teal-600 font-medium">
-                    {assignedRegistrations.length > 0 ? Math.round((paidCount / assignedRegistrations.length) * 100) : 0}% of registered
-                  </p>
+                  <div className="mt-1 flex items-baseline justify-between">
+                    <span className="text-xl font-bold font-mono text-teal-700">{paidCount}</span>
+                    <span className="text-[10px] text-teal-600 font-medium">
+                      {assignedRegistrations.length > 0 ? Math.round((paidCount / assignedRegistrations.length) * 100) : 0}% of total
+                    </span>
+                  </div>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-1">
+                <div className="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-amber-600">Pending Payment</span>
-                    <div className="p-1.5 rounded-lg bg-amber-50 text-amber-700">
-                      <Clock className="w-4 h-4" />
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Pending</span>
+                    <div className="w-6 h-6 rounded-md bg-amber-50 text-amber-600 flex items-center justify-center">
+                      <Clock className="w-3.5 h-3.5" />
                     </div>
                   </div>
-                  <p className="text-2xl font-bold font-mono text-amber-700">{pendingCount}</p>
-                  <p className="text-[11px] text-amber-600 font-medium">Awaiting checkout / cash</p>
+                  <div className="mt-1 flex items-baseline justify-between">
+                    <span className="text-xl font-bold font-mono text-amber-700">{pendingCount}</span>
+                    <span className="text-[10px] text-amber-600 font-medium">Awaiting checkout</span>
+                  </div>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-1">
+                <div className="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-cyan-600">Gate Checked-In</span>
-                    <div className="p-1.5 rounded-lg bg-cyan-50 text-cyan-700">
-                      <CheckCircle2 className="w-4 h-4" />
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Checked-In</span>
+                    <div className="w-6 h-6 rounded-md bg-cyan-50 text-cyan-600 flex items-center justify-center">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
                     </div>
                   </div>
-                  <p className="text-2xl font-bold font-mono text-cyan-700">{presentCount}</p>
-                  <p className="text-[11px] text-cyan-600 font-medium">
-                    {paidCount > 0 ? Math.round((presentCount / paidCount) * 100) : 0}% of paid present
-                  </p>
+                  <div className="mt-1 flex items-baseline justify-between">
+                    <span className="text-xl font-bold font-mono text-cyan-700">{presentCount}</span>
+                    <span className="text-[10px] text-cyan-600 font-medium">
+                      {paidCount > 0 ? Math.round((presentCount / paidCount) * 100) : 0}% of paid
+                    </span>
+                  </div>
                 </div>
               </div>
 

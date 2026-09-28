@@ -305,13 +305,13 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
   };
 
   const navItems: { id: SuperAdminTab; label: string; icon: React.ComponentType<{ className?: string }>; count?: number }[] = [
-    { id: 'dashboard', label: 'Master Telemetry', icon: LayoutDashboard },
-    { id: 'events-crud', label: 'Competitions & Events', icon: Layers, count: events.length },
-    { id: 'user-mgmt', label: 'Admins & Staff Directory', icon: Users, count: staffList.length },
-    { id: 'matrix', label: 'Permission Matrix', icon: Shield },
-    { id: 'change-history', label: 'Event Change Audits', icon: History, count: eventChanges.length },
-    { id: 'audit-logs', label: 'System Audit Logs', icon: Activity, count: auditLogs.length },
-    { id: 'system-settings', label: 'Platform Configuration', icon: Settings },
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'events-crud', label: 'Events', icon: Layers, count: events.length },
+    { id: 'user-mgmt', label: 'Staff', icon: Users, count: staffList.length },
+    { id: 'matrix', label: 'Permissions', icon: Shield },
+    { id: 'change-history', label: 'Change Logs', icon: History, count: eventChanges.length },
+    { id: 'audit-logs', label: 'Audit Logs', icon: Activity, count: auditLogs.length },
+    { id: 'system-settings', label: 'Settings', icon: Settings },
   ];
 
   const presentCount = attendanceList.filter((a) => a.status === 'PRESENT').length;
@@ -336,44 +336,44 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
-      {/* Top Executive Header Bar (White Theme with Official College Logo) */}
-      <header className="h-16 bg-white border-b border-[#d4e8f5] px-6 flex items-center justify-between sticky top-0 z-40 shadow-sm">
-        <div className="flex items-center gap-4">
+    <div className="h-screen w-full bg-slate-50 text-slate-900 flex flex-col overflow-hidden font-sans">
+      {/* Top Executive Header Bar */}
+      <header className="h-14 shrink-0 bg-white border-b border-slate-200/90 px-5 flex items-center justify-between sticky top-0 z-40 shadow-xs">
+        <div className="flex items-center gap-3">
           <CollegeLogo variant="compact" size="sm" showSubtitle={false} />
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#e8f5fb] text-[#0077c8] border border-[#d4e8f5] uppercase tracking-wider hidden sm:inline-block">
-            Super Admin Console
+          <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-[#002b66] border border-slate-200 uppercase tracking-wider hidden sm:inline-block">
+            Super Admin
           </span>
         </div>
 
         {/* Center Live Telemetry Pill */}
-        <div className="hidden lg:flex items-center gap-4 bg-slate-100/90 px-4 py-1.5 rounded-full border border-slate-200 text-xs">
-          <div className="flex items-center gap-2">
+        <div className="hidden lg:flex items-center gap-3 bg-slate-50 px-3.5 py-1 rounded-full border border-slate-200/90 text-xs font-mono">
+          <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-slate-700 font-medium">System Status: Nominal</span>
+            <span className="text-slate-600 font-medium text-[11px]">Nominal</span>
           </div>
-          <span className="text-slate-300">|</span>
-          <span className="text-slate-600">{events.length} Competitions Active</span>
-          <span className="text-slate-300">|</span>
-          <span className="text-teal-700 font-mono font-bold">{registrations.length} Registrations</span>
+          <span className="text-slate-300">•</span>
+          <span className="text-slate-600 text-[11px]">{events.length} Events</span>
+          <span className="text-slate-300">•</span>
+          <span className="text-[#002b66] font-bold text-[11px]">{registrations.length} Registrations</span>
         </div>
 
         {/* Right User & Actions */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-3 bg-slate-100/80 py-1 px-3 rounded-xl border border-slate-200">
-            <div className="w-7 h-7 rounded-lg bg-teal-100 text-teal-800 font-bold flex items-center justify-center text-xs">
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 bg-slate-50 py-1 px-2.5 rounded-xl border border-slate-200/80">
+            <div className="w-6 h-6 rounded-lg bg-[#002b66] text-white font-bold flex items-center justify-center text-[10px]">
               {superAdminUser.name.charAt(0)}
             </div>
             <div className="hidden sm:block text-left text-xs">
-              <p className="font-bold text-slate-900 leading-tight">{superAdminUser.name}</p>
-              <p className="text-[10px] text-slate-500 truncate max-w-[140px]">Super Administrator</p>
+              <p className="font-bold text-slate-800 leading-none text-xs">{superAdminUser.name}</p>
+              <p className="text-[10px] text-slate-400 font-mono">Convenor</p>
             </div>
           </div>
 
           <button
             onClick={onStaffLogout}
             title="Sign Out"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-semibold transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-600 hover:text-rose-700 border border-slate-200 hover:border-rose-200 text-xs font-semibold transition-colors cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Sign Out</span>
@@ -382,15 +382,15 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
       </header>
 
       {/* Main Container with Left Sidebar on Desktop & Top Segmented Bar on Mobile */}
-      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-        {/* Left Navigation Sidebar (Desktop) */}
-        <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between p-4 shrink-0 hidden md:flex shadow-sm">
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden min-h-0">
+        {/* Left Navigation Sidebar (Desktop - Stationary & Fixed) */}
+        <aside className="w-56 bg-white border-r border-slate-200 flex flex-col justify-between p-3 shrink-0 hidden md:flex h-full overflow-y-auto shadow-xs">
           <div className="space-y-1">
-            <div className="px-3 py-2 text-[10px] uppercase font-bold tracking-widest text-slate-400">
-              Management Modules
+            <div className="px-3 py-1.5 text-[9px] uppercase font-mono font-bold tracking-widest text-slate-400">
+              Console
             </div>
 
-            <nav className="space-y-1">
+            <nav className="space-y-0.5">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeTab === item.id;
@@ -398,20 +398,20 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id)}
-                    className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer ${
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer ${
                       isActive
-                        ? 'bg-gradient-to-r from-[#002b66] to-[#0077c8] text-white font-bold shadow-md shadow-[#0077c8]/25'
-                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                        ? 'bg-[#002b66] text-white font-bold shadow-xs'
+                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <Icon className={`w-4 h-4 ${isActive ? 'text-[#7af1fc]' : 'text-slate-500'}`} />
+                    <div className="flex items-center gap-2.5">
+                      <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#7af1fc]' : 'text-slate-400'}`} />
                       <span>{item.label}</span>
                     </div>
                     {item.count !== undefined && (
                       <span
-                        className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
-                          isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                        className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
+                          isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'
                         }`}
                       >
                         {item.count}
@@ -423,20 +423,15 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
             </nav>
           </div>
 
-          {/* Sidebar Footer Info */}
-          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-1">
-            <div className="flex items-center gap-1.5 text-[#0077c8] font-bold">
-              <ShieldCheck className="w-4 h-4 text-emerald-500" />
-              <span>Strict 1-Participant Rule</span>
-            </div>
-            <p className="text-[11px] text-slate-500">
-              Database constraints enforce 1 event per student globally.
-            </p>
+          {/* Compact Sidebar Footer Micro-Card */}
+          <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 text-[11px] text-slate-500 flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span className="truncate font-medium text-[10px]">1-Event-Per-Student Active</span>
           </div>
         </aside>
 
         {/* Mobile Horizontal Navigation Tabs */}
-        <div className="md:hidden w-full overflow-x-auto bg-white border-b border-[#d4e8f5] p-2 flex gap-2 shrink-0 scrollbar-none sticky top-16 z-30 shadow-xs">
+        <div className="md:hidden w-full overflow-x-auto bg-white border-b border-slate-200 p-2 flex gap-1.5 shrink-0 scrollbar-none sticky top-14 z-30 shadow-xs">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -444,18 +439,18 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
                   isActive
-                    ? 'bg-gradient-to-r from-[#002b66] to-[#0077c8] text-white shadow-md shadow-[#0077c8]/25'
-                    : 'text-slate-600 bg-slate-50 border border-slate-200 hover:bg-slate-100'
+                    ? 'bg-[#002b66] text-white shadow-xs'
+                    : 'text-slate-600 bg-slate-50 border border-slate-200/80 hover:bg-slate-100'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#7af1fc]' : 'text-slate-500'}`} />
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#7af1fc]' : 'text-slate-400'}`} />
                 <span>{item.label}</span>
                 {item.count !== undefined && (
                   <span
-                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
-                      isActive ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
+                    className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
+                      isActive ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
                     }`}
                   >
                     {item.count}
@@ -466,137 +461,144 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
           })}
         </div>
 
-        {/* Main Content Viewport */}
-        <main className="flex-1 bg-slate-50 overflow-y-auto p-6 lg:p-8 space-y-6">
+        {/* Main Content Viewport (Independently Scrollable) */}
+        <main className="flex-1 h-full bg-slate-50/80 overflow-y-auto p-5 lg:p-6 space-y-5 min-w-0">
           {/* ========================================================================= */}
-          {/* 1. MASTER TELEMETRY DASHBOARD */}
+          {/* 1. COMPACT TELEMETRY DASHBOARD */}
           {/* ========================================================================= */}
           {activeTab === 'dashboard' && (
-            <div className="space-y-6 max-w-7xl mx-auto">
-              {/* Executive Stat Cards Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3.5">
-                {/* Stat: Total Payment Collection */}
-                <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+            <div className="space-y-5 max-w-7xl mx-auto">
+              {/* Compact & Unique Stat Cards Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                {/* Stat 1: Gross Collection */}
+                <div className="bg-white border border-slate-200/80 hover:border-emerald-300 rounded-xl p-3.5 shadow-2xs transition-all hover:shadow-xs flex flex-col justify-between">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Gross Collection</span>
-                    <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700">
-                      <IndianRupee className="w-4 h-4" />
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Revenue</span>
+                    <div className="w-6 h-6 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                      <IndianRupee className="w-3.5 h-3.5" />
                     </div>
                   </div>
-                  <div className="mt-4">
-                    <span className="text-3xl font-bold font-mono text-emerald-700">
+                  <div className="mt-2">
+                    <span className="text-xl font-bold font-mono text-emerald-700 block leading-tight">
                       ₹{registrations.filter((r) => r.paymentStatus === 'PAID').reduce((sum, r) => sum + (r.amountPaid || 0), 0).toLocaleString()}
                     </span>
-                    <p className="text-[11px] text-emerald-700 mt-1 font-semibold">
+                    <p className="text-[10px] text-emerald-600 mt-0.5 font-medium truncate">
                       {registrations.filter((r) => r.paymentStatus === 'PAID').length} Paid / {registrations.filter((r) => (r.paymentStatus || 'PENDING') === 'PENDING').length} Pending
                     </p>
                   </div>
                 </div>
 
-                {/* Stat 1 */}
-                <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+                {/* Stat 2: Total Events */}
+                <div className="bg-white border border-slate-200/80 hover:border-sky-300 rounded-xl p-3.5 shadow-2xs transition-all hover:shadow-xs flex flex-col justify-between">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Events</span>
-                    <div className="p-2 rounded-xl bg-teal-50 text-teal-700">
-                      <Layers className="w-4 h-4" />
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Events</span>
+                    <div className="w-6 h-6 rounded-lg bg-sky-50 text-sky-700 flex items-center justify-center">
+                      <Layers className="w-3.5 h-3.5" />
                     </div>
                   </div>
-                  <div className="mt-4">
-                    <span className="text-3xl font-bold font-mono text-slate-900">{events.length}</span>
-                    <p className="text-[11px] text-slate-500 mt-1">Tech & Non-Tech active</p>
+                  <div className="mt-2">
+                    <span className="text-xl font-bold font-mono text-slate-800 block leading-tight">{events.length}</span>
+                    <p className="text-[10px] text-slate-500 mt-0.5 truncate">Tech &amp; Non-Tech</p>
                   </div>
                 </div>
 
-                {/* Stat 2 */}
-                <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+                {/* Stat 3: Total Registrations */}
+                <div className="bg-white border border-slate-200/80 hover:border-indigo-300 rounded-xl p-3.5 shadow-2xs transition-all hover:shadow-xs flex flex-col justify-between">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Registrations</span>
-                    <div className="p-2 rounded-xl bg-cyan-50 text-cyan-700">
-                      <Users className="w-4 h-4" />
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Registrations</span>
+                    <div className="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-700 flex items-center justify-center">
+                      <Users className="w-3.5 h-3.5" />
                     </div>
                   </div>
-                  <div className="mt-4">
-                    <span className="text-3xl font-bold font-mono text-teal-700">{registrations.length}</span>
-                    <p className="text-[11px] text-slate-500 mt-1">Verified participants</p>
+                  <div className="mt-2">
+                    <span className="text-xl font-bold font-mono text-[#002b66] block leading-tight">{registrations.length}</span>
+                    <p className="text-[10px] text-slate-500 mt-0.5 truncate">Verified Delegates</p>
                   </div>
                 </div>
 
-                {/* Stat 3 */}
-                <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+                {/* Stat 4: Gate Attendance */}
+                <div className="bg-white border border-slate-200/80 hover:border-teal-300 rounded-xl p-3.5 shadow-2xs transition-all hover:shadow-xs flex flex-col justify-between">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Gate Attendance</span>
-                    <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700">
-                      <CheckCircle2 className="w-4 h-4" />
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Attendance</span>
+                    <div className="w-6 h-6 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
                     </div>
                   </div>
-                  <div className="mt-4">
-                    <span className="text-3xl font-bold font-mono text-emerald-600">{presentCount}</span>
-                    <p className="text-[11px] text-emerald-700 mt-1 font-semibold">{attendanceRate}% Turnout Rate</p>
+                  <div className="mt-2">
+                    <span className="text-xl font-bold font-mono text-teal-700 block leading-tight">{presentCount}</span>
+                    <p className="text-[10px] text-teal-600 mt-0.5 font-medium truncate">{attendanceRate}% Turnout</p>
                   </div>
                 </div>
 
-                {/* Stat 4 */}
-                <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+                {/* Stat 5: Staff & Admins */}
+                <div className="bg-white border border-slate-200/80 hover:border-amber-300 rounded-xl p-3.5 shadow-2xs transition-all hover:shadow-xs flex flex-col justify-between">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Admins & Staff</span>
-                    <div className="p-2 rounded-xl bg-amber-50 text-amber-700">
-                      <Shield className="w-4 h-4" />
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Staff</span>
+                    <div className="w-6 h-6 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
+                      <Shield className="w-3.5 h-3.5" />
                     </div>
                   </div>
-                  <div className="mt-4">
-                    <span className="text-3xl font-bold font-mono text-amber-700">{staffList.length}</span>
-                    <p className="text-[11px] text-slate-500 mt-1">Authorized personnel</p>
+                  <div className="mt-2">
+                    <span className="text-xl font-bold font-mono text-amber-700 block leading-tight">{staffList.length}</span>
+                    <p className="text-[10px] text-slate-500 mt-0.5 truncate">Personnel</p>
                   </div>
                 </div>
 
-                {/* Stat 5 */}
-                <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+                {/* Stat 6: Event Changes */}
+                <div className="bg-white border border-slate-200/80 hover:border-rose-300 rounded-xl p-3.5 shadow-2xs transition-all hover:shadow-xs flex flex-col justify-between">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Event Changes</span>
-                    <div className="p-2 rounded-xl bg-rose-50 text-rose-700">
-                      <History className="w-4 h-4" />
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Switches</span>
+                    <div className="w-6 h-6 rounded-lg bg-rose-50 text-rose-700 flex items-center justify-center">
+                      <History className="w-3.5 h-3.5" />
                     </div>
                   </div>
-                  <div className="mt-4">
-                    <span className="text-3xl font-bold font-mono text-rose-700">{eventChanges.length}</span>
-                    <p className="text-[11px] text-slate-500 mt-1">Audited switches</p>
+                  <div className="mt-2">
+                    <span className="text-xl font-bold font-mono text-rose-700 block leading-tight">{eventChanges.length}</span>
+                    <p className="text-[10px] text-slate-500 mt-0.5 truncate">Audited Changes</p>
                   </div>
                 </div>
               </div>
 
-              {/* Two-Column Telemetry Grids */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Two-Column Telemetry Grids (Compact & Unique) */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Category Registration Breakdown */}
-                <div className="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm space-y-4">
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                      <Layers className="w-4 h-4 text-teal-600" />
+                <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs space-y-3">
+                  <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
+                    <h3 className="text-xs font-bold text-slate-800 flex items-center gap-1.5 uppercase font-mono tracking-wider">
+                      <Layers className="w-3.5 h-3.5 text-[#002b66]" />
                       <span>Category Distribution</span>
                     </h3>
-                    <span className="text-xs text-slate-500 font-semibold">Total: {registrations.length}</span>
+                    <span className="text-[10px] text-slate-500 font-mono font-bold bg-slate-100 px-2 py-0.5 rounded-full">
+                      Total: {registrations.length}
+                    </span>
                   </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {['Technical', 'Non-Technical'].map((cat) => {
                       const catEvents = events.filter((e) => e.category === cat);
                       const catRegs = registrations.filter((r) => r.category === cat);
                       const percent = registrations.length > 0 ? Math.round((catRegs.length / registrations.length) * 100) : 0;
+                      const isTech = cat === 'Technical';
 
                       return (
-                        <div key={cat} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-                          <div className="flex items-center justify-between text-xs font-bold">
-                            <span className="text-slate-900">{cat} Events ({catEvents.length} Competitions)</span>
-                            <span className="text-teal-700 font-mono">{catRegs.length} Participants ({percent}%)</span>
+                        <div key={cat} className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="font-bold text-slate-800 text-[11px]">
+                              {cat} ({catEvents.length} Events)
+                            </span>
+                            <span className={`font-mono text-[11px] font-bold ${isTech ? 'text-teal-700' : 'text-[#002b66]'}`}>
+                              {catRegs.length} ({percent}%)
+                            </span>
                           </div>
-                          <div className="h-2.5 w-full bg-slate-200 rounded-full overflow-hidden">
+                          <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
                             <div
-                              className="h-full bg-teal-600 rounded-full transition-all duration-500"
+                              className={`h-full rounded-full transition-all duration-500 ${isTech ? 'bg-teal-600' : 'bg-[#002b66]'}`}
                               style={{ width: `${percent}%` }}
                             />
                           </div>
-                          <div className="flex justify-between text-[11px] text-slate-500 pt-1">
-                            <span>Slots Filled: {catEvents.reduce((sum, e) => sum + (e.totalSlots - e.slotsLeft), 0)}</span>
-                            <span>Remaining Capacity: {catEvents.reduce((sum, e) => sum + e.slotsLeft, 0)}</span>
+                          <div className="flex justify-between text-[10px] text-slate-400 font-mono">
+                            <span>Filled: {catEvents.reduce((sum, e) => sum + (e.totalSlots - e.slotsLeft), 0)}</span>
+                            <span>Remaining: {catEvents.reduce((sum, e) => sum + e.slotsLeft, 0)}</span>
                           </div>
                         </div>
                       );
@@ -605,44 +607,46 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                 </div>
 
                 {/* Latest Check-in Stream */}
-                <div className="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm space-y-4">
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                      <Activity className="w-4 h-4 text-emerald-600" />
-                      <span>Live Gate Check-in Feed</span>
+                <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs space-y-3">
+                  <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
+                    <h3 className="text-xs font-bold text-slate-800 flex items-center gap-1.5 uppercase font-mono tracking-wider">
+                      <Activity className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Live Check-in Feed</span>
                     </h3>
-                    <span className="text-xs text-emerald-700 font-mono font-bold">{presentCount} Present</span>
+                    <span className="text-[10px] text-emerald-700 font-mono font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                      {presentCount} Present
+                    </span>
                   </div>
 
-                  <div className="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
+                  <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
                     {attendanceList.map((att) => (
                       <div
                         key={att.id}
-                        className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3 text-xs"
+                        className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3 text-xs hover:bg-slate-100/80 transition-colors"
                       >
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-                            <CheckCircle2 className="w-4 h-4" />
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
                           </div>
-                          <div>
-                            <p className="font-bold text-slate-900">{att.participantName}</p>
-                            <p className="text-[11px] text-slate-500 font-mono">
+                          <div className="min-w-0">
+                            <p className="font-bold text-slate-800 text-xs truncate">{att.participantName}</p>
+                            <p className="text-[10px] text-slate-400 font-mono truncate">
                               {att.participantRollNumber} • {events.find((e) => e.id === att.eventId)?.title || att.eventId}
                             </p>
                           </div>
                         </div>
 
-                        <div className="text-right">
-                          <span className="text-[10px] text-slate-500 font-mono block">
-                            {new Date(att.scannedAt || '').toLocaleTimeString()}
+                        <div className="text-right shrink-0">
+                          <span className="text-[9px] text-slate-400 font-mono block">
+                            {new Date(att.scannedAt || '').toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                           </span>
-                          <span className="text-[10px] font-bold text-teal-700">Verified</span>
+                          <span className="text-[9px] font-bold text-emerald-700 font-mono">Verified</span>
                         </div>
                       </div>
                     ))}
 
                     {attendanceList.length === 0 && (
-                      <div className="text-center py-12 text-slate-400 text-xs">
+                      <div className="text-center py-8 text-slate-400 text-xs font-mono">
                         No check-in scans recorded yet.
                       </div>
                     )}
@@ -653,28 +657,28 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
           )}
 
           {/* ========================================================================= */}
-          {/* 2. COMPETITIONS & EVENTS DIRECTORY (Create, Edit, Image & Rules)        */}
+          {/* 2. EVENTS DIRECTORY (Compact & Modern)                                  */}
           {/* ========================================================================= */}
           {activeTab === 'events-crud' && (
-            <div className="space-y-6 max-w-7xl mx-auto">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/90 shadow-sm">
+            <div className="space-y-4 max-w-7xl mx-auto">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">Event &amp; Competition Directory</h3>
-                  <p className="text-xs text-slate-500">
-                    Create, edit, configure rules, assign images, and manage slots for all symposium events.
+                  <h3 className="text-base sm:text-lg font-bold text-slate-900">Event Directory</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Configure events, rules, fees, slots, and coordinator details.
                   </p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2.5">
+                <div className="flex flex-wrap items-center gap-2">
                   <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs">
                     {(['ALL', 'Technical', 'Non-Technical'] as const).map((cat) => (
                       <button
                         key={cat}
                         type="button"
                         onClick={() => setEventCategoryFilter(cat)}
-                        className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-colors cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-lg font-bold text-xs transition-colors cursor-pointer ${
                           eventCategoryFilter === cat
-                            ? 'bg-gradient-to-r from-[#002b66] to-[#0077c8] text-white shadow-sm'
+                            ? 'bg-[#0077c8] text-white shadow-2xs'
                             : 'text-slate-600 hover:text-slate-900'
                         }`}
                       >
@@ -693,10 +697,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                         handleOpenCreateEvent();
                       }
                     }}
-                    className="py-2 px-4 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white font-bold text-xs shadow-md shadow-[#0077c8]/25 flex items-center gap-2 transition-all cursor-pointer"
+                    className="py-1.5 px-3.5 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white font-bold text-xs shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
                   >
-                    <Plus className="w-4 h-4" />
-                    <span>{isCreatingEvent ? 'Close Form' : 'Add New Event'}</span>
+                    <Plus className="w-3.5 h-3.5 text-[#7af1fc]" />
+                    <span>{isCreatingEvent ? 'Close Form' : 'Add Event'}</span>
                   </button>
                 </div>
               </div>
@@ -1169,80 +1173,96 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
           )}
 
           {/* ========================================================================= */}
-          {/* 3. ADMINS & STAFF GOVERNANCE (Executive Unboxed Design)                  */}
+          {/* 3. STAFF DIRECTORY (Compact, Sleek & Modern)                             */}
           {/* ========================================================================= */}
           {activeTab === 'user-mgmt' && (
-            <div className="space-y-6 max-w-7xl mx-auto">
-              {/* Top Unboxed Header Strip */}
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
+            <div className="space-y-4 max-w-7xl mx-auto">
+              {/* Header Strip */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
                 <div>
-                  <div className="flex items-center gap-2.5">
-                    <h3 className="text-2xl font-serif font-bold text-[#002b66] tracking-tight">
-                      Staff &amp; Admin Governance
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base sm:text-lg font-bold text-slate-900">
+                      Staff Directory
                     </h3>
-                    <span className="text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-full bg-[#f0f8fc] text-[#0077c8] border border-[#d4e8f5]">
-                      Dept. of IT Registry
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200">
+                      IT Registry
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Manage administrative roles, assign event oversight permissions, and view official digital staff passes.
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Manage roles, assign event oversight, and issue digital passes.
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2">
                   <button
                     type="button"
                     onClick={() => setIsCreatingAdmin(!isCreatingAdmin)}
-                    className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white font-bold text-xs shadow-md shadow-[#0077c8]/25 flex items-center gap-2 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                    className="py-2 px-3.5 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white font-bold text-xs shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
                   >
-                    <Plus className="w-4 h-4 text-[#7af1fc]" />
-                    <span>{isCreatingAdmin ? 'Close Provisioning Form' : 'Create Event Admin'}</span>
+                    <Plus className="w-3.5 h-3.5 text-[#7af1fc]" />
+                    <span>{isCreatingAdmin ? 'Close Form' : 'Create Event Admin'}</span>
                   </button>
                 </div>
               </div>
 
-              {/* 4 KPI Metric Summary Cards */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-                <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
+              {/* 4 Compact Stat Cards */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 shadow-2xs hover:shadow-xs transition-shadow flex flex-col justify-between">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Staff</span>
-                    <Users className="w-4 h-4 text-[#0077c8]" />
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Total Staff</span>
+                    <div className="w-6 h-6 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center">
+                      <Users className="w-3.5 h-3.5" />
+                    </div>
                   </div>
-                  <p className="text-2xl font-bold text-slate-900">{staffList.length}</p>
-                  <p className="text-[11px] text-slate-500 font-medium">Configured accounts</p>
+                  <div className="mt-2 flex items-baseline justify-between">
+                    <span className="text-xl font-bold font-mono text-slate-900">{staffList.length}</span>
+                    <span className="text-[10px] text-slate-400 font-medium">Configured</span>
+                  </div>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
+                <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 shadow-2xs hover:shadow-xs transition-shadow flex flex-col justify-between">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-purple-600">Super Admins</span>
-                    <ShieldAlert className="w-4 h-4 text-purple-600" />
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Super Admins</span>
+                    <div className="w-6 h-6 rounded-md bg-purple-50 text-purple-600 flex items-center justify-center">
+                      <ShieldAlert className="w-3.5 h-3.5" />
+                    </div>
                   </div>
-                  <p className="text-2xl font-bold text-purple-900">
-                    {staffList.filter((s) => s.role === 'SUPER_ADMIN').length}
-                  </p>
-                  <p className="text-[11px] text-purple-600/80 font-medium">Global system convenors</p>
+                  <div className="mt-2 flex items-baseline justify-between">
+                    <span className="text-xl font-bold font-mono text-purple-900">
+                      {staffList.filter((s) => s.role === 'SUPER_ADMIN').length}
+                    </span>
+                    <span className="text-[10px] text-purple-600 font-medium">Global Access</span>
+                  </div>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
+                <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 shadow-2xs hover:shadow-xs transition-shadow flex flex-col justify-between">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#0077c8]">Event Admins</span>
-                    <Building className="w-4 h-4 text-[#0077c8]" />
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Event Admins</span>
+                    <div className="w-6 h-6 rounded-md bg-cyan-50 text-cyan-600 flex items-center justify-center">
+                      <Building className="w-3.5 h-3.5" />
+                    </div>
                   </div>
-                  <p className="text-2xl font-bold text-[#002b66]">
-                    {staffList.filter((s) => s.role === 'ADMIN').length}
-                  </p>
-                  <p className="text-[11px] text-slate-500 font-medium">Competitions overseers</p>
+                  <div className="mt-2 flex items-baseline justify-between">
+                    <span className="text-xl font-bold font-mono text-[#002b66]">
+                      {staffList.filter((s) => s.role === 'ADMIN').length}
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-medium">Overseers</span>
+                  </div>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
+                <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 shadow-2xs hover:shadow-xs transition-shadow flex flex-col justify-between">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-600">Evaluators</span>
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Evaluators</span>
+                    <div className="w-6 h-6 rounded-md bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                    </div>
                   </div>
-                  <p className="text-2xl font-bold text-emerald-900">
-                    {staffList.filter((s) => s.role === 'EMPLOYEE').length}
-                  </p>
-                  <p className="text-[11px] text-emerald-600/80 font-medium">PWA scanners &amp; judges</p>
+                  <div className="mt-2 flex items-baseline justify-between">
+                    <span className="text-xl font-bold font-mono text-emerald-900">
+                      {staffList.filter((s) => s.role === 'EMPLOYEE').length}
+                    </span>
+                    <span className="text-[10px] text-emerald-600 font-medium">Judges & Scanners</span>
+                  </div>
                 </div>
               </div>
 
@@ -1404,28 +1424,28 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
               )}
 
               {/* Search & Filter Toolbar */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-white rounded-2xl border border-slate-200/90 shadow-2xs">
-                <div className="relative w-full sm:w-80">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 p-2.5 bg-white rounded-xl border border-slate-200/80 shadow-2xs">
+                <div className="relative w-full sm:w-72">
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     id="superadmin-staff-search"
                     name="staffSearch"
                     type="text"
                     value={staffSearch}
                     onChange={(e) => setStaffSearch(e.target.value)}
-                    placeholder="Search staff by name, email, department..."
-                    className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:border-[#0077c8] focus:bg-white focus:outline-none"
+                    placeholder="Search name, email, department..."
+                    className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:border-[#0077c8] focus:bg-white focus:outline-none"
                   />
                 </div>
 
-                <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase mr-1">Role:</span>
+                <div className="flex items-center gap-1 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
+                  <span className="text-[10px] font-mono font-bold text-slate-400 uppercase mr-1">Role:</span>
                   {(['ALL', 'SUPER_ADMIN', 'ADMIN', 'EMPLOYEE'] as const).map((role) => (
                     <button
                       key={role}
                       type="button"
                       onClick={() => setStaffRoleFilter(role)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                      className={`px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                         staffRoleFilter === role
                           ? 'bg-[#0077c8] text-white shadow-2xs font-bold'
                           : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200'
@@ -1437,18 +1457,18 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                 </div>
               </div>
 
-              {/* Clean Modern Enterprise Staff Table */}
-              <div className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-2xs">
+              {/* Clean Compact Modern Staff Table */}
+              <div className="bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-2xs">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-50/90 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[10px] font-bold">
+                    <thead className="bg-slate-50 border-b border-slate-200/80 text-slate-400 uppercase tracking-wider text-[9px] font-mono font-bold">
                       <tr>
-                        <th className="py-3.5 px-5">Staff Member</th>
-                        <th className="py-3.5 px-5">Role</th>
-                        <th className="py-3.5 px-5">Department</th>
-                        <th className="py-3.5 px-5">Permitted Competitions</th>
-                        <th className="py-3.5 px-5">Account Status</th>
-                        <th className="py-3.5 px-5 text-right">Actions</th>
+                        <th className="py-2.5 px-4">Staff Member</th>
+                        <th className="py-2.5 px-3">Role</th>
+                        <th className="py-2.5 px-3">Department</th>
+                        <th className="py-2.5 px-3">Permitted Events</th>
+                        <th className="py-2.5 px-3">Status</th>
+                        <th className="py-2.5 px-4 text-right">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
@@ -1463,10 +1483,10 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                           return matches && matchesRole;
                         })
                         .map((user) => (
-                          <tr key={user.id} className="hover:bg-slate-50/80 transition-colors">
-                            <td className="py-4 px-5">
-                              <div className="flex items-center gap-3">
-                                <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs shrink-0 border ${
+                          <tr key={user.id} className="hover:bg-slate-50/70 transition-colors">
+                            <td className="py-2.5 px-4">
+                              <div className="flex items-center gap-2.5">
+                                <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-[11px] shrink-0 border ${
                                   user.role === 'SUPER_ADMIN'
                                     ? 'bg-purple-50 text-purple-700 border-purple-200'
                                     : user.role === 'ADMIN'
@@ -1476,38 +1496,38 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                                   {user.name.charAt(0)}
                                 </div>
                                 <div className="min-w-0">
-                                  <p className="font-bold text-[#002b66] truncate">{user.name}</p>
-                                  <p className="text-[11px] text-slate-500 font-mono truncate">{user.email}</p>
+                                  <p className="font-bold text-slate-900 text-xs truncate leading-tight">{user.name}</p>
+                                  <p className="text-[10px] text-slate-400 font-mono truncate">{user.email}</p>
                                 </div>
                               </div>
                             </td>
-                            <td className="py-4 px-5">
+                            <td className="py-2.5 px-3">
                               <span
-                                className={`text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-full border ${
+                                className={`text-[9px] uppercase font-mono font-bold px-2 py-0.5 rounded-md border ${
                                   user.role === 'SUPER_ADMIN'
                                     ? 'bg-purple-50 text-purple-700 border-purple-200'
                                     : user.role === 'ADMIN'
                                     ? 'bg-sky-50 text-[#0077c8] border-sky-200'
-                                    : 'bg-slate-100 text-slate-700 border-slate-200'
+                                    : 'bg-slate-100 text-slate-600 border-slate-200'
                                 }`}
                               >
-                                {user.role === 'SUPER_ADMIN' ? 'Super Admin' : user.role === 'ADMIN' ? 'Event Admin' : 'Evaluator'}
+                                {user.role === 'SUPER_ADMIN' ? 'Super Admin' : user.role === 'ADMIN' ? 'Admin' : 'Evaluator'}
                               </span>
                             </td>
-                            <td className="py-4 px-5 text-slate-600 font-medium">
-                              {user.department || 'Dept. of Information Technology'}
+                            <td className="py-2.5 px-3 text-slate-600 text-xs">
+                              {user.department || 'Dept. of IT'}
                             </td>
-                            <td className="py-4 px-5">
+                            <td className="py-2.5 px-3">
                               {user.assignedEventIds.length === 0 ? (
-                                <span className="text-[#0077c8] font-bold text-xs">
-                                  All 15 Events (Global)
+                                <span className="text-[#0077c8] font-mono font-bold text-[11px]">
+                                  All 15 Events
                                 </span>
                               ) : (
                                 <div className="flex flex-wrap gap-1 max-w-xs">
                                   {user.assignedEventIds.map((id) => (
                                     <span
                                       key={id}
-                                      className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-medium border border-slate-200/60"
+                                      className="px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 text-[10px] font-medium border border-slate-200/60 truncate max-w-[130px]"
                                     >
                                       {events.find((e) => e.id === id)?.title || id}
                                     </span>
@@ -1515,34 +1535,34 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                                 </div>
                               )}
                             </td>
-                            <td className="py-4 px-5">
+                            <td className="py-2.5 px-3">
                               <span
-                                className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-0.5 rounded-full border ${
+                                className={`inline-flex items-center gap-1 text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md border ${
                                   user.isActive
                                     ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                                     : 'bg-rose-50 text-rose-700 border-rose-200'
                                 }`}
                               >
                                 <span className={`w-1.5 h-1.5 rounded-full ${user.isActive ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
-                                <span>{user.isActive ? 'Active' : 'Deactivated'}</span>
+                                <span>{user.isActive ? 'Active' : 'Inactive'}</span>
                               </span>
                             </td>
-                            <td className="py-4 px-5 text-right">
-                              <div className="flex items-center justify-end gap-2">
+                            <td className="py-2.5 px-4 text-right">
+                              <div className="flex items-center justify-end gap-1.5">
                                 <button
                                   type="button"
                                   onClick={() => setSelectedPassUser(user)}
-                                  className="py-1 px-3 rounded-lg text-xs font-semibold bg-[#f0f8fc] hover:bg-[#d4e8f5] text-[#0077c8] border border-[#d4e8f5] flex items-center gap-1.5 transition-all cursor-pointer hover:scale-105 active:scale-95"
-                                  title="View Official Digital Credential Pass"
+                                  className="py-1 px-2 rounded-lg text-[11px] font-semibold bg-[#f0f8fc] hover:bg-[#d4e8f5] text-[#0077c8] border border-[#d4e8f5] flex items-center gap-1 transition-all cursor-pointer"
+                                  title="View Pass"
                                 >
-                                  <Key className="w-3.5 h-3.5" />
-                                  <span>View Pass</span>
+                                  <Key className="w-3 h-3" />
+                                  <span>Pass</span>
                                 </button>
                                 {user.role !== 'SUPER_ADMIN' && (
                                   <button
                                     type="button"
                                     onClick={() => handleToggleUserActive(user)}
-                                    className={`py-1 px-2.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+                                    className={`py-1 px-2 rounded-lg text-[11px] font-semibold border transition-all cursor-pointer ${
                                       user.isActive
                                         ? 'border-rose-200 text-rose-600 hover:bg-rose-50'
                                         : 'border-emerald-200 text-emerald-600 hover:bg-emerald-50'
@@ -1563,7 +1583,7 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
           )}
 
           {/* ========================================================================= */}
-          {/* 4. PERMISSION MATRIX (ENTERPRISE REDESIGN)                                 */}
+          {/* 4. PERMISSIONS MATRIX (Compact & Modern)                                 */}
           {/* ========================================================================= */}
           {activeTab === 'matrix' && (() => {
             const filteredStaff = staffList.filter((user) => {
@@ -1588,67 +1608,66 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
             const nonTechEvents = filteredMatrixEvents.filter((e) => e.category === 'Non-Technical');
 
             return (
-              <div className="space-y-6 max-w-7xl mx-auto">
+              <div className="space-y-4 max-w-7xl mx-auto">
                 {/* Header & Metric Cards */}
-                <div className="bg-white p-6 rounded-3xl border border-[#d4e8f5] shadow-sm space-y-5">
-                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-2xs space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#e8f5fb] text-[#0077c8] border border-[#d4e8f5] uppercase tracking-wider">
-                          Access Control Governance
+                        <h3 className="text-base sm:text-lg font-bold text-slate-900">
+                          Permissions Matrix
+                        </h3>
+                        <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200">
+                          {events.length} Events
                         </span>
-                        <span className="text-xs text-slate-400 font-mono">11 Competitions</span>
                       </div>
-                      <h3 className="text-xl font-bold text-[#002b66] mt-1">
-                        Event Assignment &amp; Permission Matrix
-                      </h3>
-                      <p className="text-xs text-slate-500 max-w-2xl">
-                        Comprehensive authorization grid showing real-time event permissions, evaluation privileges, and gate control for all administrators and judges.
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Real-time event permissions and evaluator assignments.
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => {
                           setActiveTab('user-mgmt');
                           setIsCreatingAdmin(true);
                         }}
-                        className="py-2.5 px-4 rounded-xl bg-[#0077c8] hover:bg-[#0066ad] text-white font-bold text-xs shadow-md shadow-[#0077c8]/20 flex items-center gap-2 transition-all cursor-pointer"
+                        className="py-1.5 px-3.5 rounded-xl bg-[#0077c8] hover:bg-[#0066ad] text-white font-bold text-xs shadow-2xs flex items-center gap-1.5 transition-all cursor-pointer"
                       >
-                        <Plus className="w-4 h-4" />
-                        <span>Provision New Admin Pass</span>
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Provision Admin</span>
                       </button>
                     </div>
                   </div>
 
                   {/* Summary Metric Pills */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-[#e8f5fb]">
-                    <div className="p-3 rounded-2xl bg-[#f8fafc] border border-[#d4e8f5]">
-                      <span className="text-[10px] uppercase font-bold text-slate-500 block">Total Staff</span>
-                      <p className="text-xl font-bold text-[#002b66] font-mono mt-0.5">{staffList.length} Accounts</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-slate-100">
+                    <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3 flex flex-col justify-between">
+                      <span className="text-[10px] uppercase font-mono font-bold text-slate-400">Total Staff</span>
+                      <p className="text-xl font-bold font-mono text-slate-900 mt-1">{staffList.length}</p>
                     </div>
-                    <div className="p-3 rounded-2xl bg-[#f8fafc] border border-[#d4e8f5]">
-                      <span className="text-[10px] uppercase font-bold text-slate-500 block">Global Overseers</span>
-                      <p className="text-xl font-bold text-[#0077c8] font-mono mt-0.5">
-                        {staffList.filter((s) => s.assignedEventIds.length === 0).length} All-Access
+                    <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3 flex flex-col justify-between">
+                      <span className="text-[10px] uppercase font-mono font-bold text-slate-400">Global Access</span>
+                      <p className="text-xl font-bold font-mono text-[#0077c8] mt-1">
+                        {staffList.filter((s) => s.assignedEventIds.length === 0).length}
                       </p>
                     </div>
-                    <div className="p-3 rounded-2xl bg-[#f8fafc] border border-[#d4e8f5]">
-                      <span className="text-[10px] uppercase font-bold text-slate-500 block">Tech Events</span>
-                      <p className="text-xl font-bold text-[#0077c8] font-mono mt-0.5">{techEvents.length} Events</p>
+                    <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3 flex flex-col justify-between">
+                      <span className="text-[10px] uppercase font-mono font-bold text-slate-400">Tech Events</span>
+                      <p className="text-xl font-bold font-mono text-teal-700 mt-1">{techEvents.length}</p>
                     </div>
-                    <div className="p-3 rounded-2xl bg-[#f8fafc] border border-[#d4e8f5]">
-                      <span className="text-[10px] uppercase font-bold text-slate-500 block">Non-Tech Events</span>
-                      <p className="text-xl font-bold text-[#00a887] font-mono mt-0.5">{nonTechEvents.length} Events</p>
+                    <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3 flex flex-col justify-between">
+                      <span className="text-[10px] uppercase font-mono font-bold text-slate-400">Non-Tech Events</span>
+                      <p className="text-xl font-bold font-mono text-[#002b66] mt-1">{nonTechEvents.length}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Filter and Live Search Toolbar */}
-                <div className="bg-white p-4 rounded-3xl border border-[#d4e8f5] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+                <div className="bg-white p-3 rounded-2xl border border-slate-200/80 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-2.5 text-xs">
                   <div className="relative flex-1 max-w-md">
-                    <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       id="superadmin-matrix-search"
                       name="matrixSearch"
@@ -1656,7 +1675,7 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                       value={matrixSearch}
                       onChange={(e) => setMatrixSearch(e.target.value)}
                       placeholder="Search staff by name, email, or department..."
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-[#d4e8f5] text-slate-900 text-xs focus:border-[#0077c8] focus:bg-white focus:outline-none"
+                      className="w-full pl-9 pr-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs focus:border-[#0077c8] focus:bg-white focus:outline-none"
                     />
                   </div>
 
@@ -1668,9 +1687,9 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                           key={r}
                           type="button"
                           onClick={() => setMatrixRoleFilter(r)}
-                          className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-colors ${
+                          className={`px-2.5 py-1 rounded-lg font-bold text-xs transition-colors cursor-pointer ${
                             matrixRoleFilter === r
-                              ? 'bg-[#0077c8] text-white shadow-sm'
+                              ? 'bg-[#0077c8] text-white shadow-2xs'
                               : 'text-slate-600 hover:text-slate-900'
                           }`}
                         >
@@ -1686,13 +1705,13 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                           key={cat}
                           type="button"
                           onClick={() => setMatrixCategoryFilter(cat)}
-                          className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-colors ${
+                          className={`px-2.5 py-1 rounded-lg font-bold text-xs transition-colors cursor-pointer ${
                             matrixCategoryFilter === cat
-                              ? 'bg-[#002b66] text-white shadow-sm'
+                              ? 'bg-[#002b66] text-white shadow-2xs'
                               : 'text-slate-600 hover:text-slate-900'
                           }`}
                         >
-                          {cat === 'ALL' ? 'All 11 Events' : cat}
+                          {cat === 'ALL' ? `All ${events.length} Events` : cat}
                         </button>
                       ))}
                     </div>
@@ -1700,16 +1719,16 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                 </div>
 
                 {/* Enterprise Matrix Table */}
-                <div className="bg-white border border-[#d4e8f5] rounded-3xl overflow-hidden shadow-sm">
+                <div className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-2xs">
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs border-collapse">
                       <thead>
                         {/* Top Category Super-Header */}
-                        <tr className="bg-slate-100/80 border-b border-[#d4e8f5] text-[10px] uppercase tracking-wider">
-                          <th className="sticky left-0 bg-slate-100/90 z-20 py-2.5 px-5 font-bold text-slate-500 border-r border-[#d4e8f5] min-w-[280px]">
+                        <tr className="bg-slate-50 border-b border-slate-200 text-[10px] uppercase tracking-wider">
+                          <th className="sticky left-0 bg-slate-50 z-20 py-2.5 px-4 font-bold text-slate-500 border-r border-slate-200 min-w-[240px]">
                             Personnel Information
                           </th>
-                          <th className="py-2.5 px-4 font-bold text-slate-500 border-r border-[#d4e8f5] min-w-[130px]">
+                          <th className="py-2.5 px-3 font-bold text-slate-500 border-r border-slate-200 min-w-[110px]">
                             Authority
                           </th>
                           {techEvents.length > 0 && (
@@ -1901,48 +1920,48 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
           {/* 5. EVENT CHANGE AUDITS */}
           {/* ========================================================================= */}
           {activeTab === 'change-history' && (
-            <div className="space-y-6 max-w-7xl mx-auto">
-              <div className="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm">
-                <h3 className="text-lg font-bold text-slate-900">Participant Event Change Audits</h3>
-                <p className="text-xs text-slate-500">
-                  Permanent tamper-evident ledger recording all authorized 1-event switches and invalidated QR passes.
+            <div className="space-y-4 max-w-7xl mx-auto">
+              <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
+                <h3 className="text-base sm:text-lg font-bold text-slate-900">Event Change Logs</h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Ledger of authorized event switches and revoked QR passes.
                 </p>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {eventChanges.map((chg) => (
                   <div
                     key={chg.id}
-                    className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2 text-xs"
+                    className="p-4 rounded-xl bg-white border border-slate-200/80 shadow-2xs space-y-1.5 text-xs"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-slate-900 text-sm">
+                      <span className="font-bold text-slate-900 text-xs">
                         {chg.participantName} ({chg.rollNumber})
                       </span>
-                      <span className="font-mono text-slate-500 text-[11px]">
+                      <span className="font-mono text-slate-400 text-[10px]">
                         {new Date(chg.changedAt).toLocaleString()}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-3 text-xs pt-1">
-                      <span className="px-3 py-1 rounded-lg bg-rose-50 text-rose-700 border border-rose-200 font-medium">
-                        Revoked: {chg.oldEventTitle} (Pass: {chg.oldRegistrationId})
+                    <div className="flex items-center gap-2 text-xs pt-0.5">
+                      <span className="px-2.5 py-0.5 rounded-md bg-rose-50 text-rose-700 border border-rose-200 text-[11px] font-medium">
+                        Revoked: {chg.oldEventTitle}
                       </span>
                       <span className="text-slate-400">→</span>
-                      <span className="px-3 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium">
-                        Minted: {chg.newEventTitle} (Pass: {chg.newRegistrationId})
+                      <span className="px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-medium">
+                        Minted: {chg.newEventTitle}
                       </span>
                     </div>
 
-                    <p className="text-xs text-slate-600 pt-1 italic">
-                      Change Reason: "{chg.reason}"
+                    <p className="text-[11px] text-slate-500 pt-0.5 italic">
+                      Reason: "{chg.reason}"
                     </p>
                   </div>
                 ))}
 
                 {eventChanges.length === 0 && (
-                  <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 text-slate-400 text-xs">
-                    No participant event changes recorded in the registry yet.
+                  <div className="text-center py-12 bg-white rounded-2xl border border-slate-200/80 text-slate-400 text-xs">
+                    No participant event changes recorded yet.
                   </div>
                 )}
               </div>
@@ -1953,23 +1972,23 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
           {/* 6. SYSTEM AUDIT LOGS */}
           {/* ========================================================================= */}
           {activeTab === 'audit-logs' && (
-            <div className="space-y-6 max-w-7xl mx-auto">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm">
+            <div className="space-y-4 max-w-7xl mx-auto">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">System Security & Activity Trail</h3>
-                  <p className="text-xs text-slate-500">
-                    Immutable event log of all administrative actions, logins, registrations, and scoring events.
+                  <h3 className="text-base sm:text-lg font-bold text-slate-900">Audit Logs</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Security trail of administrative actions, logins, and scoring events.
                   </p>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   <select
                     id="superadmin-log-filter-role"
                     name="logFilterRole"
                     aria-label="Filter Audit Logs by Role"
                     value={logFilterRole}
                     onChange={(e) => setLogFilterRole(e.target.value)}
-                    className="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 text-xs font-bold text-slate-900"
+                    className="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-300 text-xs font-bold text-slate-900"
                   >
                     <option value="ALL">All Roles</option>
                     <option value="SUPER_ADMIN">Super Admin</option>
@@ -1981,24 +2000,24 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-200/90 rounded-3xl overflow-hidden shadow-sm p-4 space-y-2">
+              <div className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-2xs p-3 space-y-2">
                 {filteredLogs.map((log) => (
                   <div
                     key={log.id}
-                    className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-4 text-xs hover:border-slate-300 transition-colors"
+                    className="p-3 rounded-xl bg-slate-50 border border-slate-200/70 flex items-center justify-between gap-3 text-xs hover:border-slate-300 transition-colors"
                   >
-                    <div className="space-y-1">
+                    <div className="space-y-0.5 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="font-mono font-bold text-teal-700 text-xs">{log.action}</span>
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-slate-200 text-slate-700 font-bold">
+                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-slate-200 text-slate-700 font-bold">
                           {log.actorRole}
                         </span>
                       </div>
-                      <p className="text-slate-900 font-medium">{log.details}</p>
-                      <p className="text-[11px] text-slate-500">Actor: {log.actorName}</p>
+                      <p className="text-slate-900 font-medium text-[11px] truncate">{log.details}</p>
+                      <p className="text-[10px] text-slate-400">Actor: {log.actorName}</p>
                     </div>
 
-                    <span className="text-[11px] text-slate-500 font-mono shrink-0">
+                    <span className="text-[10px] text-slate-400 font-mono shrink-0">
                       {new Date(log.timestamp).toLocaleTimeString()}
                     </span>
                   </div>
@@ -2011,22 +2030,22 @@ export const SuperAdminPortal: React.FC<SuperAdminPortalProps> = ({
           {/* 7. SYSTEM CONFIG & SETTINGS */}
           {/* ========================================================================= */}
           {activeTab === 'system-settings' && (
-            <div className="space-y-6 max-w-4xl mx-auto">
-              <div className="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm">
-                <h3 className="text-lg font-bold text-slate-900">Global Platform Configuration</h3>
-                <p className="text-xs text-slate-500">
-                  Configure symposium parameters, master registration kill switches, and theme banners.
+            <div className="space-y-4 max-w-4xl mx-auto">
+              <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
+                <h3 className="text-base sm:text-lg font-bold text-slate-900">Platform Settings</h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Symposium parameters, registration controls, and theme banners.
                 </p>
               </div>
 
               {settingsSuccess && (
-                <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2">
+                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                   <span>Platform configuration successfully saved!</span>
                 </div>
               )}
 
-              <form onSubmit={handleSaveSettings} className="bg-white border border-slate-200/90 rounded-3xl p-6 space-y-6 shadow-sm text-xs">
+              <form onSubmit={handleSaveSettings} className="bg-white border border-slate-200/80 rounded-2xl p-5 space-y-4 shadow-2xs text-xs">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
                     <div>
