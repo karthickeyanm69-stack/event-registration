@@ -23,25 +23,39 @@ import { CustomDatePicker } from '../common/CustomDatePicker';
 import { CollegeLogo, CollegeEmblem } from '../common/CollegeLogo';
 
 interface OnboardingDetailsFormProps {
+  initialData?: Partial<Participant>;
   onBackToAccess: () => void;
   onContinueToEvents: (participantData: Partial<Participant>) => void;
   onRedirectToExistingDashboard: (participant: Participant, registration: Registration) => void;
 }
 
 export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
+  initialData,
   onBackToAccess,
   onContinueToEvents,
   onRedirectToExistingDashboard,
 }) => {
-  const [name, setName] = useState('');
-  const [collegeName, setCollegeName] = useState("St. Peter's Institute of Higher Education & Research");
-  const [department, setDepartment] = useState('Dept. of Information Technology');
-  const [rollNumber, setRollNumber] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [name, setName] = useState(initialData?.name || '');
+  const [collegeName, setCollegeName] = useState(
+    initialData?.collegeName || "St. Peter's Institute of Higher Education & Research"
+  );
+  const [department, setDepartment] = useState(initialData?.department || 'Dept. of Information Technology');
+  const [rollNumber, setRollNumber] = useState(initialData?.rollNumber || '');
+  const [dateOfBirth, setDateOfBirth] = useState(initialData?.dateOfBirth || '');
+  const [email, setEmail] = useState(initialData?.email || '');
+  const [phone, setPhone] = useState(initialData?.phone || '');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [existingRegNotice, setExistingRegNotice] = useState<{ participant: Participant; registration: Registration } | null>(null);
+
+  const handleAutoFillDemo = () => {
+    const randomRoll = `RAD26-IT${Math.floor(100 + Math.random() * 900)}`;
+    setName(name || 'Miles Morales');
+    setRollNumber(randomRoll);
+    setDateOfBirth('2004-05-14');
+    setEmail(email || `${randomRoll.toLowerCase()}@spiher.edu.in`);
+    setPhone(phone || '+91 98765 43210');
+    setErrorMessage(null);
+  };
 
   const departments = [
     'Dept. of Information Technology',
@@ -224,11 +238,19 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
           </div>
 
           <div className="space-y-1">
-            <div className="hidden lg:flex items-center justify-between">
+            <div className="flex items-center justify-between">
               <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#FF1E42]/10 text-[#FF1E42] border border-[#FF1E42]/30">
                 Step 1 of 3: Profile Setup
               </span>
-              <span className="text-xs text-stone-400 font-mono">Fields with * required</span>
+              <button
+                type="button"
+                onClick={handleAutoFillDemo}
+                className="text-[11px] font-mono font-bold text-[#FF287D] hover:text-white bg-[#1a041c] hover:bg-[#FF1E42]/30 px-2.5 py-1 rounded-lg border border-[#FF1E42]/40 transition-colors cursor-pointer flex items-center gap-1"
+                title="Auto-fill form with test registration data"
+              >
+                <Sparkles className="w-3 h-3 text-[#FFE600]" />
+                <span>Auto-Fill Demo Data</span>
+              </button>
             </div>
             <h3 className="text-xl sm:text-2xl font-['Impact',sans-serif] text-white uppercase tracking-wide">
               PERSONAL &amp; ACADEMIC PROFILE

@@ -68,6 +68,7 @@ interface RadianzaLandingPageProps {
   onSelectEvent: (event: CollegeEvent) => void;
   onSuccessfulAccess: (participant: Participant, registration?: Registration) => void;
   onOpenConsole?: () => void;
+  onReplayCinematic?: () => void;
 }
 
 // ── Speakers Data ──
@@ -239,6 +240,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
   onSelectEvent,
   onSuccessfulAccess,
   onOpenConsole,
+  onReplayCinematic,
 }) => {
   const [activePage, setActivePage] = useState<LandingPageId>(activeLandingPage);
   const [pageDirection, setPageDirection] = useState<number>(0);
@@ -453,8 +455,21 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
             </button>
           </nav>
 
-          {/* Right Header Actions: Access Pass + Strong START JOURNEY Button */}
-          <div className="flex items-center gap-3">
+          {/* Right Header Actions: Cinematic Intro + Access Pass + Strong START JOURNEY Button */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Cinematic Intro Button */}
+            {onReplayCinematic && (
+              <button
+                type="button"
+                onClick={onReplayCinematic}
+                className="hidden lg:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#1a041c] hover:bg-[#2e0533] text-[#FF287D] border border-[#FF287D]/40 text-xs font-mono font-bold tracking-wider uppercase transition-all cursor-pointer shadow-md active:scale-95 hover:border-[#FF287D]"
+                title="Watch Dimensional Cinematic Video Intro"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-[#FFE600] animate-pulse" />
+                <span>CINEMATIC INTRO</span>
+              </button>
+            )}
+
             {/* Access Pass Button */}
             <button
               type="button"
@@ -469,7 +484,7 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
             <button
               type="button"
               onClick={onStartNewRegistration}
-              className="relative px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#C40030] via-[#E00070] to-[#F04A20] hover:brightness-110 text-white text-xs font-mono font-black uppercase tracking-wider shadow-[0_0_20px_rgba(196,0,48,0.5)] transition-all cursor-pointer hover:scale-[1.03] active:scale-[0.97] flex items-center gap-2"
+              className="relative px-4 sm:px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#C40030] via-[#E00070] to-[#F04A20] hover:brightness-110 text-white text-xs font-mono font-black uppercase tracking-wider shadow-[0_0_20px_rgba(196,0,48,0.5)] transition-all cursor-pointer hover:scale-[1.03] active:scale-[0.97] flex items-center gap-1.5 sm:gap-2"
             >
               <Zap className="w-3.5 h-3.5 fill-white" />
               <span>START JOURNEY</span>
@@ -746,53 +761,68 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                   </div>
                 </div>
 
-                {/* ─── MOBILE VIEW (< lg): Full Immersive Multiverse Portal ─── */}
-                <div className="lg:hidden relative w-full min-h-[calc(100dvh-4.5rem)] flex flex-col justify-start p-4 sm:p-6 pb-12 select-none overflow-hidden z-20 space-y-6">
-                  {/* Miles Morales Portal Centerpiece */}
-                  <div className="w-full pt-2">
+                {/* ─── MOBILE VIEW (< lg): Clean, Balanced Multiverse Portal ─── */}
+                <div className="lg:hidden relative w-full min-h-[calc(100dvh-4.5rem)] flex flex-col justify-start p-4 sm:p-6 pb-10 select-none overflow-hidden z-20 space-y-5">
+                  {/* Top Mobile Brand & Title Header */}
+                  <div className="space-y-2 text-center pt-2">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1a041c] border border-[#C40030]/40 text-xs font-mono font-bold text-[#F07030]">
+                      <CollegeEmblem size={18} />
+                      <span>SPIHER • DEPT. OF IT</span>
+                    </div>
+
+                    <h1 className="text-4xl sm:text-5xl font-['Impact',sans-serif] font-black tracking-tight text-white leading-none uppercase">
+                      RADIANZA <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C40030] to-[#E00070]">’26</span>
+                    </h1>
+
+                    <p className="text-xs text-[#E2D5DE]/90 font-bold uppercase font-mono tracking-wide">
+                      TECHNICAL SYMPOSIUM • 15-16 OCT 2026
+                    </p>
+                  </div>
+
+                  {/* Miles Morales 3D Portal Centerpiece */}
+                  <div className="w-full max-w-sm mx-auto">
                     <SpiderMilesMultiverseHero
                       isRevealed={isRevealed}
                       onRegisterClick={onStartNewRegistration}
                     />
                   </div>
 
-                  {/* Mobile Foreground HUD */}
-                  <div className="space-y-4 max-w-full">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1a041c] border border-[#C40030]/40 text-xs font-mono font-bold text-[#F07030]">
-                      <CollegeEmblem size={20} />
-                      <span>SPIHER • DEPT. OF IT</span>
+                  {/* Mobile Countdown & Action Controls */}
+                  <div className="space-y-3.5 max-w-sm mx-auto w-full pt-1">
+                    {/* Countdown Matrix */}
+                    <div className="flex items-center justify-center gap-2">
+                      {[
+                        { label: 'DAYS', val: timeLeft.days },
+                        { label: 'HRS', val: timeLeft.hours },
+                        { label: 'MIN', val: timeLeft.mins },
+                        { label: 'SEC', val: timeLeft.secs },
+                      ].map((item, idx) => (
+                        <div
+                          key={idx}
+                          className="px-2.5 py-1.5 rounded-xl bg-[#1a041c]/90 border border-[#C40030]/30 text-center flex-1"
+                        >
+                          <span className="text-base font-mono font-black text-white block leading-none">
+                            {String(item.val).padStart(2, '0')}
+                          </span>
+                          <span className="text-[8px] font-mono text-[#F07030] font-bold uppercase tracking-wider">
+                            {item.label}
+                          </span>
+                        </div>
+                      ))}
                     </div>
 
-                    <h1 className="text-4xl sm:text-5xl font-['Impact',sans-serif] font-black tracking-tight text-white leading-none uppercase">
-                      RADIANZA <span className="text-[#C40030]">’26</span>
-                    </h1>
-
-                    <p className="text-xs font-mono font-bold text-[#FF287D] uppercase tracking-wider">
-                      TECHNICAL SYMPOSIUM
-                    </p>
-
-                    <p className="text-xs sm:text-sm text-[#E2D5DE] font-bold uppercase font-mono">
-                      "IGNITING IDEAS. INNOVATING TOMORROW."
-                    </p>
-
-                    {/* Mobile Date & Location */}
-                    <div className="flex flex-wrap gap-2 text-xs font-mono font-semibold">
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#1a041c] border border-[#C40030]/30">
-                        <Calendar className="w-3.5 h-3.5 text-[#C40030]" />
-                        <span>15-16 OCT 2026</span>
-                      </div>
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#1a041c] border border-[#F07030]/30">
-                        <MapPin className="w-3.5 h-3.5 text-[#F07030]" />
-                        <span>SPIHER Campus</span>
-                      </div>
+                    {/* Location Badge */}
+                    <div className="flex items-center justify-center gap-1.5 text-xs font-mono text-stone-300 bg-[#1a041c]/60 py-1.5 px-3 rounded-xl border border-white/10">
+                      <MapPin className="w-3.5 h-3.5 text-[#F07030]" />
+                      <span>SPIHER Campus, Avadi, Chennai</span>
                     </div>
 
-                    {/* Mobile Action Buttons */}
-                    <div className="pt-2 flex flex-col gap-2.5">
+                    {/* Unified Mobile Action Buttons */}
+                    <div className="flex flex-col gap-2 pt-1">
                       <button
                         type="button"
                         onClick={onStartNewRegistration}
-                        className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#C40030] via-[#E00070] to-[#F04A20] text-white font-mono font-black text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(196,0,48,0.5)] flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                        className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#C40030] via-[#E00070] to-[#F04A20] text-white font-mono font-black text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(196,0,48,0.5)] flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                       >
                         <Zap className="w-4 h-4 fill-white" />
                         <span>START JOURNEY</span>
@@ -802,9 +832,9 @@ export const RadianzaLandingPage: React.FC<RadianzaLandingPageProps> = ({
                       <button
                         type="button"
                         onClick={() => navigateToPage('events')}
-                        className="w-full py-3 rounded-2xl bg-[#1a041c] border border-[#C40030]/40 text-[#E2D5DE] font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2"
+                        className="w-full py-2.5 rounded-2xl bg-[#1a041c] hover:bg-[#260728] border border-[#C40030]/40 text-[#E2D5DE] font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer"
                       >
-                        <span>VIEW EVENTS MATRIX</span>
+                        <span>EXPLORE EVENTS MATRIX</span>
                         <ChevronRight className="w-4 h-4 text-[#F07030]" />
                       </button>
                     </div>

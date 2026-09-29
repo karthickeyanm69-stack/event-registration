@@ -712,12 +712,22 @@ export default function App() {
               }}
               onSuccessfulAccess={handleParticipantAccessSuccess}
               onOpenConsole={() => navigateTo('/console', 'console', 'access', 'home')}
+              onReplayCinematic={() => {
+                try {
+                  sessionStorage.removeItem(WEB_REVEALED_SESSION_KEY);
+                } catch {
+                  // ignore
+                }
+                setIsRevealed(false);
+                navigateTo('/', 'participant', 'access', 'home');
+              }}
             />
           )}
 
           {/* Onboarding Form (Personal, College, Roll No, DOB, Email) */}
           {participantStep === 'onboarding' && (
             <OnboardingDetailsForm
+              initialData={onboardingDraft}
               onBackToAccess={() => navigateTo('/', 'participant', 'access', 'home')}
               onContinueToEvents={handleOnboardingContinue}
               onRedirectToExistingDashboard={(part, reg) => {
