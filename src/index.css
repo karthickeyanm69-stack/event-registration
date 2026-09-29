@@ -2,60 +2,69 @@
 
 @layer base {
   :root {
-    /* ─── RADIANZA ’26 Spider-Man Inspired Dark Futuristic Color Palette ─── */
-    /* 70% Near-Black */
-    --near-black:    #050505;
-    --dark-surface:  #0a0a0e;
-    --dark-card:     #111116;
-    --dark-card-hover:#181820;
+    /* ─── RADIANZA ’26: Strict 2.5D Cinematic Spider-Verse Dimensional Color Matrix ─── */
+    /* Deep Multiverse Void Base (Almost Black) */
+    --void-black:        #080006;
+    --void-black-alt:    #100010;
+    --dark-surface:      #120214;
+    --dark-card:         #1a041c;
+    --dark-card-hover:   #260728;
+    --dark-card-elevated:#320a35;
 
-    /* 20% Deep Red / Crimson */
-    --crimson:       #C1121F;
-    --crimson-hover: #9e0d19;
-    --crimson-dark:  #780016;
-    --crimson-glow:  rgba(193, 18, 31, 0.45);
+    /* Deep Purple Supporting Dimension */
+    --dimension-purple:  #200020;
 
-    /* 5% Bright Red Glow */
-    --red-glow:      #FF1738;
-    --red-neon:      #FF2D4D;
-    --red-spark:     rgba(255, 23, 56, 0.55);
+    /* Primary Crimson & Hot Magenta Hierarchy */
+    --crimson-core:      #C40030;
+    --crimson-hover:     #A50028;
+    --crimson-dark:      #680018;
+    --crimson-glow:      rgba(196, 0, 48, 0.6);
 
-    /* 5% White / Light Gray Typography */
-    --text-primary:  #FFFFFF;
-    --text-secondary:#9CA3AF;
-    --text-muted:    #6B7280;
+    --hot-magenta:       #E00070;
+    --electric-pink:     #FF287D;
+    --magenta-glow:      rgba(224, 0, 112, 0.55);
+
+    /* Dimensional Portal Flame & Spark Energy */
+    --orange-red:        #F04A20;
+    --bright-orange:     #F07030;
+    --orange-glow:       rgba(240, 74, 32, 0.5);
+
+    /* Supporting Dimensional Accent (Controlled, not dominant) */
+    --electric-blue:     #3030FF;
+    --blue-dim:          rgba(48, 48, 255, 0.35);
+
+    /* Typography & Contrast */
+    --text-primary:      #FFFFFF;
+    --text-secondary:    #E2D5DE;
+    --text-muted:        #A38FA0;
 
     /* Semantic Mappings */
-    --bg-dark:       #050505;
-    --bg-card:       #0d0d12;
-    --border-red:    rgba(193, 18, 31, 0.35);
-    --border-glow:   rgba(255, 23, 56, 0.6);
+    --bg-dark:           #080006;
+    --bg-card:           #1a041c;
+    --border-spider:     rgba(196, 0, 48, 0.4);
+    --border-magenta:    rgba(224, 0, 112, 0.4);
+    --border-orange:     rgba(240, 74, 32, 0.4);
+    --border-glow:       rgba(196, 0, 48, 0.8);
 
-    /* Legacy compatibility tokens mapped to Spider-Man dark red palette */
-    --midnight:      #050505;
-    --navy:          #0a0a0e;
-    --navy-surface:  #111116;
-    --ivory:         #FFFFFF;
-    --gold:          #C1121F;
-    --gold-hover:    #9e0d19;
-    --gold-glow:     rgba(255, 23, 56, 0.45);
-    --blue:          #C1121F;
-    --blue-hover:    #9e0d19;
-    --blue-glow:     rgba(255, 23, 56, 0.45);
-    --cyan:          #FF1738;
-    --border-gold:   rgba(193, 18, 31, 0.35);
-    --border-blue:   rgba(255, 23, 56, 0.3);
-    --navy-mid:      #0d0d12;
-    --navy-deep:     #050505;
-    --teal:          #C1121F;
-    --purple:        #780016;
-    --spiher-navy:   #050505;
-    --spiher-blue:   #C1121F;
+    /* Backward compatibility mappings */
+    --near-black:        #080006;
+    --crimson:           #C40030;
+    --red-glow:          #C40030;
+    --red-neon:          #FF287D;
+    --gold:              #F07030;
+    --gold-hover:        #F04A20;
+    --gold-glow:         rgba(240, 112, 48, 0.5);
+    --blue:              #3030FF;
+    --cyan:              #E00070;
+    --purple:            #200020;
+    --miles-red:         #C40030;
+    --portal-orange:     #F07030;
+    --glitch-magenta:    #E00070;
   }
 
   html, body {
-    background-color: #faf6f8;
-    color: #111827;
+    background-color: #080006;
+    color: #FFFFFF;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -64,344 +73,395 @@
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Smooth native scrolling & section anchoring */
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
   }
+
+  ::selection {
+    background: #C40030;
+    color: #FFFFFF;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════
-   KEYFRAMES
+   2D/2.5D CINEMATIC SPIDER-VERSE COMIC KEYFRAMES & FX
 ═══════════════════════════════════════════════════════ */
 
-/* SVG stroke draw — used in loading screen emblem */
-@keyframes svg-draw {
-  from { stroke-dashoffset: 1000; opacity: 0.4; }
-  to   { stroke-dashoffset: 0;    opacity: 1; }
+/* Chromatic Aberration Text Glitch (Crimson / Magenta / Electric Blue) */
+@keyframes spider-glitch {
+  0% {
+    text-shadow: 2px 0 #C40030, -2px 0 #3030FF;
+    transform: translate(0);
+  }
+  20% {
+    text-shadow: -2.5px 0 #E00070, 2.5px 0 #C40030;
+    transform: translate(-1px, 1px);
+  }
+  40% {
+    text-shadow: 2px 0 #F07030, -2px 0 #E00070;
+    transform: translate(1px, -1px);
+  }
+  60% {
+    text-shadow: -1.5px 0 #C40030, 1.5px 0 #3030FF;
+    transform: translate(-0.5px, -0.5px);
+  }
+  80% {
+    text-shadow: 2px 0 #FF287D, -2px 0 #C40030;
+    transform: translate(0.5px, 0.5px);
+  }
+  100% {
+    text-shadow: 2px 0 #C40030, -2px 0 #3030FF;
+    transform: translate(0);
+  }
 }
-.animate-svg-draw {
-  stroke-dasharray: 1000;
-  animation: svg-draw 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+.animate-spider-glitch {
+  animation: spider-glitch 3.2s steps(2, end) infinite;
 }
 
-/* Radiant ray expansion from center */
-@keyframes radiant-expand {
-  0%   { transform: scale(0.3) rotate(0deg);   opacity: 0; }
-  60%  { transform: scale(1.1) rotate(180deg); opacity: 0.7; }
-  100% { transform: scale(1)   rotate(360deg); opacity: 1; }
+/* Hex Portal Pulse & Rotate */
+@keyframes hex-portal-spin {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.05); }
+  100% { transform: rotate(360deg) scale(1); }
 }
-.animate-radiant-expand {
-  animation: radiant-expand 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+.animate-hex-spin {
+  animation: hex-portal-spin 24s linear infinite;
 }
 
-/* Halo pulse — "Register Now" button */
-@keyframes halo-pulse {
+@keyframes hex-portal-spin-reverse {
+  0% { transform: rotate(360deg) scale(1.04); }
+  50% { transform: rotate(180deg) scale(0.96); }
+  100% { transform: rotate(0deg) scale(1.04); }
+}
+.animate-hex-spin-reverse {
+  animation: hex-portal-spin-reverse 30s linear infinite;
+}
+
+/* Dimensional Energy Tunnel Pulse */
+@keyframes tunnel-pulse {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(255, 23, 56, 0.45),
-                0 0 25px 2px rgba(193, 18, 31, 0.35);
+    opacity: 0.85;
+    filter: drop-shadow(0 0 25px rgba(196, 0, 48, 0.7)) drop-shadow(0 0 45px rgba(224, 0, 112, 0.4));
   }
   50% {
-    box-shadow: 0 0 0 14px rgba(255, 23, 56, 0),
-                0 0 45px 8px rgba(193, 18, 31, 0.55);
+    opacity: 1;
+    filter: drop-shadow(0 0 40px rgba(224, 0, 112, 0.8)) drop-shadow(0 0 70px rgba(240, 112, 48, 0.5));
   }
 }
-.animate-halo-pulse {
-  animation: halo-pulse 2.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.animate-tunnel-pulse {
+  animation: tunnel-pulse 3.8s ease-in-out infinite;
 }
 
-/* Metallic light sweep across buttons */
+/* Comic Dimensional Glitch Flicker */
+@keyframes comic-flicker {
+  0%, 100% { opacity: 1; }
+  15% { opacity: 0.82; transform: skewX(-0.5deg); }
+  30% { opacity: 0.96; }
+  45% { opacity: 0.75; transform: skewX(0.5deg); }
+  60% { opacity: 1; }
+  75% { opacity: 0.88; }
+  90% { opacity: 0.98; }
+}
+.animate-comic-flicker {
+  animation: comic-flicker 4s ease-in-out infinite;
+}
+
+/* Floating Dimensional Movement */
+@keyframes float-miles {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(-0.8deg); }
+}
+.animate-float-miles {
+  animation: float-miles 5s ease-in-out infinite;
+}
+
+/* Holographic Laser Scanner */
+@keyframes laser-scan-spider {
+  0% { top: 0%; opacity: 0.9; box-shadow: 0 0 20px #C40030, 0 0 40px #F07030; }
+  50% { opacity: 1; }
+  100% { top: 96%; opacity: 0.9; box-shadow: 0 0 20px #E00070, 0 0 35px #FF287D; }
+}
+.animate-laser-spider {
+  animation: laser-scan-spider 2s ease-in-out infinite alternate;
+}
+
+/* Light metallic sweep */
 @keyframes light-sweep {
-  0%        { transform: translateX(-140%) skewX(-20deg); }
-  25%, 100% { transform: translateX(260%)  skewX(-20deg); }
+  0% { transform: translateX(-150%) skewX(-25deg); }
+  30%, 100% { transform: translateX(280%) skewX(-25deg); }
 }
 .animate-light-sweep {
-  animation: light-sweep 3.5s ease-in-out infinite;
-}
-
-/* 3D floating — hero visual */
-@keyframes float-3d {
-  0%, 100% { transform: translateY(0px)   rotate3d(1, 0, 0, 0deg); }
-  50%       { transform: translateY(-12px) rotate3d(1, 0, 0, 1.5deg); }
-}
-.animate-float-3d {
-  animation: float-3d 5.5s ease-in-out infinite;
-}
-
-/* Slow horizontal float — subtle background orbs */
-@keyframes float-slow {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-10px); }
-}
-.animate-float-slow {
-  animation: float-slow 5s ease-in-out infinite;
-}
-
-/* Cosmic rotation — energy rings */
-@keyframes cosmic-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-.animate-cosmic-spin {
-  animation: cosmic-spin 24s linear infinite;
-}
-
-@keyframes cosmic-spin-reverse {
-  from { transform: rotate(360deg); }
-  to   { transform: rotate(0deg); }
-}
-.animate-cosmic-spin-reverse {
-  animation: cosmic-spin-reverse 32s linear infinite;
-}
-
-/* Timeline line draw — schedule section */
-@keyframes line-draw {
-  from { transform: scaleY(0); }
-  to   { transform: scaleY(1); }
-}
-.animate-line-draw {
-  transform-origin: top center;
-  animation: line-draw 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-/* Progress bar fill */
-@keyframes progress-fill {
-  from { width: 0%; }
-  to   { width: var(--progress, 100%); }
-}
-
-/* Count-up numbers */
-@keyframes count-up-fade {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.animate-count-up {
-  animation: count-up-fade 0.6s ease-out forwards;
-}
-
-/* Laser scanner — QR pass */
-@keyframes laser-scan {
-  0%   { top: 0%;  opacity: 0.8; }
-  50%  { opacity: 1; }
-  100% { top: 96%; opacity: 0.8; }
-}
-.animate-laser {
-  animation: laser-scan 2.2s ease-in-out infinite alternate;
-}
-
-/* Ping indicator — live badge */
-@keyframes radianza-ping {
-  75%, 100% { transform: scale(2); opacity: 0; }
-}
-.animate-radianza-ping {
-  animation: radianza-ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  animation: light-sweep 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 /* ═══════════════════════════════════════════════════════
-   UTILITY CLASSES
+   SURFACES, COMIC INK PANELS & 2.5D TEXTURES
 ═══════════════════════════════════════════════════════ */
 
-/* Glassmorphism surfaces */
-.glass-light {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.9);
+/* Spider-Verse Halftone Comic Screen */
+.halftone-spider-dots {
+  background-image: radial-gradient(circle, rgba(196, 0, 48, 0.16) 1.5px, transparent 1.5px);
+  background-size: 16px 16px;
 }
 
-.glass-dark {
-  background: rgba(10, 10, 14, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(193, 18, 31, 0.25);
+.halftone-spider-dots-dense {
+  background-image: radial-gradient(circle, rgba(224, 0, 112, 0.18) 1.2px, transparent 1.2px);
+  background-size: 10px 10px;
 }
 
-.glass-navy {
-  background: rgba(13, 13, 18, 0.8);
+/* Cyber Hex Grid Pattern */
+.bg-spider-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(196, 0, 48, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(224, 0, 112, 0.06) 1px, transparent 1px);
+}
+
+.bg-spider-mesh {
+  background-color: #080006;
+  background-image: 
+    radial-gradient(circle at 50% 25%, rgba(196, 0, 48, 0.18) 0%, transparent 55%),
+    radial-gradient(circle at 85% 75%, rgba(224, 0, 112, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 15% 85%, rgba(240, 74, 32, 0.10) 0%, transparent 40%),
+    radial-gradient(circle at 50% 100%, #100010 0%, #080006 100%);
+}
+
+/* 2.5D Comic Ink Panel Card */
+.comic-panel-card {
+  background: rgba(18, 2, 20, 0.88);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 23, 56, 0.2);
+  border: 1.5px solid rgba(196, 0, 48, 0.45);
+  box-shadow: 
+    0 10px 30px -5px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(196, 0, 48, 0.2),
+    inset 0 0 15px rgba(196, 0, 48, 0.05);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ── Reference Poster Theme Tokens & Cards ── */
+.comic-panel-card:hover {
+  border-color: rgba(224, 0, 112, 0.7);
+  box-shadow: 
+    0 16px 40px -5px rgba(0, 0, 0, 0.9),
+    0 0 30px rgba(224, 0, 112, 0.35),
+    inset 0 0 20px rgba(224, 0, 112, 0.1);
+  transform: translateY(-3px);
+}
+
+/* Web-themed Nav Pill */
+.web-nav-pill {
+  background: rgba(16, 0, 16, 0.9);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(196, 0, 48, 0.35);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 15px rgba(196, 0, 48, 0.15);
+}
+
+.web-nav-pill:hover {
+  border-color: rgba(224, 0, 112, 0.6);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.8), 0 0 25px rgba(224, 0, 112, 0.25);
+}
+
+
+/* Miles Morales Glass Cards */
+.card-spider-verse {
+  background: rgba(17, 12, 32, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 30, 66, 0.22);
+  box-shadow: 
+    0 10px 30px -10px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-spider-verse:hover {
+  background: rgba(26, 18, 48, 0.85);
+  border-color: rgba(255, 30, 66, 0.55);
+  box-shadow: 
+    0 16px 40px -10px rgba(255, 30, 66, 0.25),
+    0 0 20px rgba(255, 107, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transform: translateY(-4px);
+}
+
+.card-spider-portal {
+  background: radial-gradient(circle at 50% 0%, rgba(255, 107, 0, 0.15) 0%, rgba(17, 12, 32, 0.8) 70%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 107, 0, 0.3);
+  box-shadow: 0 12px 36px -8px rgba(255, 107, 0, 0.2);
+}
+
+.card-spider-portal:hover {
+  border-color: rgba(255, 107, 0, 0.7);
+  box-shadow: 0 20px 50px -10px rgba(255, 107, 0, 0.35), 0 0 25px rgba(255, 30, 66, 0.3);
+  transform: translateY(-4px);
+}
+
+/* Glassmorphism primitives */
+.glass-spider-dark {
+  background: rgba(10, 8, 18, 0.82);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 30, 66, 0.25);
+}
+
+.glass-spider-nav {
+  background: rgba(7, 5, 14, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(255, 30, 66, 0.2);
+}
+
+/* Text Gradients */
+.text-spider-gradient {
+  background: linear-gradient(135deg, #FFFFFF 0%, #FFD4DC 25%, #FF1E42 65%, #FF6B00 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-portal-gradient {
+  background: linear-gradient(135deg, #FFE600 0%, #FF8C00 45%, #FF1E42 85%, #E000FF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-multiverse-gradient {
+  background: linear-gradient(135deg, #FFFFFF 0%, #00F0FF 40%, #E000FF 80%, #FF1E42 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Glowing text strokes */
+.spider-title-stroke {
+  -webkit-text-stroke: 1.5px rgba(255, 30, 66, 0.6);
+  color: transparent;
+  text-shadow: 
+    0 0 20px rgba(255, 30, 66, 0.5),
+    -2px 0 0 rgba(0, 240, 255, 0.4),
+    2px 0 0 rgba(255, 107, 0, 0.4);
+}
+
+/* Glow Badges & Buttons */
+.glow-spider-red {
+  box-shadow: 0 0 25px rgba(255, 30, 66, 0.55), 0 0 50px rgba(255, 30, 66, 0.25);
+}
+
+.glow-spider-orange {
+  box-shadow: 0 0 25px rgba(255, 107, 0, 0.55), 0 0 50px rgba(255, 107, 0, 0.25);
+}
+
+.glow-spider-magenta {
+  box-shadow: 0 0 25px rgba(224, 0, 255, 0.5), 0 0 50px rgba(224, 0, 255, 0.2);
+}
+
+.glow-spider-cyan {
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.5), 0 0 50px rgba(0, 240, 255, 0.2);
+}
+
+/* Hexagon Clip Paths */
+.clip-hexagon {
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+.clip-spider-badge {
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+
+/* Speedlines Overlay */
+.speedlines-overlay {
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 48px,
+    rgba(255, 30, 66, 0.04) 48px,
+    rgba(255, 30, 66, 0.04) 50px
+  );
+}
+
+/* Prismatic Spider Badge */
+.prismatic-badge {
+  background: linear-gradient(135deg, rgba(255, 30, 66, 0.15) 0%, rgba(255, 107, 0, 0.15) 50%, rgba(224, 0, 255, 0.15) 100%);
+  border: 1px solid rgba(255, 30, 66, 0.35);
+}
+
+/* Legacy class compatibility tokens */
 .bg-reference-pearl {
-  background-color: #faf6f8;
+  background-color: #05050a;
   background-image: 
-    radial-gradient(circle at top right, rgba(230, 38, 69, 0.07) 0%, transparent 60%),
-    radial-gradient(circle at bottom left, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+    radial-gradient(circle at top right, rgba(255, 30, 66, 0.15) 0%, transparent 60%),
+    radial-gradient(circle at bottom left, rgba(255, 107, 0, 0.12) 0%, transparent 50%);
 }
 
 .bg-reference-hero {
-  background: radial-gradient(circle at 50% 20%, #b80d28 0%, #7e0818 45%, #42040c 85%, #250207 100%);
-}
-
-.grid-mesh-pattern {
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
-}
-
-.grid-mesh-pattern-light {
-  background-size: 28px 28px;
-  background-image: 
-    linear-gradient(to right, rgba(193, 18, 31, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(193, 18, 31, 0.04) 1px, transparent 1px);
-}
-
-.halftone-screen-dots {
-  background-image: radial-gradient(circle, rgba(193, 18, 31, 0.12) 1.2px, transparent 1.2px);
-  background-size: 14px 14px;
+  background: radial-gradient(circle at 50% 20%, #ff1e42 0%, #99001c 45%, #22050f 85%, #05050a 100%);
 }
 
 .card-reference-luxury {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(220, 38, 60, 0.14);
-  box-shadow: 0 12px 36px -8px rgba(139, 0, 24, 0.06), 0 4px 16px rgba(0, 0, 0, 0.03);
+  background: rgba(17, 12, 32, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 30, 66, 0.22);
+  box-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 30, 66, 0.08);
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-reference-luxury:hover {
-  border-color: rgba(220, 38, 60, 0.35);
-  box-shadow: 0 20px 48px -10px rgba(139, 0, 24, 0.12), 0 8px 24px rgba(0, 0, 0, 0.05);
+  border-color: rgba(255, 30, 66, 0.55);
+  box-shadow: 0 20px 48px -10px rgba(255, 30, 66, 0.25), 0 0 25px rgba(255, 107, 0, 0.15);
   transform: translateY(-4px);
 }
 
-.prismatic-badge {
-  background: linear-gradient(135deg, rgba(255, 23, 56, 0.1) 0%, rgba(212, 175, 55, 0.12) 50%, rgba(0, 240, 255, 0.1) 100%);
-  border: 1px solid rgba(255, 23, 56, 0.25);
-}
-
-/* Radiant red gradient text */
 .text-radianza {
-  background: linear-gradient(135deg, #FFFFFF 0%, #FFD8E0 40%, #FF1738 80%, #C1121F 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, #FFD4DC 35%, #FF1E42 75%, #FF6B00 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .text-reference-crimson {
-  background: linear-gradient(135deg, #860a16 0%, #c1121f 50%, #e62645 100%);
+  background: linear-gradient(135deg, #FF6B00 0%, #FF1E42 50%, #E000FF 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-/* ── Stitch AI Spider-Man 3D Hero Overlays & Architecture ── */
-.bg-cyber-grid {
-  background-size: 38px 38px;
-  background-image: 
-    linear-gradient(to right, rgba(139, 21, 27, 0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(139, 21, 27, 0.07) 1px, transparent 1px);
-}
-
-.scanlines-overlay {
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 0) 50%,
-    rgba(139, 21, 27, 0.025) 50%,
-    rgba(139, 21, 27, 0.025)
-  );
-  background-size: 100% 4px;
-  pointer-events: none;
-}
-
 .crimson-ambient-glow {
   background: radial-gradient(
     circle at 50% 42%,
-    rgba(200, 29, 37, 0.15) 0%,
-    rgba(237, 232, 232, 0.5) 45%,
-    rgba(245, 243, 242, 0.95) 85%
+    rgba(255, 30, 66, 0.25) 0%,
+    rgba(255, 107, 0, 0.12) 35%,
+    rgba(224, 0, 255, 0.08) 60%,
+    transparent 85%
   );
 }
 
 .spiderman-title-stroke {
-  -webkit-text-stroke: 1.5px rgba(139, 21, 27, 0.35);
-  color: rgba(255, 255, 255, 0.55);
+  -webkit-text-stroke: 1.5px rgba(255, 30, 66, 0.5);
+  color: rgba(255, 255, 255, 0.85);
   text-shadow: 
-    0 0 20px rgba(200, 29, 37, 0.2),
-    -1.5px 0 0 rgba(0, 229, 255, 0.2),
-    1.5px 0 0 rgba(200, 29, 37, 0.25);
+    0 0 24px rgba(255, 30, 66, 0.4),
+    -2px 0 0 rgba(0, 240, 255, 0.3),
+    2px 0 0 rgba(255, 107, 0, 0.3);
 }
 
-.pillar-column {
-  background: linear-gradient(
-    90deg,
-    rgba(240, 235, 235, 0.2) 0%,
-    rgba(255, 255, 255, 0.8) 25%,
-    rgba(230, 224, 224, 0.4) 50%,
-    rgba(255, 255, 255, 0.85) 75%,
-    rgba(220, 215, 215, 0.2) 100%
-  );
-  box-shadow: 
-    inset 1px 0 3px rgba(255, 255, 255, 0.9),
-    0 10px 25px rgba(139, 21, 27, 0.06);
-}
-
-/* Brand background patterns */
 .bg-radianza-hero {
-  background: linear-gradient(160deg, #050505 0%, #120306 40%, #050505 100%);
+  background: linear-gradient(160deg, #05050a 0%, #150618 40%, #05050a 100%);
 }
 
 .bg-radianza-dark {
-  background: linear-gradient(160deg, #050505 0%, #150608 50%, #050505 100%);
+  background: linear-gradient(160deg, #05050a 0%, #180922 50%, #05050a 100%);
 }
 
 .bg-radianza-cta {
-  background: linear-gradient(135deg, #180306 0%, #0d0204 50%, #050505 100%);
+  background: linear-gradient(135deg, #24081c 0%, #120516 50%, #05050a 100%);
 }
 
-/* Glow effects */
-.glow-blue {
-  box-shadow: 0 0 30px rgba(193, 18, 31, 0.4), 0 0 60px rgba(255, 23, 56, 0.2);
-}
-
-.glow-cyan {
-  box-shadow: 0 0 30px rgba(255, 23, 56, 0.45), 0 0 60px rgba(193, 18, 31, 0.2);
-}
-
-.glow-red {
-  box-shadow: 0 0 25px rgba(255, 23, 56, 0.45), 0 0 50px rgba(193, 18, 31, 0.2);
-}
-
-.glow-crimson {
-  box-shadow: 0 0 20px rgba(193, 18, 31, 0.4);
-}
-
-/* Official SPIHER colour utilities — legacy compatibility */
-.bg-spiher-navy    { background-color: var(--spiher-navy); }
-.text-spiher-navy  { color: var(--spiher-navy); }
-.bg-spiher-blue    { background-color: var(--spiher-blue); }
-.text-spiher-blue  { color: var(--spiher-blue); }
-.border-spiher-blue{ border-color: var(--spiher-blue); }
-.bg-spiher-teal    { background-color: var(--spiher-teal); }
-.text-spiher-teal  { color: var(--spiher-teal); }
-.border-spiher-teal{ border-color: var(--spiher-teal); }
-.bg-spiher-ice     { background-color: var(--spiher-ice); }
-.border-spiher-border { border-color: var(--spiher-border); }
-
-/* Section transition utility — smooth bg color shift */
-.section-transition {
-  transition: background-color 0.6s ease, color 0.6s ease;
-}
-
-/* Clip-path wipe reveal — used in About image */
-@keyframes clip-wipe {
-  from { clip-path: inset(0 100% 0 0); }
-  to   { clip-path: inset(0 0% 0 0); }
-}
-.animate-clip-wipe {
-  animation: clip-wipe 1.0s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-/* ═══════════════════════════════════════════════════════
-   RESPONSIVE OVERRIDES
-═══════════════════════════════════════════════════════ */
-
-/* Reduce animation complexity on weaker devices */
+/* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

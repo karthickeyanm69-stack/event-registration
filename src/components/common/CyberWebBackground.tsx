@@ -7,12 +7,11 @@ interface CyberWebBackgroundProps {
 
 /**
  * CyberWebBackground:
- * Dark futuristic cyber-web and geometric laser grid background.
- * - 70% Near-Black base (#050505)
- * - 20% Deep Crimson accents (#C1121F)
- * - 5% Bright Red glow accents (#FF1738)
- * - Subtle geometric polygonal web lattice lines & intersecting cyber nodes
- * - Zero traditional motifs, zero copyrighted character art/logos
+ * Spider-Man Miles Morales Across the Spider-Verse Multiverse Background.
+ * - Deep Multiverse Void Base (#05050a)
+ * - Dimensional Hex Portal Amber & Neon Crimson Energy Conduits
+ * - Multiverse Glitch Magenta & Venom Cyan atmospheric nodes
+ * - Geometric Hexagonal Web Rings & Dimensional Speedlines
  */
 export const CyberWebBackground: React.FC<CyberWebBackgroundProps> = ({ className = '' }) => {
   return (
@@ -20,57 +19,60 @@ export const CyberWebBackground: React.FC<CyberWebBackgroundProps> = ({ classNam
       aria-hidden="true"
       className={`absolute inset-0 pointer-events-none select-none overflow-hidden z-0 ${className}`}
     >
-      {/* 1. Deep Atmospheric Radial Ambient Glows */}
-      <div className="absolute top-1/4 right-1/4 w-[32rem] h-[32rem] rounded-full bg-[#C1121F]/15 blur-[120px]" />
-      <div className="absolute -top-20 right-10 w-96 h-96 rounded-full bg-[#FF1738]/10 blur-[100px]" />
-      <div className="absolute bottom-1/3 left-10 w-80 h-80 rounded-full bg-[#780016]/15 blur-[90px]" />
+      {/* 1. Deep Atmospheric Multiverse Nebulae */}
+      <div className="absolute top-1/4 right-1/4 w-[36rem] h-[36rem] rounded-full bg-[#C40030]/15 blur-[130px] animate-pulse" style={{ animationDuration: '6s' }} />
+      <div className="absolute -top-20 right-10 w-[28rem] h-[28rem] rounded-full bg-[#F07030]/12 blur-[120px]" />
+      <div className="absolute bottom-1/4 left-10 w-[30rem] h-[30rem] rounded-full bg-[#E00070]/12 blur-[110px]" />
+      <div className="absolute top-1/2 left-1/3 w-[20rem] h-[20rem] rounded-full bg-[#3030FF]/08 blur-[90px]" />
 
-      {/* 2. Geometric Hex-Web & Radar Lattice SVG */}
+      {/* 2. Geometric Hex-Portal Energy Web SVG */}
       <svg
-        className="absolute -top-16 right-[-8%] sm:right-[5%] lg:right-[15%] w-[580px] h-[580px] sm:w-[720px] sm:h-[720px] opacity-35"
+        className="absolute -top-24 right-[-10%] sm:right-[2%] lg:right-[10%] w-[680px] h-[680px] sm:w-[840px] sm:h-[840px] opacity-40"
         viewBox="0 0 800 800"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <radialGradient id="webCenterGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#FF1738" stopOpacity="0.45" />
-            <stop offset="50%" stopColor="#C1121F" stopOpacity="0.15" />
-            <stop offset="100%" stopColor="#050505" stopOpacity="0" />
+          <radialGradient id="portalCenterGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#F07030" stopOpacity="0.4" />
+            <stop offset="35%" stopColor="#C40030" stopOpacity="0.25" />
+            <stop offset="70%" stopColor="#E00070" stopOpacity="0.1" />
+            <stop offset="100%" stopColor="#080006" stopOpacity="0" />
           </radialGradient>
-          <linearGradient id="laserBeamGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FF1738" stopOpacity="0" />
-            <stop offset="50%" stopColor="#FF1738" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#C1121F" stopOpacity="0" />
+          <linearGradient id="portalLaserGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#E00070" stopOpacity="0" />
+            <stop offset="50%" stopColor="#C40030" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#F07030" stopOpacity="0.8" />
           </linearGradient>
         </defs>
 
-        {/* Ambient Center Glow */}
-        <circle cx="400" cy="400" r="320" fill="url(#webCenterGlow)" />
+        {/* Ambient Portal Core Glow */}
+        <circle cx="400" cy="400" r="350" fill="url(#portalCenterGlow)" />
 
-        {/* Radial Web Strands (Laser Beams) */}
+        {/* Radial Spider Laser Beams (30 deg intervals) */}
         {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => {
           const rad = (deg * Math.PI) / 180;
-          const x2 = 400 + Math.cos(rad) * 360;
-          const y2 = 400 + Math.sin(rad) * 360;
+          const x2 = 400 + Math.cos(rad) * 380;
+          const y2 = 400 + Math.sin(rad) * 380;
+          const isPrimary = deg % 60 === 0;
           return (
             <line
-              key={`radial-${deg}`}
+              key={`radial-spider-${deg}`}
               x1="400"
               y1="400"
               x2={x2}
               y2={y2}
-              stroke="#C1121F"
-              strokeWidth="0.8"
-              strokeOpacity="0.35"
-              strokeDasharray={deg % 60 === 0 ? 'none' : '4 6'}
+              stroke={isPrimary ? '#C40030' : '#F07030'}
+              strokeWidth={isPrimary ? '1' : '0.6'}
+              strokeOpacity={isPrimary ? '0.45' : '0.2'}
+              strokeDasharray={isPrimary ? 'none' : '4 6'}
             />
           );
         })}
 
-        {/* Concentric Polygonal Web Rings (Dodecagons) */}
-        {[80, 140, 200, 260, 320, 380].map((radius, rIdx) => {
-          const points = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330]
+        {/* Concentric Hexagonal Portal Rings */}
+        {[70, 130, 190, 260, 330, 400].map((radius, rIdx) => {
+          const points = [0, 60, 120, 180, 240, 300]
             .map((deg) => {
               const rad = (deg * Math.PI) / 180;
               const x = 400 + Math.cos(rad) * radius;
@@ -82,66 +84,31 @@ export const CyberWebBackground: React.FC<CyberWebBackgroundProps> = ({ classNam
           const isMajor = rIdx % 2 === 1;
           return (
             <polygon
-              key={`ring-${radius}`}
+              key={`hex-ring-${radius}`}
               points={points}
-              stroke={isMajor ? '#FF1738' : '#C1121F'}
-              strokeWidth={isMajor ? '1.2' : '0.75'}
-              strokeOpacity={isMajor ? '0.5' : '0.25'}
+              stroke={rIdx === 1 ? '#F07030' : isMajor ? '#C40030' : '#E00070'}
+              strokeWidth={isMajor ? '1.4' : '0.8'}
+              strokeOpacity={isMajor ? '0.6' : '0.25'}
               fill="none"
             />
           );
         })}
 
-        {/* Web Intersection Nodes / Light Sparks */}
-        {[140, 260].map((radius) =>
+        {/* Hex Intersection Energy Nodes */}
+        {[130, 260].map((radius) =>
           [0, 60, 120, 180, 240, 300].map((deg) => {
             const rad = (deg * Math.PI) / 180;
             const cx = 400 + Math.cos(rad) * radius;
             const cy = 400 + Math.sin(rad) * radius;
             return (
-              <g key={`node-${radius}-${deg}`}>
-                <circle cx={cx} cy={cy} r="2.5" fill="#FF1738" opacity="0.85" />
-                <circle cx={cx} cy={cy} r="6" fill="#FF1738" opacity="0.2" />
+              <g key={`hex-node-${radius}-${deg}`}>
+                <circle cx={cx} cy={cy} r="3" fill="#C40030" />
+                <circle cx={cx} cy={cy} r="6" stroke="#F07030" strokeWidth="0.8" strokeOpacity="0.8" fill="none" />
               </g>
             );
           })
         )}
-
-        {/* Central Core Hexagon */}
-        <polygon
-          points={[0, 60, 120, 180, 240, 300]
-            .map((deg) => {
-              const rad = (deg * Math.PI) / 180;
-              return `${(400 + Math.cos(rad) * 26).toFixed(1)},${(400 + Math.sin(rad) * 26).toFixed(1)}`;
-            })
-            .join(' ')}
-          stroke="#FF1738"
-          strokeWidth="1.5"
-          fill="#C1121F"
-          fillOpacity="0.12"
-        />
-        <circle cx="400" cy="400" r="3" fill="#FFFFFF" />
       </svg>
-
-      {/* 3. Subtle Cyber Perspective Grid Floor on bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-44 bg-[linear-gradient(to_bottom,transparent_0%,rgba(193,18,31,0.06)_100%)]">
-        <div
-          className="w-full h-full opacity-20"
-          style={{
-            backgroundImage: `
-              linear-gradient(to right, rgba(193, 18, 31, 0.25) 1px, transparent 1px),
-              linear-gradient(to bottom, rgba(193, 18, 31, 0.25) 1px, transparent 1px)
-            `,
-            backgroundSize: '40px 40px',
-            transform: 'perspective(400px) rotateX(60deg)',
-            transformOrigin: 'bottom center',
-          }}
-        />
-      </div>
-
-      {/* 4. Glowing Red Hairline Laser Accent Across Hero */}
-      <div className="absolute top-[38%] left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#FF1738]/40 to-transparent pointer-events-none" />
-      <div className="absolute top-[68%] left-1/4 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#C1121F]/30 to-transparent pointer-events-none" />
     </div>
   );
 };

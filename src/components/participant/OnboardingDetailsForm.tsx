@@ -46,7 +46,7 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
   const departments = [
     'Dept. of Information Technology',
     'Dept. of Artificial Intelligence & Data Science',
-    'Dept. of Information Technology',
+    'Dept. of Computer Science & Engineering',
     'Dept. of Electronics & Communication',
     'Dept. of Electrical & Electronics',
     'Dept. of Mechanical Engineering',
@@ -85,7 +85,6 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
       return;
     }
 
-    // Strict Backend Check: Check if roll number already has an active registration
     const check = MockDatabaseService.checkIsParticipantRegistered(normRoll);
     if (check.isRegistered && check.activeRegistration) {
       const participants = MockDatabaseService.getParticipants();
@@ -99,53 +98,53 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
       }
     }
 
-    const participantData: Partial<Participant> = {
+    onContinueToEvents({
       name: name.trim(),
       collegeName: collegeName.trim(),
       department: department.trim(),
       rollNumber: normRoll,
-      dateOfBirth,
-      email: email.trim().toLowerCase(),
-      phone: phone.trim(),
-    };
-
-    onContinueToEvents(participantData);
+      dateOfBirth: dateOfBirth.trim(),
+      email: email.trim(),
+      phone: phone.trim() || undefined,
+    });
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-50 flex items-center justify-center p-3 sm:p-6 lg:p-10 font-sans selection:bg-[#0077c8] selection:text-white">
-      {/* Main Split-Hero Card Container */}
-      <div className="w-full max-w-5xl bg-white rounded-3xl shadow-[0_25px_60px_-15px_rgba(0,43,102,0.15)] border border-[#d4e8f5] overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-auto lg:min-h-[620px]">
+    <div className="w-full min-h-screen bg-[#05050a] text-white flex flex-col items-center justify-center p-3 sm:p-6 select-none relative overflow-x-hidden">
+      {/* Multiverse Ambient Glows */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[#FF1E42]/10 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-[#FF6B00]/10 blur-[120px] pointer-events-none" />
+
+      <div className="w-full max-w-4xl bg-[#090714] rounded-3xl sm:rounded-[2.5rem] shadow-2xl border border-[#FF1E42]/30 overflow-hidden grid grid-cols-1 lg:grid-cols-12 relative z-10">
         {/* ========================================================================= */}
         {/* LEFT PROGRESS & SYMPOSIUM OVERVIEW HERO (Visible ONLY on Desktop lg+)    */}
         {/* ========================================================================= */}
-        <div className="hidden lg:flex lg:col-span-5 bg-gradient-to-br from-[#001f4d] via-[#002b66] to-[#001838] text-white p-8 sm:p-10 flex-col justify-between relative overflow-hidden">
-          {/* Luminous Ambient Glow */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#0077c8]/25 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#00a887]/20 rounded-full blur-2xl pointer-events-none" />
+        <div className="hidden lg:flex lg:col-span-5 bg-gradient-to-br from-[#12061e] via-[#090714] to-[#05050a] text-white p-8 sm:p-10 flex-col justify-between relative overflow-hidden border-r border-[#FF1E42]/20">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF1E42]/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#FF6B00]/20 rounded-full blur-2xl pointer-events-none" />
 
           {/* Top Brand Header */}
           <div className="relative z-10 space-y-4">
             <button
               type="button"
               onClick={onBackToAccess}
-              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 text-xs font-bold text-white transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 bg-white/10 hover:bg-[#FF1E42] backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 text-xs font-mono font-bold text-white transition-all cursor-pointer"
             >
-              <ArrowLeft className="w-3.5 h-3.5 text-[#7af1fc]" />
-              <span>Back to Pass Access</span>
+              <ArrowLeft className="w-3.5 h-3.5 text-[#FF6B00]" />
+              <span>Back to Portal</span>
             </button>
 
             <div className="flex items-center gap-3 pt-2">
               <CollegeEmblem size={44} />
               <div>
-                <h1 className="font-serif font-bold text-lg leading-tight tracking-tight text-white">
-                  St. Peter's
+                <h1 className="font-['Impact',sans-serif] text-xl leading-tight tracking-tight text-white uppercase">
+                  RADIANZA <span className="text-[#FF1E42]">'26</span>
                 </h1>
-                <p className="text-[11px] text-[#7af1fc] font-medium tracking-wide">
-                  Institute of Higher Education &amp; Research
+                <p className="text-[11px] text-[#FF6B00] font-mono font-bold tracking-wide">
+                  Across The Tech-Verse
                 </p>
-                <p className="text-[9px] text-white/60 uppercase tracking-wider">
-                  RADIANZA '26 Registration
+                <p className="text-[9px] text-stone-400 uppercase tracking-wider">
+                  SPIHER IT Registration Matrix
                 </p>
               </div>
             </div>
@@ -153,54 +152,53 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
 
           {/* Center 3-Step Timeline Progression */}
           <div className="relative z-10 space-y-4 py-6">
-            <h2 className="text-xl sm:text-2xl font-serif font-bold text-white leading-snug">
-              Student Registration
+            <h2 className="text-xl sm:text-2xl font-['Impact',sans-serif] text-white uppercase tracking-wide">
+              DELEGATE ONBOARDING
             </h2>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              Complete your profile to unlock full competition access and mint your verified digital QR badge.
+            <p className="text-xs text-stone-300 leading-relaxed">
+              Complete your profile to unlock full arena competition access and mint your verified digital QR pass.
             </p>
 
-            {/* 3-Step Process Indicator */}
             <div className="space-y-3 pt-3">
-              <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/15 border border-[#7af1fc]/40 text-xs">
-                <div className="w-7 h-7 rounded-xl bg-[#0077c8] text-white font-bold flex items-center justify-center shrink-0 shadow">
+              <div className="flex items-center gap-3 p-3 rounded-2xl bg-[#FF1E42]/15 border border-[#FF1E42]/40 text-xs shadow-md">
+                <div className="w-7 h-7 rounded-xl bg-[#FF1E42] text-white font-bold flex items-center justify-center shrink-0 shadow">
                   1
                 </div>
                 <div>
-                  <span className="font-bold text-white block text-xs">Student Details</span>
-                  <span className="text-[10px] text-[#7af1fc]">Name, Roll No, DOB &amp; College</span>
+                  <span className="font-bold text-white block text-xs">Delegate Details</span>
+                  <span className="text-[10px] text-[#FF6B00] font-mono">Name, Roll No, DOB &amp; College</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/10 text-xs opacity-70">
-                <div className="w-7 h-7 rounded-xl bg-white/10 text-slate-300 font-bold flex items-center justify-center shrink-0">
+                <div className="w-7 h-7 rounded-xl bg-white/10 text-stone-400 font-bold flex items-center justify-center shrink-0">
                   2
                 </div>
                 <div>
-                  <span className="font-bold text-slate-200 block text-xs">Competition Selection</span>
-                  <span className="text-[10px] text-slate-400">Technical &amp; Non-Technical Events</span>
+                  <span className="font-bold text-stone-300 block text-xs">Arena Selection</span>
+                  <span className="text-[10px] text-stone-400">Technical &amp; Non-Technical Arenas</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/10 text-xs opacity-70">
-                <div className="w-7 h-7 rounded-xl bg-white/10 text-slate-300 font-bold flex items-center justify-center shrink-0">
+                <div className="w-7 h-7 rounded-xl bg-white/10 text-stone-400 font-bold flex items-center justify-center shrink-0">
                   3
                 </div>
                 <div>
-                  <span className="font-bold text-slate-200 block text-xs">Pass Minting</span>
-                  <span className="text-[10px] text-slate-400">Vector QR Pass Download</span>
+                  <span className="font-bold text-stone-300 block text-xs">Pass Minting</span>
+                  <span className="text-[10px] text-stone-400">Cryptographic QR Pass Access</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Bottom Security Footer */}
-          <div className="relative z-10 pt-4 border-t border-white/15 flex items-center justify-between text-[11px] text-white/70">
+          <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] text-stone-400 font-mono">
             <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-[#7af1fc]" />
+              <ShieldCheck className="w-4 h-4 text-[#FF1E42]" />
               <span>1-Participant-1-Event Rule</span>
             </div>
-            <span className="text-[10px] text-white/50">Free Registration</span>
+            <span className="text-[10px] text-[#FF6B00]">Free Access Pass</span>
           </div>
         </div>
 
@@ -209,51 +207,51 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
         {/* ========================================================================= */}
         <div className="lg:col-span-7 p-5 sm:p-8 lg:p-10 flex flex-col justify-center space-y-5 sm:space-y-6">
           {/* Mobile Navigation Header */}
-          <div className="lg:hidden flex items-center justify-between pb-3 border-b border-[#e8f5fb]">
+          <div className="lg:hidden flex items-center justify-between pb-3 border-b border-white/10">
             <button
               type="button"
               onClick={onBackToAccess}
-              className="flex items-center gap-1.5 text-xs font-bold text-[#002b66] hover:text-[#0077c8] transition-colors cursor-pointer bg-slate-50 px-2.5 py-1.5 rounded-xl border border-[#d4e8f5]"
+              className="flex items-center gap-1.5 text-xs font-mono font-bold text-stone-300 hover:text-white transition-colors cursor-pointer bg-white/5 px-2.5 py-1.5 rounded-xl border border-white/10"
             >
-              <ArrowLeft className="w-3.5 h-3.5 text-[#0077c8]" />
+              <ArrowLeft className="w-3.5 h-3.5 text-[#FF1E42]" />
               <span>Back</span>
             </button>
 
-            <div className="flex items-center gap-1 text-[10px] font-bold text-[#0077c8] bg-[#e8f5fb] px-2.5 py-1 rounded-full border border-[#d4e8f5]">
+            <div className="flex items-center gap-1 text-[10px] font-mono font-bold text-[#FF6B00] bg-[#FF6B00]/10 px-2.5 py-1 rounded-full border border-[#FF6B00]/30">
               <Sparkles className="w-3 h-3" />
-              <span>Step 1 of 3: Onboarding</span>
+              <span>Step 1: Onboarding</span>
             </div>
           </div>
 
           <div className="space-y-1">
             <div className="hidden lg:flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#e8f5fb] text-[#0077c8] border border-[#d4e8f5]">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#FF1E42]/10 text-[#FF1E42] border border-[#FF1E42]/30">
                 Step 1 of 3: Profile Setup
               </span>
-              <span className="text-xs text-slate-400 font-medium">All fields with * are required</span>
+              <span className="text-xs text-stone-400 font-mono">Fields with * required</span>
             </div>
-            <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#002b66]">
-              Personal &amp; College Details
+            <h3 className="text-xl sm:text-2xl font-['Impact',sans-serif] text-white uppercase tracking-wide">
+              PERSONAL &amp; ACADEMIC PROFILE
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-stone-400">
               Provide your details for the symposium registry and digital entry badge.
             </p>
           </div>
 
           {/* Existing Registration Conflict Alert */}
           {existingRegNotice && (
-            <div className="p-4 rounded-2xl bg-amber-50 border border-amber-300 space-y-3 animate-in fade-in duration-200">
+            <div className="p-4 rounded-2xl bg-amber-950/40 border border-amber-500/50 space-y-3 animate-in fade-in duration-200">
               <div className="flex items-start gap-2.5">
-                <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                <AlertCircle className="w-5 h-5 text-[#FFE600] shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-xs font-bold text-amber-900">
-                    Already Registered for an Event
+                  <p className="text-xs font-bold text-[#FFE600]">
+                    Already Registered for an Arena
                   </p>
-                  <p className="text-xs text-amber-800 mt-0.5">
-                    Roll Number <strong className="font-mono">{existingRegNotice.participant.rollNumber}</strong> is already registered for{' '}
-                    <strong className="underline">{existingRegNotice.registration.eventTitle}</strong>.
+                  <p className="text-xs text-stone-300 mt-0.5">
+                    Roll Number <strong className="font-mono text-white">{existingRegNotice.participant.rollNumber}</strong> is already registered for{' '}
+                    <strong className="underline text-[#FF6B00]">{existingRegNotice.registration.eventTitle}</strong>.
                   </p>
-                  <p className="text-[11px] text-amber-700 mt-1">
+                  <p className="text-[11px] text-stone-400 mt-1">
                     Per the 1-Participant-1-Event rule, you cannot create a new registration. You can open your existing pass now.
                   </p>
                 </div>
@@ -262,17 +260,17 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
               <button
                 type="button"
                 onClick={() => onRedirectToExistingDashboard(existingRegNotice.participant, existingRegNotice.registration)}
-                className="w-full py-2.5 px-4 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-sm flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#FF6B00] to-[#FF1E42] text-white text-xs font-mono font-bold shadow-md flex items-center justify-center gap-2 transition-colors cursor-pointer"
               >
-                <span>Open My Existing Pass &amp; Dashboard</span>
+                <span>OPEN EXISTING PASS &amp; DASHBOARD</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           )}
 
           {errorMessage && (
-            <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium flex items-center gap-2.5 animate-in fade-in">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+            <div className="p-3.5 rounded-2xl bg-[#FF1E42]/10 border border-[#FF1E42]/40 text-[#FF1E42] text-xs font-medium flex items-center gap-2.5 animate-in fade-in">
+              <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errorMessage}</span>
             </div>
           )}
@@ -280,9 +278,9 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Full Name */}
             <div className="space-y-1.5">
-              <label htmlFor="onboarding-name" className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
-                <User className="w-3.5 h-3.5 text-[#0077c8]" />
-                <span>Full Name (As per College ID) <span className="text-rose-500">*</span></span>
+              <label htmlFor="onboarding-name" className="text-xs font-mono font-bold text-stone-300 flex items-center gap-1.5">
+                <User className="w-3.5 h-3.5 text-[#FF1E42]" />
+                <span>Full Name (As per College ID) <span className="text-[#FF1E42]">*</span></span>
               </label>
               <input
                 id="onboarding-name"
@@ -293,31 +291,29 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Alex Mercer"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-[#d4e8f5] text-[#002b66] placeholder-slate-400 text-sm focus:ring-2 focus:ring-[#0077c8]/20 focus:border-[#0077c8] focus:bg-white focus:outline-none transition-all shadow-xs"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/20 text-white placeholder-stone-500 text-sm focus:ring-2 focus:ring-[#FF1E42]/30 focus:border-[#FF1E42] focus:outline-none transition-all shadow-inner"
               />
             </div>
 
-            {/* Roll Number & Date of Birth (Grid) */}
+            {/* Roll Number & Date of Birth */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div className="space-y-1.5">
-                <label htmlFor="onboarding-roll" className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
-                  <CreditCard className="w-3.5 h-3.5 text-[#0077c8]" />
-                  <span>Roll / Register No <span className="text-rose-500">*</span></span>
+                <label htmlFor="onboarding-roll" className="text-xs font-mono font-bold text-stone-300 flex items-center gap-1.5">
+                  <Award className="w-3.5 h-3.5 text-[#FF6B00]" />
+                  <span>Roll / Reg No <span className="text-[#FF1E42]">*</span></span>
                 </label>
                 <input
                   id="onboarding-roll"
                   name="rollNumber"
                   type="text"
-                  autoComplete="off"
                   required
                   value={rollNumber}
                   onChange={(e) => setRollNumber(e.target.value.toUpperCase())}
-                  placeholder="2021CS042"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-[#d4e8f5] text-[#002b66] placeholder-slate-400 text-sm font-mono tracking-wider focus:ring-2 focus:ring-[#0077c8]/20 focus:border-[#0077c8] focus:bg-white focus:outline-none transition-all shadow-xs uppercase"
+                  placeholder="e.g. 2021CS042"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/20 text-white font-mono font-bold placeholder-stone-500 text-sm focus:ring-2 focus:ring-[#FF1E42]/30 focus:border-[#FF1E42] focus:outline-none transition-all uppercase shadow-inner"
                 />
               </div>
 
-              {/* Modern Custom Date Picker with right-aligned popover */}
               <div className="space-y-1.5">
                 <CustomDatePicker
                   id="onboarding-dob"
@@ -327,45 +323,43 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
                   label="Date of Birth"
                   placeholder="Select Date of Birth"
                   required
-                  align="right"
                 />
               </div>
             </div>
 
-            {/* College Name Custom Select */}
-            <div className="space-y-1.5">
-              <CustomSelect
-                id="onboarding-college"
-                name="collegeName"
-                label="College / Institution *"
-                icon={<Building className="w-3.5 h-3.5 text-[#0077c8]" />}
-                options={collegeList}
-                value={collegeName}
-                onChange={setCollegeName}
-                searchable
-              />
-            </div>
+            {/* College & Department */}
+            <div className="space-y-3.5">
+              <div className="space-y-1.5">
+                <CustomSelect
+                  id="onboarding-college"
+                  name="collegeName"
+                  value={collegeName}
+                  onChange={setCollegeName}
+                  options={collegeList}
+                  label="Institution / University"
+                  icon={<Building className="w-3.5 h-3.5 text-[#FF1E42]" />}
+                />
+              </div>
 
-            {/* Department Custom Select */}
-            <div className="space-y-1.5">
-              <CustomSelect
-                id="onboarding-department"
-                name="department"
-                label="Department / Specialization *"
-                icon={<GraduationCap className="w-3.5 h-3.5 text-[#0077c8]" />}
-                options={departments}
-                value={department}
-                onChange={setDepartment}
-                searchable
-              />
+              <div className="space-y-1.5">
+                <CustomSelect
+                  id="onboarding-dept"
+                  name="department"
+                  value={department}
+                  onChange={setDepartment}
+                  options={departments}
+                  label="Department / Branch"
+                  icon={<GraduationCap className="w-3.5 h-3.5 text-[#FF6B00]" />}
+                />
+              </div>
             </div>
 
             {/* Email & Phone */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div className="space-y-1.5">
-                <label htmlFor="onboarding-email" className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
-                  <Mail className="w-3.5 h-3.5 text-[#0077c8]" />
-                  <span>Email Address <span className="text-rose-500">*</span></span>
+                <label htmlFor="onboarding-email" className="text-xs font-mono font-bold text-stone-300 flex items-center gap-1.5">
+                  <Mail className="w-3.5 h-3.5 text-[#FF1E42]" />
+                  <span>Email Address <span className="text-[#FF1E42]">*</span></span>
                 </label>
                 <input
                   id="onboarding-email"
@@ -375,15 +369,15 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="alex@college.edu"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-[#d4e8f5] text-[#002b66] placeholder-slate-400 text-sm focus:ring-2 focus:ring-[#0077c8]/20 focus:border-[#0077c8] focus:bg-white focus:outline-none transition-all shadow-xs"
+                  placeholder="alex@example.com"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/20 text-white placeholder-stone-500 text-sm focus:ring-2 focus:ring-[#FF1E42]/30 focus:border-[#FF1E42] focus:outline-none transition-all shadow-inner"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="onboarding-phone" className="text-xs font-bold text-[#002b66] flex items-center gap-1.5">
-                  <Phone className="w-3.5 h-3.5 text-[#0077c8]" />
-                  <span>Phone / WhatsApp</span>
+                <label htmlFor="onboarding-phone" className="text-xs font-mono font-bold text-stone-300 flex items-center gap-1.5">
+                  <Phone className="w-3.5 h-3.5 text-[#FF6B00]" />
+                  <span>Phone Number</span>
                 </label>
                 <input
                   id="onboarding-phone"
@@ -393,19 +387,19 @@ export const OnboardingDetailsForm: React.FC<OnboardingDetailsFormProps> = ({
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+91 98765 43210"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-[#d4e8f5] text-[#002b66] placeholder-slate-400 text-sm focus:ring-2 focus:ring-[#0077c8]/20 focus:border-[#0077c8] focus:bg-white focus:outline-none transition-all shadow-xs"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/20 text-white placeholder-stone-500 text-sm focus:ring-2 focus:ring-[#FF1E42]/30 focus:border-[#FF1E42] focus:outline-none transition-all shadow-inner"
                 />
               </div>
             </div>
 
-            {/* Continue Action Button */}
+            {/* Submit Action */}
             <div className="pt-2">
               <button
                 type="submit"
-                className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white font-bold text-xs sm:text-sm shadow-lg shadow-[#0077c8]/25 flex items-center justify-center gap-2 transition-all cursor-pointer hover:scale-[1.01] active:scale-[0.98]"
+                className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-[#FF1E42] via-[#FF6B00] to-[#E000FF] hover:brightness-110 text-white font-mono font-black text-xs uppercase tracking-wider shadow-lg shadow-[#FF1E42]/40 flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95"
               >
-                <span>Proceed to Competition Selection</span>
-                <ArrowRight className="w-4 h-4 text-[#7af1fc]" />
+                <span>CONTINUE TO EVENT MATRIX</span>
+                <ArrowRight className="w-4 h-4 text-white" />
               </button>
             </div>
           </form>

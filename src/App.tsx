@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { InteractiveWebReveal } from './components/participant/InteractiveWebReveal';
+import { DimensionalCinematicExperience, ParticipantGateData } from './components/participant/DimensionalCinematicExperience';
 import { ParticipantAccess } from './components/participant/ParticipantAccess';
 import { RadianzaLandingPage } from './components/participant/RadianzaLandingPage';
 import { OnboardingDetailsForm } from './components/participant/OnboardingDetailsForm';
@@ -76,10 +76,18 @@ export default function App() {
   });
   const [authRedirectNotice, setAuthRedirectNotice] = useState<string | null>(null);
 
-  const handleRevealComplete = useCallback(() => {
+  const handleRevealComplete = useCallback((gateData?: ParticipantGateData) => {
     setIsRevealed(true);
     try {
       sessionStorage.setItem(WEB_REVEALED_SESSION_KEY, 'true');
+      if (gateData) {
+        setOnboardingDraft((prev) => ({
+          ...prev,
+          name: gateData.name || prev?.name,
+          collegeName: gateData.collegeName || prev?.collegeName,
+          rollNumber: gateData.participantKey || prev?.rollNumber,
+        }));
+      }
     } catch {
       // ignore
     }
@@ -675,10 +683,15 @@ export default function App() {
       {/* ========================================================================= */}
       {currentRole === 'participant' && (
         <div className="flex-1 flex flex-col items-center justify-start w-full relative">
-          {/* Interactive Web Pull Reveal Experience - ONLY on initial landing page entrance */}
+          {/* Dimensional Cinematic Experience - ONLY on initial landing page entrance */}
           {!isRevealed && participantStep === 'access' && landingPageId === 'home' && (
-            <InteractiveWebReveal
+            <DimensionalCinematicExperience
               onComplete={handleRevealComplete}
+              initialData={{
+                name: onboardingDraft?.name,
+                collegeName: onboardingDraft?.collegeName,
+                participantKey: onboardingDraft?.rollNumber,
+              }}
             />
           )}
 

@@ -339,204 +339,163 @@ export const PaymentGateway: React.FC<PaymentGatewayProps> = ({
   const isRazorpayConfigured = razorpayKeyId && !razorpayKeyId.includes('REPLACE');
 
   return (
-    <div className="w-full min-h-screen bg-slate-50 text-slate-900 flex flex-col items-center justify-start py-6 sm:py-10 px-4">
-      <div className="w-full max-w-lg mx-auto space-y-5 animate-in fade-in duration-300">
+    <div className="w-full min-h-screen bg-[#05050a] text-white flex flex-col items-center justify-start py-6 sm:py-10 px-4 relative overflow-x-hidden">
+      {/* Spider-Verse Ambient Glow */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[#FF1E42]/10 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-[#FF6B00]/10 blur-[120px] pointer-events-none" />
+
+      <div className="w-full max-w-lg mx-auto space-y-5 animate-in fade-in duration-300 relative z-10">
         {/* Header Bar */}
         <div className="flex items-center justify-between">
           <button
             type="button"
             onClick={onBackToEvents}
             disabled={step === 'VERIFYING' || step === 'CREATING_ORDER'}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-[#0077c8] transition-colors cursor-pointer bg-white px-3.5 py-1.5 rounded-xl border border-slate-200 shadow-xs hover:border-[#0077c8]/40 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-stone-300 hover:text-white transition-colors cursor-pointer bg-[#110c20] px-3.5 py-1.5 rounded-xl border border-[#FF1E42]/30 shadow-md hover:border-[#FF1E42] disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            <ArrowLeft className="w-4 h-4 text-slate-600" />
-            <span>Back</span>
+            <ArrowLeft className="w-4 h-4 text-[#FF1E42]" />
+            <span>BACK</span>
           </button>
 
           <div className="flex items-center gap-2">
-            <span className="font-serif font-extrabold text-xs text-[#002b66] tracking-tight">RADIANZA '26</span>
-            <span className="text-slate-300 text-xs">•</span>
-            <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold shadow-2xs">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Secure Checkout</span>
+            <span className="font-['Impact',sans-serif] text-sm text-white tracking-wide uppercase">RADIANZA <span className="text-[#FF1E42]">'26</span></span>
+            <span className="text-stone-600 text-xs">•</span>
+            <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-950/40 border border-emerald-500/40 text-emerald-400 text-[11px] font-mono font-bold shadow-md">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <span>SECURE CHECKOUT</span>
             </div>
           </div>
         </div>
 
         {/* Step Indicator */}
         <div className="flex items-center justify-center gap-2.5 py-1">
-          <div className="flex items-center gap-1.5 text-xs font-medium">
-            <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold shadow-2xs">✓</span>
-            <span className="text-emerald-700 font-semibold text-xs">Details</span>
+          <div className="flex items-center gap-1.5 text-xs font-mono font-bold">
+            <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px]">✓</span>
+            <span className="text-emerald-400">Details</span>
           </div>
-          <div className="w-8 h-px bg-slate-300" />
-          <div className="flex items-center gap-1.5 text-xs font-medium">
-            <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold shadow-2xs">✓</span>
-            <span className="text-emerald-700 font-semibold text-xs">Event</span>
+          <div className="w-8 h-px bg-white/20" />
+          <div className="flex items-center gap-1.5 text-xs font-mono font-bold">
+            <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px]">✓</span>
+            <span className="text-emerald-400">Arena</span>
           </div>
-          <div className="w-8 h-px bg-slate-300" />
-          <div className="flex items-center gap-1.5 text-xs font-medium">
-            <span className="w-5 h-5 rounded-full bg-[#002b66] text-white flex items-center justify-center text-[10px] font-bold shadow-xs ring-2 ring-[#0077c8]/30">3</span>
-            <span className="text-[#002b66] font-extrabold text-xs">Payment</span>
+          <div className="w-8 h-px bg-white/20" />
+          <div className="flex items-center gap-1.5 text-xs font-mono font-bold">
+            <span className="w-5 h-5 rounded-full bg-[#FF1E42] text-white flex items-center justify-center text-[10px] shadow-[0_0_8px_#FF1E42]">3</span>
+            <span className="text-[#FF1E42]">Payment</span>
           </div>
         </div>
 
         {/* ── ORDER SUMMARY CARD ── */}
-        <div className="bg-gradient-to-b from-[#001f4d] via-[#002b66] to-[#001838] rounded-3xl p-5 sm:p-6 shadow-2xl border border-white/20 text-white space-y-4 relative overflow-hidden">
-        {/* Background Glow Effects */}
-        <div className="absolute top-0 right-0 w-40 h-40 bg-[#0077c8]/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#00a887]/15 rounded-full blur-2xl pointer-events-none" />
+        <div className="bg-gradient-to-b from-[#180922] via-[#090714] to-[#120516] rounded-3xl p-5 sm:p-6 shadow-2xl border border-[#FF1E42]/40 text-white space-y-4 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-[#FF1E42]/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#FF6B00]/15 rounded-full blur-2xl pointer-events-none" />
 
-        {/* Event Info */}
-        <div className="relative z-10 space-y-3">
-          <div className="flex items-start justify-between gap-3">
-            <div className="space-y-1">
-              <span className={`text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded-full ${
-                event.category === 'Technical' ? 'bg-[#0077c8] text-white' : 'bg-[#00a887] text-white'
-              }`}>
-                {event.category}
-              </span>
-              <h3 className="text-lg font-serif font-bold text-white mt-1">{event.title}</h3>
-              <p className="text-xs text-slate-300 font-medium">{event.tagline}</p>
-            </div>
-            <div className="text-right shrink-0">
-              <span className="text-[10px] text-white/60 uppercase font-bold block">Registration Fee</span>
-              <span className="text-2xl font-black text-[#7af1fc]">₹{event.price}</span>
-            </div>
-          </div>
-
-          {/* Quick Info */}
-          <div className="grid grid-cols-2 gap-2 text-[11px]">
-            <div className="flex items-center gap-1.5 bg-white/10 backdrop-blur-md px-2.5 py-1.5 rounded-xl border border-white/15">
-              <Clock className="w-3.5 h-3.5 text-[#7af1fc] shrink-0" />
-              <span className="text-white/90">{event.time}</span>
-            </div>
-            <div className="flex items-center gap-1.5 bg-white/10 backdrop-blur-md px-2.5 py-1.5 rounded-xl border border-white/15">
-              <MapPin className="w-3.5 h-3.5 text-[#7af1fc] shrink-0" />
-              <span className="text-white/90 truncate">{event.venue}</span>
-            </div>
-          </div>
-
-          {/* Participant Info */}
-          <div className="bg-white/10 backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/15 space-y-1">
-            <span className="text-[10px] text-white/60 uppercase font-bold">Registered As</span>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                {event.isTeamEvent ? (
-                  <Users className="w-4 h-4 text-[#7af1fc]" />
-                ) : (
-                  <User className="w-4 h-4 text-[#7af1fc]" />
-                )}
-                <div>
-                  <p className="text-xs font-bold text-white">{registration.leaderName}</p>
-                  <p className="text-[10px] text-white/70 font-mono">{registration.leaderRollNumber}</p>
-                </div>
-              </div>
-              {registration.teamName && (
-                <span className="text-[10px] font-bold text-[#7af1fc] bg-white/10 px-2 py-0.5 rounded-lg border border-white/15">
-                  {registration.teamName}
+          {/* Event Info */}
+          <div className="relative z-10 space-y-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="space-y-1">
+                <span className={`text-[10px] uppercase font-mono font-black tracking-wider px-2 py-0.5 rounded-full ${
+                  event.category === 'Technical' ? 'bg-[#FF1E42] text-white' : 'bg-[#FF6B00] text-white'
+                }`}>
+                  {event.category}
                 </span>
-              )}
+                <h3 className="text-lg font-['Impact',sans-serif] uppercase tracking-wide text-white mt-1">{event.title}</h3>
+                <p className="text-xs text-stone-300 font-mono">{event.tagline}</p>
+              </div>
+              <div className="text-right shrink-0">
+                <span className="text-[10px] text-stone-400 uppercase font-mono font-bold block">Entry Fee</span>
+                <span className="text-2xl font-mono font-black text-[#FFE600]">₹{event.price}</span>
+              </div>
+            </div>
+
+            {/* Quick Info */}
+            <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
+              <div className="flex items-center gap-1.5 bg-white/5 backdrop-blur-md px-2.5 py-1.5 rounded-xl border border-white/10">
+                <Clock className="w-3.5 h-3.5 text-[#FF1E42] shrink-0" />
+                <span className="text-stone-300">{event.time}</span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-white/5 backdrop-blur-md px-2.5 py-1.5 rounded-xl border border-white/10">
+                <MapPin className="w-3.5 h-3.5 text-[#FF6B00] shrink-0" />
+                <span className="text-stone-300 truncate">{event.venue}</span>
+              </div>
+            </div>
+
+            {/* Participant Info */}
+            <div className="bg-white/5 backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 space-y-1">
+              <span className="text-[10px] text-stone-400 uppercase font-mono font-bold">Registered As</span>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {event.isTeamEvent ? (
+                    <Users className="w-4 h-4 text-[#FF1E42]" />
+                  ) : (
+                    <User className="w-4 h-4 text-[#FF6B00]" />
+                  )}
+                  <div>
+                    <p className="text-xs font-bold text-white">{registration.leaderName}</p>
+                    <p className="text-[10px] text-stone-400 font-mono">{registration.leaderRollNumber}</p>
+                  </div>
+                </div>
+                {registration.teamName && (
+                  <span className="text-[10px] font-mono font-bold text-[#FFE600] bg-white/10 px-2 py-0.5 rounded-lg border border-white/15">
+                    {registration.teamName}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Price Breakdown */}
+          <div className="relative z-10 border-t border-white/10 pt-3 space-y-2">
+            <div className="flex items-center justify-between text-xs font-mono">
+              <span className="text-stone-400">Arena Registration Fee</span>
+              <span className="text-white font-semibold">₹{event.price}.00</span>
+            </div>
+            <div className="flex items-center justify-between text-xs font-mono">
+              <span className="text-stone-400">Gateway Processing Fee</span>
+              <span className="text-emerald-400 font-semibold">FREE (0%)</span>
+            </div>
+            <div className="flex items-center justify-between text-sm pt-2 border-t border-white/10 font-mono">
+              <span className="text-white font-bold">Total Payable</span>
+              <span className="text-xl font-black text-[#FFE600]">₹{event.price}.00</span>
             </div>
           </div>
         </div>
 
-        {/* Price Breakdown */}
-        <div className="relative z-10 border-t border-white/15 pt-3 space-y-2">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-white/70">Event Registration Fee</span>
-            <span className="text-white font-semibold">₹{event.price}.00</span>
+        {/* ── PAYMENT STATUS INDICATOR ── */}
+        {step === 'CREATING_ORDER' && (
+          <div className="flex items-center justify-center gap-3 p-4 bg-black/50 rounded-2xl border border-[#FF6B00]/40 text-[#FF6B00]">
+            <Loader2 className="w-5 h-5 animate-spin text-[#FF6B00]" />
+            <span className="text-xs font-mono font-bold">Creating secure payment order...</span>
           </div>
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-white/70">Processing Fee</span>
-            <span className="text-emerald-400 font-semibold">FREE</span>
-          </div>
-          <div className="flex items-center justify-between text-sm pt-2 border-t border-white/20">
-            <span className="text-white font-bold">Total Payable</span>
-            <span className="text-xl font-black text-[#7af1fc]">₹{event.price}.00</span>
-          </div>
-        </div>
-      </div>
+        )}
 
-      {/* ── PAYMENT STATUS INDICATOR ── */}
-      {step === 'CREATING_ORDER' && (
-        <div className="flex items-center justify-center gap-3 p-4 bg-blue-50 rounded-2xl border border-blue-200 text-blue-800">
-          <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
-          <span className="text-xs font-bold">Creating secure payment order...</span>
-        </div>
-      )}
-
-      {step === 'CHECKOUT_OPEN' && (
-        <div className="flex items-center justify-center gap-3 p-4 bg-amber-50 rounded-2xl border border-amber-200 text-amber-800">
-          <CreditCard className="w-5 h-5 text-amber-600 animate-pulse" />
-          <span className="text-xs font-bold">Complete payment in the Razorpay window...</span>
-        </div>
-      )}
-
-      {step === 'VERIFYING' && (
-        <div className="flex items-center justify-center gap-3 p-4 bg-indigo-50 rounded-2xl border border-indigo-200 text-indigo-800">
-          <ShieldCheck className="w-5 h-5 text-indigo-600 animate-pulse" />
-          <span className="text-xs font-bold">Verifying payment with server... Do not close this page.</span>
-        </div>
-      )}
-
-      {step === 'SUCCESS' && (
-        <div className="flex flex-col items-center gap-3 p-5 bg-emerald-50 rounded-2xl border border-emerald-300 text-emerald-800">
-          <div className="w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center ring-4 ring-emerald-500/20">
-            <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+        {step === 'CHECKOUT_OPEN' && (
+          <div className="flex items-center justify-center gap-3 p-4 bg-black/50 rounded-2xl border border-[#FFE600]/40 text-[#FFE600]">
+            <CreditCard className="w-5 h-5 text-[#FFE600] animate-pulse" />
+            <span className="text-xs font-mono font-bold">Complete payment in the Razorpay window...</span>
           </div>
-          <div className="text-center">
-            <h4 className="text-sm font-bold text-emerald-900">Payment Verified!</h4>
-            <p className="text-xs text-emerald-700 mt-0.5">Your QR pass is being generated...</p>
-          </div>
-          <div className="flex items-center gap-2 text-xs text-emerald-600">
-            <Loader2 className="w-4 h-4 animate-spin text-emerald-500" />
-            <span>Redirecting to pass...</span>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              const finalReg: Registration = {
-                ...registration,
-                paymentStatus: 'PAID',
-                paidAt: registration.paidAt || new Date().toISOString(),
-              };
-              onPaymentVerified(finalReg);
-            }}
-            className="mt-1 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:brightness-110 text-white font-bold text-xs shadow-md shadow-emerald-600/20 flex items-center gap-1.5 cursor-pointer transition-all"
-          >
-            <span>Open Event Pass Now</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      )}
+        )}
 
-      {step === 'FAILED' && (
-        <div className="flex flex-col items-center gap-3 p-5 bg-red-50 rounded-2xl border border-red-300 text-red-800">
-          <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center ring-4 ring-red-500/20">
-            <XCircle className="w-8 h-8 text-red-600" />
+        {step === 'VERIFYING' && (
+          <div className="flex items-center justify-center gap-3 p-4 bg-black/50 rounded-2xl border border-[#00F0FF]/40 text-[#00F0FF]">
+            <ShieldCheck className="w-5 h-5 text-[#00F0FF] animate-pulse" />
+            <span className="text-xs font-mono font-bold">Verifying payment with server... Do not close this page.</span>
           </div>
-          <div className="text-center">
-            <h4 className="text-sm font-bold text-red-900">Payment Verification Failed</h4>
-            <p className="text-xs text-red-700 mt-0.5">{errorMessage}</p>
-          </div>
-          <p className="text-[10px] text-red-600 font-mono text-center px-4">
-            If money was deducted, please contact support at radianza2026@spiher.edu.in with your registration number: {registration.registrationNumber}
-          </p>
-        </div>
-      )}
+        )}
 
-      {/* Error Message (for recoverable errors) */}
-      {errorMessage && step !== 'FAILED' && (
-        <div className="flex flex-col gap-2.5 p-3.5 bg-amber-50 rounded-2xl border border-amber-200 text-amber-800">
-          <div className="flex items-start gap-2.5">
-            <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-            <div className="flex-1 min-w-0">
-              <span className="text-xs font-bold block">Payment Notice</span>
-              <span className="text-[11px] text-amber-700">{errorMessage}</span>
+        {step === 'SUCCESS' && (
+          <div className="flex flex-col items-center gap-3 p-5 bg-emerald-950/40 rounded-2xl border border-emerald-500/40 text-emerald-400">
+            <div className="w-14 h-14 rounded-full bg-emerald-900/50 flex items-center justify-center ring-4 ring-emerald-500/20">
+              <CheckCircle2 className="w-8 h-8 text-emerald-400" />
             </div>
-          </div>
-          <div className="flex items-center gap-2 pt-1 border-t border-amber-200/60">
+            <div className="text-center">
+              <h4 className="text-sm font-mono font-bold text-white uppercase">Payment Verified!</h4>
+              <p className="text-xs text-emerald-300 mt-0.5">Your Multiverse QR pass is being minted...</p>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-emerald-400 font-mono">
+              <Loader2 className="w-4 h-4 animate-spin text-emerald-400" />
+              <span>Redirecting to pass...</span>
+            </div>
             <button
               type="button"
               onClick={() => {
@@ -545,151 +504,189 @@ export const PaymentGateway: React.FC<PaymentGatewayProps> = ({
                   paymentStatus: 'PAID',
                   paidAt: registration.paidAt || new Date().toISOString(),
                 };
-                MockDatabaseService.updatePaymentStatus(registration.id, 'PAID');
                 onPaymentVerified(finalReg);
               }}
-              className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-xs cursor-pointer transition-all"
+              className="mt-1 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:brightness-110 text-white font-mono font-bold text-xs shadow-md shadow-emerald-600/20 flex items-center gap-1.5 cursor-pointer transition-all"
             >
-              <span>View Verified Event Pass</span>
+              <span>Open Event Pass Now</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
+          </div>
+        )}
+
+        {step === 'FAILED' && (
+          <div className="flex flex-col items-center gap-3 p-5 bg-red-950/40 rounded-2xl border border-[#FF1E42]/40 text-[#FF1E42]">
+            <div className="w-14 h-14 rounded-full bg-red-900/50 flex items-center justify-center ring-4 ring-red-500/20">
+              <XCircle className="w-8 h-8 text-[#FF1E42]" />
+            </div>
+            <div className="text-center">
+              <h4 className="text-sm font-mono font-bold text-white uppercase">Payment Failed</h4>
+              <p className="text-xs text-[#FF1E42] mt-0.5">{errorMessage}</p>
+            </div>
+            <p className="text-[10px] text-stone-400 font-mono text-center px-4">
+              If money was deducted, please contact radianza2026@spiher.edu.in with ID: {registration.registrationNumber}
+            </p>
+          </div>
+        )}
+
+        {/* Error Message (for recoverable errors) */}
+        {errorMessage && step !== 'FAILED' && (
+          <div className="flex flex-col gap-2.5 p-3.5 bg-amber-950/40 rounded-2xl border border-amber-500/40 text-amber-200">
+            <div className="flex items-start gap-2.5">
+              <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+              <div className="flex-1 min-w-0">
+                <span className="text-xs font-mono font-bold block text-amber-300">Payment Notice</span>
+                <span className="text-[11px] font-mono text-amber-200/80">{errorMessage}</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 pt-1 border-t border-amber-500/20">
+              <button
+                type="button"
+                onClick={() => {
+                  const finalReg: Registration = {
+                    ...registration,
+                    paymentStatus: 'PAID',
+                    paidAt: registration.paidAt || new Date().toISOString(),
+                  };
+                  MockDatabaseService.updatePaymentStatus(registration.id, 'PAID');
+                  onPaymentVerified(finalReg);
+                }}
+                className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-mono font-bold text-xs flex items-center gap-1.5 shadow-xs cursor-pointer transition-all"
+              >
+                <span>View Verified Event Pass</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={handleDevSimulatePayment}
+                className="px-3 py-1.5 rounded-xl bg-white/10 border border-amber-500/30 hover:bg-white/15 text-amber-200 font-mono font-bold text-xs cursor-pointer transition-all"
+              >
+                Simulate Test Payment
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── ACTION & PAYMENT METHOD SECTION ── */}
+        {(step === 'SUMMARY' || step === 'ERROR') && (
+          <div className="space-y-4">
+            {/* Payment Method Selector */}
+            <div className="card-spider-verse rounded-2xl border border-white/10 p-3.5 space-y-3">
+              <div className="flex items-center justify-between text-xs px-1">
+                <span className="font-mono font-bold text-white">Select Payment Mode</span>
+                <span className="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/50 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                  ⚡ Instant Verification
+                </span>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod('upi')}
+                  className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
+                    paymentMethod === 'upi'
+                      ? 'border-[#FF1E42] bg-[#FF1E42]/20 text-white shadow-md ring-1 ring-[#FF1E42]'
+                      : 'border-white/10 bg-black/40 text-stone-400 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  <div className="w-8 h-8 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center mb-1.5">
+                    <QrCode className="w-4 h-4 text-[#FF1E42]" />
+                  </div>
+                  <span className="text-[11px] font-mono font-bold block leading-tight">UPI / QR</span>
+                  <span className="text-[9px] text-stone-400 font-mono">GPay, PhonePe</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod('card')}
+                  className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
+                    paymentMethod === 'card'
+                      ? 'border-[#FF6B00] bg-[#FF6B00]/20 text-white shadow-md ring-1 ring-[#FF6B00]'
+                      : 'border-white/10 bg-black/40 text-stone-400 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  <div className="w-8 h-8 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center mb-1.5">
+                    <CreditCard className="w-4 h-4 text-[#FF6B00]" />
+                  </div>
+                  <span className="text-[11px] font-mono font-bold block leading-tight">Cards</span>
+                  <span className="text-[9px] text-stone-400 font-mono">Debit / Credit</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod('netbanking')}
+                  className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
+                    paymentMethod === 'netbanking'
+                      ? 'border-[#E000FF] bg-[#E000FF]/20 text-white shadow-md ring-1 ring-[#E000FF]'
+                      : 'border-white/10 bg-black/40 text-stone-400 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  <div className="w-8 h-8 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center mb-1.5">
+                    <Building2 className="w-4 h-4 text-[#E000FF]" />
+                  </div>
+                  <span className="text-[11px] font-mono font-bold block leading-tight">Net Banking</span>
+                  <span className="text-[9px] text-stone-400 font-mono">All Major Banks</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Unified Pay Button */}
             <button
               type="button"
-              onClick={handleDevSimulatePayment}
-              className="px-3 py-1.5 rounded-xl bg-white border border-amber-300 hover:bg-amber-100/50 text-amber-900 font-bold text-xs cursor-pointer transition-all"
+              onClick={handlePrimaryPayClick}
+              className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-[#FF1E42] via-[#FF6B00] to-[#E000FF] hover:brightness-110 text-white font-mono font-black text-sm uppercase tracking-wider shadow-xl shadow-[#FF1E42]/40 flex items-center justify-between transition-all cursor-pointer active:scale-[0.99] group"
             >
-              Simulate Test Payment
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center border border-white/20">
+                  <Lock className="w-4 h-4 text-[#FFE600]" />
+                </div>
+                <div className="text-left">
+                  <span className="text-[10px] text-[#FFE600] uppercase tracking-wider font-extrabold block">
+                    {retryCount > 0 ? 'Retry Payment' : 'Initialize Payment'}
+                  </span>
+                  <span className="text-sm font-bold text-white">
+                    {isRazorpayConfigured ? 'Checkout with Razorpay' : `Pay ₹${event.price}.00 Securely`}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-xl border border-white/15 group-hover:bg-white/20 transition-all">
+                <span className="text-base font-black text-white">₹{event.price}</span>
+                <ArrowRight className="w-4 h-4 text-[#FFE600] group-hover:translate-x-0.5 transition-transform" />
+              </div>
             </button>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* ── ACTION & PAYMENT METHOD SECTION ── */}
-      {(step === 'SUMMARY' || step === 'ERROR') && (
-        <div className="space-y-4">
-          {/* Payment Method Selector */}
-          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-3.5 space-y-3">
-            <div className="flex items-center justify-between text-xs px-1">
-              <span className="font-bold text-[#002b66]">Select Payment Mode</span>
-              <span className="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                ⚡ Instant Verification
-              </span>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => setPaymentMethod('upi')}
-                className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
-                  paymentMethod === 'upi'
-                    ? 'border-[#0077c8] bg-[#f0f8fc] text-[#002b66] shadow-xs ring-1 ring-[#0077c8]'
-                    : 'border-slate-200 bg-slate-50/60 text-slate-600 hover:bg-slate-100/80 hover:border-slate-300'
-                }`}
-              >
-                <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center mb-1.5 shadow-2xs">
-                  <QrCode className="w-4 h-4 text-[#0077c8]" />
-                </div>
-                <span className="text-[11px] font-bold block leading-tight">UPI / QR</span>
-                <span className="text-[9px] text-slate-600 font-medium">GPay, PhonePe</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setPaymentMethod('card')}
-                className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
-                  paymentMethod === 'card'
-                    ? 'border-[#0077c8] bg-[#f0f8fc] text-[#002b66] shadow-xs ring-1 ring-[#0077c8]'
-                    : 'border-slate-200 bg-slate-50/60 text-slate-600 hover:bg-slate-100/80 hover:border-slate-300'
-                }`}
-              >
-                <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center mb-1.5 shadow-2xs">
-                  <CreditCard className="w-4 h-4 text-[#002b66]" />
-                </div>
-                <span className="text-[11px] font-bold block leading-tight">Cards</span>
-                <span className="text-[9px] text-slate-600 font-medium">Debit / Credit</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setPaymentMethod('netbanking')}
-                className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
-                  paymentMethod === 'netbanking'
-                    ? 'border-[#0077c8] bg-[#f0f8fc] text-[#002b66] shadow-xs ring-1 ring-[#0077c8]'
-                    : 'border-slate-200 bg-slate-50/60 text-slate-600 hover:bg-slate-100/80 hover:border-slate-300'
-                }`}
-              >
-                <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center mb-1.5 shadow-2xs">
-                  <Building2 className="w-4 h-4 text-emerald-600" />
-                </div>
-                <span className="text-[11px] font-bold block leading-tight">Net Banking</span>
-                <span className="text-[9px] text-slate-600 font-medium">All Major Banks</span>
-              </button>
-            </div>
+        {/* Official Registration Receipt Card */}
+        <div className="card-spider-verse rounded-2xl border border-white/10 p-3.5 flex items-center justify-between">
+          <div className="space-y-0.5">
+            <span className="text-[10px] font-mono uppercase font-bold text-stone-400 tracking-wider block">
+              Registration Order ID
+            </span>
+            <span className="font-mono text-xs font-bold text-[#FF6B00]">
+              {registration.registrationNumber}
+            </span>
           </div>
 
-          {/* Unified Production-Grade Pay Button */}
           <button
             type="button"
-            onClick={handlePrimaryPayClick}
-            className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-[#001f4d] via-[#002b66] to-[#0077c8] hover:from-[#001838] hover:to-[#005fa3] text-white font-bold text-sm shadow-xl shadow-[#002b66]/25 flex items-center justify-between transition-all cursor-pointer active:scale-[0.99] hover:shadow-2xl hover:scale-[1.005] group"
+            onClick={handleCopyId}
+            className="inline-flex items-center gap-1 text-[11px] font-mono font-semibold text-stone-300 hover:text-white bg-white/5 hover:bg-white/10 px-2.5 py-1.5 rounded-lg border border-white/10 transition-colors cursor-pointer"
           >
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center border border-white/20">
-                <Lock className="w-4 h-4 text-[#7af1fc]" />
-              </div>
-              <div className="text-left">
-                <span className="text-[10px] text-[#7af1fc] uppercase tracking-wider font-extrabold block">
-                  {retryCount > 0 ? 'Retry Payment' : 'Pay Now'}
-                </span>
-                <span className="text-sm font-bold text-white">
-                  {isRazorpayConfigured ? 'Checkout with Razorpay' : `Pay ₹${event.price}.00 Securely`}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-xl border border-white/15 group-hover:bg-white/20 transition-all">
-              <span className="text-base font-black text-white">₹{event.price}</span>
-              <ArrowRight className="w-4 h-4 text-[#7af1fc] group-hover:translate-x-0.5 transition-transform" />
-            </div>
+            {copiedId ? (
+              <>
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-emerald-400 font-bold">Copied!</span>
+              </>
+            ) : (
+              <>
+                <Copy className="w-3.5 h-3.5 text-stone-400" />
+                <span>Copy ID</span>
+              </>
+            )}
           </button>
-
-          {retryCount > 0 && (
-            <p className="text-center text-[10px] text-slate-500 font-medium">
-              Payment pending • Attempt {retryCount + 1} • Your registration is saved and waiting for payment
-            </p>
-          )}
         </div>
-      )}
-
-      {/* Official Registration Receipt Card */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-3.5 flex items-center justify-between">
-        <div className="space-y-0.5">
-          <span className="text-[10px] uppercase font-bold text-slate-600 tracking-wider block">
-            Registration Order ID
-          </span>
-          <span className="font-mono text-xs font-bold text-[#002b66]">
-            {registration.registrationNumber}
-          </span>
-        </div>
-
-        <button
-          type="button"
-          onClick={handleCopyId}
-          className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-600 hover:text-[#0077c8] bg-slate-50 hover:bg-slate-100 px-2.5 py-1.5 rounded-lg border border-slate-200 transition-colors cursor-pointer"
-        >
-          {copiedId ? (
-            <>
-              <Check className="w-3.5 h-3.5 text-emerald-600" />
-              <span className="text-emerald-700 font-bold">Copied!</span>
-            </>
-          ) : (
-            <>
-              <Copy className="w-3.5 h-3.5 text-slate-500" />
-              <span>Copy ID</span>
-            </>
-          )}
-        </button>
-      </div>
       </div>
     </div>
   );

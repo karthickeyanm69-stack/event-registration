@@ -1,19 +1,21 @@
 import React, { useEffect, useRef } from 'react';
 
-interface SpiderParticle {
+interface MultiverseParticle {
   x: number;
   y: number;
   vx: number;
   vy: number;
   size: number;
+  color: string;
+  glowColor: string;
+  type: 'spider' | 'spark' | 'hex' | 'glitch';
   angle: number;
   angularVel: number;
   legPhase: number;
   legSpeed: number;
   opacity: number;
-  silkLength: number;
-  swayFreq: number;
-  swayAmp: number;
+  life: number;
+  maxLife: number;
 }
 
 interface FlyingSpidersCanvasProps {
@@ -23,7 +25,7 @@ interface FlyingSpidersCanvasProps {
 
 export const FlyingSpidersCanvas: React.FC<FlyingSpidersCanvasProps> = ({
   className = '',
-  count = 10,
+  count = 28,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointerRef = useRef<{ x: number; y: number; active: boolean }>({
@@ -35,11 +37,10 @@ export const FlyingSpidersCanvas: React.FC<FlyingSpidersCanvasProps> = ({
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d', { alpha: true });
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     let animId: number;
-    let isVisible = true;
     let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
     let height = (canvas.height = canvas.parentElement?.clientHeight || window.innerHeight);
 
@@ -49,26 +50,39 @@ export const FlyingSpidersCanvas: React.FC<FlyingSpidersCanvasProps> = ({
       height = canvas.height = canvas.parentElement.clientHeight;
     };
 
-    window.addEventListener('resize', handleResize, { passive: true });
+    window.addEventListener('resize', handleResize);
 
-    // Initialize Spiders
-    const spiders: SpiderParticle[] = [];
-    const actualCount = Math.min(count, 12);
-    for (let i = 0; i < actualCount; i++) {
-      spiders.push({
+    const COLOR_PALETTE = [
+      { color: '#FF1E42', glow: 'rgba(255, 30, 66, 0.6)' },   // Miles Red
+      { color: '#FF6B00', glow: 'rgba(255, 107, 0, 0.6)' },  // Portal Amber
+      { color: '#E000FF', glow: 'rgba(224, 0, 255, 0.55)' }, // Glitch Magenta
+      { color: '#00F0FF', glow: 'rgba(0, 240, 255, 0.5)' },  // Venom Cyan
+      { color: '#FFE600', glow: 'rgba(255, 230, 0, 0.5)' },  // Electric Yellow
+    ];
+
+    // Initialize Spider & Multiverse Particles
+    const particles: MultiverseParticle[] = [];
+    for (let i = 0; i < count; i++) {
+      const pal = COLOR_PALETTE[Math.floor(Math.random() * COLOR_PALETTE.length)];
+      const typeChoice: 'spider' | 'spark' | 'hex' | 'glitch' =
+        i % 3 === 0 ? 'spider' : i % 3 === 1 ? 'hex' : 'spark';
+
+      particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.35 + (Math.random() > 0.5 ? 0.3 : -0.3),
-        vy: -0.3 - Math.random() * 0.55,
-        size: 2.0 + Math.random() * 2.2,
-        angle: (Math.random() - 0.5) * 0.3,
-        angularVel: (Math.random() - 0.5) * 0.01,
+        vx: (Math.random() - 0.5) * 0.6 + (Math.random() > 0.5 ? 0.3 : -0.3),
+        vy: -0.4 - Math.random() * 0.8, // Floating upward
+        size: typeChoice === 'spider' ? 2.5 + Math.random() * 2.5 : 1.5 + Math.random() * 3,
+        color: pal.color,
+        glowColor: pal.glow,
+        type: typeChoice,
+        angle: Math.random() * Math.PI * 2,
+        angularVel: (Math.random() - 0.5) * 0.03,
         legPhase: Math.random() * Math.PI * 2,
-        legSpeed: 0.004 + Math.random() * 0.006,
-        opacity: 0.3 + Math.random() * 0.3,
-        silkLength: 30 + Math.random() * 50,
-        swayFreq: 0.0015 + Math.random() * 0.002,
-        swayAmp: 0.5 + Math.random() * 0.8,
+        legSpeed: 0.006 + Math.random() * 0.01,
+        opacity: 0.35 + Math.random() * 0.55,
+        life: 0,
+        maxLife: 200 + Math.random() * 400,
       });
     }
 
@@ -88,142 +102,139 @@ export const FlyingSpidersCanvas: React.FC<FlyingSpidersCanvasProps> = ({
     window.addEventListener('mousemove', handlePointerMove, { passive: true });
     window.addEventListener('mouseleave', handlePointerLeave);
 
-    // Render little arachnid
-    const drawLittleSpider = (
+    // Draw little Spider
+    const drawSpider = (
       c: CanvasRenderingContext2D,
-      s: SpiderParticle,
+      p: MultiverseParticle,
       time: number
     ) => {
       c.save();
-      c.translate(s.x, s.y);
-      c.rotate(s.angle);
+      c.translate(p.x, p.y);
+      c.rotate(p.angle);
 
-      const color = `rgba(24, 24, 30, ${s.opacity})`;
-      const accentColor = `rgba(180, 20, 35, ${s.opacity * 0.85})`;
-      const silkColor = `rgba(30, 30, 40, ${s.opacity * 0.25})`;
-
-      // Silk Filament
+      // Spider body
+      c.fillStyle = p.color;
+      c.shadowColor = p.glowColor;
+      c.shadowBlur = 8;
       c.beginPath();
-      c.moveTo(0, s.size * 0.6);
-      const wave = Math.sin(time * 0.003 + s.legPhase) * 4;
-      c.quadraticCurveTo(wave * 0.5, s.silkLength * 0.5, wave, s.silkLength);
-      c.strokeStyle = silkColor;
-      c.lineWidth = 0.5;
-      c.stroke();
-
-      // Abdomen
-      c.beginPath();
-      c.ellipse(0, s.size * 0.2, s.size * 0.65, s.size * 0.85, 0, 0, Math.PI * 2);
-      c.fillStyle = color;
+      c.ellipse(0, 0, p.size * 0.8, p.size * 1.2, 0, 0, Math.PI * 2);
       c.fill();
 
-      // Marking
+      // Spider head
       c.beginPath();
-      c.arc(0, s.size * 0.1, s.size * 0.22, 0, Math.PI * 2);
-      c.fillStyle = accentColor;
+      c.arc(0, -p.size * 1.1, p.size * 0.6, 0, Math.PI * 2);
       c.fill();
 
-      // Head
-      c.beginPath();
-      c.arc(0, -s.size * 0.6, s.size * 0.45, 0, Math.PI * 2);
-      c.fillStyle = color;
-      c.fill();
+      // Spider legs (8 legs)
+      c.strokeStyle = p.color;
+      c.lineWidth = 0.85;
+      c.shadowBlur = 4;
+      const legCycle = Math.sin(time * p.legSpeed + p.legPhase);
 
-      // Legs (Simplified 4 pair lines for high performance)
-      c.strokeStyle = color;
-      c.lineWidth = Math.max(0.65, s.size * 0.2);
-      c.lineCap = 'round';
+      for (let side = -1; side <= 1; side += 2) {
+        for (let j = 0; j < 4; j++) {
+          const baseAngle = (j * 0.3 - 0.45) * side;
+          const kx = side * (p.size * 2 + j * 1.2) + legCycle * side * 1.5;
+          const ky = (j - 1.5) * p.size * 1.4;
+          const endX = side * (p.size * 3.5 + j * 1.8);
+          const endY = (j - 1.2) * p.size * 2.2 + (j % 2 === 0 ? 3 : -2);
 
-      const legOffsets = [
-        { bx: -s.size * 0.3, by: -s.size * 0.4, tx: -s.size * 2.0, ty: -s.size * 0.7 },
-        { bx: -s.size * 0.4, by: -s.size * 0.1, tx: -s.size * 2.3, ty: s.size * 0.1 },
-        { bx: -s.size * 0.4, by: s.size * 0.1, tx: -s.size * 2.1, ty: s.size * 1.2 },
-        { bx: -s.size * 0.3, by: s.size * 0.3, tx: -s.size * 1.6, ty: s.size * 1.9 },
-      ];
-
-      legOffsets.forEach((l, idx) => {
-        const tw = Math.sin(time * s.legSpeed + s.legPhase + idx * 0.8) * (s.size * 0.35);
-        // Left
-        c.beginPath();
-        c.moveTo(l.bx, l.by);
-        c.lineTo(l.tx + tw, l.ty + tw * 0.5);
-        c.stroke();
-
-        // Right
-        c.beginPath();
-        c.moveTo(-l.bx, l.by);
-        c.lineTo(-l.tx - tw, l.ty + tw * 0.5);
-        c.stroke();
-      });
+          c.beginPath();
+          c.moveTo(side * (p.size * 0.6), (j - 1.5) * p.size * 0.8);
+          c.quadraticCurveTo(kx, ky, endX, endY);
+          c.stroke();
+        }
+      }
 
       c.restore();
     };
 
-    let lastTime = performance.now();
+    // Draw Multiverse Hex Spark
+    const drawHex = (c: CanvasRenderingContext2D, p: MultiverseParticle) => {
+      c.save();
+      c.translate(p.x, p.y);
+      c.rotate(p.angle);
+      c.strokeStyle = p.color;
+      c.fillStyle = p.glowColor;
+      c.lineWidth = 1;
+      c.shadowColor = p.glowColor;
+      c.shadowBlur = 10;
 
-    const render = (time: number) => {
-      if (!isVisible) {
-        animId = requestAnimationFrame(render);
-        return;
+      c.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const rad = (i * Math.PI) / 3;
+        const hx = Math.cos(rad) * p.size * 2;
+        const hy = Math.sin(rad) * p.size * 2;
+        if (i === 0) c.moveTo(hx, hy);
+        else c.lineTo(hx, hy);
       }
+      c.closePath();
+      c.stroke();
+      if (Math.random() > 0.4) c.fill();
+      c.restore();
+    };
 
-      animId = requestAnimationFrame(render);
-      const dt = Math.min((time - lastTime) * 0.001, 0.033);
+    // Draw Spark
+    const drawSpark = (c: CanvasRenderingContext2D, p: MultiverseParticle) => {
+      c.save();
+      c.translate(p.x, p.y);
+      c.fillStyle = p.color;
+      c.shadowColor = p.glowColor;
+      c.shadowBlur = 12;
+      c.beginPath();
+      c.arc(0, 0, p.size, 0, Math.PI * 2);
+      c.fill();
+      c.restore();
+    };
+
+    let lastTime = 0;
+    const animate = (time: number) => {
+      const dt = time - lastTime;
       lastTime = time;
 
       ctx.clearRect(0, 0, width, height);
 
-      const pointer = pointerRef.current;
+      particles.forEach((p) => {
+        p.life += 1;
+        p.angle += p.angularVel;
+        p.x += p.vx;
+        p.y += p.vy;
 
-      for (let i = 0; i < spiders.length; i++) {
-        const s = spiders[i];
-        const sway = Math.sin(time * s.swayFreq + s.legPhase) * s.swayAmp;
-        s.x += (s.vx + sway) * (dt * 60);
-        s.y += s.vy * (dt * 60);
-        s.angle += s.angularVel;
-
-        if (pointer.active) {
-          const dx = s.x - pointer.x;
-          const dy = s.y - pointer.y;
-          const distSq = dx * dx + dy * dy;
-          if (distSq < 10000 && distSq > 1) {
-            const dist = Math.sqrt(distSq);
-            const force = (1 - dist / 100) * 1.5;
-            s.x += (dx / dist) * force;
-            s.y += (dy / dist) * force;
+        // Interactive mouse gravity repulsion
+        if (pointerRef.current.active) {
+          const dx = p.x - pointerRef.current.x;
+          const dy = p.y - pointerRef.current.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            const force = (120 - dist) / 120;
+            p.x += (dx / dist) * force * 3;
+            p.y += (dy / dist) * force * 3;
           }
         }
 
-        if (s.y < -60) {
-          s.y = height + 30;
-          s.x = Math.random() * width;
-        } else if (s.y > height + 60) {
-          s.y = -30;
+        // Screen wrap
+        if (p.y < -30) {
+          p.y = height + 20;
+          p.x = Math.random() * width;
         }
+        if (p.x < -30) p.x = width + 20;
+        if (p.x > width + 30) p.x = -20;
 
-        if (s.x < -40) {
-          s.x = width + 30;
-        } else if (s.x > width + 40) {
-          s.x = -30;
+        if (p.type === 'spider') {
+          drawSpider(ctx, p, time);
+        } else if (p.type === 'hex') {
+          drawHex(ctx, p);
+        } else {
+          drawSpark(ctx, p);
         }
+      });
 
-        drawLittleSpider(ctx, s, time);
-      }
+      animId = requestAnimationFrame(animate);
     };
 
-    // Intersection Observer to stop rendering when scrolled out of view
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isVisible = entry.isIntersecting;
-      },
-      { threshold: 0.05 }
-    );
-    observer.observe(canvas);
-
-    animId = requestAnimationFrame(render);
+    animId = requestAnimationFrame(animate);
 
     return () => {
-      observer.disconnect();
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handlePointerMove);
@@ -234,8 +245,7 @@ export const FlyingSpidersCanvas: React.FC<FlyingSpidersCanvasProps> = ({
   return (
     <canvas
       ref={canvasRef}
-      aria-hidden="true"
-      className={`absolute inset-0 pointer-events-none z-15 select-none ${className}`}
+      className={`absolute inset-0 pointer-events-none z-10 ${className}`}
     />
   );
 };

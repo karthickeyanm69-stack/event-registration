@@ -72,7 +72,6 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
     }, 400);
   };
 
-  // Smooth gesture drag handler
   const handleDrag = (_: any, info: { offset: { x: number; y: number } }) => {
     const isPastThreshold = info.offset.y >= PULL_THRESHOLD;
     if (isPastThreshold !== isReadyToRelease) {
@@ -83,7 +82,6 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
   const handleDragEnd = (_: any, info: { offset: { x: number; y: number }; velocity: { x: number; y: number } }) => {
     const { x, y } = info.offset;
 
-    // Pull down activation trigger
     if (y >= PULL_THRESHOLD && currentEvent && !isActivating) {
       triggerActivation(currentEvent);
       return;
@@ -91,7 +89,6 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
 
     setIsReadyToRelease(false);
 
-    // Horizontal swipe navigation
     const swipeThreshold = 50;
     if (x > swipeThreshold || info.velocity.x > 300) {
       handlePrev();
@@ -101,527 +98,479 @@ export const EventSelectionView: React.FC<EventSelectionViewProps> = ({
   };
 
   return (
-    <div className="w-full min-h-screen bg-slate-50 text-slate-900 select-none flex flex-col items-center py-4 sm:py-6 px-4">
-      <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
+    <div className="w-full min-h-screen bg-[#05050a] text-white select-none flex flex-col items-center py-4 sm:py-6 px-4 relative overflow-x-hidden">
+      {/* Spider-Verse Ambient Glow */}
+      <div className="absolute top-1/4 left-1/4 w-[28rem] h-[28rem] rounded-full bg-[#FF1E42]/10 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-[28rem] h-[28rem] rounded-full bg-[#FF6B00]/10 blur-[120px] pointer-events-none" />
+
+      <div className="w-full max-w-4xl mx-auto flex flex-col items-center relative z-10">
         {/* ── Top Header Navigation Bar ── */}
         <div className="w-full flex items-center justify-between gap-4 mb-4">
           <button
             type="button"
             onClick={onBackToOnboarding}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-[#0077c8] transition-colors cursor-pointer bg-white px-3.5 py-1.5 rounded-xl border border-slate-200 shadow-xs hover:border-[#0077c8]/40"
+            className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-stone-300 hover:text-white transition-colors cursor-pointer bg-[#110c20] px-3.5 py-1.5 rounded-xl border border-[#FF1E42]/30 shadow-md hover:border-[#FF1E42]"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back</span>
+            <ArrowLeft className="w-4 h-4 text-[#FF1E42]" />
+            <span>BACK</span>
           </button>
 
-        {/* Top Right Event Pass Badge */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#eef7fc] border border-[#d4e8f5] text-[#002b66] font-mono text-[11px] font-extrabold shadow-xs">
-            <Ticket className="w-3.5 h-3.5 text-[#0077c8]" />
-            <span>RADIANZA '26</span>
+          {/* Top Right Event Pass Badge */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#110c20] border border-[#FF1E42]/40 text-[#FF6B00] font-mono text-[11px] font-extrabold shadow-md">
+              <Ticket className="w-3.5 h-3.5 text-[#FF1E42]" />
+              <span>RADIANZA '26</span>
+            </div>
+            <div className="hidden sm:flex items-center gap-1 text-xs font-bold text-white bg-[#110c20] px-3 py-1 rounded-xl border border-white/10 shadow-md font-mono">
+              {participantData.name || 'Participant'}
+            </div>
           </div>
-          <div className="hidden sm:flex items-center gap-1 text-xs font-bold text-[#002b66] bg-white px-3 py-1 rounded-xl border border-[#d4e8f5] shadow-xs font-mono">
-            {participantData.name || 'Participant'}
-          </div>
-        </div>
-      </div>
-
-      {/* ── Dynamic Top Marquee / Heading ── */}
-      <div className="w-full text-center mb-4 relative min-h-[58px] flex items-center justify-center">
-        <AnimatePresence mode="wait">
-          {isReadyToRelease ? (
-            <motion.div
-              key="release-banner"
-              initial={{ opacity: 0, scale: 0.95, y: -4 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -4 }}
-              transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-              className="inline-flex items-center gap-2.5 px-6 py-2 rounded-full bg-gradient-to-r from-[#001f4d] via-[#003366] to-[#0077c8] text-white font-bold text-xs sm:text-sm tracking-wide shadow-xl shadow-[#0077c8]/25 border border-sky-400/40"
-            >
-              <CheckCircle2 className="w-4 h-4 text-[#7af1fc] animate-pulse" />
-              <span className="tracking-wide">Release to select event</span>
-              <Sparkles className="w-3.5 h-3.5 text-[#f59e0b]" />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="choose-heading"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="space-y-0.5"
-            >
-              <h2 className="text-2xl sm:text-3xl font-serif font-extrabold text-[#001f4d] tracking-tight">
-                Choose your event card
-              </h2>
-              <p className="text-xs text-slate-500 font-medium">
-                Swipe left/right to browse • <strong>Pull down</strong> to select & lock in
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* ── Category & View Mode Switchers ── */}
-      <div className="w-full max-w-md flex items-center justify-between gap-3 mb-5">
-        {/* Category Tabs */}
-        <div className="flex-1 grid grid-cols-2 gap-1.5 p-1 bg-[#f0f8fc] rounded-2xl border border-[#d4e8f5] shadow-inner">
-          <button
-            type="button"
-            onClick={() => handleCategoryChange('Technical')}
-            className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
-              selectedCategory === 'Technical'
-                ? 'bg-[#002b66] text-white shadow-md'
-                : 'text-[#002b66] hover:bg-white/80'
-            }`}
-          >
-            <span>Technical</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-white/20">
-              {techCount}
-            </span>
-          </button>
-          <button
-            type="button"
-            onClick={() => handleCategoryChange('Non-Technical')}
-            className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
-              selectedCategory === 'Non-Technical'
-                ? 'bg-[#00a887] text-white shadow-md'
-                : 'text-[#002b66] hover:bg-white/80'
-            }`}
-          >
-            <span>Non-Tech</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-white/20">
-              {nonTechCount}
-            </span>
-          </button>
         </div>
 
-        {/* View Toggle */}
-        <div className="flex items-center p-1 bg-[#f0f8fc] rounded-2xl border border-[#d4e8f5]">
-          <button
-            type="button"
-            onClick={() => setViewMode('deck')}
-            className={`p-2 rounded-xl transition-all cursor-pointer ${
-              viewMode === 'deck' ? 'bg-[#002b66] text-white shadow-xs' : 'text-slate-500'
-            }`}
-            title="3D Card Deck"
-          >
-            <Layers3 className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => setViewMode('grid')}
-            className={`p-2 rounded-xl transition-all cursor-pointer ${
-              viewMode === 'grid' ? 'bg-[#002b66] text-white shadow-xs' : 'text-slate-500'
-            }`}
-            title="Grid View"
-          >
-            <LayoutGrid className="w-4 h-4" />
-          </button>
+        {/* ── Dynamic Top Marquee / Heading ── */}
+        <div className="w-full text-center mb-4 relative min-h-[58px] flex items-center justify-center">
+          <AnimatePresence mode="wait">
+            {isReadyToRelease ? (
+              <motion.div
+                key="release-banner"
+                initial={{ opacity: 0, scale: 0.95, y: -4 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: -4 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                className="inline-flex items-center gap-2.5 px-6 py-2 rounded-full bg-gradient-to-r from-[#FF1E42] via-[#FF6B00] to-[#E000FF] text-white font-mono font-black text-xs sm:text-sm uppercase tracking-wider shadow-xl shadow-[#FF1E42]/40 border border-[#FFE600]/40"
+              >
+                <CheckCircle2 className="w-4 h-4 text-[#FFE600] animate-pulse" />
+                <span>RELEASE TO LOCK IN ARENA</span>
+                <Sparkles className="w-3.5 h-3.5 text-[#FFE600]" />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="choose-heading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="space-y-0.5"
+              >
+                <h2 className="text-2xl sm:text-3xl font-['Impact',sans-serif] font-black text-white tracking-tight uppercase drop-shadow-[0_0_15px_rgba(255,30,66,0.3)]">
+                  CHOOSE YOUR ARENA CARD
+                </h2>
+                <p className="text-xs text-stone-400 font-mono">
+                  Swipe left/right to browse • <strong className="text-[#FF6B00]">Pull down</strong> to lock in
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-      </div>
 
-      {/* ── 3D COVERFLOW DECK (Hardware Accelerated & Buttery Smooth) ── */}
-      {viewMode === 'deck' && (
-        <div className="relative w-full max-w-md flex flex-col items-center justify-center">
-          {/* Deck Main Stage */}
-          <div className="relative w-[300px] sm:w-[325px] h-[480px] sm:h-[500px] flex items-center justify-center perspective-[1000px]">
-            {/* ── BOTTOM ACTIVATION CRADLE (Drop Slot) ── */}
-            <div
-              className={`absolute bottom-0 w-[280px] sm:w-[305px] h-32 rounded-3xl border-2 border-dashed transition-all duration-300 flex flex-col items-center justify-end pb-3 pointer-events-none z-0 ${
-                isReadyToRelease
-                  ? 'border-emerald-500 bg-emerald-500/15 shadow-[0_0_35px_rgba(16,185,129,0.35)] scale-105'
-                  : 'border-slate-300/80 bg-white/40 opacity-60'
+        {/* ── Category & View Mode Switchers ── */}
+        <div className="w-full max-w-md flex items-center justify-between gap-3 mb-5">
+          {/* Category Tabs */}
+          <div className="flex-1 grid grid-cols-2 gap-1.5 p-1 bg-[#110c20] rounded-2xl border border-[#FF1E42]/30 shadow-inner">
+            <button
+              type="button"
+              onClick={() => handleCategoryChange('Technical')}
+              className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                selectedCategory === 'Technical'
+                  ? 'bg-gradient-to-r from-[#FF1E42] to-[#FF6B00] text-white shadow-lg shadow-[#FF1E42]/30'
+                  : 'text-stone-400 hover:text-white'
               }`}
             >
-              <span
-                className={`text-[11px] font-extrabold font-mono uppercase tracking-wider transition-colors ${
-                  isReadyToRelease ? 'text-emerald-700 animate-bounce' : 'text-slate-400'
+              <span>Technical</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/50">
+                {techCount}
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleCategoryChange('Non-Technical')}
+              className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                selectedCategory === 'Non-Technical'
+                  ? 'bg-gradient-to-r from-[#FF6B00] to-[#E000FF] text-white shadow-lg shadow-[#FF6B00]/30'
+                  : 'text-stone-400 hover:text-white'
+              }`}
+            >
+              <span>Non-Tech</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/50">
+                {nonTechCount}
+              </span>
+            </button>
+          </div>
+
+          {/* View Toggle */}
+          <div className="flex items-center p-1 bg-[#110c20] rounded-2xl border border-white/10">
+            <button
+              type="button"
+              onClick={() => setViewMode('deck')}
+              className={`p-2 rounded-xl transition-all cursor-pointer ${
+                viewMode === 'deck' ? 'bg-[#FF1E42] text-white shadow-md' : 'text-stone-400 hover:text-white'
+              }`}
+              title="3D Card Deck"
+            >
+              <Layers3 className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('grid')}
+              className={`p-2 rounded-xl transition-all cursor-pointer ${
+                viewMode === 'grid' ? 'bg-[#FF1E42] text-white shadow-md' : 'text-stone-400 hover:text-white'
+              }`}
+              title="Grid View"
+            >
+              <LayoutGrid className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* ── 3D COVERFLOW DECK ── */}
+        {viewMode === 'deck' && (
+          <div className="relative w-full max-w-md flex flex-col items-center justify-center">
+            {/* Deck Main Stage */}
+            <div className="relative w-[300px] sm:w-[325px] h-[480px] sm:h-[500px] flex items-center justify-center perspective-[1000px]">
+              {/* ── BOTTOM ACTIVATION CRADLE (Drop Slot) ── */}
+              <div
+                className={`absolute bottom-0 w-[280px] sm:w-[305px] h-32 rounded-3xl border-2 border-dashed transition-all duration-300 flex flex-col items-center justify-end pb-3 pointer-events-none z-0 ${
+                  isReadyToRelease
+                    ? 'border-[#FF1E42] bg-[#FF1E42]/20 shadow-[0_0_40px_rgba(255,30,66,0.5)] scale-105'
+                    : 'border-white/20 bg-[#110c20]/60 opacity-60'
                 }`}
               >
-                {isReadyToRelease ? '⚡ Drop to Lock In Event' : 'Activation Slot'}
-              </span>
-            </div>
-
-            {/* ── 3D CAROUSEL CARDS ── */}
-            {filteredEvents.map((evt, idx) => {
-              const diff = idx - activeIndex;
-              const isCenter = diff === 0;
-
-              // Coverflow positioning
-              let xOffset = 0;
-              let scale = 1;
-              let rotateY = 0;
-              let zIndex = 10;
-              let opacity = 1;
-
-              if (isCenter) {
-                xOffset = 0;
-                scale = 1;
-                rotateY = 0;
-                zIndex = 30;
-                opacity = 1;
-              } else if (diff === -1 || (diff > 0 && diff === filteredEvents.length - 1 && filteredEvents.length > 2)) {
-                xOffset = -115;
-                scale = 0.86;
-                rotateY = 20;
-                zIndex = 15;
-                opacity = 0.7;
-              } else if (diff === 1 || (diff < 0 && Math.abs(diff) === filteredEvents.length - 1 && filteredEvents.length > 2)) {
-                xOffset = 115;
-                scale = 0.86;
-                rotateY = -20;
-                zIndex = 15;
-                opacity = 0.7;
-              } else {
-                xOffset = diff < 0 ? -170 : 170;
-                scale = 0.72;
-                rotateY = diff < 0 ? 30 : -30;
-                zIndex = 5;
-                opacity = 0;
-              }
-
-              if (opacity === 0) return null;
-
-              return (
-                <motion.div
-                  key={evt.id}
-                  drag={isCenter ? true : false}
-                  dragSnapToOrigin={!isActivating}
-                  dragConstraints={{ left: -70, right: 70, top: 0, bottom: 130 }}
-                  dragElastic={{ top: 0.05, bottom: 0.2, left: 0.1, right: 0.1 }}
-                  onDrag={isCenter ? handleDrag : undefined}
-                  onDragEnd={isCenter ? handleDragEnd : undefined}
-                  onClick={() => {
-                    if (!isCenter) {
-                      setActiveIndex(idx);
-                      setIsReadyToRelease(false);
-                    }
-                  }}
-                  animate={{
-                    x: xOffset,
-                    scale: isCenter && isActivating ? 1.04 : scale,
-                    rotateY: rotateY,
-                    opacity: opacity,
-                  }}
-                  transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-                  style={{ zIndex }}
-                  className={`absolute top-0 w-[280px] sm:w-[305px] h-[435px] sm:h-[455px] rounded-3xl overflow-hidden shadow-xl flex flex-col justify-between select-none border-2 bg-white ${
-                    isCenter
-                      ? 'cursor-grab active:cursor-grabbing border-[#d4e8f5] shadow-2xl hover:border-[#0077c8]/50 touch-none'
-                      : 'cursor-pointer border-slate-200'
-                  } ${
-                    isCenter && isReadyToRelease
-                      ? 'ring-4 ring-emerald-400 border-emerald-400 shadow-[0_0_40px_rgba(16,185,129,0.5)]'
-                      : ''
+                <span
+                  className={`text-[11px] font-mono font-bold uppercase tracking-wider transition-colors ${
+                    isReadyToRelease ? 'text-[#FFE600] animate-bounce' : 'text-stone-500'
                   }`}
                 >
-                  {/* ── CARD COVER IMAGE WITH OVERLAYS ── */}
-                  <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-900 shrink-0 pointer-events-none">
-                    <img
-                      src={evt.imageUrl}
-                      alt={evt.title}
-                      onError={(e) => {
-                        e.currentTarget.src = 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80';
-                      }}
-                      className="w-full h-full object-cover opacity-95 pointer-events-none"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent" />
+                  {isReadyToRelease ? '⚡ DROP TO LOCK IN ARENA' : 'ACTIVATION SLOT'}
+                </span>
+              </div>
 
-                    {/* Category Tag */}
-                    <span
-                      className={`absolute top-3 left-3 text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full text-white shadow-xs ${
-                        evt.category === 'Technical' ? 'bg-[#0077c8]' : 'bg-[#00a887]'
-                      }`}
-                    >
-                      {evt.category}
-                    </span>
+              {/* ── 3D CAROUSEL CARDS ── */}
+              {filteredEvents.map((evt, idx) => {
+                const diff = idx - activeIndex;
+                const isCenter = diff === 0;
 
-                    {/* Price Tag */}
-                    <span className="absolute top-3 left-24 bg-black/60 text-[#7af1fc] font-mono font-bold text-[10px] px-2.5 py-1 rounded-full backdrop-blur-md shadow-xs border border-white/20">
-                      ₹{evt.price || 100}
-                    </span>
+                let xOffset = 0;
+                let scale = 1;
+                let rotateY = 0;
+                let zIndex = 10;
+                let opacity = 1;
 
-                    {/* Team Size Tag */}
-                    <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[10px] font-mono font-bold flex items-center gap-1 border border-white/20 shadow-xs">
-                      {evt.isTeamEvent ? (
-                        <>
-                          <Users className="w-3.5 h-3.5 text-[#7af1fc]" />
-                          <span>Team ({evt.minTeamSize}-{evt.maxTeamSize})</span>
-                        </>
-                      ) : (
-                        <>
-                          <User className="w-3.5 h-3.5 text-[#7af1fc]" />
-                          <span>Solo</span>
-                        </>
-                      )}
-                    </div>
+                if (isCenter) {
+                  xOffset = 0;
+                  scale = 1;
+                  rotateY = 0;
+                  zIndex = 30;
+                  opacity = 1;
+                } else if (diff === -1 || (diff > 0 && diff === filteredEvents.length - 1 && filteredEvents.length > 2)) {
+                  xOffset = -115;
+                  scale = 0.86;
+                  rotateY = 20;
+                  zIndex = 15;
+                  opacity = 0.7;
+                } else if (diff === 1 || (diff < 0 && Math.abs(diff) === filteredEvents.length - 1 && filteredEvents.length > 2)) {
+                  xOffset = 115;
+                  scale = 0.86;
+                  rotateY = -20;
+                  zIndex = 15;
+                  opacity = 0.7;
+                } else {
+                  xOffset = diff < 0 ? -170 : 170;
+                  scale = 0.72;
+                  rotateY = diff < 0 ? 30 : -30;
+                  zIndex = 5;
+                  opacity = 0;
+                }
 
-                    {/* Title & Tagline */}
-                    <div className="absolute bottom-3 left-4 right-4 text-white">
-                      <h3 className="text-xl sm:text-2xl font-serif font-black leading-tight drop-shadow-sm">
-                        {evt.title}
-                      </h3>
-                      <p className="text-xs text-slate-200 line-clamp-1 mt-0.5 opacity-90">
-                        {evt.tagline}
-                      </p>
-                    </div>
-                  </div>
+                if (opacity === 0) return null;
 
-                  {/* ── CARD BODY DETAILS ── */}
-                  <div className="p-4 flex-1 flex flex-col justify-between space-y-2 bg-white pointer-events-none">
-                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-                      {evt.description}
-                    </p>
+                return (
+                  <motion.div
+                    key={evt.id}
+                    drag={isCenter ? true : false}
+                    dragSnapToOrigin={!isActivating}
+                    dragConstraints={{ left: -70, right: 70, top: 0, bottom: 130 }}
+                    dragElastic={{ top: 0.05, bottom: 0.2, left: 0.1, right: 0.1 }}
+                    onDrag={isCenter ? handleDrag : undefined}
+                    onDragEnd={isCenter ? handleDragEnd : undefined}
+                    onClick={() => {
+                      if (!isCenter) {
+                        setActiveIndex(idx);
+                        setIsReadyToRelease(false);
+                      }
+                    }}
+                    animate={{
+                      x: xOffset,
+                      scale,
+                      rotateY,
+                      zIndex,
+                      opacity,
+                    }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 300,
+                      damping: 28,
+                    }}
+                    style={{ transformStyle: 'preserve-3d' }}
+                    className={`absolute top-0 w-[280px] sm:w-[305px] h-[435px] sm:h-[455px] rounded-3xl overflow-hidden shadow-2xl flex flex-col justify-between select-none border-2 bg-[#090714] text-white ${
+                      isCenter
+                        ? 'border-[#FF1E42] shadow-[0_0_35px_rgba(255,30,66,0.35)] cursor-grab active:cursor-grabbing'
+                        : 'border-white/10 opacity-70 cursor-pointer'
+                    }`}
+                  >
+                    {/* Card Top Media View */}
+                    <div className="relative h-[210px] sm:h-[225px] w-full overflow-hidden bg-black pointer-events-none">
+                      <img
+                        src={evt.imageUrl}
+                        alt={evt.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#090714] via-black/30 to-transparent" />
 
-                    {/* Venue & Timing Chips */}
-                    <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-700 font-medium bg-[#f0f8fc] p-2.5 rounded-2xl border border-[#d4e8f5]">
-                      <div className="flex items-center gap-1.5 truncate">
-                        <Clock className="w-3.5 h-3.5 text-[#0077c8] shrink-0" />
-                        <span className="truncate">{evt.time}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5 truncate">
-                        <MapPin className="w-3.5 h-3.5 text-[#00a887] shrink-0" />
-                        <span className="truncate">{evt.venue}</span>
-                      </div>
-                    </div>
-
-                    {/* ── BOTTOM PULL / ACTIVATE TRIGGER ── */}
-                    <div className="pt-1">
-                      {isCenter ? (
-                        <div
-                          className={`w-full py-2.5 px-3 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold transition-all ${
-                            isReadyToRelease
-                              ? 'bg-gradient-to-r from-[#001f4d] via-[#003366] to-[#0077c8] text-white shadow-lg shadow-[#0077c8]/30 scale-[1.02] border border-sky-400/40'
-                              : 'bg-slate-100 text-[#002b66] border border-[#d4e8f5]'
+                      {/* Header Badges */}
+                      <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+                        <span
+                          className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full text-white shadow-md ${
+                            evt.category === 'Technical' ? 'bg-[#FF1E42]' : 'bg-[#FF6B00]'
                           }`}
                         >
-                          {isReadyToRelease ? (
-                            <CheckCircle2 className="w-4 h-4 text-[#7af1fc] animate-pulse" />
-                          ) : (
-                            <ChevronDown className="w-4 h-4 transition-transform animate-bounce text-[#0077c8]" />
-                          )}
-                          <span>
-                            {isReadyToRelease ? 'Release to select event' : 'Drag down to select event'}
-                          </span>
-                        </div>
-                      ) : (
-                        <div className="text-center py-1">
-                          <span className="text-[10px] font-mono text-slate-400">Tap to view event</span>
-                        </div>
-                      )}
+                          {evt.category}
+                        </span>
+
+                        <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-black/80 text-white border border-white/20">
+                          {evt.isTeamEvent ? `${evt.minTeamSize}-${evt.maxTeamSize} Members` : 'Solo'}
+                        </span>
+                      </div>
+
+                      {/* Title & Tagline in Media Bottom */}
+                      <div className="absolute bottom-3 left-3 right-3 text-white space-y-0.5">
+                        <h3 className="text-base sm:text-lg font-bold leading-snug drop-shadow-md">
+                          {evt.title}
+                        </h3>
+                        <p className="text-[11px] text-[#FF6B00] font-mono font-semibold line-clamp-1">
+                          {evt.tagline || 'Arena Challenge'}
+                        </p>
+                      </div>
                     </div>
+
+                    {/* Card Body Details */}
+                    <div className="p-4 flex-1 flex flex-col justify-between space-y-2 bg-[#090714] pointer-events-none">
+                      <p className="text-xs text-stone-300 line-clamp-2 leading-relaxed">
+                        {evt.description}
+                      </p>
+
+                      <div className="space-y-1.5 pt-1 border-t border-white/10 text-xs text-stone-400">
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-3.5 h-3.5 text-[#FF1E42]" />
+                          <span className="font-semibold text-white">{evt.time}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <MapPin className="w-3.5 h-3.5 text-[#FF6B00]" />
+                          <span className="font-semibold text-white">{evt.venue}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1">
+                        <span className="text-xs font-mono font-black text-[#FFE600] bg-[#FFE600]/10 px-2.5 py-1 rounded-lg border border-[#FFE600]/30">
+                          ₹{evt.price || 100} Entry
+                        </span>
+                        <span className="text-[10px] font-mono text-stone-400">
+                          {evt.slotsLeft} slots remaining
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Interactive Pull/Tap Button Plate */}
+                    <div className="p-3 bg-black/50 border-t border-white/10 flex items-center justify-between gap-2 pointer-events-auto">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setInspectingEvent(evt);
+                        }}
+                        className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-stone-300 text-xs font-mono font-bold transition-colors cursor-pointer"
+                      >
+                        Rules
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          triggerActivation(evt);
+                        }}
+                        className="flex-1 py-1.5 px-3 rounded-xl bg-gradient-to-r from-[#FF1E42] to-[#FF6B00] hover:brightness-110 text-white font-mono font-black text-xs uppercase tracking-wider shadow-md shadow-[#FF1E42]/30 flex items-center justify-center gap-1 cursor-pointer transition-all active:scale-95"
+                      >
+                        <Zap className="w-3.5 h-3.5 text-[#FFE600]" />
+                        <span>SELECT ARENA</span>
+                      </button>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* Deck Navigation Controls */}
+            <div className="flex items-center gap-4 mt-6">
+              <button
+                type="button"
+                onClick={handlePrev}
+                className="p-2 rounded-xl bg-[#110c20] border border-[#FF1E42]/30 hover:bg-[#FF1E42] text-white shadow-md transition-colors cursor-pointer"
+                aria-label="Previous card"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+
+              <div className="flex items-center gap-1.5">
+                {filteredEvents.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => {
+                      setActiveIndex(i);
+                      setIsReadyToRelease(false);
+                    }}
+                    className={`h-2 rounded-full transition-all cursor-pointer ${
+                      activeIndex === i ? 'w-6 bg-[#FF1E42] shadow-[0_0_8px_#FF1E42]' : 'w-2 bg-white/20'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={handleNext}
+                className="p-2 rounded-xl bg-[#110c20] border border-[#FF1E42]/30 hover:bg-[#FF1E42] text-white shadow-md transition-colors cursor-pointer"
+                aria-label="Next card"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── GRID VIEW (Alternative Access) ── */}
+        {viewMode === 'grid' && (
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+            {filteredEvents.map((evt) => (
+              <div
+                key={evt.id}
+                className="card-spider-verse rounded-2xl border border-white/10 overflow-hidden shadow-md hover:border-[#FF1E42] transition-all flex flex-col justify-between group"
+              >
+                <div className="relative h-40 w-full overflow-hidden bg-black">
+                  <img
+                    src={evt.imageUrl}
+                    alt={evt.title}
+                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#090714] via-black/30 to-transparent" />
+                  <div className="absolute top-2.5 left-2.5">
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#FF1E42] text-white">
+                      {evt.category}
+                    </span>
                   </div>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          {/* ── Navigation Controls & Pagination Dots ── */}
-          <div className="w-full flex items-center justify-between mt-3 px-6">
-            <button
-              type="button"
-              onClick={handlePrev}
-              className="p-2 rounded-xl bg-white border border-[#d4e8f5] hover:bg-[#f0f8fc] text-[#002b66] shadow-xs transition-colors cursor-pointer"
-              aria-label="Previous Event"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-
-            {/* Pagination Dots */}
-            <div className="flex items-center gap-1.5">
-              {filteredEvents.map((_, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => {
-                    setActiveIndex(idx);
-                    setIsReadyToRelease(false);
-                  }}
-                  className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                    idx === activeIndex
-                      ? 'w-6 bg-gradient-to-r from-[#002b66] to-[#0077c8]'
-                      : 'w-2 bg-slate-300 hover:bg-slate-400'
-                  }`}
-                  aria-label={`Go to event ${idx + 1}`}
-                />
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={handleNext}
-              className="p-2 rounded-xl bg-white border border-[#d4e8f5] hover:bg-[#f0f8fc] text-[#002b66] shadow-xs transition-colors cursor-pointer"
-              aria-label="Next Event"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Fallback & Rules Inspector */}
-          <div className="flex items-center justify-center gap-3 mt-4">
-            <button
-              type="button"
-              onClick={() => setInspectingEvent(currentEvent)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white border border-[#d4e8f5] hover:bg-[#f0f8fc] text-slate-700 text-xs font-bold transition-colors cursor-pointer shadow-xs"
-            >
-              <Info className="w-3.5 h-3.5 text-[#0077c8]" />
-              <span>Event Details</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => currentEvent && triggerActivation(currentEvent)}
-              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
-            >
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-              <span>{currentEvent && currentEvent.price > 0 ? `Register (₹${currentEvent.price})` : 'Choose Event (1-Click)'}</span>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* ── MODE 2: GRID OVERVIEW ── */}
-      {viewMode === 'grid' && (
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-2">
-          {filteredEvents.map((evt) => (
-            <div
-              key={evt.id}
-              className="bg-white rounded-2xl border border-[#d4e8f5] overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between group"
-            >
-              <div className="relative h-40 overflow-hidden bg-slate-900">
-                <img
-                  src={evt.imageUrl}
-                  alt={evt.title}
-                  onError={(e) => {
-                    e.currentTarget.src = 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80';
-                  }}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent" />
-                <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full text-white bg-black/60 backdrop-blur-md">
-                    {evt.isTeamEvent ? `Team (${evt.minTeamSize}-${evt.maxTeamSize})` : 'Solo'}
-                  </span>
-                  <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-full text-[#7af1fc] bg-black/60 backdrop-blur-md border border-white/20">
-                    ₹{evt.price || 100}
-                  </span>
+                  <div className="absolute bottom-2.5 left-3 right-3 text-white">
+                    <h4 className="text-sm font-bold">{evt.title}</h4>
+                  </div>
                 </div>
-                <div className="absolute bottom-2.5 left-3 right-3 text-white">
-                  <h4 className="font-serif font-bold text-base line-clamp-1">{evt.title}</h4>
-                  <p className="text-[11px] text-slate-300 line-clamp-1">{evt.tagline}</p>
+
+                <div className="p-4 space-y-3">
+                  <p className="text-xs text-stone-300 line-clamp-2">{evt.description}</p>
+                  <div className="flex items-center justify-between text-xs pt-1 border-t border-white/10">
+                    <span className="font-mono font-black text-[#FFE600]">₹{evt.price || 100}</span>
+                    <span className="text-[10px] font-mono text-stone-400">{evt.slotsLeft} slots</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setInspectingEvent(evt)}
+                      className="py-1.5 rounded-xl bg-white/5 text-stone-300 text-xs font-mono font-bold hover:bg-white/10"
+                    >
+                      Rules
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => triggerActivation(evt)}
+                      className="py-1.5 rounded-xl bg-gradient-to-r from-[#FF1E42] to-[#FF6B00] text-white text-xs font-mono font-bold shadow-md"
+                    >
+                      Select
+                    </button>
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+        )}
 
-              <div className="p-3.5 space-y-3 flex-1 flex flex-col justify-between">
-                <p className="text-xs text-slate-600 line-clamp-2">{evt.description}</p>
-                <div className="flex items-center justify-between pt-2 border-t border-slate-100 gap-2">
+        {/* ── INSPECT RULES MODAL ── */}
+        <AnimatePresence>
+          {inspectingEvent && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="bg-[#090714] text-white rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto border border-[#FF1E42]/40 shadow-2xl p-6 space-y-5"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-mono font-bold text-[#FF6B00] uppercase">
+                    {inspectingEvent.category} ARENA
+                  </span>
                   <button
                     type="button"
-                    onClick={() => setInspectingEvent(evt)}
-                    className="text-[11px] font-bold text-slate-600 hover:text-[#0077c8] transition-colors"
+                    onClick={() => setInspectingEvent(null)}
+                    className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#FF1E42]"
                   >
-                    Details
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onSelectEvent(evt)}
-                    className="px-3 py-1.5 rounded-xl bg-[#002b66] hover:bg-[#001f4d] text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
-                  >
-                    Select (₹{evt.price || 100})
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
 
-      {/* ── RULES & DETAILS MODAL ── */}
-      <AnimatePresence>
-        {inspectingEvent && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto border border-[#d4e8f5] shadow-2xl p-6 space-y-5"
-            >
-              <div className="flex items-start justify-between gap-4">
                 <div>
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#eef7fc] text-[#0077c8]">
-                    {inspectingEvent.category} • {inspectingEvent.isTeamEvent ? 'Team' : 'Solo'}
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-serif font-extrabold text-[#001f4d] mt-1">
-                    {inspectingEvent.title}
-                  </h3>
-                  <p className="text-xs text-slate-500 font-medium">{inspectingEvent.tagline}</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setInspectingEvent(null)}
-                  className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div className="space-y-3 text-xs text-slate-700">
-                <div>
-                  <h4 className="font-bold text-slate-900 mb-1">About This Challenge</h4>
-                  <p className="leading-relaxed">{inspectingEvent.description}</p>
+                  <h3 className="text-xl font-bold font-['Impact',sans-serif]">{inspectingEvent.title}</h3>
+                  <p className="text-xs text-stone-300 mt-1">{inspectingEvent.description}</p>
                 </div>
 
-                {inspectingEvent.rules && inspectingEvent.rules.length > 0 && (
+                <div className="grid grid-cols-2 gap-3 p-3 rounded-2xl bg-white/5 border border-white/10 text-xs">
                   <div>
-                    <h4 className="font-bold text-slate-900 mb-1.5">Official Rules & Guidelines</h4>
-                    <ul className="space-y-1 pl-4 list-disc marker:text-[#0077c8]">
+                    <span className="text-stone-400 font-mono block text-[10px]">TIME</span>
+                    <span className="font-bold text-white">{inspectingEvent.time}</span>
+                  </div>
+                  <div>
+                    <span className="text-stone-400 font-mono block text-[10px]">VENUE</span>
+                    <span className="font-bold text-white">{inspectingEvent.venue}</span>
+                  </div>
+                </div>
+
+                {inspectingEvent.rules && (
+                  <div className="space-y-1.5 text-xs text-stone-300">
+                    <span className="font-bold text-white uppercase font-mono">Arena Rules:</span>
+                    <ul className="space-y-1 pl-1">
                       {inspectingEvent.rules.map((rule, idx) => (
-                        <li key={idx} className="leading-relaxed">
-                          {rule}
+                        <li key={idx} className="flex items-start gap-2">
+                          <span className="text-[#FF1E42] font-bold">•</span>
+                          <span>{rule}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 )}
 
-                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
-                  <div className="bg-[#f0f8fc] p-2.5 rounded-xl border border-[#d4e8f5]">
-                    <span className="text-[10px] text-slate-500 font-bold block">Timing</span>
-                    <span className="font-bold text-[#002b66]">{inspectingEvent.time}</span>
-                  </div>
-                  <div className="bg-[#f0f8fc] p-2.5 rounded-xl border border-[#d4e8f5]">
-                    <span className="text-[10px] text-slate-500 font-bold block">Venue</span>
-                    <span className="font-bold text-[#002b66]">{inspectingEvent.venue}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setInspectingEvent(null)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
-                >
-                  Close
-                </button>
                 <button
                   type="button"
                   onClick={() => {
                     const evt = inspectingEvent;
                     setInspectingEvent(null);
-                    onSelectEvent(evt);
+                    triggerActivation(evt);
                   }}
-                  className="px-5 py-2 rounded-xl bg-[#002b66] hover:bg-[#001f4d] text-white text-xs font-bold shadow-md transition-colors cursor-pointer flex items-center gap-1.5"
+                  className="w-full py-3 rounded-2xl bg-gradient-to-r from-[#FF1E42] to-[#FF6B00] text-white font-mono font-bold text-xs uppercase shadow-lg shadow-[#FF1E42]/30"
                 >
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span>{inspectingEvent.price > 0 ? `Select & Proceed (₹${inspectingEvent.price})` : 'Select & Proceed'}</span>
+                  Select This Event (₹{inspectingEvent.price || 100}) →
                 </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
 };
+
+export default EventSelectionView;

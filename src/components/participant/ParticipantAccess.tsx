@@ -30,6 +30,7 @@ interface ParticipantAccessProps {
 export const ParticipantAccess: React.FC<ParticipantAccessProps> = ({
   onSuccessfulAccess,
   onStartNewRegistration,
+  onBackToHome,
 }) => {
   const [rollNumber, setRollNumber] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
@@ -76,107 +77,93 @@ export const ParticipantAccess: React.FC<ParticipantAccessProps> = ({
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-50 flex items-center justify-center p-3 sm:p-6 lg:p-10 font-sans selection:bg-[#0077c8] selection:text-white">
+    <div className="min-h-screen w-full bg-[#05050a] text-white flex items-center justify-center p-3 sm:p-6 lg:p-10 font-sans selection:bg-[#FF1E42] selection:text-white relative overflow-x-hidden">
+      {/* Spider-Verse Ambient Glow */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[#FF1E42]/10 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-[#FF6B00]/10 blur-[120px] pointer-events-none" />
+
       {/* Main Split-Hero Card Container */}
-      <div className="w-full max-w-5xl bg-white rounded-3xl shadow-[0_25px_60px_-15px_rgba(0,43,102,0.15)] border border-[#d4e8f5] grid grid-cols-1 lg:grid-cols-12 min-h-auto lg:min-h-[580px] relative">
+      <div className="w-full max-w-5xl bg-[#090714] rounded-3xl sm:rounded-[2.5rem] shadow-2xl border border-[#FF1E42]/30 grid grid-cols-1 lg:grid-cols-12 min-h-auto lg:min-h-[580px] relative z-10 overflow-hidden">
         {/* ========================================================================= */}
         {/* LEFT BRANDING & INFORMATION HERO (Visible ONLY on Desktop lg+)           */}
         {/* ========================================================================= */}
-        <div className="hidden lg:flex lg:col-span-5 bg-gradient-to-br from-[#001f4d] via-[#002b66] to-[#001838] text-white p-8 sm:p-10 flex-col justify-between relative overflow-hidden rounded-l-3xl">
-          {/* Luminous Ambient Background Glow */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#0077c8]/25 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#00a887]/20 rounded-full blur-2xl pointer-events-none" />
+        <div className="hidden lg:flex lg:col-span-5 bg-gradient-to-br from-[#12061e] via-[#090714] to-[#05050a] text-white p-8 sm:p-10 flex-col justify-between relative overflow-hidden border-r border-[#FF1E42]/20">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF1E42]/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#FF6B00]/20 rounded-full blur-2xl pointer-events-none" />
 
           {/* Top Brand Header */}
           <div className="relative z-10 space-y-4">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15 text-[11px] font-bold text-[#7af1fc]">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>RADIANZA 2026 Symposium Portal</span>
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15 text-[11px] font-mono font-bold text-[#FF6B00]">
+              <Sparkles className="w-3.5 h-3.5 text-[#FFE600]" />
+              <span>RADIANZA '26 MULTIVERSE PORTAL</span>
             </div>
 
             <div className="flex items-center gap-3">
               <CollegeEmblem size={44} />
               <div>
-                <h1 className="font-serif font-bold text-lg leading-tight tracking-tight text-white">
-                  St. Peter's
+                <h1 className="font-['Impact',sans-serif] text-xl leading-tight tracking-tight text-white uppercase">
+                  RADIANZA <span className="text-[#FF1E42]">'26</span>
                 </h1>
-                <p className="text-[11px] text-[#7af1fc] font-medium tracking-wide">
-                  Institute of Higher Education &amp; Research
+                <p className="text-[11px] text-[#FF6B00] font-mono font-bold tracking-wide">
+                  Department of IT • SPIHER
+                </p>
+                <p className="text-[9px] text-stone-400 uppercase tracking-wider">
+                  Verified Pass Verification Mainframe
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Center Value Highlights */}
-          <div className="relative z-10 space-y-4 py-6">
-            <h2 className="text-xl sm:text-2xl font-serif font-bold text-white leading-snug">
-              Official Digital Event &amp; Pass Access
-            </h2>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              Verify your symposium entry, manage team registrations, and retrieve your cryptographically verified QR Pass.
-            </p>
-
-            <div className="space-y-2.5 pt-2">
-              <div className="flex items-center gap-3 p-2.5 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 text-xs">
-                <div className="p-2 rounded-xl bg-[#0077c8]/40 text-[#7af1fc] shrink-0">
-                  <Zap className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="font-bold text-white block text-xs">Instant Passwordless Access</span>
-                  <span className="text-[11px] text-slate-300">Login with Roll Number + Date of Birth</span>
-                </div>
+          {/* Center Info Points */}
+          <div className="relative z-10 space-y-3 py-4">
+            <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white/5 border border-white/10 text-xs">
+              <QrCode className="w-5 h-5 text-[#FF1E42] shrink-0 mt-0.5" />
+              <div>
+                <span className="font-bold text-white block text-xs">Holographic QR Entry Pass</span>
+                <span className="text-[11px] text-stone-300 leading-snug block mt-0.5">
+                  Access your encrypted entry credential with real-time check-in validation.
+                </span>
               </div>
+            </div>
 
-              <div className="flex items-center gap-3 p-2.5 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 text-xs">
-                <div className="p-2 rounded-xl bg-[#00a887]/40 text-emerald-300 shrink-0">
-                  <QrCode className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="font-bold text-white block text-xs">Digital QR Entry Pass</span>
-                  <span className="text-[11px] text-slate-300">Live check-in and stage evaluations</span>
-                </div>
+            <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white/5 border border-white/10 text-xs">
+              <Trophy className="w-5 h-5 text-[#FF6B00] shrink-0 mt-0.5" />
+              <div>
+                <span className="font-bold text-white block text-xs">Multiverse Competition Matrix</span>
+                <span className="text-[11px] text-stone-300 leading-snug block mt-0.5">
+                  View your registered arena tracks, rules, venue coordinates, and live scores.
+                </span>
               </div>
             </div>
           </div>
 
-          {/* Bottom Security Footer */}
-          <div className="relative z-10 pt-4 border-t border-white/15 flex items-center justify-between text-[11px] text-white/70">
-            <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-[#7af1fc]" />
-              <span>Official University Registry</span>
-            </div>
-            <span className="font-mono text-[10px] text-white/50">v2.4 Live</span>
+          {/* Bottom Accreditation Badge */}
+          <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] text-stone-400 font-mono">
+            <span>NAAC 'A' Grade Accredited</span>
+            <span className="text-[#FF6B00]">October 15-16, 2026</span>
           </div>
         </div>
 
         {/* ========================================================================= */}
-        {/* RIGHT INTERACTIVE LOGIN & REGISTRATION CARD                               */}
+        {/* RIGHT INTERACTIVE LOGIN & REGISTRATION SELECTION PANEL                   */}
         {/* ========================================================================= */}
-        <div className="lg:col-span-7 p-5 sm:p-8 lg:p-10 flex flex-col justify-center space-y-5 sm:space-y-6">
-          {/* Mobile College Logo Header for small screens */}
-          <div className="lg:hidden flex flex-col items-center text-center pb-2 border-b border-[#e8f5fb]">
-            <CollegeLogo size="sm" />
-            <span className="text-[10px] font-mono font-bold uppercase text-[#0077c8] tracking-widest mt-1">
-              RADIANZA 2026 Portal
-            </span>
-          </div>
-
-          {/* Mode Switcher Segmented Control */}
-          <div className="grid grid-cols-2 gap-1.5 p-1.5 bg-[#f0f8fc] rounded-2xl border border-[#d4e8f5]">
+        <div className="lg:col-span-7 p-6 sm:p-10 lg:p-12 flex flex-col justify-center space-y-6">
+          {/* Top Toggle Switcher */}
+          <div className="flex items-center justify-between gap-2 p-1.5 bg-black/50 rounded-2xl border border-white/10 shadow-inner">
             <button
               type="button"
               onClick={() => {
                 setActiveMode('EXISTING');
                 setErrorMessage(null);
               }}
-              className={`flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
+              className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer ${
                 activeMode === 'EXISTING'
-                  ? 'bg-[#0077c8] text-white shadow-md shadow-[#0077c8]/20'
-                  : 'text-[#002b66] hover:bg-white/80'
+                  ? 'bg-gradient-to-r from-[#FF1E42] to-[#FF6B00] text-white shadow-md'
+                  : 'text-stone-400 hover:text-white'
               }`}
             >
               <UserCheck className="w-4 h-4" />
-              <span>Existing Pass Access</span>
+              <span>Access Existing Pass</span>
             </button>
 
             <button
@@ -185,10 +172,10 @@ export const ParticipantAccess: React.FC<ParticipantAccessProps> = ({
                 setActiveMode('NEW');
                 onStartNewRegistration();
               }}
-              className={`flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
+              className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer ${
                 activeMode === 'NEW'
-                  ? 'bg-[#00a887] text-white shadow-md shadow-[#00a887]/20'
-                  : 'text-[#002b66] hover:bg-white/80'
+                  ? 'bg-gradient-to-r from-[#FF1E42] to-[#FF6B00] text-white shadow-md'
+                  : 'text-stone-400 hover:text-white'
               }`}
             >
               <UserPlus className="w-4 h-4" />
@@ -196,102 +183,81 @@ export const ParticipantAccess: React.FC<ParticipantAccessProps> = ({
             </button>
           </div>
 
-          {/* Existing Participant Access Form */}
-          {activeMode === 'EXISTING' && (
-            <form onSubmit={handleAccessSubmit} className="space-y-4">
-              <div className="space-y-1">
-                <h3 className="text-xl font-serif font-bold text-[#002b66]">
-                  Access Your Event Pass
-                </h3>
-                <p className="text-xs text-slate-500">
-                  Enter your registered institutional credentials to view your digital pass and event schedule.
-                </p>
-              </div>
+          <div className="space-y-1">
+            <h2 className="text-2xl sm:text-3xl font-['Impact',sans-serif] text-white uppercase tracking-wide">
+              {activeMode === 'EXISTING' ? 'DELEGATE PASS LOGIN' : 'NEW REGISTRATION'}
+            </h2>
+            <p className="text-xs text-stone-400">
+              {activeMode === 'EXISTING'
+                ? 'Enter your Roll Number and Date of Birth to view your pass and arena schedule.'
+                : 'Initialize your registration for RADIANZA ’26 national symposium.'}
+            </p>
+          </div>
 
-              {errorMessage && (
-                <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium flex items-center gap-2.5 animate-in fade-in">
-                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
-                  <span>{errorMessage}</span>
-                </div>
-              )}
-
-              <div className="space-y-3.5">
-                {/* Roll Number Input */}
-                <div className="space-y-1.5">
-                  <label htmlFor="participant-login-roll" className="block text-xs font-bold text-[#002b66] uppercase tracking-wider">
-                    Roll Number / Register Number <span className="text-rose-500">*</span>
-                  </label>
-                  <div className="relative">
-                    <CreditCard className="w-4 h-4 text-[#0077c8] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                    <input
-                      id="participant-login-roll"
-                      name="rollNumber"
-                      type="text"
-                      autoComplete="off"
-                      required
-                      value={rollNumber}
-                      onChange={(e) => setRollNumber(e.target.value.toUpperCase())}
-                      placeholder="e.g. 2021CS042"
-                      className="w-full pl-10 pr-3.5 py-3 rounded-xl bg-slate-50 border border-[#d4e8f5] text-[#002b66] placeholder-slate-400 text-sm font-mono tracking-wider focus:ring-2 focus:ring-[#0077c8]/20 focus:border-[#0077c8] focus:bg-white focus:outline-none transition-all shadow-xs"
-                    />
-                  </div>
-                </div>
-
-                {/* Custom Date Picker */}
-                <div className="space-y-1.5">
-                  <CustomDatePicker
-                    value={dateOfBirth}
-                    onChange={setDateOfBirth}
-                    label="Date of Birth"
-                    placeholder="Select Date of Birth"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Submit Action */}
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={isVerifying}
-                  className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#002b66] to-[#0077c8] hover:from-[#001f4d] hover:to-[#005fa3] text-white font-bold text-xs sm:text-sm shadow-lg shadow-[#0077c8]/25 flex items-center justify-center gap-2 transition-all cursor-pointer hover:scale-[1.01] active:scale-[0.98] disabled:opacity-50"
-                >
-                  {isVerifying ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      <span>Verifying Pass...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Open My Event Pass</span>
-                      <ArrowRight className="w-4 h-4 text-[#7af1fc]" />
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
+          {errorMessage && (
+            <div className="p-3.5 rounded-2xl bg-[#FF1E42]/10 border border-[#FF1E42]/40 text-[#FF1E42] text-xs font-medium flex items-center gap-2.5 animate-in fade-in">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{errorMessage}</span>
+            </div>
           )}
 
-          {/* Quick Demo Autofill Section */}
-          <div className="pt-2 border-t border-[#e8f5fb] space-y-2">
-            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
-              Quick Demo Profile:
-            </span>
-            <div className="p-3 rounded-2xl bg-[#f8fbfe] border border-[#d4e8f5] flex items-center justify-between text-xs hover:border-[#0077c8]/40 transition-colors">
-              <div>
-                <p className="font-bold text-[#002b66]">Alex Mercer (Information Technology)</p>
-                <p className="text-[10px] text-slate-500 font-mono">
-                  Roll: <strong className="text-[#0077c8]">2021CS042</strong> • DOB: 14/05/2003
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => handleFillDemoUser('2021CS042', '2003-05-14')}
-                className="px-3 py-1.5 rounded-xl bg-white hover:bg-[#e8f5fb] text-[#0077c8] border border-[#d4e8f5] text-xs font-bold shadow-xs transition-colors cursor-pointer"
-              >
-                Autofill
-              </button>
+          <form onSubmit={handleAccessSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <label htmlFor="access-roll-input" className="text-xs font-mono font-bold text-stone-300 flex items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5 text-[#FF1E42]" />
+                <span>Roll Number / Register Number <span className="text-[#FF1E42]">*</span></span>
+              </label>
+              <input
+                id="access-roll-input"
+                name="rollNumber"
+                type="text"
+                autoComplete="username"
+                required
+                value={rollNumber}
+                onChange={(e) => setRollNumber(e.target.value.toUpperCase())}
+                placeholder="e.g. 2021CS042"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/20 text-white font-mono font-bold placeholder-stone-500 text-sm focus:ring-2 focus:ring-[#FF1E42]/30 focus:border-[#FF1E42] focus:outline-none transition-all uppercase shadow-inner"
+              />
             </div>
+
+            <div className="space-y-1.5">
+              <CustomDatePicker
+                id="access-dob-input"
+                name="dateOfBirth"
+                value={dateOfBirth}
+                onChange={setDateOfBirth}
+                label="Date of Birth"
+                placeholder="Select Date of Birth"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isVerifying}
+              className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-[#FF1E42] via-[#FF6B00] to-[#E000FF] hover:brightness-110 text-white font-mono font-black text-xs uppercase tracking-wider shadow-lg shadow-[#FF1E42]/40 flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 disabled:opacity-50"
+            >
+              {isVerifying ? (
+                <span>VERIFYING PASS CREDENTIALS...</span>
+              ) : (
+                <>
+                  <span>AUTHENTICATE &amp; OPEN PASS</span>
+                  <ArrowRight className="w-4 h-4 text-white" />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Quick Demo Autofill */}
+          <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs font-mono text-stone-400">
+            <span>Demo User:</span>
+            <button
+              type="button"
+              onClick={() => handleFillDemoUser('2021CS042', '2003-05-14')}
+              className="text-[#FF6B00] hover:text-[#FFA500] underline font-bold cursor-pointer"
+            >
+              Autofill 2021CS042
+            </button>
           </div>
         </div>
       </div>
