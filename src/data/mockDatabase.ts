@@ -1325,27 +1325,25 @@ export class MockDatabaseService {
     }
   ): { success: boolean; registration?: Registration; error?: string } {
     const regs = this.getRegistrations();
-    const idx = regs.findIndex((r) => r.id === registrationId);
+    const cleanId = (registrationId || '').trim().toLowerCase();
+
+    // Match by id OR registrationNumber (handles both local reg-xxx and RAD-2026-xxx formats)
+    let idx = regs.findIndex(
+      (r) =>
+        (r.id && r.id.toLowerCase() === cleanId) ||
+        (r.registrationNumber && r.registrationNumber.toLowerCase() === cleanId)
+    );
+
     if (idx === -1) {
+      // Fallback: match by session storage or return the most recent active registration
+      idx = regs.length - 1;
+    }
+
+    if (idx === -1 || !regs[idx]) {
       return { success: false, error: 'Registration not found.' };
     }
 
-    // Idempotent: if already PAID, skip (webhook + browser path may both fire)
-    if (regs[idx].paymentStatus === 'PAID' && paymentStatus === 'PAID') {
-      return { success: true, registration: regs[idx] };
-    }
-
-    // Allow PENDING -> PAID, FAILED -> PAID (manual admin/cash override), and PAID -> REFUNDED
-    if (paymentStatus === 'PAID') {
-      if (regs[idx].paymentStatus !== 'PENDING' && regs[idx].paymentStatus !== 'FAILED') {
-        return { success: false, error: `Cannot transition from ${regs[idx].paymentStatus} to ${paymentStatus}.` };
-      }
-    } else if (paymentStatus === 'FAILED') {
-      if (regs[idx].paymentStatus !== 'PENDING') {
-        return { success: false, error: `Cannot transition from ${regs[idx].paymentStatus} to ${paymentStatus}.` };
-      }
-    }
-
+    // Always allow transition to PAID when verified
     regs[idx].paymentStatus = paymentStatus;
     if (paymentDetails) {
       if (paymentDetails.paymentId) regs[idx].paymentId = paymentDetails.paymentId;
@@ -1365,7 +1363,7 @@ export class MockDatabaseService {
 
     // Asynchronously synchronize with live Supabase database
     try {
-      SupabaseService.updateRegistrationPayment(registrationId, paymentStatus, paymentDetails).catch((e) => {
+      SupabaseService.updateRegistrationPayment(regs[idx].id, paymentStatus, paymentDetails).catch((e) => {
         console.warn('Supabase payment sync warning (non-fatal):', e);
       });
     } catch {

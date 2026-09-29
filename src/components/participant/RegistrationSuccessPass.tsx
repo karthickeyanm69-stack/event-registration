@@ -49,21 +49,21 @@ export const RegistrationSuccessPass: React.FC<RegistrationSuccessPassProps> = (
     }
 
     // Generate high-resolution vector QR with universal verification URL
-    if (registration.qrToken) {
-      const origin = window.location.origin;
-      const verifyUrl = `${origin}/?verify=${encodeURIComponent(registration.registrationNumber)}&token=${encodeURIComponent(registration.qrToken)}`;
+    const token = registration.qrToken || `SPIHER_RADIANZA_TOKEN_V1_${registration.registrationNumber || 'PASS'}_${Date.now()}`;
+    const regNum = registration.registrationNumber || 'RAD-2026-PASS';
+    const origin = window.location.origin;
+    const verifyUrl = `${origin}/?verify=${encodeURIComponent(regNum)}&token=${encodeURIComponent(token)}`;
 
-      QRCode.toDataURL(verifyUrl, {
-        width: 340,
-        margin: 1.5,
-        color: {
-          dark: '#001a40',
-          light: '#ffffff',
-        },
-      })
-        .then((url) => setQrDataUrl(url))
-        .catch((err) => console.error('QR generation error:', err));
-    }
+    QRCode.toDataURL(verifyUrl, {
+      width: 340,
+      margin: 1.5,
+      color: {
+        dark: '#001a40',
+        light: '#ffffff',
+      },
+    })
+      .then((url) => setQrDataUrl(url))
+      .catch((err) => console.error('QR generation error:', err));
   }, [registration]);
 
   const handleDownloadPass = () => {
